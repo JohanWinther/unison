@@ -4125,7 +4125,7 @@ module Unison.Codebase.Type
 
 -- | Abstract interface to a user's codebase.
 data Codebase m v a
-Codebase :: (Id -> Transaction (Maybe (Term v a))) -> (Id -> Transaction (Maybe (Type v a))) -> (Id -> Transaction (Maybe (Decl v a))) -> (Reference -> m ConstructorType) -> (Id -> Term v a -> Type v a -> Transaction ()) -> (Hash -> [(Term v a, Type v a)] -> Transaction ()) -> (Id -> Decl v a -> Transaction ()) -> (Hash -> [Decl v a] -> Transaction ()) -> (Hash -> Transaction (Maybe [(Term v a, Type v a)])) -> m (Branch m) -> (Text -> Branch m -> m ()) -> (CausalHash -> m (Maybe (Branch m))) -> (Branch m -> m ()) -> (CodebasePath -> SyncMode -> Branch m -> m ()) -> (CodebasePath -> SyncMode -> Branch m -> m ()) -> (forall r. ReadGitRemoteNamespace -> GitBranchBehavior -> ((Branch m, CodebasePath) -> m r) -> m (Either GitError r)) -> (forall e. WriteGitRepo -> PushGitBranchOpts -> (Branch m -> m (Either e (Branch m))) -> m (Either GitError (Either e (Branch m)))) -> (WatchKind -> Id -> Transaction (Maybe (Term v a))) -> (Reference -> Transaction (Set Id)) -> (Reference -> Transaction (Set Id)) -> (ShortHash -> Transaction (Set Id)) -> (forall x. (Connection -> m x) -> m x) -> (forall x. (Connection -> IO x) -> IO x) -> Codebase m v a
+Codebase :: (Id -> Transaction (Maybe (Term v a))) -> (Id -> Transaction (Maybe (Type v a))) -> (Id -> Transaction (Maybe (Decl v a))) -> (Reference -> Transaction ConstructorType) -> (Id -> Term v a -> Type v a -> Transaction ()) -> (Hash -> [(Term v a, Type v a)] -> Transaction ()) -> (Id -> Decl v a -> Transaction ()) -> (Hash -> [Decl v a] -> Transaction ()) -> (Hash -> Transaction (Maybe [(Term v a, Type v a)])) -> m (Branch m) -> (Text -> Branch m -> m ()) -> (CausalHash -> m (Maybe (Branch m))) -> (Branch m -> m ()) -> (CodebasePath -> SyncMode -> Branch m -> m ()) -> (CodebasePath -> SyncMode -> Branch m -> m ()) -> (forall r. ReadGitRemoteNamespace -> GitBranchBehavior -> ((Branch m, CodebasePath) -> m r) -> m (Either GitError r)) -> (forall e. WriteGitRepo -> PushGitBranchOpts -> (Branch m -> m (Either e (Branch m))) -> m (Either GitError (Either e (Branch m)))) -> (WatchKind -> Id -> Transaction (Maybe (Term v a))) -> (Reference -> Transaction (Set Id)) -> (Reference -> Transaction (Set Id)) -> (ShortHash -> Transaction (Set Id)) -> (forall x. (Connection -> m x) -> m x) -> (forall x. (Connection -> IO x) -> IO x) -> Codebase m v a
 
 -- | Get a user-defined term from the codebase.
 --   
@@ -4150,7 +4150,7 @@ Codebase :: (Id -> Transaction (Maybe (Term v a))) -> (Id -> Transaction (Maybe 
 [$sel:getTypeDeclaration:Codebase] :: Codebase m v a -> Id -> Transaction (Maybe (Decl v a))
 
 -- | Get the type of a given decl.
-[$sel:getDeclType:Codebase] :: Codebase m v a -> Reference -> m ConstructorType
+[$sel:getDeclType:Codebase] :: Codebase m v a -> Reference -> Transaction ConstructorType
 
 -- | Enqueue the put of a user-defined term (with its type) into the
 --   codebase, if it doesn't already exist. The implementation may choose
@@ -4570,7 +4570,7 @@ unsafeGetTermComponent :: HasCallStack => Codebase m v a -> Hash -> Transaction 
 getTypeOfTerm :: BuiltinAnnotation a => Codebase m Symbol a -> Reference -> Transaction (Maybe (Type Symbol a))
 
 -- | Get the type of a given decl.
-($sel:getDeclType:Codebase) :: Codebase m v a -> Reference -> m ConstructorType
+($sel:getDeclType:Codebase) :: Codebase m v a -> Reference -> Transaction ConstructorType
 
 -- | Like <a>getTypeOfTerm</a>, but for when the term is known to exist in
 --   the codebase.

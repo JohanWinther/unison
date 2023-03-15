@@ -616,7 +616,7 @@ shallowPPE :: MonadIO m => Codebase m v a -> Branch m -> m PrettyPrintEnv
 --   I.e. names in nested children are omitted. This should probably live
 --   elsewhere, but the package dependency graph makes it hard to find a
 --   good place.
-shallowNames :: forall m v a. Monad m => Codebase m v a -> Branch m -> m Names
+shallowNames :: forall m v a. Monad m => Codebase m v a -> Branch m -> Transaction Names
 loadReferentType :: Codebase m Symbol Ann -> Referent -> Transaction (Maybe (Type Symbol Ann))
 data TermEntry v a
 TermEntry :: Referent -> ShortHash -> NameSegment -> Bool -> Maybe (Type v a) -> TermTag -> TermEntry v a
@@ -650,7 +650,7 @@ doc2Type :: (Ord v, Monoid a) => Type v a
 isTestResultList :: forall v a. (Var v, Monoid a) => Maybe (Type v a) -> Bool
 resultListType :: (Ord v, Monoid a) => Type v a
 termListEntry :: MonadIO m => Codebase m Symbol Ann -> Branch n -> ExactName NameSegment Referent -> m (TermEntry Symbol Ann)
-getTermTag :: (Monad m, Var v) => Codebase m v a -> Referent -> Maybe (Type v Ann) -> m TermTag
+getTermTag :: (Var v, MonadIO m) => Codebase m v a -> Referent -> Maybe (Type v Ann) -> m TermTag
 getTypeTag :: Var v => Codebase m v Ann -> Reference -> Transaction TypeTag
 typeListEntry :: Var v => Codebase m v Ann -> Branch n -> ExactName NameSegment Reference -> Transaction TypeEntry
 typeDeclHeader :: forall v m. Var v => Codebase m v Ann -> PrettyPrintEnv -> Reference -> Transaction (DisplayObject SyntaxText SyntaxText)
