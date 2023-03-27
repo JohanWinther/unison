@@ -2,12 +2,14 @@
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.Codebase.Editor.DisplayObject</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-4"></span><span>
-</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bifunctor</span></span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.ShortHash</span></span><span>
-</span><span id="line-8"></span><span>
-</span><span id="line-9"></span><span id="local-6989586621680751668"><span id="local-6989586621680751669"></span></span><span class="hs-keyword">data</span><span> </span><span id="DisplayObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-var">DisplayObject</span></a></span></span><span> </span><span id="local-6989586621680751675"><span class="annot"><a href="#local-6989586621680751675"><span class="hs-identifier hs-type">b</span></a></span></span><span> </span><span id="local-6989586621680751674"><span class="annot"><a href="#local-6989586621680751674"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="BuiltinObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-var">BuiltinObject</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680751675"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="MissingObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-var">MissingObject</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="UserObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-var">UserObject</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680751674"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-10"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680751661"><span id="local-6989586621680751663"><span class="annot"><span class="annottext">DisplayObject b a -&gt; DisplayObject b a -&gt; Bool
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bifoldable</span></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bifunctor</span></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bitraversable</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.ShortHash</span></span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span id="local-6989586621680752730"><span id="local-6989586621680752731"></span></span><span class="hs-keyword">data</span><span> </span><span id="DisplayObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-var">DisplayObject</span></a></span></span><span> </span><span id="local-6989586621680752780"><span class="annot"><a href="#local-6989586621680752780"><span class="hs-identifier hs-type">b</span></a></span></span><span> </span><span id="local-6989586621680752779"><span class="annot"><a href="#local-6989586621680752779"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="BuiltinObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-var">BuiltinObject</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680752780"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="MissingObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-var">MissingObject</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="UserObject"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-var">UserObject</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680752779"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680752723"><span id="local-6989586621680752725"><span class="annot"><span class="annottext">DisplayObject b a -&gt; DisplayObject b a -&gt; Bool
 (DisplayObject b a -&gt; DisplayObject b a -&gt; Bool)
 -&gt; (DisplayObject b a -&gt; DisplayObject b a -&gt; Bool)
 -&gt; Eq (DisplayObject b a)
@@ -23,7 +25,7 @@ DisplayObject b a -&gt; DisplayObject b a -&gt; Bool
 $c== :: forall b a.
 (Eq b, Eq a) =&gt;
 DisplayObject b a -&gt; DisplayObject b a -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680751645"><span id="local-6989586621680751647"><span id="local-6989586621680751649"><span id="local-6989586621680751651"><span id="local-6989586621680751653"><span id="local-6989586621680751655"><span id="local-6989586621680751657"><span class="annot"><span class="annottext">Eq (DisplayObject b a)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680752707"><span id="local-6989586621680752709"><span id="local-6989586621680752711"><span id="local-6989586621680752713"><span id="local-6989586621680752715"><span id="local-6989586621680752717"><span id="local-6989586621680752719"><span class="annot"><span class="annottext">Eq (DisplayObject b a)
 Eq (DisplayObject b a)
 -&gt; (DisplayObject b a -&gt; DisplayObject b a -&gt; Ordering)
 -&gt; (DisplayObject b a -&gt; DisplayObject b a -&gt; Bool)
@@ -85,7 +87,7 @@ $ccompare :: forall b a.
 (Ord b, Ord a) =&gt;
 DisplayObject b a -&gt; DisplayObject b a -&gt; Ordering
 $cp1Ord :: forall b a. (Ord b, Ord a) =&gt; Eq (DisplayObject b a)
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680751638"><span id="local-6989586621680751640"><span id="local-6989586621680751642"><span class="annot"><span class="annottext">Int -&gt; DisplayObject b a -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680752700"><span id="local-6989586621680752702"><span id="local-6989586621680752704"><span class="annot"><span class="annottext">Int -&gt; DisplayObject b a -&gt; ShowS
 [DisplayObject b a] -&gt; ShowS
 DisplayObject b a -&gt; String
 (Int -&gt; DisplayObject b a -&gt; ShowS)
@@ -103,7 +105,7 @@ show :: DisplayObject b a -&gt; String
 $cshow :: forall b a. (Show b, Show a) =&gt; DisplayObject b a -&gt; String
 showsPrec :: Int -&gt; DisplayObject b a -&gt; ShowS
 $cshowsPrec :: forall b a. (Show b, Show a) =&gt; Int -&gt; DisplayObject b a -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680751633"><span id="local-6989586621680751635"><span class="annot"><span class="annottext">a -&gt; DisplayObject b b -&gt; DisplayObject b a
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680752695"><span id="local-6989586621680752697"><span class="annot"><span class="annottext">a -&gt; DisplayObject b b -&gt; DisplayObject b a
 (a -&gt; b) -&gt; DisplayObject b a -&gt; DisplayObject b b
 (forall a b. (a -&gt; b) -&gt; DisplayObject b a -&gt; DisplayObject b b)
 -&gt; (forall a b. a -&gt; DisplayObject b b -&gt; DisplayObject b a)
@@ -130,44 +132,255 @@ forall b a x. Rep (DisplayObject b a) x -&gt; DisplayObject b a
 forall b a x. DisplayObject b a -&gt; Rep (DisplayObject b a) x
 $cto :: forall b a x. Rep (DisplayObject b a) x -&gt; DisplayObject b a
 $cfrom :: forall b a x. DisplayObject b a -&gt; Rep (DisplayObject b a) x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680751624"><span id="local-6989586621680751626"><span class="annot"><span class="hs-identifier hs-type">Bifunctor</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-13"></span><span>  </span><span id="local-6989586621680751622"><span class="annot"><span class="annottext">bimap :: (a -&gt; b) -&gt; (c -&gt; d) -&gt; DisplayObject a c -&gt; DisplayObject b d
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680752657"><span id="local-6989586621680752659"><span id="local-6989586621680752661"><span id="local-6989586621680752663"><span id="local-6989586621680752665"><span id="local-6989586621680752667"><span id="local-6989586621680752669"><span id="local-6989586621680752671"><span id="local-6989586621680752673"><span id="local-6989586621680752675"><span id="local-6989586621680752677"><span id="local-6989586621680752679"><span id="local-6989586621680752681"><span id="local-6989586621680752683"><span id="local-6989586621680752685"><span id="local-6989586621680752687"><span id="local-6989586621680752689"><span class="annot"><span class="annottext">DisplayObject b a -&gt; Bool
+(a -&gt; m) -&gt; DisplayObject b a -&gt; m
+(a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+(forall m. Monoid m =&gt; DisplayObject b m -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a)
+-&gt; (forall a. DisplayObject b a -&gt; [a])
+-&gt; (forall a. DisplayObject b a -&gt; Bool)
+-&gt; (forall a. DisplayObject b a -&gt; Int)
+-&gt; (forall a. Eq a =&gt; a -&gt; DisplayObject b a -&gt; Bool)
+-&gt; (forall a. Ord a =&gt; DisplayObject b a -&gt; a)
+-&gt; (forall a. Ord a =&gt; DisplayObject b a -&gt; a)
+-&gt; (forall a. Num a =&gt; DisplayObject b a -&gt; a)
+-&gt; (forall a. Num a =&gt; DisplayObject b a -&gt; a)
+-&gt; Foldable (DisplayObject b)
+forall a. Eq a =&gt; a -&gt; DisplayObject b a -&gt; Bool
+forall a. Num a =&gt; DisplayObject b a -&gt; a
+forall a. Ord a =&gt; DisplayObject b a -&gt; a
+forall m. Monoid m =&gt; DisplayObject b m -&gt; m
+forall a. DisplayObject b a -&gt; Bool
+forall a. DisplayObject b a -&gt; Int
+forall a. DisplayObject b a -&gt; [a]
+forall a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+forall b a. Eq a =&gt; a -&gt; DisplayObject b a -&gt; Bool
+forall b a. Num a =&gt; DisplayObject b a -&gt; a
+forall b a. Ord a =&gt; DisplayObject b a -&gt; a
+forall m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+forall b m. Monoid m =&gt; DisplayObject b m -&gt; m
+forall b a. DisplayObject b a -&gt; Bool
+forall b a. DisplayObject b a -&gt; Int
+forall b a. DisplayObject b a -&gt; [a]
+forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+forall b a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+forall b m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+forall b b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+forall b a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+forall (t :: * -&gt; *).
+(forall m. Monoid m =&gt; t m -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; t a -&gt; m)
+-&gt; (forall m a. Monoid m =&gt; (a -&gt; m) -&gt; t a -&gt; m)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall b a. (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; t a -&gt; a)
+-&gt; (forall a. (a -&gt; a -&gt; a) -&gt; t a -&gt; a)
+-&gt; (forall a. t a -&gt; [a])
+-&gt; (forall a. t a -&gt; Bool)
+-&gt; (forall a. t a -&gt; Int)
+-&gt; (forall a. Eq a =&gt; a -&gt; t a -&gt; Bool)
+-&gt; (forall a. Ord a =&gt; t a -&gt; a)
+-&gt; (forall a. Ord a =&gt; t a -&gt; a)
+-&gt; (forall a. Num a =&gt; t a -&gt; a)
+-&gt; (forall a. Num a =&gt; t a -&gt; a)
+-&gt; Foldable t
+product :: DisplayObject b a -&gt; a
+$cproduct :: forall b a. Num a =&gt; DisplayObject b a -&gt; a
+sum :: DisplayObject b a -&gt; a
+$csum :: forall b a. Num a =&gt; DisplayObject b a -&gt; a
+minimum :: DisplayObject b a -&gt; a
+$cminimum :: forall b a. Ord a =&gt; DisplayObject b a -&gt; a
+maximum :: DisplayObject b a -&gt; a
+$cmaximum :: forall b a. Ord a =&gt; DisplayObject b a -&gt; a
+elem :: a -&gt; DisplayObject b a -&gt; Bool
+$celem :: forall b a. Eq a =&gt; a -&gt; DisplayObject b a -&gt; Bool
+length :: DisplayObject b a -&gt; Int
+$clength :: forall b a. DisplayObject b a -&gt; Int
+null :: DisplayObject b a -&gt; Bool
+$cnull :: forall b a. DisplayObject b a -&gt; Bool
+toList :: DisplayObject b a -&gt; [a]
+$ctoList :: forall b a. DisplayObject b a -&gt; [a]
+foldl1 :: (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+$cfoldl1 :: forall b a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+foldr1 :: (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+$cfoldr1 :: forall b a. (a -&gt; a -&gt; a) -&gt; DisplayObject b a -&gt; a
+foldl' :: (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+$cfoldl' :: forall b b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+foldl :: (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+$cfoldl :: forall b b a. (b -&gt; a -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+foldr' :: (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+$cfoldr' :: forall b a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+foldr :: (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+$cfoldr :: forall b a b. (a -&gt; b -&gt; b) -&gt; b -&gt; DisplayObject b a -&gt; b
+foldMap' :: (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+$cfoldMap' :: forall b m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+foldMap :: (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+$cfoldMap :: forall b m a. Monoid m =&gt; (a -&gt; m) -&gt; DisplayObject b a -&gt; m
+fold :: DisplayObject b m -&gt; m
+$cfold :: forall b m. Monoid m =&gt; DisplayObject b m -&gt; m
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Foldable</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680752646"><span id="local-6989586621680752648"><span id="local-6989586621680752650"><span id="local-6989586621680752652"><span class="annot"><span class="annottext">Functor (DisplayObject b)
+Foldable (DisplayObject b)
+Functor (DisplayObject b)
+-&gt; Foldable (DisplayObject b)
+-&gt; (forall (f :: * -&gt; *) a b.
+    Applicative f =&gt;
+    (a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b))
+-&gt; (forall (f :: * -&gt; *) a.
+    Applicative f =&gt;
+    DisplayObject b (f a) -&gt; f (DisplayObject b a))
+-&gt; (forall (m :: * -&gt; *) a b.
+    Monad m =&gt;
+    (a -&gt; m b) -&gt; DisplayObject b a -&gt; m (DisplayObject b b))
+-&gt; (forall (m :: * -&gt; *) a.
+    Monad m =&gt;
+    DisplayObject b (m a) -&gt; m (DisplayObject b a))
+-&gt; Traversable (DisplayObject b)
+(a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b)
+forall b. Functor (DisplayObject b)
+forall b. Foldable (DisplayObject b)
+forall b (m :: * -&gt; *) a.
+Monad m =&gt;
+DisplayObject b (m a) -&gt; m (DisplayObject b a)
+forall b (f :: * -&gt; *) a.
+Applicative f =&gt;
+DisplayObject b (f a) -&gt; f (DisplayObject b a)
+forall b (m :: * -&gt; *) a b.
+Monad m =&gt;
+(a -&gt; m b) -&gt; DisplayObject b a -&gt; m (DisplayObject b b)
+forall b (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b)
+forall (t :: * -&gt; *).
+Functor t
+-&gt; Foldable t
+-&gt; (forall (f :: * -&gt; *) a b.
+    Applicative f =&gt;
+    (a -&gt; f b) -&gt; t a -&gt; f (t b))
+-&gt; (forall (f :: * -&gt; *) a. Applicative f =&gt; t (f a) -&gt; f (t a))
+-&gt; (forall (m :: * -&gt; *) a b.
+    Monad m =&gt;
+    (a -&gt; m b) -&gt; t a -&gt; m (t b))
+-&gt; (forall (m :: * -&gt; *) a. Monad m =&gt; t (m a) -&gt; m (t a))
+-&gt; Traversable t
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+DisplayObject b (m a) -&gt; m (DisplayObject b a)
+forall (f :: * -&gt; *) a.
+Applicative f =&gt;
+DisplayObject b (f a) -&gt; f (DisplayObject b a)
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(a -&gt; m b) -&gt; DisplayObject b a -&gt; m (DisplayObject b b)
+forall (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b)
+sequence :: DisplayObject b (m a) -&gt; m (DisplayObject b a)
+$csequence :: forall b (m :: * -&gt; *) a.
+Monad m =&gt;
+DisplayObject b (m a) -&gt; m (DisplayObject b a)
+mapM :: (a -&gt; m b) -&gt; DisplayObject b a -&gt; m (DisplayObject b b)
+$cmapM :: forall b (m :: * -&gt; *) a b.
+Monad m =&gt;
+(a -&gt; m b) -&gt; DisplayObject b a -&gt; m (DisplayObject b b)
+sequenceA :: DisplayObject b (f a) -&gt; f (DisplayObject b a)
+$csequenceA :: forall b (f :: * -&gt; *) a.
+Applicative f =&gt;
+DisplayObject b (f a) -&gt; f (DisplayObject b a)
+traverse :: (a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b)
+$ctraverse :: forall b (f :: * -&gt; *) a b.
+Applicative f =&gt;
+(a -&gt; f b) -&gt; DisplayObject b a -&gt; f (DisplayObject b b)
+$cp2Traversable :: forall b. Foldable (DisplayObject b)
+$cp1Traversable :: forall b. Functor (DisplayObject b)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Traversable</span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680752640"><span id="local-6989586621680752642"><span class="annot"><span class="hs-identifier hs-type">Bifunctor</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-15"></span><span>  </span><span id="local-6989586621680752638"><span class="annot"><span class="annottext">bimap :: (a -&gt; b) -&gt; (c -&gt; d) -&gt; DisplayObject a c -&gt; DisplayObject b d
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></span></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-type">MissingObject</span></a></span><span> </span><span id="local-6989586621680751620"><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621680751620"><span class="hs-identifier hs-var">sh</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; DisplayObject b d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-type">MissingObject</span></a></span><span> </span><span id="local-6989586621680752636"><span class="annot"><span class="annottext">ShortHash
+</span><a href="#local-6989586621680752636"><span class="hs-identifier hs-var">sh</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; DisplayObject b d
 forall b a. ShortHash -&gt; DisplayObject b a
 </span><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-var">MissingObject</span></a></span><span> </span><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621680751620"><span class="hs-identifier hs-var">sh</span></a></span><span>
-</span><span id="line-14"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bimap</span></span><span> </span><span id="local-6989586621680751619"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680751619"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-type">BuiltinObject</span></a></span><span> </span><span id="local-6989586621680751618"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680751618"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; DisplayObject b d
+</span><a href="#local-6989586621680752636"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><span id="line-16"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bimap</span></span><span> </span><span id="local-6989586621680752635"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680752635"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-type">BuiltinObject</span></a></span><span> </span><span id="local-6989586621680752634"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680752634"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; DisplayObject b d
 forall b a. b -&gt; DisplayObject b a
 </span><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-var">BuiltinObject</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680751619"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680751618"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-15"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bimap</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680751617"><span class="annot"><span class="annottext">c -&gt; d
-</span><a href="#local-6989586621680751617"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-type">UserObject</span></a></span><span> </span><span id="local-6989586621680751616"><span class="annot"><span class="annottext">c
-</span><a href="#local-6989586621680751616"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">d -&gt; DisplayObject b d
+</span><a href="#local-6989586621680752635"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680752634"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bimap</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680752633"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621680752633"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-type">UserObject</span></a></span><span> </span><span id="local-6989586621680752632"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621680752632"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">d -&gt; DisplayObject b d
 forall b a. a -&gt; DisplayObject b a
 </span><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-var">UserObject</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">c -&gt; d
-</span><a href="#local-6989586621680751617"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">c
-</span><a href="#local-6989586621680751616"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span id="local-6989586621680751614"><span id="local-6989586621680751615"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#toMaybe"><span class="hs-identifier hs-type">toMaybe</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680751615"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680751614"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621680751614"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
-</span><span id="line-18"></span><span id="toMaybe"><span class="annot"><span class="annottext">toMaybe :: DisplayObject b a -&gt; Maybe a
+</span><a href="#local-6989586621680752633"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621680752632"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bitraversable</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621680752627"><span class="annot"><span class="annottext">bitraverse :: (a -&gt; f c)
+-&gt; (b -&gt; f d) -&gt; DisplayObject a b -&gt; f (DisplayObject c d)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">bitraverse</span></span></span><span> </span><span id="local-6989586621680752625"><span class="annot"><span class="annottext">a -&gt; f c
+</span><a href="#local-6989586621680752625"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">b -&gt; f d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-type">BuiltinObject</span></a></span><span> </span><span id="local-6989586621680752624"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680752624"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">c -&gt; DisplayObject c d
+forall b a. b -&gt; DisplayObject b a
+</span><a href="Unison.Codebase.Editor.DisplayObject.html#BuiltinObject"><span class="hs-identifier hs-var">BuiltinObject</span></a></span><span> </span><span class="annot"><span class="annottext">(c -&gt; DisplayObject c d) -&gt; f c -&gt; f (DisplayObject c d)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; f c
+</span><a href="#local-6989586621680752625"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680752624"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-21"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; f c
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">b -&gt; f d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-type">MissingObject</span></a></span><span> </span><span id="local-6989586621680752622"><span class="annot"><span class="annottext">ShortHash
+</span><a href="#local-6989586621680752622"><span class="hs-identifier hs-var">sh</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DisplayObject c d -&gt; f (DisplayObject c d)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ShortHash -&gt; DisplayObject c d
+forall b a. ShortHash -&gt; DisplayObject b a
+</span><a href="Unison.Codebase.Editor.DisplayObject.html#MissingObject"><span class="hs-identifier hs-var">MissingObject</span></a></span><span> </span><span class="annot"><span class="annottext">ShortHash
+</span><a href="#local-6989586621680752622"><span class="hs-identifier hs-var">sh</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; f c
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680752621"><span class="annot"><span class="annottext">b -&gt; f d
+</span><a href="#local-6989586621680752621"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-type">UserObject</span></a></span><span> </span><span id="local-6989586621680752620"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680752620"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">d -&gt; DisplayObject c d
+forall b a. a -&gt; DisplayObject b a
+</span><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-var">UserObject</span></a></span><span> </span><span class="annot"><span class="annottext">(d -&gt; DisplayObject c d) -&gt; f d -&gt; f (DisplayObject c d)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">b -&gt; f d
+</span><a href="#local-6989586621680752621"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680752620"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680752613"><span id="local-6989586621680752615"><span id="local-6989586621680752618"><span class="annot"><span class="hs-identifier hs-type">Bifoldable</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-25"></span><span>  </span><span id="local-6989586621680752611"><span class="annot"><span class="annottext">bifoldMap :: (a -&gt; m) -&gt; (b -&gt; m) -&gt; DisplayObject a b -&gt; m
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">bifoldMap</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; m) -&gt; (b -&gt; m) -&gt; DisplayObject a b -&gt; m
+forall (t :: * -&gt; * -&gt; *) m a b.
+(Bitraversable t, Monoid m) =&gt;
+(a -&gt; m) -&gt; (b -&gt; m) -&gt; t a b -&gt; m
+</span><span class="hs-identifier hs-var">bifoldMapDefault</span></span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span id="local-6989586621680752607"><span id="local-6989586621680752608"><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#toMaybe"><span class="hs-identifier hs-type">toMaybe</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#DisplayObject"><span class="hs-identifier hs-type">DisplayObject</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680752608"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680752607"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621680752607"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-28"></span><span id="toMaybe"><span class="annot"><span class="annottext">toMaybe :: DisplayObject b a -&gt; Maybe a
 </span><a href="Unison.Codebase.Editor.DisplayObject.html#toMaybe"><span class="hs-identifier hs-var hs-var">toMaybe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-19"></span><span>  </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-type">UserObject</span></a></span><span> </span><span id="local-6989586621680751612"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680751612"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a -&gt; Maybe a
+</span><span id="line-29"></span><span>  </span><span class="annot"><a href="Unison.Codebase.Editor.DisplayObject.html#UserObject"><span class="hs-identifier hs-type">UserObject</span></a></span><span> </span><span id="local-6989586621680752605"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680752605"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a -&gt; Maybe a
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680751612"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-20"></span><span>  </span><span class="annot"><span class="annottext">DisplayObject b a
+</span><a href="#local-6989586621680752605"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="annot"><span class="annottext">DisplayObject b a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe a
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-21"></span></pre></body></html>
+</span><span id="line-31"></span></pre></body></html>

@@ -335,6 +335,8 @@ instance (GHC.Show.Show t, GHC.Show.Show d, GHC.Show.Show p, GHC.Show.Show c) =>
 instance GHC.Show.Show U.Codebase.Sqlite.Branch.Format.BranchFormat
 
 module U.Codebase.Sqlite.NamedRef
+
+-- | E.g. ("map" :| [<a>List</a>, "base"])
 type ReversedSegments = NonEmpty Text
 data ConstructorType
 DataConstructor :: ConstructorType
@@ -343,7 +345,6 @@ data NamedRef ref
 NamedRef :: ReversedSegments -> ref -> NamedRef ref
 [$sel:reversedSegments:NamedRef] :: NamedRef ref -> ReversedSegments
 [$sel:ref:NamedRef] :: NamedRef ref -> ref
-toRowWithNamespace :: ToRow ref => NamedRef ref -> [SQLData]
 
 -- | The new <tt>scoped</tt> name lookup format is different from the old
 --   version.
@@ -882,6 +883,7 @@ loadHashId :: Hash32 -> Transaction (Maybe HashId)
 expectHash :: HashId -> Transaction Hash
 expectHash32 :: HashId -> Transaction Hash32
 expectBranchHash :: BranchHashId -> Transaction BranchHash
+expectBranchHashId :: BranchHash -> Transaction BranchHashId
 loadHashIdByHash :: Hash -> Transaction (Maybe HashId)
 expectHashIdByHash :: Hash -> Transaction HashId
 saveCausalHash :: CausalHash -> Transaction CausalHashId
@@ -1080,15 +1082,81 @@ removeScopedTypeNames :: BranchHashId -> [NamedRef TextReference] -> Transaction
 --   name lookup index
 termNamesWithinNamespace :: BranchHashId -> Maybe Text -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
 
--- | Get the list of a type names in the root namespace according to the
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   | Get the list of a type names in the root namespace according to the
 --   name lookup index
 typeNamesWithinNamespace :: BranchHashId -> Maybe Text -> Transaction [NamedRef TextReference]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of term names for a given Referent within a given
+--   namespace.
+termNamesForRefWithinNamespace :: BranchHashId -> NamespaceText -> TextReferent -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of type names for a given Reference within a given
+--   namespace.
+typeNamesForRefWithinNamespace :: BranchHashId -> NamespaceText -> TextReference -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the set of refs for an exact name.
+termRefsForExactName :: BranchHashId -> ReversedSegments -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the set of refs for an exact name.
+typeRefsForExactName :: BranchHashId -> ReversedSegments -> Transaction [NamedRef TextReference]
 
 -- | Check if we've already got an index for the desired root branch hash.
 checkBranchHashNameLookupExists :: BranchHashId -> Transaction Bool
 
 -- | Inserts a new record into the name_lookups table
 trackNewBranchHashNameLookup :: BranchHashId -> Transaction ()
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of term names within a given namespace which have the
+--   given suffix.
+termNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of type names within a given namespace which have the
+--   given suffix.
+typeNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transaction [NamedRef TextReference]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   The goal of this query is to search the codebase for the single name
+--   which has a different hash from the provided name, but shares longest
+--   matching suffix for for that name.
+--   
+--   Including this name in the pretty-printer object causes it to
+--   suffixify the name so that it is unambiguous from other names in
+--   scope.
+--   
+--   Sqlite doesn't provide enough functionality to do this query in a
+--   single query, so we do it iteratively, querying for longer and longer
+--   suffixes we no longer find matches. Then we return the name with
+--   longest matching suffix.
+--   
+--   This is still relatively efficient because we can use an index and
+--   LIMIT 1 to make each individual query fast, and in the common case
+--   we'll only need two or three queries to find the longest matching
+--   suffix.
+longestMatchingTermNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReferent -> Transaction (Maybe (NamedRef (TextReferent, Maybe ConstructorType)))
+longestMatchingTypeNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReference -> Transaction (Maybe (NamedRef TextReference))
 appendReflog :: Entry CausalHashId Text -> Transaction ()
 getReflog :: Int -> Transaction [Entry CausalHashId Text]
 
@@ -1198,8 +1266,15 @@ x2cTType :: (LocalTextId -> Text) -> (LocalDefnId -> Hash) -> Type -> Type Symbo
 
 -- | implementation detail of {s,w}2c*Term*
 x2cTerm :: (LocalTextId -> Text) -> (LocalDefnId -> Hash) -> Term -> Term Symbol
+
+-- | A namespace rendered as a path, no leading <a>.</a> E.g. "base.data"
+type NamespaceText = Text
+type TextPathSegments = [Text]
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Queries.UnexpectedSchemaVersion
 instance GHC.Show.Show U.Codebase.Sqlite.Queries.UnexpectedSchemaVersion
+instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Queries.EmptyName
+instance GHC.Show.Show U.Codebase.Sqlite.Queries.EmptyName
+instance GHC.Classes.Eq U.Codebase.Sqlite.Queries.EmptyName
 
 module U.Codebase.Sqlite.Sync22
 data Entity
@@ -1245,14 +1320,10 @@ expectRootCausal :: Transaction (CausalBranch Transaction)
 expectRootBranchHash :: Transaction BranchHash
 
 -- | Load the causal hash at the given path from the root.
---   
---   FIXME should we move some Path type here?
-loadCausalHashAtPath :: [Text] -> Transaction (Maybe CausalHash)
+loadCausalHashAtPath :: TextPathSegments -> Transaction (Maybe CausalHash)
 
 -- | Expect the causal hash at the given path from the root.
---   
---   FIXME should we move some Path type here?
-expectCausalHashAtPath :: [Text] -> Transaction CausalHash
+expectCausalHashAtPath :: TextPathSegments -> Transaction CausalHash
 saveBranch :: HashHandle -> CausalBranch Transaction -> Transaction (BranchObjectId, CausalHashId)
 loadCausalBranchByCausalHash :: CausalHash -> Transaction (Maybe (CausalBranch Transaction))
 expectCausalBranchByCausalHash :: CausalHash -> Transaction (CausalBranch Transaction)
@@ -1313,11 +1384,42 @@ NamesByPath :: [NamedRef (Referent, Maybe ConstructorType)] -> [NamedRef Referen
 [$sel:termNamesInPath:NamesByPath] :: NamesByPath -> [NamedRef (Referent, Maybe ConstructorType)]
 [$sel:typeNamesInPath:NamesByPath] :: NamesByPath -> [NamedRef Reference]
 
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of a names for a given Referent.
+termNamesForRefWithinNamespace :: BranchHash -> NamespaceText -> Referent -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of a names for a given Reference, with an optional
+--   required suffix.
+typeNamesForRefWithinNamespace :: BranchHash -> NamespaceText -> Reference -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+termNamesBySuffix :: BranchHash -> NamespaceText -> ReversedSegments -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
+typeNamesBySuffix :: BranchHash -> NamespaceText -> ReversedSegments -> Transaction [NamedRef Reference]
+termRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
+typeRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef Reference]
+
 -- | Check whether we've already got an index for a given causal hash.
 checkBranchHashNameLookupExists :: BranchHash -> Transaction Bool
 
 -- | Apply a set of name updates to an existing index.
 buildNameLookupForBranchHash :: Maybe BranchHash -> BranchHash -> ([NamedRef (Referent, Maybe ConstructorType)], [NamedRef Referent]) -> ([NamedRef Reference], [NamedRef Reference]) -> Transaction ()
+
+-- | Get the name within the provided namespace that has the longest
+--   matching suffix with the provided name, but a different ref. This is a
+--   bit of a hack but allows us to shortcut suffixification. We can clean
+--   this up if we make a custom PPE type just for sqlite pretty printing,
+--   but for now this works fine.
+longestMatchingTermNameForSuffixification :: BranchHash -> NamespaceText -> NamedRef Referent -> Transaction (Maybe (NamedRef (Referent, Maybe ConstructorType)))
+
+-- | Get the name within the provided namespace that has the longest
+--   matching suffix with the provided name, but a different ref. This is a
+--   bit of a hack but allows us to shortcut suffixification. We can clean
+--   this up if we make a custom PPE type just for sqlite pretty printing,
+--   but for now this works fine.
+longestMatchingTypeNameForSuffixification :: BranchHash -> NamespaceText -> NamedRef Reference -> Transaction (Maybe (NamedRef Reference))
 
 -- | Gets the specified number of reflog entries in chronological order,
 --   most recent first.

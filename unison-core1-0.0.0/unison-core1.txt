@@ -692,6 +692,14 @@ segments :: Name -> NonEmpty NameSegment
 --   </pre>
 suffixes :: Name -> [Name]
 
+-- | Return the final segment of a name.
+--   
+--   <pre>
+--   &gt;&gt;&gt; lastSegment (fromSegments ("base" :| ["List", "map"]))
+--   NameSegment {toText = "map"}
+--   </pre>
+lastSegment :: Name -> NameSegment
+
 -- | Make a name absolute. No-op if the name is already absolute.
 --   
 --   <i>O(1)</i>.
@@ -1047,6 +1055,7 @@ expandWildcardImport :: Name -> Names -> [(Name, Name)]
 isEmpty :: Names -> Bool
 hashQualifyTypesRelation :: Relation Name TypeReference -> Relation (HashQualified Name) TypeReference
 hashQualifyTermsRelation :: Relation Name Referent -> Relation (HashQualified Name) Referent
+fromTermsAndTypes :: [(Name, Referent)] -> [(Name, TypeReference)] -> Names
 instance GHC.Show.Show Unison.Names.Names
 instance GHC.Classes.Ord Unison.Names.Names
 instance GHC.Classes.Eq Unison.Names.Names
@@ -1822,10 +1831,16 @@ constructors :: DataDeclaration v a -> [(v, Type v a)]
 constructorType :: Decl v a -> ConstructorType
 constructorTypes :: DataDeclaration v a -> [Type v a]
 constructorVars :: DataDeclaration v a -> [v]
+
+-- | The constructor ids for the given data declaration.
 constructorIds :: DataDeclaration v a -> [ConstructorId]
 declConstructorReferents :: Id -> Decl v a -> [Id]
 declDependencies :: Ord v => Decl v a -> Set Reference
 labeledDeclDependencies :: Ord v => Decl v a -> Set LabeledDependency
+
+-- | Compute the dependencies of a data declaration, including the type
+--   itself and references for each of its constructors.
+labeledDeclDependenciesIncludingSelf :: Ord v => TypeReference -> Decl v a -> Set LabeledDependency
 declFields :: Var v => Decl v a -> Either [Int] [Int]
 dependencies :: Ord v => DataDeclaration v a -> Set Reference
 labeledDependencies :: Ord v => DataDeclaration v a -> Set LabeledDependency

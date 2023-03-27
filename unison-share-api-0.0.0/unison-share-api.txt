@@ -159,6 +159,63 @@ QueryResult :: [HashQualified Name] -> [SearchResult] -> QueryResult
 [$sel:misses:QueryResult] :: QueryResult -> [HashQualified Name]
 [$sel:hits:QueryResult] :: QueryResult -> [SearchResult]
 
+module Unison.Server.NameSearch
+
+-- | A <tt>Search r</tt> is a small bag of functions that is used to power
+--   a search for <tt>r</tt>s.
+--   
+--   There are currently two implementations of this interface:
+--   
+--   <ul>
+--   <li><a>FromNames</a> which builds a name search from a <tt>Names</tt>
+--   object</li>
+--   <li>'NameSearch.Sqlite which builds a name search that uses a sqlite
+--   name lookup index.</li>
+--   </ul>
+--   
+--   You can use the individual methods of a name search or can use
+--   <a>applySearch</a>.
+data Search m r
+Search :: (r -> m (Set (HashQualified Name))) -> (HashQualified Name -> m (Set r)) -> (HashQualified Name -> r -> Set (HashQualified Name) -> m SearchResult) -> (Name -> r -> HashQualified Name -> Bool) -> Search m r
+[$sel:lookupNames:Search] :: Search m r -> r -> m (Set (HashQualified Name))
+[$sel:lookupRelativeHQRefs':Search] :: Search m r -> HashQualified Name -> m (Set r)
+[$sel:makeResult:Search] :: Search m r -> HashQualified Name -> r -> Set (HashQualified Name) -> m SearchResult
+[$sel:matchesNamedRef:Search] :: Search m r -> Name -> r -> HashQualified Name -> Bool
+data NameSearch m
+NameSearch :: Search m Reference -> Search m Referent -> NameSearch m
+[$sel:typeSearch:NameSearch] :: NameSearch m -> Search m Reference
+[$sel:termSearch:NameSearch] :: NameSearch m -> Search m Referent
+
+-- | Interpret a <a>Search</a> as a function from name to search results.
+applySearch :: (Show r, Monad m) => Search m r -> HashQualified Name -> m [SearchResult]
+
+module Unison.Server.NameSearch.Sqlite
+
+-- | Resolves a shorthash into any possible matches.
+resolveShortHash :: Codebase m v a -> ShortHash -> Transaction (Set LabeledDependency)
+
+-- | Look up types in the codebase by short hash, and include builtins.
+typeReferencesByShortHash :: ShortHash -> Transaction (Set Reference)
+
+-- | Look up terms in the codebase by short hash, and include builtins.
+termReferentsByShortHash :: Codebase m v a -> ShortHash -> Transaction (Set Referent)
+data NameSearch m
+NameSearch :: Search m Reference -> Search m Referent -> NameSearch m
+[$sel:typeSearch:NameSearch] :: NameSearch m -> Search m Reference
+[$sel:termSearch:NameSearch] :: NameSearch m -> Search m Referent
+scopedNameSearch :: Codebase m v a -> BranchHash -> Path -> NameSearch Transaction
+instance GHC.Classes.Eq Unison.Server.NameSearch.Sqlite.SearchStrategy
+instance GHC.Show.Show Unison.Server.NameSearch.Sqlite.SearchStrategy
+
+module Unison.Server.NameSearch.FromNames
+
+-- | Make a type search, given a short hash length and names to search in.
+makeTypeSearch :: Applicative m => Int -> NamesWithHistory -> Search m Reference
+
+-- | Make a term search, given a short hash length and names to search in.
+makeTermSearch :: Applicative m => Int -> NamesWithHistory -> Search m Referent
+makeNameSearch :: Applicative m => Int -> NamesWithHistory -> NameSearch m
+
 module Unison.Server.SearchResult'
 data SearchResult' v a
 Tm' :: TermResult' v a -> SearchResult' v a
@@ -613,13 +670,6 @@ instance Data.Bitraversable.Bitraversable Unison.Server.Types.ExactName
 instance Web.Internal.HttpApiData.FromHttpApiData (Unison.Server.Types.ExactName Unison.Name.Internal.Name Unison.ShortHash.ShortHash)
 
 module Unison.Server.Backend
-type SyntaxText = SyntaxText' Reference
-data ShallowListEntry v a
-ShallowTermEntry :: TermEntry v a -> ShallowListEntry v a
-ShallowTypeEntry :: TypeEntry -> ShallowListEntry v a
-ShallowBranchEntry :: NameSegment -> CausalHash -> NamespaceStats -> ShallowListEntry v a
-ShallowPatchEntry :: NameSegment -> ShallowListEntry v a
-listEntryName :: ShallowListEntry v a -> Text
 data BackendError
 NoSuchNamespace :: Absolute -> BackendError
 BadNamespace :: String -> String -> BackendError
@@ -630,41 +680,21 @@ NoBranchForHash :: CausalHash -> BackendError
 CouldntLoadBranch :: CausalHash -> BackendError
 MissingSignatureForTerm :: Reference -> BackendError
 NoSuchDefinition :: HashQualified Name -> BackendError
+DisjointProjectAndPerspective :: Path -> Path -> BackendError
+newtype Backend m a
+Backend :: ReaderT BackendEnv (ExceptT BackendError m) a -> Backend m a
+[$sel:runBackend:Backend] :: Backend m a -> ReaderT BackendEnv (ExceptT BackendError m) a
+data ShallowListEntry v a
+ShallowTermEntry :: TermEntry v a -> ShallowListEntry v a
+ShallowTypeEntry :: TypeEntry -> ShallowListEntry v a
+ShallowBranchEntry :: NameSegment -> CausalHash -> NamespaceStats -> ShallowListEntry v a
+ShallowPatchEntry :: NameSegment -> ShallowListEntry v a
 newtype BackendEnv
 BackendEnv :: Bool -> BackendEnv
 
 -- | Whether to use the sqlite name-lookup table to generate Names objects
 --   rather than building Names from the root branch.
 [$sel:useNamesIndex:BackendEnv] :: BackendEnv -> Bool
-newtype Backend m a
-Backend :: ReaderT BackendEnv (ExceptT BackendError m) a -> Backend m a
-[$sel:runBackend:Backend] :: Backend m a -> ReaderT BackendEnv (ExceptT BackendError m) a
-hoistBackend :: (forall x. m x -> n x) -> Backend m a -> Backend n a
-suffixifyNames :: Int -> Names -> PrettyPrintEnv
-namesForBranch :: Branch m -> NameScoping -> (Names, Names, Names)
-basicSuffixifiedNames :: Int -> Branch m -> NameScoping -> PrettyPrintEnv
-parseNamesForBranch :: Branch m -> NameScoping -> Names
-prettyNamesForBranch :: Branch m -> NameScoping -> Names
-shallowPPE :: MonadIO m => Codebase m v a -> Branch m -> m PrettyPrintEnv
-
--- | A <a>Names</a> which only includes mappings for things _directly_
---   accessible from the branch.
---   
---   I.e. names in nested children are omitted. This should probably live
---   elsewhere, but the package dependency graph makes it hard to find a
---   good place.
-shallowNames :: forall m v a. Monad m => Codebase m v a -> Branch m -> Transaction Names
-loadReferentType :: Codebase m Symbol Ann -> Referent -> Transaction (Maybe (Type Symbol Ann))
-data TermEntry v a
-TermEntry :: Referent -> ShortHash -> NameSegment -> Bool -> Maybe (Type v a) -> TermTag -> TermEntry v a
-[$sel:termEntryReferent:TermEntry] :: TermEntry v a -> Referent
-[$sel:termEntryHash:TermEntry] :: TermEntry v a -> ShortHash
-[$sel:termEntryName:TermEntry] :: TermEntry v a -> NameSegment
-[$sel:termEntryConflicted:TermEntry] :: TermEntry v a -> Bool
-[$sel:termEntryType:TermEntry] :: TermEntry v a -> Maybe (Type v a)
-[$sel:termEntryTag:TermEntry] :: TermEntry v a -> TermTag
-termEntryDisplayName :: TermEntry v a -> Text
-termEntryHQName :: TermEntry v a -> HashQualified NameSegment
 data TypeEntry
 TypeEntry :: Reference -> ShortHash -> NameSegment -> Bool -> TypeTag -> TypeEntry
 [$sel:typeEntryReference:TypeEntry] :: TypeEntry -> Reference
@@ -672,40 +702,9 @@ TypeEntry :: Reference -> ShortHash -> NameSegment -> Bool -> TypeTag -> TypeEnt
 [$sel:typeEntryName:TypeEntry] :: TypeEntry -> NameSegment
 [$sel:typeEntryConflicted:TypeEntry] :: TypeEntry -> Bool
 [$sel:typeEntryTag:TypeEntry] :: TypeEntry -> TypeTag
-typeEntryDisplayName :: TypeEntry -> Text
-typeEntryHQName :: TypeEntry -> HashQualified NameSegment
 data FoundRef
 FoundTermRef :: Referent -> FoundRef
 FoundTypeRef :: Reference -> FoundRef
-fuzzyFind :: Names -> String -> [(Alignment, UnisonName, [FoundRef])]
-lsAtPath :: MonadIO m => Codebase m Symbol Ann -> Maybe (Branch Transaction) -> Absolute -> m [ShallowListEntry Symbol Ann]
-findShallowReadmeInBranchAndRender :: Width -> Runtime Symbol -> Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Branch m -> Backend IO (Maybe Doc)
-isDoc :: Codebase m Symbol Ann -> Referent -> Transaction Bool
-isDoc' :: (Var v, Monoid loc) => Maybe (Type v loc) -> Bool
-doc1Type :: (Ord v, Monoid a) => Type v a
-doc2Type :: (Ord v, Monoid a) => Type v a
-isTestResultList :: forall v a. (Var v, Monoid a) => Maybe (Type v a) -> Bool
-resultListType :: (Ord v, Monoid a) => Type v a
-termListEntry :: MonadIO m => Codebase m Symbol Ann -> Branch n -> ExactName NameSegment Referent -> m (TermEntry Symbol Ann)
-getTermTag :: (Var v, MonadIO m) => Codebase m v a -> Referent -> Maybe (Type v Ann) -> m TermTag
-getTypeTag :: Var v => Codebase m v Ann -> Reference -> Transaction TypeTag
-typeListEntry :: Var v => Codebase m v Ann -> Branch n -> ExactName NameSegment Reference -> Transaction TypeEntry
-typeDeclHeader :: forall v m. Var v => Codebase m v Ann -> PrettyPrintEnv -> Reference -> Transaction (DisplayObject SyntaxText SyntaxText)
-formatTypeName :: PrettyPrintEnv -> Reference -> SyntaxText
-formatTypeName' :: PrettyPrintEnv -> Reference -> SyntaxText
-termEntryToNamedTerm :: Var v => PrettyPrintEnv -> Maybe Width -> TermEntry v a -> NamedTerm
-typeEntryToNamedType :: TypeEntry -> NamedType
-
--- | Find all definitions and children reachable from the given
---   <a>Branch</a>,
-lsBranch :: MonadIO m => Codebase m Symbol Ann -> Branch n -> m [ShallowListEntry Symbol Ann]
-
--- | Look up types in the codebase by short hash, and include builtins.
-typeReferencesByShortHash :: ShortHash -> Transaction (Set Reference)
-termReferencesByShortHash :: ShortHash -> Transaction (Set Reference)
-
--- | Look up terms in the codebase by short hash, and include builtins.
-termReferentsByShortHash :: Codebase m v a -> ShortHash -> Transaction (Set Referent)
 
 -- | Configure how names will be constructed and filtered. this is
 --   typically used when fetching names for printing source code or when
@@ -718,63 +717,61 @@ AllNames :: Path -> NameScoping
 
 -- | Filter returned names to only include names within this path.
 Within :: Path -> NameScoping
-toAllNames :: NameScoping -> NameScoping
-getCurrentPrettyNames :: Int -> NameScoping -> Branch m -> PrettyPrintEnvDecl
-getCurrentParseNames :: NameScoping -> Branch m -> NamesWithHistory
-fixupNamesRelative :: Absolute -> Names -> Names
 
--- | A <tt>Search r</tt> is a small bag of functions that is used to power
---   a search for <tt>r</tt>s.
+-- | Determines whether we include full cycles in the results, (e.g. if I
+--   search for <tt>isEven</tt>, will I find <tt>isOdd</tt> too?)
 --   
---   Construct a <a>Search</a> with <a>makeTypeSearch</a> or
---   <a>makeTermSearch</a>, and eliminate it with <a>applySearch</a>.
-data Search r
-Search :: (r -> Set (HashQualified Name)) -> (HashQualified Name -> Set r) -> (HashQualified Name -> r -> Set (HashQualified Name) -> SearchResult) -> (Name -> r -> HashQualified Name -> Bool) -> Search r
-[$sel:lookupNames:Search] :: Search r -> r -> Set (HashQualified Name)
-[$sel:lookupRelativeHQRefs':Search] :: Search r -> HashQualified Name -> Set r
-[$sel:makeResult:Search] :: Search r -> HashQualified Name -> r -> Set (HashQualified Name) -> SearchResult
-[$sel:matchesNamedRef:Search] :: Search r -> Name -> r -> HashQualified Name -> Bool
-data NameSearch
-NameSearch :: Search Reference -> Search Referent -> NameSearch
-[$sel:typeSearch:NameSearch] :: NameSearch -> Search Reference
-[$sel:termSearch:NameSearch] :: NameSearch -> Search Referent
-
--- | Make a type search, given a short hash length and names to search in.
-makeTypeSearch :: Int -> NamesWithHistory -> Search Reference
-
--- | Make a term search, given a short hash length and names to search in.
-makeTermSearch :: Int -> NamesWithHistory -> Search Referent
-makeNameSearch :: Int -> NamesWithHistory -> NameSearch
-
--- | Interpret a <a>Search</a> as a function from name to search results.
-applySearch :: Show r => Search r -> HashQualified Name -> [SearchResult]
-hqNameQuery :: Codebase m v Ann -> NameSearch -> [HashQualified Name] -> Transaction QueryResult
+--   This was once used for both term and decl components, but now is only
+--   used for decl components, because <tt>update</tt> does The Right Thing
+--   for terms (i.e. propagates changes to all dependents, including
+--   component-mates, which are de facto dependents).
+--   
+--   Ticket of interest:
+--   <a>https://github.com/unisonweb/unison/issues/3445</a>
+data IncludeCycles
+IncludeCycles :: IncludeCycles
+DontIncludeCycles :: IncludeCycles
 data DefinitionResults
 DefinitionResults :: Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann)) -> Map Reference (DisplayObject () (Decl Symbol Ann)) -> [HashQualified Name] -> DefinitionResults
 [$sel:termResults:DefinitionResults] :: DefinitionResults -> Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann))
 [$sel:typeResults:DefinitionResults] :: DefinitionResults -> Map Reference (DisplayObject () (Decl Symbol Ann))
 [$sel:noResults:DefinitionResults] :: DefinitionResults -> [HashQualified Name]
-expandShortCausalHash :: ShortCausalHash -> Backend Transaction CausalHash
-
--- | Efficiently resolve a root hash and path to a shallow branch's causal.
-getShallowCausalAtPathFromRootHash :: Maybe CausalHash -> Path -> Transaction (CausalBranch Transaction)
-formatType' :: Var v => PrettyPrintEnv -> Width -> Type v a -> SyntaxText
-formatType :: Var v => PrettyPrintEnv -> Width -> Type v a -> SyntaxText
-formatSuffixedType :: Var v => PrettyPrintEnvDecl -> Width -> Type v Ann -> SyntaxText
-mungeSyntaxText :: Functor g => g (Element Reference) -> g Element
 
 -- | Renders a definition for the given name or hash alongside its
 --   documentation.
 prettyDefinitionsForHQName :: Path -> Maybe CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
-
--- | Fetch the docs associated with the given name. Returns all references
---   with a Doc type which are at the name provided, or at
---   '<a>name</a>.doc'.
-docsForDefinitionName :: Codebase IO Symbol Ann -> NameSearch -> Name -> IO [TermReference]
-renderDoc :: PrettyPrintEnvDecl -> Width -> Runtime Symbol -> Codebase IO Symbol Ann -> TermReference -> IO (HashQualifiedName, UnisonHash, Doc)
-docsInBranchToHtmlFiles :: Runtime Symbol -> Codebase IO Symbol Ann -> Branch IO -> Path -> FilePath -> IO ()
+fuzzyFind :: Names -> String -> [(Alignment, UnisonName, [FoundRef])]
+basicSuffixifiedNames :: Int -> Branch m -> NameScoping -> PrettyPrintEnv
 bestNameForTerm :: forall v. Var v => PrettyPrintEnv -> Width -> Referent -> Text
 bestNameForType :: forall v. Var v => PrettyPrintEnv -> Width -> Reference -> Text
+definitionsBySuffixes :: Codebase m Symbol Ann -> NameSearch Transaction -> IncludeCycles -> [HashQualified Name] -> Transaction DefinitionResults
+displayType :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject () (Decl Symbol Ann))
+docsInBranchToHtmlFiles :: Runtime Symbol -> Codebase IO Symbol Ann -> Branch IO -> Path -> FilePath -> IO ()
+expandShortCausalHash :: ShortCausalHash -> Backend Transaction CausalHash
+findShallowReadmeInBranchAndRender :: Width -> Runtime Symbol -> Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Branch m -> Backend IO (Maybe Doc)
+formatSuffixedType :: Var v => PrettyPrintEnvDecl -> Width -> Type v Ann -> SyntaxText
+getCurrentParseNames :: NameScoping -> Branch m -> NamesWithHistory
+getCurrentPrettyNames :: Int -> NameScoping -> Branch m -> PrettyPrintEnvDecl
+
+-- | Efficiently resolve a root hash and path to a shallow branch's causal.
+getShallowCausalAtPathFromRootHash :: Maybe CausalHash -> Path -> Transaction (CausalBranch Transaction)
+getTermTag :: (Var v, MonadIO m) => Codebase m v a -> Referent -> Maybe (Type v Ann) -> m TermTag
+getTypeTag :: Var v => Codebase m v Ann -> Reference -> Transaction TypeTag
+hoistBackend :: (forall x. m x -> n x) -> Backend m a -> Backend n a
+hqNameQuery :: Codebase m v Ann -> NameSearch Transaction -> [HashQualified Name] -> Transaction QueryResult
+loadReferentType :: Codebase m Symbol Ann -> Referent -> Transaction (Maybe (Type Symbol Ann))
+loadSearchResults :: Codebase m Symbol Ann -> [SearchResult] -> Transaction [SearchResult' Symbol Ann]
+lsAtPath :: MonadIO m => Codebase m Symbol Ann -> Maybe (Branch Transaction) -> Absolute -> m [ShallowListEntry Symbol Ann]
+
+-- | Find all definitions and children reachable from the given
+--   <a>Branch</a>,
+lsBranch :: MonadIO m => Codebase m Symbol Ann -> Branch n -> m [ShallowListEntry Symbol Ann]
+mungeSyntaxText :: Functor g => g (Element Reference) -> g Element
+namesForBranch :: Branch m -> NameScoping -> (Names, Names, Names)
+parseNamesForBranch :: Branch m -> NameScoping -> Names
+prettyNamesForBranch :: Branch m -> NameScoping -> Names
+resolveCausalHashV2 :: Maybe CausalHash -> Transaction (CausalBranch Transaction)
+resolveRootBranchHashV2 :: Maybe ShortCausalHash -> Backend Transaction (CausalBranch Transaction)
 
 -- | Returns (parse, pretty, local, ppe) where:
 --   
@@ -793,29 +790,22 @@ bestNameForType :: forall v. Var v => PrettyPrintEnv -> Width -> Reference -> Te
 --   is found (local, falling back to global)</li>
 --   </ul>
 scopedNamesForBranchHash :: forall m n v a. MonadIO m => Codebase m v a -> Maybe (CausalBranch n) -> Path -> Backend m (Names, PrettyPrintEnvDecl)
-resolveCausalHash :: Monad m => Maybe CausalHash -> Codebase m v a -> Backend m (Branch m)
-resolveCausalHashV2 :: Maybe CausalHash -> Transaction (CausalBranch Transaction)
-resolveRootBranchHash :: MonadIO m => Maybe ShortCausalHash -> Codebase m v a -> Backend m (Branch m)
-resolveRootBranchHashV2 :: Maybe ShortCausalHash -> Backend Transaction (CausalBranch Transaction)
+termEntryDisplayName :: TermEntry v a -> Text
+termEntryHQName :: TermEntry v a -> HashQualified NameSegment
+termEntryToNamedTerm :: Var v => PrettyPrintEnv -> Maybe Width -> TermEntry v a -> NamedTerm
+($sel:termEntryType:TermEntry) :: TermEntry v a -> Maybe (Type v a)
+termListEntry :: MonadIO m => Codebase m Symbol Ann -> Branch n -> ExactName NameSegment Referent -> m (TermEntry Symbol Ann)
 
--- | Determines whether we include full cycles in the results, (e.g. if I
---   search for <tt>isEven</tt>, will I find <tt>isOdd</tt> too?)
---   
---   This was once used for both term and decl components, but now is only
---   used for decl components, because <tt>update</tt> does The Right Thing
---   for terms (i.e. propagates changes to all dependents, including
---   component-mates, which are de facto dependents).
---   
---   Ticket of interest:
---   <a>https://github.com/unisonweb/unison/issues/3445</a>
-data IncludeCycles
-IncludeCycles :: IncludeCycles
-DontIncludeCycles :: IncludeCycles
-definitionsBySuffixes :: Codebase m Symbol Ann -> NameSearch -> IncludeCycles -> [HashQualified Name] -> Transaction DefinitionResults
-displayTerm :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject (Type Symbol Ann) (Term Symbol Ann))
-displayType :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject () (Decl Symbol Ann))
-termsToSyntax :: Var v => Ord a => Suffixify -> Width -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type v a) (Term v a)) -> Map Reference (DisplayObject SyntaxText SyntaxText)
-typesToSyntax :: Var v => Ord a => Suffixify -> Width -> PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a)) -> Map Reference (DisplayObject SyntaxText SyntaxText)
+-- | Look up terms in the codebase by short hash, and include builtins.
+termReferentsByShortHash :: Codebase m v a -> ShortHash -> Transaction (Set Referent)
+typeDeclHeader :: forall v m. Var v => Codebase m v Ann -> PrettyPrintEnv -> Reference -> Transaction (DisplayObject SyntaxText SyntaxText)
+typeEntryDisplayName :: TypeEntry -> Text
+typeEntryHQName :: TypeEntry -> HashQualified NameSegment
+typeEntryToNamedType :: TypeEntry -> NamedType
+typeListEntry :: Var v => Codebase m v Ann -> Branch n -> ExactName NameSegment Reference -> Transaction TypeEntry
+
+-- | Look up types in the codebase by short hash, and include builtins.
+typeReferencesByShortHash :: ShortHash -> Transaction (Set Reference)
 
 -- | Renders a type to its decl header, e.g.
 --   
@@ -827,8 +817,37 @@ typesToSyntax :: Var v => Ord a => Suffixify -> Width -> PrettyPrintEnvDecl -> M
 --   
 --   structural type Maybe a
 typeToSyntaxHeader :: Width -> HashQualified Name -> DisplayObject () (Decl Symbol Ann) -> DisplayObject SyntaxText SyntaxText
-loadSearchResults :: Codebase m Symbol Ann -> [SearchResult] -> Transaction [SearchResult' Symbol Ann]
-loadTypeDisplayObject :: Codebase m v Ann -> Reference -> Transaction (DisplayObject () (Decl v Ann))
+
+-- | Evaluate and render the given docs
+renderDocRefs :: Traversable t => PrettyPrintEnvDecl -> Width -> Codebase IO Symbol Ann -> Runtime Symbol -> t TermReference -> IO (t (HashQualifiedName, UnisonHash, Doc))
+
+-- | Fetch the docs associated with the given name. Returns all references
+--   with a Doc type which are at the name provided, or at
+--   '<a>name</a>.doc'.
+docsForDefinitionName :: Codebase IO Symbol Ann -> NameSearch Transaction -> Name -> IO [TermReference]
+resolveRootBranchHash :: MonadIO m => Maybe ShortCausalHash -> Codebase m v a -> Backend m (Branch m)
+shallowPPE :: MonadIO m => Codebase m v a -> Branch m -> m PrettyPrintEnv
+isTestResultList :: forall v a. (Var v, Monoid a) => Maybe (Type v a) -> Bool
+toAllNames :: NameScoping -> NameScoping
+fixupNamesRelative :: Absolute -> Names -> Names
+termsToSyntax :: Var v => Ord a => Suffixify -> Width -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type v a) (Term v a)) -> Map Reference (DisplayObject SyntaxText SyntaxText)
+typesToSyntax :: Var v => Ord a => Suffixify -> Width -> PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a)) -> Map Reference (DisplayObject SyntaxText SyntaxText)
+
+-- | Finds ALL direct references contained within a
+--   <a>DefinitionResults</a> so we can build a pretty printer for them.
+definitionResultsDependencies :: DefinitionResults -> Set LabeledDependency
+($sel:termEntryTag:TermEntry) :: TermEntry v a -> TermTag
+
+-- | Evaluate the doc at the given reference and return its
+--   evaluated-but-not-rendered form.
+evalDocRef :: Runtime Symbol -> Codebase IO Symbol Ann -> TermReference -> IO (EvaluatedDoc Symbol)
+
+-- | Given an arbitrary query and perspective, find the project root the
+--   query belongs in, then return that root and the query relocated to
+--   that project root.
+relocateToProjectRoot :: Path -> HashQualified Name -> Branch Transaction -> Transaction (Either BackendError (Path, HashQualified Name))
+mkTermDefinition :: Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Path -> CausalBranch Transaction -> Width -> Reference -> [(HashQualifiedName, UnisonHash, Doc)] -> DisplayObject (AnnotatedText (Element Reference)) (AnnotatedText (Element Reference)) -> Backend IO TermDefinition
+mkTypeDefinition :: Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Path -> CausalBranch Transaction -> Width -> Reference -> [(HashQualifiedName, UnisonHash, Doc)] -> DisplayObject (AnnotatedText (Element Reference)) (AnnotatedText (Element Reference)) -> Backend IO TypeDefinition
 instance GHC.Show.Show Unison.Server.Backend.BackendError
 instance GHC.Base.Monad m => Control.Monad.Error.Class.MonadError Unison.Server.Backend.BackendError (Unison.Server.Backend.Backend m)
 instance GHC.Base.Monad m => Control.Monad.Reader.Class.MonadReader Unison.Server.Backend.BackendEnv (Unison.Server.Backend.Backend m)
@@ -852,7 +871,23 @@ instance GHC.Generics.Generic Unison.Server.Backend.FoundRef
 instance GHC.Show.Show Unison.Server.Backend.FoundRef
 instance GHC.Classes.Ord Unison.Server.Backend.FoundRef
 instance GHC.Classes.Eq Unison.Server.Backend.FoundRef
+instance GHC.Show.Show Unison.Server.Backend.DefinitionResults
 instance Control.Monad.Trans.Class.MonadTrans Unison.Server.Backend.Backend
+
+
+-- | This module contains implementations of Backend methods which are
+--   specialized for Share. We should likely move them to the Share
+--   repository eventually, but for now it's much easier to ensure they're
+--   resilient to refactors and changes in the Backend API if they live
+--   here.
+--   
+--   Perhaps we'll move them when the backing implementation switches to
+--   postgres.
+module Unison.Server.Share.Definitions
+
+-- | Renders a definition for the given name or hash alongside its
+--   documentation.
+definitionForHQName :: Path -> CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
 
 module Unison.Server.Errors
 badHQN :: HashQualifiedName -> ServerError
@@ -864,6 +899,7 @@ ambiguousNamespace :: HashQualifiedName -> Set HashQualifiedName -> ServerError
 missingSigForTerm :: HashQualifiedName -> ServerError
 noSuchDefinition :: HashQualified Name -> ServerError
 ambiguousHashForDefinition :: ShortHash -> ServerError
+disjointProjectAndPerspective :: Path -> Path -> ServerError
 
 module Unison.Server.Endpoints.Projects
 type ProjectsAPI = "projects" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "owner" ProjectOwner :> APIGet [ProjectListing]

@@ -133,12 +133,16 @@ BuiltinObject :: b -> DisplayObject b a
 MissingObject :: ShortHash -> DisplayObject b a
 UserObject :: a -> DisplayObject b a
 toMaybe :: DisplayObject b a -> Maybe a
+instance Data.Traversable.Traversable (Unison.Codebase.Editor.DisplayObject.DisplayObject b)
+instance Data.Foldable.Foldable (Unison.Codebase.Editor.DisplayObject.DisplayObject b)
 instance GHC.Generics.Generic (Unison.Codebase.Editor.DisplayObject.DisplayObject b a)
 instance GHC.Base.Functor (Unison.Codebase.Editor.DisplayObject.DisplayObject b)
 instance (GHC.Show.Show b, GHC.Show.Show a) => GHC.Show.Show (Unison.Codebase.Editor.DisplayObject.DisplayObject b a)
 instance (GHC.Classes.Ord b, GHC.Classes.Ord a) => GHC.Classes.Ord (Unison.Codebase.Editor.DisplayObject.DisplayObject b a)
 instance (GHC.Classes.Eq b, GHC.Classes.Eq a) => GHC.Classes.Eq (Unison.Codebase.Editor.DisplayObject.DisplayObject b a)
 instance Data.Bifunctor.Bifunctor Unison.Codebase.Editor.DisplayObject.DisplayObject
+instance Data.Bitraversable.Bitraversable Unison.Codebase.Editor.DisplayObject.DisplayObject
+instance Data.Bifoldable.Bifoldable Unison.Codebase.Editor.DisplayObject.DisplayObject
 
 module Unison.Codebase.Init.CreateCodebaseError
 data CreateCodebaseError
@@ -208,7 +212,13 @@ prefix :: Absolute -> Path' -> Path
 unprefix :: Absolute -> Path' -> Path
 prefixName :: Absolute -> Name -> Name
 
--- | what is this? —AI
+-- | Remove a path prefix from a name. Returns <a>Nothing</a> if there are
+--   no remaining segments to construct the name from.
+--   
+--   <pre>
+--   &gt;&gt;&gt; unprefixName (Absolute $ fromList ["base", "List"]) (Name.unsafeFromText "base.List.map")
+--   Just (Name Relative (NameSegment {toText = "map"} :| []))
+--   </pre>
 unprefixName :: Absolute -> Name -> Maybe Name
 type HQSplit = (Path, HQSegment)
 type Split = (Path, NameSegment)
@@ -3469,9 +3479,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4nyK loc_a4nyL. Lens' (Env v_a4nyK loc_a4nyL) (TypeLookup v_a4nyK loc_a4nyL)
-termsByShortname :: forall v_a4nyK loc_a4nyL. Lens' (Env v_a4nyK loc_a4nyL) (Map Name [NamedReference v_a4nyK loc_a4nyL])
-ambientAbilities :: forall v_a4nyK loc_a4nyL. Lens' (Env v_a4nyK loc_a4nyL) [Type v_a4nyK loc_a4nyL]
+typeLookup :: forall v_a4nGN loc_a4nGO. Lens' (Env v_a4nGN loc_a4nGO) (TypeLookup v_a4nGN loc_a4nGO)
+termsByShortname :: forall v_a4nGN loc_a4nGO. Lens' (Env v_a4nGN loc_a4nGO) (Map Name [NamedReference v_a4nGN loc_a4nGO])
+ambientAbilities :: forall v_a4nGN loc_a4nGO. Lens' (Env v_a4nGN loc_a4nGO) [Type v_a4nGN loc_a4nGO]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -4294,6 +4304,9 @@ referenceid2to1 :: Id -> Id
 rreferent2to1 :: Applicative m => Hash -> (Reference -> m ConstructorType) -> ReferentH -> m Referent
 rreferent1to2 :: Hash -> Referent -> ReferentH
 referent2to1 :: Applicative m => (Reference -> m ConstructorType) -> Referent -> m Referent
+
+-- | Like referent2to1, but uses the provided constructor type directly
+referent2to1UsingCT :: ConstructorType -> Referent -> Referent
 referent1to2 :: Referent -> Referent
 referentid2to1 :: Applicative m => (Reference -> m ConstructorType) -> Id -> m Id
 constructorType1to2 :: ConstructorType -> ConstructorType
@@ -4805,6 +4818,13 @@ installUcmDependencies :: Codebase m Symbol Ann -> Transaction ()
 toCodeLookup :: MonadIO m => Codebase m Symbol Ann -> CodeLookup Symbol m Ann
 typeLookupForDependencies :: forall m a. BuiltinAnnotation a => Codebase m Symbol a -> Set Reference -> Transaction (TypeLookup Symbol a)
 unsafeGetComponentLength :: HasCallStack => Hash -> Transaction CycleSize
+
+module Unison.PrettyPrintEnvDecl.Sqlite
+
+-- | Given a set of references, return a PPE which contains names for only
+--   those references. Names are limited to those within the provided
+--   perspective
+ppedForReferences :: BranchHash -> Path -> Set LabeledDependency -> Transaction PrettyPrintEnvDecl
 
 module Unison.Codebase.SqliteCodebase.Paths
 

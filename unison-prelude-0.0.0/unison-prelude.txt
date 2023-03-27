@@ -51,6 +51,9 @@ Temp :: DebugFlag
 
 -- | Shows Annotations when printing terms
 Annotations :: DebugFlag
+
+-- | Debug endpoints of the local UI (or Share) server
+Server :: DebugFlag
 PatternCoverage :: DebugFlag
 PatternCoverageConstraintSolver :: DebugFlag
 instance GHC.Enum.Enum Unison.Debug.DebugFlag
@@ -2359,6 +2362,7 @@ symmetricDifference :: Ord a => Set a -> Set a -> Set a
 traverse :: (Applicative f, Ord b) => (a -> f b) -> Set a -> f (Set b)
 flatMap :: Ord b => (a -> Set b) -> Set a -> Set b
 filterM :: (Ord a, Monad m) => (a -> m Bool) -> Set a -> m (Set a)
+forMaybe :: (Ord b, Applicative f) => Set a -> (a -> f (Maybe b)) -> f (Set b)
 
 module Unison.Util.Timing
 time :: MonadIO m => String -> m a -> m a

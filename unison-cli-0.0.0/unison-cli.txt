@@ -776,12 +776,12 @@ logError :: Text -> Lsp ()
 
 -- | Environment for the Lsp monad.
 data Env
-Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO NameSearch -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri FileAnalysis) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
+Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO (NameSearch Transaction) -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri FileAnalysis) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
 [$sel:lspContext:Env] :: Env -> LanguageContextEnv Config
 [$sel:codebase:Env] :: Env -> Codebase IO Symbol Ann
 [$sel:parseNamesCache:Env] :: Env -> IO NamesWithHistory
 [$sel:ppedCache:Env] :: Env -> IO PrettyPrintEnvDecl
-[$sel:nameSearchCache:Env] :: Env -> IO NameSearch
+[$sel:nameSearchCache:Env] :: Env -> IO (NameSearch Transaction)
 [$sel:currentPathCache:Env] :: Env -> IO Absolute
 [$sel:vfsVar:Env] :: Env -> MVar VFS
 [$sel:runtime:Env] :: Env -> Runtime Symbol
@@ -834,7 +834,7 @@ FileSummary :: Map Symbol (Id, DataDeclaration Symbol Ann) -> Map Id (Map Symbol
 getCurrentPath :: Lsp Absolute
 getCodebaseCompletions :: Lsp CompletionTree
 globalPPED :: Lsp PrettyPrintEnvDecl
-getNameSearch :: Lsp NameSearch
+getNameSearch :: Lsp (NameSearch Transaction)
 getParseNames :: Lsp NamesWithHistory
 data Config
 Config :: Maybe Int -> Config
@@ -1920,7 +1920,7 @@ module Unison.LSP.UCMWorker
 
 -- | Watches for state changes in UCM and updates cached LSP state
 --   accordingly
-ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar NameSearch -> STM (Branch IO) -> STM Absolute -> Lsp ()
+ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar (NameSearch Transaction) -> STM (Branch IO) -> STM Absolute -> Lsp ()
 
 module Unison.LSP.CodeAction
 
