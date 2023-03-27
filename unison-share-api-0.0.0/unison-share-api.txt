@@ -5,6 +5,35 @@
 @package unison-share-api
 @version 0.0.0
 
+module Unison.Server.Doc.Markdown.Types
+
+-- | Custom type for converting Docs into Markdown. I tried using the
+--   existing cmark-gfm library for this, but we have too many edge-cases
+--   for it to work well.
+data Markdown
+
+-- | E.g. '---'
+ThematicBreak :: Markdown
+Paragraph :: [Markdown] -> Markdown
+BlockQuote :: [Markdown] -> Markdown
+CodeBlock :: Text -> Text -> Markdown
+Heading :: Int -> [Markdown] -> Markdown
+OrderedList :: Int -> [[Markdown]] -> Markdown
+UnorderedList :: [[Markdown]] -> Markdown
+Txt :: Text -> Markdown
+Linebreak :: Markdown
+InlineCode :: Text -> Markdown
+Italics :: [Markdown] -> Markdown
+Strong :: [Markdown] -> Markdown
+Strikethrough :: [Markdown] -> Markdown
+Link :: [Markdown] -> Text -> Markdown
+Image :: [Markdown] -> Text -> Markdown
+Table :: Maybe [[Markdown]] -> [[[Markdown]]] -> Markdown
+
+-- | Render the markdown datatype to markdown text
+toText :: [Markdown] -> Text
+instance GHC.Show.Show Unison.Server.Doc.Markdown.Types.Markdown
+
 module Unison.Server.Orphans
 instance Data.Aeson.Types.ToJSON.ToJSON U.Codebase.HashTags.CausalHash
 instance Data.Aeson.Types.FromJSON.FromJSON U.Codebase.HashTags.CausalHash
@@ -203,6 +232,7 @@ reference :: SyntaxSegment -> Maybe UnisonHash
 
 -- | Convert a <a>SyntaxText</a> to a <a>String</a>, ignoring syntax markup
 toPlain :: SyntaxText -> String
+toPlainText :: SyntaxText -> Text
 toHtml :: SyntaxText -> Html ()
 nameToHtml :: Name -> Html ()
 segmentToHtml :: SyntaxSegment -> Html ()
@@ -387,6 +417,13 @@ instance U.Core.ABT.Var.Var v => GHC.Classes.Eq (Unison.Server.Doc.EvaluatedSpec
 instance Data.OpenApi.Internal.Schema.ToSchema specialForm => Data.OpenApi.Internal.Schema.ToSchema (Unison.Server.Doc.DocG specialForm)
 instance Data.OpenApi.Internal.Schema.ToSchema trm => Data.OpenApi.Internal.Schema.ToSchema (Unison.Server.Doc.RenderError trm)
 instance Data.OpenApi.Internal.Schema.ToSchema a => Data.OpenApi.Internal.Schema.ToSchema (Unison.Server.Doc.Ref a)
+
+
+-- | Render Unison.Server.Doc as plain markdown, used in the LSP
+module Unison.Server.Doc.Markdown.Render
+
+-- | Renders a Doc to a list of Markdown blocks
+toMarkdown :: Doc -> [Markdown]
 
 
 -- | Render Unison.Server.Doc and embedded source to Html
@@ -729,6 +766,11 @@ mungeSyntaxText :: Functor g => g (Element Reference) -> g Element
 -- | Renders a definition for the given name or hash alongside its
 --   documentation.
 prettyDefinitionsForHQName :: Path -> Maybe CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
+
+-- | Fetch the docs associated with the given name. Returns all references
+--   with a Doc type which are at the name provided, or at
+--   '<a>name</a>.doc'.
+docsForDefinitionName :: Codebase IO Symbol Ann -> NameSearch -> Name -> IO [TermReference]
 renderDoc :: PrettyPrintEnvDecl -> Width -> Runtime Symbol -> Codebase IO Symbol Ann -> TermReference -> IO (HashQualifiedName, UnisonHash, Doc)
 docsInBranchToHtmlFiles :: Runtime Symbol -> Codebase IO Symbol Ann -> Branch IO -> Path -> FilePath -> IO ()
 bestNameForTerm :: forall v. Var v => PrettyPrintEnv -> Width -> Referent -> Text

@@ -263,6 +263,7 @@ DebugNameDiffI :: ShortCausalHash -> ShortCausalHash -> Input
 QuitI :: Input
 ApiI :: Input
 UiI :: Input
+DocToMarkdownI :: Name -> Input
 DocsToHtmlI :: Path' -> FilePath -> Input
 GistI :: GistInput -> Input
 AuthLoginI :: Input
@@ -775,11 +776,12 @@ logError :: Text -> Lsp ()
 
 -- | Environment for the Lsp monad.
 data Env
-Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri FileAnalysis) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
+Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO NameSearch -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri FileAnalysis) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
 [$sel:lspContext:Env] :: Env -> LanguageContextEnv Config
 [$sel:codebase:Env] :: Env -> Codebase IO Symbol Ann
 [$sel:parseNamesCache:Env] :: Env -> IO NamesWithHistory
 [$sel:ppedCache:Env] :: Env -> IO PrettyPrintEnvDecl
+[$sel:nameSearchCache:Env] :: Env -> IO NameSearch
 [$sel:currentPathCache:Env] :: Env -> IO Absolute
 [$sel:vfsVar:Env] :: Env -> MVar VFS
 [$sel:runtime:Env] :: Env -> Runtime Symbol
@@ -832,6 +834,7 @@ FileSummary :: Map Symbol (Id, DataDeclaration Symbol Ann) -> Map Id (Map Symbol
 getCurrentPath :: Lsp Absolute
 getCodebaseCompletions :: Lsp CompletionTree
 globalPPED :: Lsp PrettyPrintEnvDecl
+getNameSearch :: Lsp NameSearch
 getParseNames :: Lsp NamesWithHistory
 data Config
 Config :: Maybe Int -> Config
@@ -853,6 +856,7 @@ getConfig :: Lsp Config
 setConfig :: Config -> Lsp ()
 instance GHC.Show.Show Unison.LSP.Types.CompletionTree
 instance GHC.Show.Show Unison.LSP.Types.FileSummary
+instance GHC.Show.Show Unison.LSP.Types.FileAnalysis
 instance GHC.Show.Show Unison.LSP.Types.Config
 instance Language.LSP.Server.Core.MonadLsp Unison.LSP.Types.Config Unison.LSP.Types.Lsp
 instance Control.Monad.Reader.Class.MonadReader Unison.LSP.Types.Env Unison.LSP.Types.Lsp
@@ -1197,6 +1201,7 @@ DisplayDebugNameDiff :: NameChanges -> Output
 DisplayDebugCompletions :: [Completion] -> Output
 ClearScreen :: Output
 PulledEmptyBranch :: ReadRemoteNamespace -> Output
+MarkdownOut :: Text -> Output
 data DisplayDefinitionsOutput
 DisplayDefinitionsOutput :: (TermReference -> Bool) -> Maybe FilePath -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann)) -> Map Reference (DisplayObject () (Decl Symbol Ann)) -> DisplayDefinitionsOutput
 [$sel:isTest:DisplayDefinitionsOutput] :: DisplayDefinitionsOutput -> TermReference -> Bool
@@ -1416,6 +1421,7 @@ debugNameDiff :: InputPattern
 test :: InputPattern
 testAll :: InputPattern
 docsToHtml :: InputPattern
+docToMarkdown :: InputPattern
 execute :: InputPattern
 saveExecuteResult :: InputPattern
 ioTest :: InputPattern
@@ -1911,7 +1917,7 @@ module Unison.LSP.UCMWorker
 
 -- | Watches for state changes in UCM and updates cached LSP state
 --   accordingly
-ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> STM (Branch IO) -> STM Absolute -> Lsp ()
+ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar NameSearch -> STM (Branch IO) -> STM Absolute -> Lsp ()
 
 module Unison.LSP.CodeAction
 
