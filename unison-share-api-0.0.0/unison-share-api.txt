@@ -1023,7 +1023,7 @@ unisonAndDocsAPI :: Proxy UnisonAndDocsAPI
 api :: Proxy UnisonAPI
 serverAPI :: Proxy ServerAPI
 appAPI :: Proxy AppAPI
-app :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> FilePath -> ByteString -> Application
+app :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> FilePath -> ByteString -> Maybe String -> Application
 
 -- | The Token is used to help prevent multiple users on a machine gain
 --   access to each others codebases.
@@ -1036,17 +1036,20 @@ mkWaiter :: IO (Waiter a)
 ucmUIVar :: String
 ucmPortVar :: String
 ucmHostVar :: String
+ucmAllowCorsHost :: String
 ucmTokenVar :: String
 data CodebaseServerOpts
-CodebaseServerOpts :: Maybe String -> Maybe String -> Maybe Int -> Maybe FilePath -> CodebaseServerOpts
+CodebaseServerOpts :: Maybe String -> Maybe String -> Maybe Int -> Maybe String -> Maybe FilePath -> CodebaseServerOpts
 [$sel:token:CodebaseServerOpts] :: CodebaseServerOpts -> Maybe String
 [$sel:host:CodebaseServerOpts] :: CodebaseServerOpts -> Maybe String
 [$sel:port:CodebaseServerOpts] :: CodebaseServerOpts -> Maybe Int
+[$sel:allowCorsHost:CodebaseServerOpts] :: CodebaseServerOpts -> Maybe String
 [$sel:codebaseUIPath:CodebaseServerOpts] :: CodebaseServerOpts -> Maybe FilePath
 defaultCodebaseServerOpts :: CodebaseServerOpts
 startServer :: BackendEnv -> CodebaseServerOpts -> Runtime Symbol -> Codebase IO Symbol Ann -> (BaseUrl -> IO a) -> IO a
 serveIndex :: FilePath -> Handler RawHtml
 serveUI :: FilePath -> Server WebUI
+corsPolicy :: Maybe String -> Middleware
 server :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> FilePath -> ByteString -> Server AppAPI
 serveUnisonAndDocs :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> Server UnisonAndDocsAPI
 serveDocs :: Application
