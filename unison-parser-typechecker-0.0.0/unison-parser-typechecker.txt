@@ -743,28 +743,6 @@ instance GHC.Classes.Ord Unison.PatternMatchCoverage.ListPat.ListPat
 instance GHC.Classes.Eq Unison.PatternMatchCoverage.ListPat.ListPat
 instance GHC.Show.Show Unison.PatternMatchCoverage.ListPat.ListPat
 
-module Unison.PatternMatchCoverage.Class
-
--- | A typeclass for the queries required to perform pattern match coverage
---   checking.
-class (Ord loc, Var vt, Var v, MonadFix m) => Pmc vt v loc m | m -> vt v loc
-
--- | Get the constructors of a type
-getConstructors :: Pmc vt v loc m => Type vt loc -> m (EnumeratedConstructors vt v loc)
-
--- | Get the types of the arguments of a specific constructor
-getConstructorVarTypes :: Pmc vt v loc m => Type vt loc -> ConstructorReference -> m [Type vt loc]
-
--- | Get a fresh variable
-fresh :: Pmc vt v loc m => m v
-data EnumeratedConstructors vt v loc
-ConstructorType :: [(v, ConstructorReference, Type vt loc)] -> EnumeratedConstructors vt v loc
-SequenceType :: [(ListPat, [Type vt loc])] -> EnumeratedConstructors vt v loc
-BooleanType :: EnumeratedConstructors vt v loc
-OtherType :: EnumeratedConstructors vt v loc
-traverseConstructors :: Applicative f => (v -> ConstructorReference -> Type vt loc -> f (v, ConstructorReference, Type vt loc)) -> EnumeratedConstructors vt v loc -> f (EnumeratedConstructors vt v loc)
-instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.Class.EnumeratedConstructors vt v loc)
-
 module Unison.PatternMatchCoverage.PmLit
 data PmLit
 Int :: Int64 -> PmLit
@@ -856,6 +834,29 @@ addFallback :: PrettyPrintEnv -> PrettyPrintEnv -> PrettyPrintEnv
 union :: PrettyPrintEnv -> PrettyPrintEnv -> PrettyPrintEnv
 empty :: PrettyPrintEnv
 instance GHC.Show.Show Unison.PrettyPrintEnv.PrettyPrintEnv
+
+module Unison.PatternMatchCoverage.Class
+
+-- | A typeclass for the queries required to perform pattern match coverage
+--   checking.
+class (Ord loc, Var vt, Var v, MonadFix m) => Pmc vt v loc m | m -> vt v loc
+
+-- | Get the constructors of a type
+getConstructors :: Pmc vt v loc m => Type vt loc -> m (EnumeratedConstructors vt v loc)
+
+-- | Get the types of the arguments of a specific constructor
+getConstructorVarTypes :: Pmc vt v loc m => Type vt loc -> ConstructorReference -> m [Type vt loc]
+
+-- | Get a fresh variable
+fresh :: Pmc vt v loc m => m v
+getPrettyPrintEnv :: Pmc vt v loc m => m PrettyPrintEnv
+data EnumeratedConstructors vt v loc
+ConstructorType :: [(v, ConstructorReference, Type vt loc)] -> EnumeratedConstructors vt v loc
+SequenceType :: [(ListPat, [Type vt loc])] -> EnumeratedConstructors vt v loc
+BooleanType :: EnumeratedConstructors vt v loc
+OtherType :: EnumeratedConstructors vt v loc
+traverseConstructors :: Applicative f => (v -> ConstructorReference -> Type vt loc -> f (v, ConstructorReference, Type vt loc)) -> EnumeratedConstructors vt v loc -> f (EnumeratedConstructors vt v loc)
+instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.Class.EnumeratedConstructors vt v loc)
 
 module Unison.PrettyPrintEnv.FQN
 type Imports = Map Name Suffix
@@ -2613,6 +2614,62 @@ prettySignaturesAlt :: Var v => PrettyPrintEnv -> [([HashQualified Name], Type v
 prettySignaturesAlt' :: Var v => PrettyPrintEnv -> [([HashQualified Name], Type v a)] -> [Pretty ColorText]
 runPretty :: Var v => PrettyPrintEnv -> Reader (PrettyPrintEnv, Set v) a -> a
 
+module Unison.Syntax.TypeParser
+type TypeP v = P v (Type v Ann)
+valueType :: Var v => TypeP v
+computationType :: Var v => TypeP v
+valueTypeLeaf :: Var v => TypeP v
+typeAtom :: Var v => TypeP v
+type1 :: Var v => TypeP v
+type2a :: Var v => TypeP v
+delayed :: Var v => TypeP v
+type2 :: Var v => TypeP v
+effect :: Var v => TypeP v
+effectList :: Var v => TypeP v
+sequenceTyp :: Var v => TypeP v
+tupleOrParenthesizedType :: Var v => TypeP v -> TypeP v
+arrow :: Var v => TypeP v -> TypeP v
+forall :: Var v => TypeP v -> TypeP v
+
+module Unison.Syntax.TermPrinter
+emptyAc :: AmbientContext
+pretty :: Var v => PrettyPrintEnv -> Term v a -> Pretty ColorText
+prettyBlock :: Var v => Bool -> PrettyPrintEnv -> Term v a -> Pretty ColorText
+prettyBlock' :: Var v => Bool -> PrettyPrintEnv -> Term v a -> Pretty SyntaxText
+pretty' :: Var v => Maybe Width -> PrettyPrintEnv -> Term v a -> ColorText
+
+-- | Render a binding, producing output of the form
+--   
+--   foo : t -&gt; u foo a = ...
+--   
+--   The first line is only output if the term has a type annotation as the
+--   outermost constructor.
+--   
+--   Binary functions with symbolic names are output infix, as follows:
+--   
+--   (+) : t -&gt; t -&gt; t a + b = ...
+prettyBinding :: Var v => PrettyPrintEnv -> HashQualified Name -> Term2 v at ap v a -> Pretty SyntaxText
+prettyBinding' :: Var v => PrettyPrintEnv -> Width -> HashQualified Name -> Term v a -> ColorText
+
+-- | Like <a>prettyBinding</a>, but elides the type signature (if any).
+prettyBindingWithoutTypeSignature :: Var v => PrettyPrintEnv -> HashQualified Name -> Term2 v at ap v a -> Pretty SyntaxText
+pretty0 :: forall v m. MonadPretty v m => AmbientContext -> Term3 v PrintAnnotation -> m (Pretty SyntaxText)
+runPretty :: Var v => PrettyPrintEnv -> Reader (PrettyPrintEnv, Set v) a -> a
+prettyPattern :: forall v loc. Var v => PrettyPrintEnv -> AmbientContext -> Int -> [v] -> Pattern loc -> (Pretty SyntaxText, [v])
+instance GHC.Show.Show Unison.Syntax.TermPrinter.BlockContext
+instance GHC.Classes.Eq Unison.Syntax.TermPrinter.BlockContext
+instance GHC.Show.Show Unison.Syntax.TermPrinter.InfixContext
+instance GHC.Classes.Eq Unison.Syntax.TermPrinter.InfixContext
+instance GHC.Show.Show Unison.Syntax.TermPrinter.DocLiteralContext
+instance GHC.Classes.Eq Unison.Syntax.TermPrinter.DocLiteralContext
+instance GHC.Show.Show Unison.Syntax.TermPrinter.PrintAnnotation
+instance GHC.Base.Semigroup Unison.Syntax.TermPrinter.PrintAnnotation
+instance GHC.Base.Monoid Unison.Syntax.TermPrinter.PrintAnnotation
+
+module Unison.PatternMatchCoverage.Pretty
+prettyVar :: Var v => v -> Pretty ColorText
+prettyConstructorReference :: PrettyPrintEnv -> ConstructorReference -> Pretty ColorText
+
 module Unison.PatternMatchCoverage.PmGrd
 data PmGrd vt v loc
 
@@ -2632,7 +2689,7 @@ PmBang :: v -> PmGrd vt v loc
 -- | <tt>PmLet x expr</tt> corresponds to a <tt>let x = expr</tt> guard.
 --   This actually <i>binds</i> <tt>x</tt>.
 PmLet :: v -> Term' vt v loc -> Type vt loc -> PmGrd vt v loc
-prettyPmGrd :: (Var vt, Var v) => PmGrd vt v loc -> Pretty ColorText
+prettyPmGrd :: (Var vt, Var v) => PrettyPrintEnv -> PmGrd vt v loc -> Pretty ColorText
 instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.PmGrd.PmGrd vt v loc)
 
 module Unison.PatternMatchCoverage.Desugar
@@ -2679,7 +2736,7 @@ Effectful :: v -> Constraint vt v loc
 
 -- | Equality constraint
 Eq :: v -> v -> Constraint vt v loc
-prettyConstraint :: (Var vt, Var v) => Constraint vt v loc -> Pretty ColorText
+prettyConstraint :: forall vt v loc. (Var vt, Var v) => PrettyPrintEnv -> Constraint vt v loc -> Pretty ColorText
 instance (U.Core.ABT.Var.Var vt, GHC.Classes.Ord v) => GHC.Classes.Ord (Unison.PatternMatchCoverage.Constraint.Constraint vt v loc)
 instance (U.Core.ABT.Var.Var vt, GHC.Classes.Eq v) => GHC.Classes.Eq (Unison.PatternMatchCoverage.Constraint.Constraint vt v loc)
 
@@ -2760,8 +2817,8 @@ expectCanon :: forall vt v loc. Var v => v -> NormalizedConstraints vt v loc -> 
 -- | Install a new variable into the constraint map. Throws an error if the
 --   variable already exists in the map.
 declVar :: forall vt v loc. Var v => v -> Type vt loc -> (VarInfo vt v loc -> VarInfo vt v loc) -> NormalizedConstraints vt v loc -> NormalizedConstraints vt v loc
-prettyNormalizedConstraints :: forall vt v loc. (Var v, Var vt) => NormalizedConstraints vt v loc -> Pretty ColorText
-prettyDnf :: (Var v, Var vt) => Set (NormalizedConstraints vt v loc) -> Pretty ColorText
+prettyNormalizedConstraints :: forall vt v loc. (Var v, Var vt) => PrettyPrintEnv -> NormalizedConstraints vt v loc -> Pretty ColorText
+prettyDnf :: (Var v, Var vt) => PrettyPrintEnv -> Set (NormalizedConstraints vt v loc) -> Pretty ColorText
 instance GHC.Base.Functor Unison.PatternMatchCoverage.NormalizedConstraints.ConstraintUpdate
 instance GHC.Generics.Generic (Unison.PatternMatchCoverage.NormalizedConstraints.VarConstraints vt v loc)
 instance (U.Core.ABT.Var.Var vt, GHC.Classes.Ord v) => GHC.Classes.Ord (Unison.PatternMatchCoverage.NormalizedConstraints.VarConstraints vt v loc)
@@ -2777,58 +2834,6 @@ instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMat
 instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.NormalizedConstraints.NormalizedConstraints vt v loc)
 instance (U.Core.ABT.Var.Var vt, GHC.Classes.Ord v) => GHC.Classes.Ord (Unison.PatternMatchCoverage.NormalizedConstraints.NormalizedConstraints vt v loc)
 instance (U.Core.ABT.Var.Var vt, GHC.Classes.Eq v) => GHC.Classes.Eq (Unison.PatternMatchCoverage.NormalizedConstraints.NormalizedConstraints vt v loc)
-
-module Unison.Syntax.TypeParser
-type TypeP v = P v (Type v Ann)
-valueType :: Var v => TypeP v
-computationType :: Var v => TypeP v
-valueTypeLeaf :: Var v => TypeP v
-typeAtom :: Var v => TypeP v
-type1 :: Var v => TypeP v
-type2a :: Var v => TypeP v
-delayed :: Var v => TypeP v
-type2 :: Var v => TypeP v
-effect :: Var v => TypeP v
-effectList :: Var v => TypeP v
-sequenceTyp :: Var v => TypeP v
-tupleOrParenthesizedType :: Var v => TypeP v -> TypeP v
-arrow :: Var v => TypeP v -> TypeP v
-forall :: Var v => TypeP v -> TypeP v
-
-module Unison.Syntax.TermPrinter
-emptyAc :: AmbientContext
-pretty :: Var v => PrettyPrintEnv -> Term v a -> Pretty ColorText
-prettyBlock :: Var v => Bool -> PrettyPrintEnv -> Term v a -> Pretty ColorText
-prettyBlock' :: Var v => Bool -> PrettyPrintEnv -> Term v a -> Pretty SyntaxText
-pretty' :: Var v => Maybe Width -> PrettyPrintEnv -> Term v a -> ColorText
-
--- | Render a binding, producing output of the form
---   
---   foo : t -&gt; u foo a = ...
---   
---   The first line is only output if the term has a type annotation as the
---   outermost constructor.
---   
---   Binary functions with symbolic names are output infix, as follows:
---   
---   (+) : t -&gt; t -&gt; t a + b = ...
-prettyBinding :: Var v => PrettyPrintEnv -> HashQualified Name -> Term2 v at ap v a -> Pretty SyntaxText
-prettyBinding' :: Var v => PrettyPrintEnv -> Width -> HashQualified Name -> Term v a -> ColorText
-
--- | Like <a>prettyBinding</a>, but elides the type signature (if any).
-prettyBindingWithoutTypeSignature :: Var v => PrettyPrintEnv -> HashQualified Name -> Term2 v at ap v a -> Pretty SyntaxText
-pretty0 :: forall v m. MonadPretty v m => AmbientContext -> Term3 v PrintAnnotation -> m (Pretty SyntaxText)
-runPretty :: Var v => PrettyPrintEnv -> Reader (PrettyPrintEnv, Set v) a -> a
-prettyPattern :: forall v loc. Var v => PrettyPrintEnv -> AmbientContext -> Int -> [v] -> Pattern loc -> (Pretty SyntaxText, [v])
-instance GHC.Show.Show Unison.Syntax.TermPrinter.BlockContext
-instance GHC.Classes.Eq Unison.Syntax.TermPrinter.BlockContext
-instance GHC.Show.Show Unison.Syntax.TermPrinter.InfixContext
-instance GHC.Classes.Eq Unison.Syntax.TermPrinter.InfixContext
-instance GHC.Show.Show Unison.Syntax.TermPrinter.DocLiteralContext
-instance GHC.Classes.Eq Unison.Syntax.TermPrinter.DocLiteralContext
-instance GHC.Show.Show Unison.Syntax.TermPrinter.PrintAnnotation
-instance GHC.Base.Semigroup Unison.Syntax.TermPrinter.PrintAnnotation
-instance GHC.Base.Monoid Unison.Syntax.TermPrinter.PrintAnnotation
 
 module Unison.PatternMatchCoverage.Literal
 
@@ -3075,7 +3080,7 @@ checkMatch :: forall vt v loc m. Pmc vt v loc m => loc -> Type vt loc -> [MatchC
 module Unison.Typechecker.Context
 
 -- | public interface to the typechecker
-synthesizeClosed :: (Var v, Ord loc) => [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
+synthesizeClosed :: (Var v, Ord loc) => PrettyPrintEnv -> [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
 data ErrorNote v loc
 ErrorNote :: Cause v loc -> Seq (PathElement v loc) -> ErrorNote v loc
 [$sel:cause:ErrorNote] :: ErrorNote v loc -> Cause v loc
@@ -3479,13 +3484,13 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4ocx loc_a4ocy. Lens' (Env v_a4ocx loc_a4ocy) (TypeLookup v_a4ocx loc_a4ocy)
-termsByShortname :: forall v_a4ocx loc_a4ocy. Lens' (Env v_a4ocx loc_a4ocy) (Map Name [NamedReference v_a4ocx loc_a4ocy])
-ambientAbilities :: forall v_a4ocx loc_a4ocy. Lens' (Env v_a4ocx loc_a4ocy) [Type v_a4ocx loc_a4ocy]
+typeLookup :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) (TypeLookup v_a4oBU loc_a4oBV)
+termsByShortname :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) (Map Name [NamedReference v_a4oBU loc_a4oBV])
+ambientAbilities :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) [Type v_a4oBU loc_a4oBV]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
-synthesize :: (Monad f, Var v, Ord loc) => Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
+synthesize :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
 isSubtype :: Var v => Type v loc -> Type v loc -> Bool
 handleCompilerBug :: Var v => Either (CompilerBug v ()) a -> a
 
@@ -3512,18 +3517,18 @@ Resolution :: Text -> Type v loc -> loc -> [Suggestion v loc] -> Resolution v lo
 
 -- | Infer the type of a <a>Term</a>, using type-directed name resolution
 --   to attempt to resolve unknown symbols.
-synthesizeAndResolve :: (Monad f, Var v, Monoid loc, Ord loc) => Env v loc -> TDNR f v loc (Type v loc)
+synthesizeAndResolve :: (Monad f, Var v, Monoid loc, Ord loc) => PrettyPrintEnv -> Env v loc -> TDNR f v loc (Type v loc)
 compilerBug :: CompilerBug v loc -> Result (Notes v loc) ()
 typeError :: ErrorNote v loc -> Result (Notes v loc) ()
 btw :: Monad f => InfoNote v loc -> ResultT (Notes v loc) f ()
 liftResult :: Monad f => Result (Notes v loc) a -> TDNR f v loc a
-typeDirectedNameResolution :: forall v loc f. (Monad f, Var v, Ord loc, Monoid loc) => Notes v loc -> Type v loc -> Env v loc -> TDNR f v loc (Type v loc)
+typeDirectedNameResolution :: forall v loc f. (Monad f, Var v, Ord loc, Monoid loc) => PrettyPrintEnv -> Notes v loc -> Type v loc -> Env v loc -> TDNR f v loc (Type v loc)
 
 -- | Check whether a term matches a type, using a function to resolve the
 --   type of <tt>Ref</tt> constructors contained in the term. Returns
 --   <tt>typ</tt> if successful, and a note about typechecking failure
 --   otherwise.
-check :: (Monad f, Var v, Ord loc) => Env v loc -> Term v loc -> Type v loc -> ResultT (Notes v loc) f (Type v loc)
+check :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> Type v loc -> ResultT (Notes v loc) f (Type v loc)
 
 -- | <tt>checkAdmissible</tt> e t` tests that `(f : t -&gt; r) e` is
 --   well-typed. If <tt>t</tt> has quantifiers, these are moved outside, so
@@ -3534,7 +3539,7 @@ check :: (Monad f, Var v, Ord loc) => Env v loc -> Term v loc -> Type v loc -> R
 --   (Type.ForallNamed' v body) = Type.forall() v (tweak body) tweak t =
 --   Type.arrow() t t | Returns <a>True</a> if the expression is
 --   well-typed, <a>False</a> otherwise
-wellTyped :: (Monad f, Var v, Ord loc) => Env v loc -> Term v loc -> f Bool
+wellTyped :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> f Bool
 instance (Unison.Var.Var v, GHC.Show.Show loc, GHC.Classes.Ord loc) => GHC.Show.Show (Unison.Typechecker.Notes v loc)
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Typechecker.NamedReference v loc)
 instance GHC.Base.Semigroup (Unison.Typechecker.Notes v loc)
