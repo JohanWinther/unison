@@ -111,6 +111,99 @@ instance Unison.Util.Alphabetical.Alphabetical Unison.Name.Internal.Name
 instance GHC.Classes.Ord Unison.Name.Internal.Name
 instance Control.Lens.Cons.Snoc Unison.Name.Internal.Name Unison.Name.Internal.Name Unison.NameSegment.NameSegment Unison.NameSegment.NameSegment
 
+
+-- | Projects.
+--   
+--   The syntax-related parsing code (what makes a valid project name, etc)
+--   could conceivably be moved into a different package, but for now we
+--   have just defined the one blessed project/branch name syntax that we
+--   allow.
+module Unison.Project
+
+-- | The name of a project.
+data ProjectName
+
+-- | Get the user slug at the beginning of a project name, if there is one.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectNameUserSlug "@arya/lens"
+--   Just "arya"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectNameUserSlug "lens"
+--   Nothing
+--   </pre>
+projectNameUserSlug :: ProjectName -> Maybe Text
+
+-- | Prepend a user slug to a project name, if it doesn't already have one.
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectName "arya" "lens"
+--   "@arya/lens"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectName "runar" "@unison/base"
+--   "@unison/base"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectName "???invalid???" "@unison/base"
+--   "@unison/base"
+--   </pre>
+prependUserSlugToProjectName :: Text -> ProjectName -> ProjectName
+
+-- | The name of a branch of a project.
+data ProjectBranchName
+
+-- | Get the user slug at the beginning of a project branch name, if there
+--   is one.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchNameUserSlug "@arya/topic"
+--   Just "arya"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchNameUserSlug "topic"
+--   Nothing
+--   </pre>
+projectBranchNameUserSlug :: ProjectBranchName -> Maybe Text
+
+-- | Prepend a user slug to a project branch name, if it doesn't already
+--   have one.
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectBranchName "arya" "topic"
+--   "@arya/topic"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectBranchName "runar" "@unison/main"
+--   "@unison/main"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; prependUserSlugToProjectBranchName "???invalid???" "@unison/main"
+--   "@unison/main"
+--   </pre>
+prependUserSlugToProjectBranchName :: Text -> ProjectBranchName -> ProjectBranchName
+
+-- | A generic data structure that contains information about a project and
+--   a branch in that project.
+data ProjectAndBranch a b
+ProjectAndBranch :: a -> b -> ProjectAndBranch a b
+[project] :: ProjectAndBranch a b -> a
+[branch] :: ProjectAndBranch a b -> b
+projectAndBranchNamesParser :: Parsec Void Text (These ProjectName ProjectBranchName)
+instance Witch.From.From Unison.Core.Project.ProjectName Data.Text.Internal.Text
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectName
+instance Witch.From.From Unison.Core.Project.ProjectBranchName Data.Text.Internal.Text
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectBranchName
+instance Witch.From.From (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName)
+
 module Unison.Settings
 debugNoteLoc :: Bool
 debugNoteSummary :: Bool

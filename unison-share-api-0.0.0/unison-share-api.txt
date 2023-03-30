@@ -680,6 +680,7 @@ NoBranchForHash :: CausalHash -> BackendError
 CouldntLoadBranch :: CausalHash -> BackendError
 MissingSignatureForTerm :: Reference -> BackendError
 NoSuchDefinition :: HashQualified Name -> BackendError
+ExpectedNameLookup :: BranchHash -> BackendError
 DisjointProjectAndPerspective :: Path -> Path -> BackendError
 newtype Backend m a
 Backend :: ReaderT BackendEnv (ExceptT BackendError m) a -> Backend m a
@@ -739,7 +740,7 @@ DefinitionResults :: Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol
 
 -- | Renders a definition for the given name or hash alongside its
 --   documentation.
-prettyDefinitionsForHQName :: Path -> Maybe CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
+prettyDefinitionsForHQName :: Path -> CausalBranch Transaction -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
 fuzzyFind :: Names -> String -> [(Alignment, UnisonName, [FoundRef])]
 basicSuffixifiedNames :: Int -> Branch m -> NameScoping -> PrettyPrintEnv
 bestNameForTerm :: forall v. Var v => PrettyPrintEnv -> Width -> Referent -> Text
@@ -825,6 +826,7 @@ renderDocRefs :: Traversable t => PrettyPrintEnvDecl -> Width -> Codebase IO Sym
 --   with a Doc type which are at the name provided, or at
 --   '<a>name</a>.doc'.
 docsForDefinitionName :: Codebase IO Symbol Ann -> NameSearch Transaction -> Name -> IO [TermReference]
+normaliseRootCausalHash :: Maybe (Either ShortCausalHash CausalHash) -> Backend Transaction (CausalBranch Transaction)
 resolveRootBranchHash :: MonadIO m => Maybe ShortCausalHash -> Codebase m v a -> Backend m (Branch m)
 shallowPPE :: MonadIO m => Codebase m v a -> Branch m -> m PrettyPrintEnv
 isTestResultList :: forall v a. (Var v, Monoid a) => Maybe (Type v a) -> Bool
@@ -899,6 +901,7 @@ ambiguousNamespace :: HashQualifiedName -> Set HashQualifiedName -> ServerError
 missingSigForTerm :: HashQualifiedName -> ServerError
 noSuchDefinition :: HashQualified Name -> ServerError
 ambiguousHashForDefinition :: ShortHash -> ServerError
+expectedNameLookup :: BranchHash -> ServerError
 disjointProjectAndPerspective :: Path -> Path -> ServerError
 
 module Unison.Server.Endpoints.Projects
@@ -913,7 +916,7 @@ ProjectListing :: ProjectOwner -> Text -> UnisonHash -> ProjectListing
 [$sel:hash:ProjectListing] :: ProjectListing -> UnisonHash
 backendListEntryToProjectListing :: ProjectOwner -> ShallowListEntry Symbol a -> Maybe ProjectListing
 entryToOwner :: ShallowListEntry Symbol a -> Maybe ProjectOwner
-serve :: forall m. MonadIO m => Codebase m Symbol Ann -> Maybe ShortCausalHash -> Maybe ProjectOwner -> Backend m [ProjectListing]
+serve :: forall m. MonadIO m => Codebase m Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe ProjectOwner -> Backend m [ProjectListing]
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Endpoints.Projects.ProjectOwner
 instance GHC.Show.Show Unison.Server.Endpoints.Projects.ProjectOwner
 instance GHC.Generics.Generic Unison.Server.Endpoints.Projects.ProjectOwner
@@ -928,7 +931,7 @@ instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Endpoints.Projects.Project
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Endpoints.Projects.ProjectOwner
 
 module Unison.Server.Endpoints.NamespaceListing
-serve :: Codebase IO Symbol Ann -> Maybe ShortCausalHash -> Maybe Path -> Maybe Path -> Backend IO NamespaceListing
+serve :: Codebase IO Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> Maybe Path -> Backend IO NamespaceListing
 type NamespaceListingAPI = "list" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "namespace" Path :> APIGet NamespaceListing
 data NamespaceListing
 NamespaceListing :: UnisonName -> UnisonHash -> [NamespaceObject] -> NamespaceListing
@@ -985,7 +988,7 @@ NamespaceDetails :: Path -> UnisonHash -> Maybe Doc -> NamespaceDetails
 [$sel:fqn:NamespaceDetails] :: NamespaceDetails -> Path
 [$sel:hash:NamespaceDetails] :: NamespaceDetails -> UnisonHash
 [$sel:readme:NamespaceDetails] :: NamespaceDetails -> Maybe Doc
-namespaceDetails :: Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe ShortCausalHash -> Maybe Width -> Backend IO NamespaceDetails
+namespaceDetails :: Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Width -> Backend IO NamespaceDetails
 instance GHC.Show.Show Unison.Server.Endpoints.NamespaceDetails.NamespaceDetails
 instance GHC.Generics.Generic Unison.Server.Endpoints.NamespaceDetails.NamespaceDetails
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Endpoints.NamespaceDetails.NamespaceDetails
@@ -995,7 +998,7 @@ instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "namespace
 
 module Unison.Server.Endpoints.GetDefinitions
 type DefinitionsAPI = "getDefinition" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParams "names" (HashQualified Name) :> QueryParam "renderWidth" Width :> QueryParam "suffixifyBindings" Suffixify :> APIGet DefinitionDisplayResults
-serveDefinitions :: Runtime Symbol -> Codebase IO Symbol Ann -> Maybe ShortCausalHash -> Maybe Path -> [HashQualified Name] -> Maybe Width -> Maybe Suffixify -> Backend IO DefinitionDisplayResults
+serveDefinitions :: Runtime Symbol -> Codebase IO Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> [HashQualified Name] -> Maybe Width -> Maybe Suffixify -> Backend IO DefinitionDisplayResults
 instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "renderWidth" Unison.Util.Pretty.Width)
 instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "suffixifyBindings" Unison.Server.Types.Suffixify)
 instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "relativeTo" Unison.Codebase.Path.Path)
@@ -1018,7 +1021,7 @@ FoundType :: HashQualifiedName -> DisplayObject SyntaxText SyntaxText -> NamedTy
 data FoundResult
 FoundTermResult :: FoundTerm -> FoundResult
 FoundTypeResult :: FoundType -> FoundResult
-serveFuzzyFind :: forall m. MonadIO m => Codebase m Symbol Ann -> Maybe ShortCausalHash -> Maybe Path -> Maybe Int -> Maybe Width -> Maybe String -> Backend m [(Alignment, FoundResult)]
+serveFuzzyFind :: forall m. MonadIO m => Codebase m Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> Maybe Int -> Maybe Width -> Maybe String -> Backend m [(Alignment, FoundResult)]
 instance GHC.Show.Show Unison.Server.Endpoints.FuzzyFind.FoundTerm
 instance GHC.Generics.Generic Unison.Server.Endpoints.FuzzyFind.FoundTerm
 instance GHC.Show.Show Unison.Server.Endpoints.FuzzyFind.FoundType
@@ -1044,7 +1047,7 @@ instance Data.Aeson.Types.ToJSON.ToJSON Text.FuzzyFind.ResultSegment
 
 module Unison.Server.Endpoints.DefinitionSummary
 type TermSummaryAPI = "definitions" :> "terms" :> "by-hash" :> Capture "hash" Referent :> "summary" :> QueryParam "name" Name :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "renderWidth" Width :> APIGet TermSummary
-serveTermSummary :: Codebase IO Symbol Ann -> Referent -> Maybe Name -> Maybe ShortCausalHash -> Maybe Path -> Maybe Width -> Backend IO TermSummary
+serveTermSummary :: Codebase IO Symbol Ann -> Referent -> Maybe Name -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> Maybe Width -> Backend IO TermSummary
 data TermSummary
 TermSummary :: HashQualified Name -> ShortHash -> DisplayObject SyntaxText SyntaxText -> TermTag -> TermSummary
 [$sel:displayName:TermSummary] :: TermSummary -> HashQualified Name
@@ -1052,7 +1055,7 @@ TermSummary :: HashQualified Name -> ShortHash -> DisplayObject SyntaxText Synta
 [$sel:summary:TermSummary] :: TermSummary -> DisplayObject SyntaxText SyntaxText
 [$sel:tag:TermSummary] :: TermSummary -> TermTag
 type TypeSummaryAPI = "definitions" :> "types" :> "by-hash" :> Capture "hash" Reference :> "summary" :> QueryParam "name" Name :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "renderWidth" Width :> APIGet TypeSummary
-serveTypeSummary :: Codebase IO Symbol Ann -> Reference -> Maybe Name -> Maybe ShortCausalHash -> Maybe Path -> Maybe Width -> Backend IO TypeSummary
+serveTypeSummary :: Codebase IO Symbol Ann -> Reference -> Maybe Name -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> Maybe Width -> Backend IO TypeSummary
 data TypeSummary
 TypeSummary :: HashQualified Name -> ShortHash -> DisplayObject SyntaxText SyntaxText -> TypeTag -> TypeSummary
 [$sel:displayName:TypeSummary] :: TypeSummary -> HashQualified Name
@@ -1147,42 +1150,17 @@ module Unison.Sync.Types
 -- | A newtype for JSON encoding binary data.
 newtype Base64Bytes
 Base64Bytes :: ByteString -> Base64Bytes
-newtype RepoName
-RepoName :: Text -> RepoName
-[$sel:unRepoName:RepoName] :: RepoName -> Text
+newtype RepoInfo
+RepoInfo :: Text -> RepoInfo
+[$sel:unRepoInfo:RepoInfo] :: RepoInfo -> Text
 data Path
 Path :: NonEmpty Text -> Path
 [$sel:pathSegments:Path] :: Path -> NonEmpty Text
-pathRepoName :: Path -> RepoName
+
+-- | Convert a path like arya.public.mystuff to a "repo info" by treating
+--   the first segment as a user handle.
+pathRepoInfo :: Path -> RepoInfo
 pathCodebasePath :: Path -> [Text]
-newtype HashJWT
-HashJWT :: Text -> HashJWT
-[$sel:unHashJWT:HashJWT] :: HashJWT -> Text
-
--- | Grab the hash out of a hash JWT.
---   
---   This decodes the whole JWT, then throws away the claims; use it if you
---   really only need the hash!
-hashJWTHash :: HashJWT -> Hash32
-data HashJWTClaims
-HashJWTClaims :: Hash32 -> Maybe Text -> HashJWTClaims
-[$sel:hash:HashJWTClaims] :: HashJWTClaims -> Hash32
-[$sel:userId:HashJWTClaims] :: HashJWTClaims -> Maybe Text
-
--- | A decoded hash JWT that retains the original encoded JWT.
-data DecodedHashJWT
-DecodedHashJWT :: HashJWTClaims -> HashJWT -> DecodedHashJWT
-[$sel:claims:DecodedHashJWT] :: DecodedHashJWT -> HashJWTClaims
-[$sel:hashJWT:DecodedHashJWT] :: DecodedHashJWT -> HashJWT
-
--- | Decode a hash JWT.
-decodeHashJWT :: HashJWT -> DecodedHashJWT
-
--- | Decode the claims out of a hash JWT.
-decodeHashJWTClaims :: HashJWT -> HashJWTClaims
-
--- | Grab the hash out of a decoded hash JWT.
-decodedHashJWTHash :: DecodedHashJWT -> Hash32
 data Entity text noSyncHash hash
 TC :: TermComponent text hash -> Entity text noSyncHash hash
 DC :: DeclComponent text hash -> Entity text noSyncHash hash
@@ -1255,22 +1233,46 @@ GetCausalHashByPathRequest :: Path -> GetCausalHashByPathRequest
 data GetCausalHashByPathResponse
 GetCausalHashByPathSuccess :: Maybe HashJWT -> GetCausalHashByPathResponse
 GetCausalHashByPathNoReadPermission :: Path -> GetCausalHashByPathResponse
+GetCausalHashByPathUserNotFound :: GetCausalHashByPathResponse
+GetCausalHashByPathInvalidRepoInfo :: Text -> RepoInfo -> GetCausalHashByPathResponse
 data DownloadEntitiesRequest
-DownloadEntitiesRequest :: RepoName -> NESet HashJWT -> DownloadEntitiesRequest
-[$sel:repoName:DownloadEntitiesRequest] :: DownloadEntitiesRequest -> RepoName
+DownloadEntitiesRequest :: RepoInfo -> NESet HashJWT -> DownloadEntitiesRequest
+[$sel:repoInfo:DownloadEntitiesRequest] :: DownloadEntitiesRequest -> RepoInfo
 [$sel:hashes:DownloadEntitiesRequest] :: DownloadEntitiesRequest -> NESet HashJWT
 data DownloadEntitiesResponse
 DownloadEntitiesSuccess :: NEMap Hash32 (Entity Text Hash32 HashJWT) -> DownloadEntitiesResponse
-DownloadEntitiesNoReadPermission :: RepoName -> DownloadEntitiesResponse
+DownloadEntitiesFailure :: DownloadEntitiesError -> DownloadEntitiesResponse
+data DownloadEntitiesError
+DownloadEntitiesNoReadPermission :: RepoInfo -> DownloadEntitiesError
+
+-- | msg, repoInfo
+DownloadEntitiesInvalidRepoInfo :: Text -> RepoInfo -> DownloadEntitiesError
+
+-- | userHandle
+DownloadEntitiesUserNotFound :: Text -> DownloadEntitiesError
+
+-- | project shorthand
+DownloadEntitiesProjectNotFound :: Text -> DownloadEntitiesError
 data UploadEntitiesRequest
-UploadEntitiesRequest :: RepoName -> NEMap Hash32 (Entity Text Hash32 Hash32) -> UploadEntitiesRequest
-[$sel:repoName:UploadEntitiesRequest] :: UploadEntitiesRequest -> RepoName
+UploadEntitiesRequest :: RepoInfo -> NEMap Hash32 (Entity Text Hash32 Hash32) -> UploadEntitiesRequest
+[$sel:repoInfo:UploadEntitiesRequest] :: UploadEntitiesRequest -> RepoInfo
 [$sel:entities:UploadEntitiesRequest] :: UploadEntitiesRequest -> NEMap Hash32 (Entity Text Hash32 Hash32)
 data UploadEntitiesResponse
 UploadEntitiesSuccess :: UploadEntitiesResponse
-UploadEntitiesNeedDependencies :: NeedDependencies Hash32 -> UploadEntitiesResponse
-UploadEntitiesNoWritePermission :: RepoName -> UploadEntitiesResponse
-UploadEntitiesHashMismatchForEntity :: HashMismatchForEntity -> UploadEntitiesResponse
+UploadEntitiesFailure :: UploadEntitiesError -> UploadEntitiesResponse
+data UploadEntitiesError
+UploadEntitiesError'HashMismatchForEntity :: HashMismatchForEntity -> UploadEntitiesError
+
+-- | msg, repoInfo
+UploadEntitiesError'InvalidRepoInfo :: Text -> RepoInfo -> UploadEntitiesError
+UploadEntitiesError'NeedDependencies :: NeedDependencies Hash32 -> UploadEntitiesError
+UploadEntitiesError'NoWritePermission :: RepoInfo -> UploadEntitiesError
+
+-- | project shorthand
+UploadEntitiesError'ProjectNotFound :: Text -> UploadEntitiesError
+
+-- | userHandle
+UploadEntitiesError'UserNotFound :: Text -> UploadEntitiesError
 
 -- | A non-empty list of causal hashes, latest first, that show the lineage
 --   from wherever the client wants to fast-forward to back to wherever the
@@ -1313,20 +1315,24 @@ FastForwardPathRequest :: Hash32 -> NonEmpty Hash32 -> Path -> FastForwardPathRe
 [$sel:path:FastForwardPathRequest] :: FastForwardPathRequest -> Path
 data FastForwardPathResponse
 FastForwardPathSuccess :: FastForwardPathResponse
-FastForwardPathMissingDependencies :: NeedDependencies Hash32 -> FastForwardPathResponse
-FastForwardPathNoWritePermission :: Path -> FastForwardPathResponse
+FastForwardPathFailure :: FastForwardPathError -> FastForwardPathResponse
+data FastForwardPathError
+FastForwardPathError'MissingDependencies :: NeedDependencies Hash32 -> FastForwardPathError
+FastForwardPathError'NoWritePermission :: Path -> FastForwardPathError
 
 -- | This wasn't a fast-forward. Here's a JWT to download the causal head,
 --   if you want it.
-FastForwardPathNotFastForward :: HashJWT -> FastForwardPathResponse
+FastForwardPathError'NotFastForward :: HashJWT -> FastForwardPathError
 
 -- | There was no history at this path; the client should use the "update
 --   path" endpoint instead.
-FastForwardPathNoHistory :: FastForwardPathResponse
+FastForwardPathError'NoHistory :: FastForwardPathError
 
 -- | This wasn't a fast-forward. You said the first hash was a parent of
 --   the second hash, but I disagree.
-FastForwardPathInvalidParentage :: InvalidParentage -> FastForwardPathResponse
+FastForwardPathError'InvalidParentage :: InvalidParentage -> FastForwardPathError
+FastForwardPathError'InvalidRepoInfo :: Text -> RepoInfo -> FastForwardPathError
+FastForwardPathError'UserNotFound :: FastForwardPathError
 data UpdatePathRequest
 UpdatePathRequest :: Path -> Maybe Hash32 -> Hash32 -> UpdatePathRequest
 [$sel:path:UpdatePathRequest] :: UpdatePathRequest -> Path
@@ -1334,9 +1340,13 @@ UpdatePathRequest :: Path -> Maybe Hash32 -> Hash32 -> UpdatePathRequest
 [$sel:newHash:UpdatePathRequest] :: UpdatePathRequest -> Hash32
 data UpdatePathResponse
 UpdatePathSuccess :: UpdatePathResponse
-UpdatePathHashMismatch :: HashMismatch -> UpdatePathResponse
-UpdatePathMissingDependencies :: NeedDependencies Hash32 -> UpdatePathResponse
-UpdatePathNoWritePermission :: Path -> UpdatePathResponse
+UpdatePathFailure :: UpdatePathError -> UpdatePathResponse
+data UpdatePathError
+UpdatePathError'HashMismatch :: HashMismatch -> UpdatePathError
+UpdatePathError'InvalidRepoInfo :: Text -> RepoInfo -> UpdatePathError
+UpdatePathError'MissingDependencies :: NeedDependencies Hash32 -> UpdatePathError
+UpdatePathError'NoWritePermission :: Path -> UpdatePathError
+UpdatePathError'UserNotFound :: UpdatePathError
 data HashMismatch
 HashMismatch :: Path -> Maybe Hash32 -> Maybe Hash32 -> HashMismatch
 [$sel:path:HashMismatch] :: HashMismatch -> Path
@@ -1353,25 +1363,14 @@ InvalidParentage :: Hash32 -> Hash32 -> InvalidParentage
 data NeedDependencies hash
 NeedDependencies :: NESet hash -> NeedDependencies hash
 [$sel:missingDependencies:NeedDependencies] :: NeedDependencies hash -> NESet hash
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.Sync.Types.RepoName
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.RepoName
-instance GHC.Classes.Ord Unison.Sync.Types.RepoName
-instance GHC.Classes.Eq Unison.Sync.Types.RepoName
-instance GHC.Show.Show Unison.Sync.Types.RepoName
+instance Data.Aeson.Types.FromJSON.FromJSON Unison.Sync.Types.RepoInfo
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.RepoInfo
+instance GHC.Classes.Ord Unison.Sync.Types.RepoInfo
+instance GHC.Classes.Eq Unison.Sync.Types.RepoInfo
+instance GHC.Show.Show Unison.Sync.Types.RepoInfo
 instance GHC.Classes.Ord Unison.Sync.Types.Path
 instance GHC.Classes.Eq Unison.Sync.Types.Path
 instance GHC.Show.Show Unison.Sync.Types.Path
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.Sync.Types.HashJWT
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.HashJWT
-instance GHC.Classes.Ord Unison.Sync.Types.HashJWT
-instance GHC.Classes.Eq Unison.Sync.Types.HashJWT
-instance GHC.Show.Show Unison.Sync.Types.HashJWT
-instance GHC.Classes.Ord Unison.Sync.Types.HashJWTClaims
-instance GHC.Classes.Eq Unison.Sync.Types.HashJWTClaims
-instance GHC.Show.Show Unison.Sync.Types.HashJWTClaims
-instance GHC.Show.Show Unison.Sync.Types.DecodedHashJWT
-instance GHC.Classes.Ord Unison.Sync.Types.DecodedHashJWT
-instance GHC.Classes.Eq Unison.Sync.Types.DecodedHashJWT
 instance (GHC.Classes.Ord text, GHC.Classes.Ord hash) => GHC.Classes.Ord (Unison.Sync.Types.LocalIds text hash)
 instance (GHC.Classes.Eq text, GHC.Classes.Eq hash) => GHC.Classes.Eq (Unison.Sync.Types.LocalIds text hash)
 instance (GHC.Show.Show text, GHC.Show.Show hash) => GHC.Show.Show (Unison.Sync.Types.LocalIds text hash)
@@ -1411,6 +1410,8 @@ instance GHC.Show.Show Unison.Sync.Types.GetCausalHashByPathResponse
 instance GHC.Classes.Ord Unison.Sync.Types.DownloadEntitiesRequest
 instance GHC.Classes.Eq Unison.Sync.Types.DownloadEntitiesRequest
 instance GHC.Show.Show Unison.Sync.Types.DownloadEntitiesRequest
+instance GHC.Show.Show Unison.Sync.Types.DownloadEntitiesError
+instance GHC.Classes.Eq Unison.Sync.Types.DownloadEntitiesError
 instance GHC.Classes.Ord Unison.Sync.Types.UploadEntitiesRequest
 instance GHC.Classes.Eq Unison.Sync.Types.UploadEntitiesRequest
 instance GHC.Show.Show Unison.Sync.Types.UploadEntitiesRequest
@@ -1428,10 +1429,17 @@ instance GHC.Show.Show Unison.Sync.Types.HashMismatch
 instance GHC.Classes.Ord hash => GHC.Classes.Ord (Unison.Sync.Types.NeedDependencies hash)
 instance GHC.Classes.Eq hash => GHC.Classes.Eq (Unison.Sync.Types.NeedDependencies hash)
 instance GHC.Show.Show hash => GHC.Show.Show (Unison.Sync.Types.NeedDependencies hash)
+instance GHC.Classes.Ord Unison.Sync.Types.UpdatePathError
+instance GHC.Classes.Eq Unison.Sync.Types.UpdatePathError
+instance GHC.Show.Show Unison.Sync.Types.UpdatePathError
 instance GHC.Classes.Ord Unison.Sync.Types.UpdatePathResponse
 instance GHC.Classes.Eq Unison.Sync.Types.UpdatePathResponse
 instance GHC.Show.Show Unison.Sync.Types.UpdatePathResponse
+instance GHC.Show.Show Unison.Sync.Types.FastForwardPathError
 instance GHC.Show.Show Unison.Sync.Types.FastForwardPathResponse
+instance GHC.Classes.Ord Unison.Sync.Types.UploadEntitiesError
+instance GHC.Classes.Eq Unison.Sync.Types.UploadEntitiesError
+instance GHC.Show.Show Unison.Sync.Types.UploadEntitiesError
 instance GHC.Classes.Ord Unison.Sync.Types.UploadEntitiesResponse
 instance GHC.Classes.Eq Unison.Sync.Types.UploadEntitiesResponse
 instance GHC.Show.Show Unison.Sync.Types.UploadEntitiesResponse
@@ -1495,10 +1503,6 @@ instance Data.Bifunctor.Bifunctor Unison.Sync.Types.LocalIds
 instance Data.Bitraversable.Bitraversable Unison.Sync.Types.LocalIds
 instance (Data.Aeson.Types.ToJSON.ToJSON text, Data.Aeson.Types.ToJSON.ToJSON hash) => Data.Aeson.Types.ToJSON.ToJSON (Unison.Sync.Types.LocalIds text hash)
 instance (Data.Aeson.Types.FromJSON.FromJSON text, Data.Aeson.Types.FromJSON.FromJSON hash) => Data.Aeson.Types.FromJSON.FromJSON (Unison.Sync.Types.LocalIds text hash)
-instance Servant.Auth.JWT.ToJWT Unison.Sync.Types.HashJWTClaims
-instance Servant.Auth.JWT.FromJWT Unison.Sync.Types.HashJWTClaims
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.HashJWTClaims
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.Sync.Types.HashJWTClaims
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.Path
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.Sync.Types.Path
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Sync.Types.Base64Bytes

@@ -545,6 +545,9 @@ module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema8To9
 --   the root hash id.
 migrateSchema8To9 :: Transaction ()
 
+module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema9To10
+migrateSchema9To10 :: Transaction ()
+
 module Unison.Codebase.SqliteCodebase.SyncEphemeral
 data Dependencies
 Dependencies :: Set Hash -> Set Hash -> Dependencies
@@ -935,13 +938,10 @@ data MutableArray s a
 MutableArray :: MutableArray# s a -> MutableArray s a
 [marray#] :: MutableArray s a -> MutableArray# s a
 
--- | Shrink a mutable byte array. The new size is given in bytes. It must
---   be smaller than the old size. The array will be resized in place.
-shrinkMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> m ()
-
--- | Byte arrays.
-data ByteArray
-ByteArray :: ByteArray# -> ByteArray
+-- | Boxed arrays.
+data Array a
+Array :: Array# a -> Array a
+[array#] :: Array a -> Array# a
 
 -- | The number of elements in an immutable array.
 sizeofArray :: Array a -> Int
@@ -949,128 +949,483 @@ sizeofArray :: Array a -> Int
 -- | The number of elements in a mutable array.
 sizeofMutableArray :: MutableArray s a -> Int
 
+-- | Create a new mutable array of the specified size and initialise all
+--   elements with the given value.
+--   
+--   <i>Note:</i> this function does not check if the input is
+--   non-negative.
+newArray :: PrimMonad m => Int -> a -> m (MutableArray (PrimState m) a)
+
+-- | Read a value from the immutable array at the given index.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+indexArray :: Array a -> Int -> a
+
+-- | Read a value from the immutable array at the given index, returning
+--   the result in an unboxed unary tuple. This is currently used to
+--   implement folds.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+indexArray## :: Array a -> Int -> (# a #)
+
+-- | Monadically read a value from the immutable array at the given index.
+--   This allows us to be strict in the array while remaining lazy in the
+--   read element which is very useful for collective operations. Suppose
+--   we want to copy an array. We could do something like this:
+--   
+--   <pre>
+--   copy marr arr ... = do ...
+--                          writeArray marr i (indexArray arr i) ...
+--                          ...
+--   </pre>
+--   
+--   But since the arrays are lazy, the calls to <a>indexArray</a> will not
+--   be evaluated. Rather, <tt>marr</tt> will be filled with thunks each of
+--   which would retain a reference to <tt>arr</tt>. This is definitely not
+--   what we want!
+--   
+--   With <a>indexArrayM</a>, we can instead write
+--   
+--   <pre>
+--   copy marr arr ... = do ...
+--                          x &lt;- indexArrayM arr i
+--                          writeArray marr i x
+--                          ...
+--   </pre>
+--   
+--   Now, indexing is executed immediately although the returned element is
+--   still not evaluated.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+indexArrayM :: Monad m => Array a -> Int -> m a
+
+-- | Create an immutable copy of a slice of an array.
+--   
+--   This operation makes a copy of the specified section, so it is safe to
+--   continue using the mutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+freezeArray :: PrimMonad m => MutableArray (PrimState m) a -> Int -> Int -> m (Array a)
+
+-- | Convert a mutable array to an immutable one without copying. The array
+--   should not be modified after the conversion.
+unsafeFreezeArray :: PrimMonad m => MutableArray (PrimState m) a -> m (Array a)
+
+-- | Create a mutable array from a slice of an immutable array.
+--   
+--   This operation makes a copy of the specified slice, so it is safe to
+--   use the immutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+thawArray :: PrimMonad m => Array a -> Int -> Int -> m (MutableArray (PrimState m) a)
+
+-- | Convert an immutable array to an mutable one without copying. The
+--   immutable array should not be used after the conversion.
+unsafeThawArray :: PrimMonad m => Array a -> m (MutableArray (PrimState m) a)
+
+-- | Check whether the two arrays refer to the same memory block.
+sameMutableArray :: MutableArray s a -> MutableArray s a -> Bool
+
+-- | Return a newly allocated <a>Array</a> with the specified subrange of
+--   the provided <a>Array</a>.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+cloneArray :: Array a -> Int -> Int -> Array a
+
+-- | The empty <a>Array</a>.
+emptyArray :: Array a
+
 -- | Execute the monadic action and freeze the resulting array.
 --   
 --   <pre>
---   runPrimArray m = runST $ m &gt;&gt;= unsafeFreezePrimArray
+--   runArray m = runST $ m &gt;&gt;= unsafeFreezeArray
 --   </pre>
-runPrimArray :: (forall s. () => ST s (MutablePrimArray s a)) -> PrimArray a
+runArray :: (forall s. () => ST s (MutableArray s a)) -> Array a
 
--- | Return a newly allocated mutable array with the specified subrange of
---   the provided mutable array. The provided mutable array should contain
---   the full subrange specified by the two Ints, but this is not checked.
-cloneMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> Int -> m (MutablePrimArray (PrimState m) a)
+-- | Create an array of the given size with a default value, apply the
+--   monadic function and freeze the result. If the size is 0, return
+--   <a>emptyArray</a> (rather than a new copy thereof).
+--   
+--   <pre>
+--   createArray 0 _ _ = emptyArray
+--   createArray n x f = runArray $ do
+--     mary &lt;- newArray n x
+--     f mary
+--     pure mary
+--   </pre>
+createArray :: Int -> a -> (forall s. () => MutableArray s a -> ST s ()) -> Array a
+
+-- | This is the fastest, most straightforward way to traverse an array,
+--   but it only works correctly with a sufficiently "affine"
+--   <a>PrimMonad</a> instance. In particular, it must only produce
+--   <i>one</i> result array. <a>ListT</a>-transformed monads, for example,
+--   will not work right at all.
+traverseArrayP :: PrimMonad m => (a -> m b) -> Array a -> m (Array b)
+
+-- | Strict map over the elements of the array.
+mapArray' :: (a -> b) -> Array a -> Array b
+
+-- | Create an array from a list of a known length. If the length of the
+--   list does not match the given length, this throws an exception.
+arrayFromListN :: Int -> [a] -> Array a
+
+-- | Create an array from a list.
+arrayFromList :: [a] -> Array a
+
+-- | Byte arrays.
+data ByteArray
+ByteArray :: ByteArray# -> ByteArray
+
+-- | Create a new mutable byte array of the specified size in bytes.
+--   
+--   <i>Note:</i> this function does not check if the input is
+--   non-negative.
+newByteArray :: PrimMonad m => Int -> m (MutableByteArray (PrimState m))
+
+-- | Create a <i>pinned</i> byte array of the specified size in bytes. The
+--   garbage collector is guaranteed not to move it.
+--   
+--   <i>Note:</i> this function does not check if the input is
+--   non-negative.
+newPinnedByteArray :: PrimMonad m => Int -> m (MutableByteArray (PrimState m))
+
+-- | Create a <i>pinned</i> byte array of the specified size in bytes and
+--   with the given alignment. The garbage collector is guaranteed not to
+--   move it.
+--   
+--   <i>Note:</i> this function does not check if the input is
+--   non-negative.
+newAlignedPinnedByteArray :: PrimMonad m => Int -> Int -> m (MutableByteArray (PrimState m))
+
+-- | Yield a pointer to the array's data. This operation is only safe on
+--   <i>pinned</i> byte arrays allocated by <a>newPinnedByteArray</a> or
+--   <a>newAlignedPinnedByteArray</a>.
+byteArrayContents :: ByteArray -> Ptr Word8
+
+-- | Yield a pointer to the array's data. This operation is only safe on
+--   <i>pinned</i> byte arrays allocated by <a>newPinnedByteArray</a> or
+--   <a>newAlignedPinnedByteArray</a>.
+mutableByteArrayContents :: MutableByteArray s -> Ptr Word8
+
+-- | Check if the two arrays refer to the same memory block.
+sameMutableByteArray :: MutableByteArray s -> MutableByteArray s -> Bool
+
+-- | Resize a mutable byte array. The new size is given in bytes.
+--   
+--   This will either resize the array in-place or, if not possible,
+--   allocate the contents into a new, unpinned array and copy the original
+--   array's contents.
+--   
+--   To avoid undefined behaviour, the original <a>MutableByteArray</a>
+--   shall not be accessed anymore after a <a>resizeMutableByteArray</a>
+--   has been performed. Moreover, no reference to the old one should be
+--   kept in order to allow garbage collection of the original
+--   <a>MutableByteArray</a> in case a new <a>MutableByteArray</a> had to
+--   be allocated.
+resizeMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> m (MutableByteArray (PrimState m))
+
+-- | Get the size of a byte array in bytes. Unlike
+--   <a>sizeofMutableByteArray</a>, this function ensures sequencing in the
+--   presence of resizing.
+getSizeofMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> m Int
+
+-- | Create an immutable copy of a slice of a byte array. The offset and
+--   length are given in bytes.
+--   
+--   This operation makes a copy of the specified section, so it is safe to
+--   continue using the mutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+freezeByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> m ByteArray
+
+-- | Create a mutable byte array from a slice of an immutable byte array.
+--   The offset and length are given in bytes.
+--   
+--   This operation makes a copy of the specified slice, so it is safe to
+--   use the immutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+thawByteArray :: PrimMonad m => ByteArray -> Int -> Int -> m (MutableByteArray (PrimState m))
+
+-- | Convert a mutable byte array to an immutable one without copying. The
+--   array should not be modified after the conversion.
+unsafeFreezeByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> m ByteArray
+
+-- | Convert an immutable byte array to a mutable one without copying. The
+--   original array should not be used after the conversion.
+unsafeThawByteArray :: PrimMonad m => ByteArray -> m (MutableByteArray (PrimState m))
+
+-- | Size of the byte array in bytes.
+sizeofByteArray :: ByteArray -> Int
+
+-- | Size of the mutable byte array in bytes. This function's behavior is
+--   undefined if <a>resizeMutableByteArray</a> is ever called on the
+--   mutable byte array given as the argument. Consequently, use of this
+--   function is discouraged. Prefer <a>getSizeofMutableByteArray</a>,
+--   which ensures correct sequencing in the presence of resizing.
+sizeofMutableByteArray :: MutableByteArray s -> Int
+
+-- | Shrink a mutable byte array. The new size is given in bytes. It must
+--   be smaller than the old size. The array will be resized in place.
+shrinkMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> m ()
+
+-- | Check whether or not the byte array is pinned. Pinned byte arrays
+--   cannot be moved by the garbage collector. It is safe to use
+--   <a>byteArrayContents</a> on such byte arrays. This function is only
+--   available when compiling with GHC 8.2 or newer.
+isByteArrayPinned :: ByteArray -> Bool
+
+-- | Check whether or not the mutable byte array is pinned. This function
+--   is only available when compiling with GHC 8.2 or newer.
+isMutableByteArrayPinned :: MutableByteArray s -> Bool
+
+-- | Right-fold over the elements of a <a>ByteArray</a>.
+foldrByteArray :: Prim a => (a -> b -> b) -> b -> ByteArray -> b
+
+-- | Create a <a>ByteArray</a> from a list.
+--   
+--   <pre>
+--   byteArrayFromList xs = <a>byteArrayFromListN</a> (length xs) xs
+--   </pre>
+byteArrayFromList :: Prim a => [a] -> ByteArray
+
+-- | Create a <a>ByteArray</a> from a list of a known length. If the length
+--   of the list does not match the given length, this throws an exception.
+byteArrayFromListN :: Prim a => Int -> [a] -> ByteArray
+
+-- | Copy a slice of a byte array to an unmanaged pointer address. These
+--   must not overlap. The offset and length are given in elements, not in
+--   bytes.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyByteArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> ByteArray -> Int -> Int -> m ()
+
+-- | Copy a slice of a mutable byte array to an unmanaged pointer address.
+--   These must not overlap. The offset and length are given in elements,
+--   not in bytes.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyMutableByteArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> MutableByteArray (PrimState m) -> Int -> Int -> m ()
+
+-- | Copy a slice of a byte array to an unmanaged address. These must not
+--   overlap.
+--   
+--   Note: This function is just <a>copyByteArrayToPtr</a> where <tt>a</tt>
+--   is <a>Word8</a>.
+copyByteArrayToAddr :: PrimMonad m => Ptr Word8 -> ByteArray -> Int -> Int -> m ()
+
+-- | Copy a slice of a mutable byte array to an unmanaged address. These
+--   must not overlap.
+--   
+--   Note: This function is just <a>copyMutableByteArrayToPtr</a> where
+--   <tt>a</tt> is <a>Word8</a>.
+copyMutableByteArrayToAddr :: PrimMonad m => Ptr Word8 -> MutableByteArray (PrimState m) -> Int -> Int -> m ()
+
+-- | Fill a slice of a mutable byte array with a value. The offset and
+--   length are given in elements of type <tt>a</tt> rather than in bytes.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+setByteArray :: (Prim a, PrimMonad m) => MutableByteArray (PrimState m) -> Int -> Int -> a -> m ()
+
+-- | Fill a slice of a mutable byte array with a byte.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+fillByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> Word8 -> m ()
+
+-- | Lexicographic comparison of equal-length slices into two byte arrays.
+--   This wraps the <tt>compareByteArrays#</tt> primop, which wraps
+--   <tt>memcmp</tt>.
+compareByteArrays :: ByteArray -> Int -> ByteArray -> Int -> Int -> Ordering
+
+-- | The empty <a>ByteArray</a>.
+emptyByteArray :: ByteArray
 
 -- | Return a newly allocated array with the specified subrange of the
 --   provided array. The provided array should contain the full subrange
 --   specified by the two Ints, but this is not checked.
-clonePrimArray :: Prim a => PrimArray a -> Int -> Int -> PrimArray a
+cloneByteArray :: ByteArray -> Int -> Int -> ByteArray
 
--- | Yield a pointer to the array's data. This operation is only safe on
---   <i>pinned</i> byte arrays allocated by <tt>newPinnedByteArray</tt> or
---   <tt>newAlignedPinnedByteArray</tt>.
-mutablePrimArrayContents :: MutablePrimArray s a -> Ptr a
+-- | Return a newly allocated mutable array with the specified subrange of
+--   the provided mutable array. The provided mutable array should contain
+--   the full subrange specified by the two Ints, but this is not checked.
+cloneMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> m (MutableByteArray (PrimState m))
 
--- | Yield a pointer to the array's data. This operation is only safe on
---   <i>pinned</i> prim arrays allocated by <tt>newPinnedByteArray</tt> or
---   <tt>newAlignedPinnedByteArray</tt>.
-primArrayContents :: PrimArray a -> Ptr a
-
--- | Create a <i>pinned</i> primitive array of the specified size (in
---   elements) and with the alignment given by its <a>Prim</a> instance.
---   The garbage collector is guaranteed not to move it.
-newAlignedPinnedPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
-
--- | Create a <i>pinned</i> primitive array of the specified size (in
---   elements). The garbage collector is guaranteed not to move it.
-newPinnedPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
-
--- | Traverse the primitive array with the indices, discarding the results.
---   There is no <a>PrimMonad</a> variant of this function, since it would
---   not provide any performance benefit.
-itraversePrimArray_ :: (Applicative f, Prim a) => (Int -> a -> f b) -> PrimArray a -> f ()
-
--- | Traverse the primitive array, discarding the results. There is no
---   <a>PrimMonad</a> variant of this function, since it would not provide
---   any performance benefit.
-traversePrimArray_ :: (Applicative f, Prim a) => (a -> f b) -> PrimArray a -> f ()
-
--- | Execute the applicative action the given number of times and store the
---   results in a <a>PrimArray</a>.
-replicatePrimArrayA :: (Applicative f, Prim a) => Int -> f a -> f (PrimArray a)
-
--- | Generate a primitive array by evaluating the applicative generator
---   function at each index.
-generatePrimArrayA :: (Applicative f, Prim a) => Int -> (Int -> f a) -> f (PrimArray a)
-
--- | Create a primitive array by copying the element the given number of
---   times.
-replicatePrimArray :: Prim a => Int -> a -> PrimArray a
-
--- | Generate a primitive array.
-generatePrimArray :: Prim a => Int -> (Int -> a) -> PrimArray a
-
--- | Traverse a primitive array with the indices. The traversal forces the
---   resulting values and writes them to the new primitive array as it
---   performs the monadic effects.
-itraversePrimArrayP :: (Prim a, Prim b, PrimMonad m) => (Int -> a -> m b) -> PrimArray a -> m (PrimArray b)
-
--- | Traverse a primitive array with the index of each element.
-itraversePrimArray :: (Applicative f, Prim a, Prim b) => (Int -> a -> f b) -> PrimArray a -> f (PrimArray b)
-
--- | Traverse a primitive array. The traversal performs all of the
---   applicative effects <i>before</i> forcing the resulting values and
---   writing them to the new primitive array. Consequently:
+-- | Execute the monadic action and freeze the resulting array.
 --   
 --   <pre>
---   &gt;&gt;&gt; traversePrimArray (\x -&gt; print x $&gt; bool x undefined (x == 2)) (fromList [1, 2, 3 :: Int])
---   1
---   2
---   3
---   *** Exception: Prelude.undefined
+--   runByteArray m = runST $ m &gt;&gt;= unsafeFreezeByteArray
 --   </pre>
+runByteArray :: (forall s. () => ST s (MutableByteArray s)) -> ByteArray
+
+-- | Mutable primitive arrays associated with a primitive state token.
+--   These can be written to and read from in a monadic context that
+--   supports sequencing, such as <a>IO</a> or <a>ST</a>. Typically, a
+--   mutable primitive array will be built and then converted to an
+--   immutable primitive array using <a>unsafeFreezePrimArray</a>. However,
+--   it is also acceptable to simply discard a mutable primitive array
+--   since it lives in managed memory and will be garbage collected when no
+--   longer referenced.
+data MutablePrimArray s a
+MutablePrimArray :: MutableByteArray# s -> MutablePrimArray s a
+
+-- | Arrays of unboxed elements. This accepts types like <a>Double</a>,
+--   <a>Char</a>, <a>Int</a> and <a>Word</a>, as well as their fixed-length
+--   variants (<tt>Word8</tt>, <tt>Word16</tt>, etc.). Since the elements
+--   are unboxed, a <a>PrimArray</a> is strict in its elements. This
+--   differs from the behavior of <a>Array</a>, which is lazy in its
+--   elements.
+data PrimArray a
+PrimArray :: ByteArray# -> PrimArray a
+
+-- | Create a <a>PrimArray</a> from a list.
 --   
---   The function <a>traversePrimArrayP</a> always outperforms this
---   function, but it requires a <a>PrimMonad</a> constraint, and it forces
---   the values as it performs the effects.
-traversePrimArray :: (Applicative f, Prim a, Prim b) => (a -> f b) -> PrimArray a -> f (PrimArray b)
+--   <pre>
+--   primArrayFromList vs = <a>primArrayFromListN</a> (length vs) vs
+--   </pre>
+primArrayFromList :: Prim a => [a] -> PrimArray a
 
--- | Map over a primitive array, optionally discarding some elements. This
---   has the same behavior as <tt>Data.Maybe.mapMaybe</tt>.
-mapMaybePrimArray :: (Prim a, Prim b) => (a -> Maybe b) -> PrimArray a -> PrimArray b
+-- | Create a <a>PrimArray</a> from a list of a known length. If the length
+--   of the list does not match the given length, this throws an exception.
+primArrayFromListN :: Prim a => Int -> [a] -> PrimArray a
 
--- | Map over the primitive array, keeping the elements for which the
---   applicative predicate provides a <a>Just</a>.
-mapMaybePrimArrayA :: (Applicative f, Prim a, Prim b) => (a -> f (Maybe b)) -> PrimArray a -> f (PrimArray b)
+-- | Convert a <a>PrimArray</a> to a list.
+primArrayToList :: Prim a => PrimArray a -> [a]
 
--- | Filter the primitive array, keeping the elements for which the monadic
---   predicate evaluates true.
-filterPrimArrayA :: (Applicative f, Prim a) => (a -> f Bool) -> PrimArray a -> f (PrimArray a)
+-- | The empty <a>PrimArray</a>.
+emptyPrimArray :: PrimArray a
 
--- | Filter elements of a primitive array according to a predicate.
-filterPrimArray :: Prim a => (a -> Bool) -> PrimArray a -> PrimArray a
+-- | Create a new mutable primitive array of the given length. The
+--   underlying memory is left uninitialized.
+--   
+--   <i>Note:</i> this function does not check if the input is
+--   non-negative.
+newPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
 
--- | Indexed map over the elements of a primitive array.
-imapPrimArray :: (Prim a, Prim b) => (Int -> a -> b) -> PrimArray a -> PrimArray b
+-- | Resize a mutable primitive array. The new size is given in elements.
+--   
+--   This will either resize the array in-place or, if not possible,
+--   allocate the contents into a new, unpinned array and copy the original
+--   array's contents.
+--   
+--   To avoid undefined behaviour, the original <a>MutablePrimArray</a>
+--   shall not be accessed anymore after a <a>resizeMutablePrimArray</a>
+--   has been performed. Moreover, no reference to the old one should be
+--   kept in order to allow garbage collection of the original
+--   <a>MutablePrimArray</a> in case a new <a>MutablePrimArray</a> had to
+--   be allocated.
+resizeMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> m (MutablePrimArray (PrimState m) a)
 
--- | Map over the elements of a primitive array.
-mapPrimArray :: (Prim a, Prim b) => (a -> b) -> PrimArray a -> PrimArray b
+-- | Shrink a mutable primitive array. The new size is given in elements.
+--   It must be smaller than the old size. The array will be resized in
+--   place.
+shrinkMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> m ()
 
--- | Execute the monadic action the given number of times and store the
---   results in a primitive array.
-replicatePrimArrayP :: (PrimMonad m, Prim a) => Int -> m a -> m (PrimArray a)
+-- | Copy part of a mutable array into another mutable array. In the case
+--   that the destination and source arrays are the same, the regions may
+--   overlap.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> MutablePrimArray (PrimState m) a -> Int -> Int -> m ()
 
--- | Generate a primitive array by evaluating the monadic generator
---   function at each index.
-generatePrimArrayP :: (PrimMonad m, Prim a) => Int -> (Int -> m a) -> m (PrimArray a)
+-- | Copy part of an array into another mutable array.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyPrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> PrimArray a -> Int -> Int -> m ()
 
--- | Map over the primitive array, keeping the elements for which the
---   monadic predicate provides a <a>Just</a>.
-mapMaybePrimArrayP :: (PrimMonad m, Prim a, Prim b) => (a -> m (Maybe b)) -> PrimArray a -> m (PrimArray b)
+-- | Copy a slice of an immutable primitive array to a pointer. The offset
+--   and length are given in elements of type <tt>a</tt>. This function
+--   assumes that the <a>Prim</a> instance of <tt>a</tt> agrees with the
+--   <tt>Storable</tt> instance.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyPrimArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> PrimArray a -> Int -> Int -> m ()
 
--- | Filter the primitive array, keeping the elements for which the monadic
---   predicate evaluates to true.
-filterPrimArrayP :: (PrimMonad m, Prim a) => (a -> m Bool) -> PrimArray a -> m (PrimArray a)
+-- | Copy a slice of a mutable primitive array to a pointer. The offset and
+--   length are given in elements of type <tt>a</tt>. This function assumes
+--   that the <a>Prim</a> instance of <tt>a</tt> agrees with the
+--   <tt>Storable</tt> instance.
+--   
+--   <i>Note:</i> this function does not do bounds or overlap checking.
+copyMutablePrimArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> MutablePrimArray (PrimState m) a -> Int -> Int -> m ()
+
+-- | Fill a slice of a mutable primitive array with a value.
+--   
+--   <i>Note:</i> this function does not do bounds checking.
+setPrimArray :: (Prim a, PrimMonad m) => MutablePrimArray (PrimState m) a -> Int -> Int -> a -> m ()
+
+-- | Get the size of a mutable primitive array in elements. Unlike
+--   <a>sizeofMutablePrimArray</a>, this function ensures sequencing in the
+--   presence of resizing.
+getSizeofMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> m Int
+
+-- | Size of the mutable primitive array in elements. This function shall
+--   not be used on primitive arrays that are an argument to or a result of
+--   <a>resizeMutablePrimArray</a> or <a>shrinkMutablePrimArray</a>.
+sizeofMutablePrimArray :: forall s a. Prim a => MutablePrimArray s a -> Int
+
+-- | Check if the two arrays refer to the same memory block.
+sameMutablePrimArray :: MutablePrimArray s a -> MutablePrimArray s a -> Bool
+
+-- | Create an immutable copy of a slice of a primitive array. The offset
+--   and length are given in elements.
+--   
+--   This operation makes a copy of the specified section, so it is safe to
+--   continue using the mutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+freezePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> Int -> m (PrimArray a)
+
+-- | Create a mutable primitive array from a slice of an immutable
+--   primitive array. The offset and length are given in elements.
+--   
+--   This operation makes a copy of the specified slice, so it is safe to
+--   use the immutable array afterward.
+--   
+--   <i>Note:</i> The provided array should contain the full subrange
+--   specified by the two Ints, but this is not checked.
+thawPrimArray :: (PrimMonad m, Prim a) => PrimArray a -> Int -> Int -> m (MutablePrimArray (PrimState m) a)
+
+-- | Convert a mutable primitive array to an immutable one without copying.
+--   The array should not be modified after the conversion.
+unsafeFreezePrimArray :: PrimMonad m => MutablePrimArray (PrimState m) a -> m (PrimArray a)
+
+-- | Convert an immutable array to a mutable one without copying. The
+--   original array should not be used after the conversion.
+unsafeThawPrimArray :: PrimMonad m => PrimArray a -> m (MutablePrimArray (PrimState m) a)
+
+-- | Get the size, in elements, of the primitive array.
+sizeofPrimArray :: Prim a => PrimArray a -> Int
+
+-- | Check whether or not the primitive array is pinned. Pinned primitive
+--   arrays cannot be moved by the garbage collector. It is safe to use
+--   <a>primArrayContents</a> on such arrays. This function is only
+--   available when compiling with GHC 8.2 or newer.
+isPrimArrayPinned :: PrimArray a -> Bool
+
+-- | Check whether or not the mutable primitive array is pinned. This
+--   function is only available when compiling with GHC 8.2 or newer.
+isMutablePrimArrayPinned :: MutablePrimArray s a -> Bool
+
+-- | Lazy right-associated fold over the elements of a <a>PrimArray</a>.
+foldrPrimArray :: Prim a => (a -> b -> b) -> b -> PrimArray a -> b
+
+-- | Strict right-associated fold over the elements of a <a>PrimArray</a>.
+foldrPrimArray' :: Prim a => (a -> b -> b) -> b -> PrimArray a -> b
+
+-- | Lazy left-associated fold over the elements of a <a>PrimArray</a>.
+foldlPrimArray :: Prim a => (b -> a -> b) -> b -> PrimArray a -> b
+
+-- | Strict left-associated fold over the elements of a <a>PrimArray</a>.
+foldlPrimArray' :: Prim a => (b -> a -> b) -> b -> PrimArray a -> b
+
+-- | Strict left-associated fold over the elements of a <a>PrimArray</a>.
+foldlPrimArrayM' :: (Prim a, Monad m) => (b -> a -> m b) -> b -> PrimArray a -> m b
 
 -- | Traverse a primitive array. The traversal forces the resulting values
 --   and writes them to the new primitive array as it performs the monadic
@@ -1108,480 +1463,128 @@ filterPrimArrayP :: (PrimMonad m, Prim a) => (a -> m Bool) -> PrimArray a -> m (
 --   faster than the first. It also results in fewer allocations.
 traversePrimArrayP :: (PrimMonad m, Prim a, Prim b) => (a -> m b) -> PrimArray a -> m (PrimArray b)
 
--- | Strict left-associated fold over the elements of a <a>PrimArray</a>.
-foldlPrimArrayM' :: (Prim a, Monad m) => (b -> a -> m b) -> b -> PrimArray a -> m b
+-- | Filter the primitive array, keeping the elements for which the monadic
+--   predicate evaluates to true.
+filterPrimArrayP :: (PrimMonad m, Prim a) => (a -> m Bool) -> PrimArray a -> m (PrimArray a)
 
--- | Strict left-associated fold over the elements of a <a>PrimArray</a>.
-foldlPrimArray' :: Prim a => (b -> a -> b) -> b -> PrimArray a -> b
+-- | Map over the primitive array, keeping the elements for which the
+--   monadic predicate provides a <a>Just</a>.
+mapMaybePrimArrayP :: (PrimMonad m, Prim a, Prim b) => (a -> m (Maybe b)) -> PrimArray a -> m (PrimArray b)
 
--- | Lazy left-associated fold over the elements of a <a>PrimArray</a>.
-foldlPrimArray :: Prim a => (b -> a -> b) -> b -> PrimArray a -> b
+-- | Generate a primitive array by evaluating the monadic generator
+--   function at each index.
+generatePrimArrayP :: (PrimMonad m, Prim a) => Int -> (Int -> m a) -> m (PrimArray a)
 
--- | Strict right-associated fold over the elements of a <a>PrimArray</a>.
-foldrPrimArray' :: Prim a => (a -> b -> b) -> b -> PrimArray a -> b
+-- | Execute the monadic action the given number of times and store the
+--   results in a primitive array.
+replicatePrimArrayP :: (PrimMonad m, Prim a) => Int -> m a -> m (PrimArray a)
 
--- | Lazy right-associated fold over the elements of a <a>PrimArray</a>.
-foldrPrimArray :: Prim a => (a -> b -> b) -> b -> PrimArray a -> b
+-- | Map over the elements of a primitive array.
+mapPrimArray :: (Prim a, Prim b) => (a -> b) -> PrimArray a -> PrimArray b
 
--- | Check whether or not the mutable primitive array is pinned. This
---   function is only available when compiling with GHC 8.2 or newer.
-isMutablePrimArrayPinned :: MutablePrimArray s a -> Bool
+-- | Indexed map over the elements of a primitive array.
+imapPrimArray :: (Prim a, Prim b) => (Int -> a -> b) -> PrimArray a -> PrimArray b
 
--- | Check whether or not the primitive array is pinned. Pinned primitive
---   arrays cannot be moved by the garbage collector. It is safe to use
---   <a>primArrayContents</a> on such arrays. This function is only
---   available when compiling with GHC 8.2 or newer.
-isPrimArrayPinned :: PrimArray a -> Bool
+-- | Filter elements of a primitive array according to a predicate.
+filterPrimArray :: Prim a => (a -> Bool) -> PrimArray a -> PrimArray a
 
--- | Get the size, in elements, of the primitive array.
-sizeofPrimArray :: Prim a => PrimArray a -> Int
+-- | Filter the primitive array, keeping the elements for which the monadic
+--   predicate evaluates true.
+filterPrimArrayA :: (Applicative f, Prim a) => (a -> f Bool) -> PrimArray a -> f (PrimArray a)
 
--- | Convert an immutable array to a mutable one without copying. The
---   original array should not be used after the conversion.
-unsafeThawPrimArray :: PrimMonad m => PrimArray a -> m (MutablePrimArray (PrimState m) a)
+-- | Map over the primitive array, keeping the elements for which the
+--   applicative predicate provides a <a>Just</a>.
+mapMaybePrimArrayA :: (Applicative f, Prim a, Prim b) => (a -> f (Maybe b)) -> PrimArray a -> f (PrimArray b)
 
--- | Convert a mutable primitive array to an immutable one without copying.
---   The array should not be modified after the conversion.
-unsafeFreezePrimArray :: PrimMonad m => MutablePrimArray (PrimState m) a -> m (PrimArray a)
+-- | Map over a primitive array, optionally discarding some elements. This
+--   has the same behavior as <tt>Data.Maybe.mapMaybe</tt>.
+mapMaybePrimArray :: (Prim a, Prim b) => (a -> Maybe b) -> PrimArray a -> PrimArray b
 
--- | Create a mutable primitive array from a slice of an immutable
---   primitive array. The offset and length are given in elements.
---   
---   This operation makes a copy of the specified slice, so it is safe to
---   use the immutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-thawPrimArray :: (PrimMonad m, Prim a) => PrimArray a -> Int -> Int -> m (MutablePrimArray (PrimState m) a)
-
--- | Create an immutable copy of a slice of a primitive array. The offset
---   and length are given in elements.
---   
---   This operation makes a copy of the specified section, so it is safe to
---   continue using the mutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-freezePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> Int -> m (PrimArray a)
-
--- | Check if the two arrays refer to the same memory block.
-sameMutablePrimArray :: MutablePrimArray s a -> MutablePrimArray s a -> Bool
-
--- | Size of the mutable primitive array in elements. This function shall
---   not be used on primitive arrays that are an argument to or a result of
---   <a>resizeMutablePrimArray</a> or <a>shrinkMutablePrimArray</a>.
-sizeofMutablePrimArray :: forall s a. Prim a => MutablePrimArray s a -> Int
-
--- | Get the size of a mutable primitive array in elements. Unlike
---   <a>sizeofMutablePrimArray</a>, this function ensures sequencing in the
---   presence of resizing.
-getSizeofMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> m Int
-
--- | Fill a slice of a mutable primitive array with a value.
---   
---   <i>Note:</i> this function does not do bounds checking.
-setPrimArray :: (Prim a, PrimMonad m) => MutablePrimArray (PrimState m) a -> Int -> Int -> a -> m ()
-
--- | Copy a slice of a mutable primitive array to a pointer. The offset and
---   length are given in elements of type <tt>a</tt>. This function assumes
---   that the <a>Prim</a> instance of <tt>a</tt> agrees with the
---   <tt>Storable</tt> instance.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyMutablePrimArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> MutablePrimArray (PrimState m) a -> Int -> Int -> m ()
-
--- | Copy a slice of an immutable primitive array to a pointer. The offset
---   and length are given in elements of type <tt>a</tt>. This function
---   assumes that the <a>Prim</a> instance of <tt>a</tt> agrees with the
---   <tt>Storable</tt> instance.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyPrimArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> PrimArray a -> Int -> Int -> m ()
-
--- | Copy part of an array into another mutable array.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyPrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> PrimArray a -> Int -> Int -> m ()
-
--- | Copy part of a mutable array into another mutable array. In the case
---   that the destination and source arrays are the same, the regions may
---   overlap.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> MutablePrimArray (PrimState m) a -> Int -> Int -> m ()
-
--- | Shrink a mutable primitive array. The new size is given in elements.
---   It must be smaller than the old size. The array will be resized in
---   place.
-shrinkMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> m ()
-
--- | Resize a mutable primitive array. The new size is given in elements.
---   
---   This will either resize the array in-place or, if not possible,
---   allocate the contents into a new, unpinned array and copy the original
---   array's contents.
---   
---   To avoid undefined behaviour, the original <a>MutablePrimArray</a>
---   shall not be accessed anymore after a <a>resizeMutablePrimArray</a>
---   has been performed. Moreover, no reference to the old one should be
---   kept in order to allow garbage collection of the original
---   <a>MutablePrimArray</a> in case a new <a>MutablePrimArray</a> had to
---   be allocated.
-resizeMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> m (MutablePrimArray (PrimState m) a)
-
--- | Create a new mutable primitive array of the given length. The
---   underlying memory is left uninitialized.
---   
---   <i>Note:</i> this function does not check if the input is
---   non-negative.
-newPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
-
--- | The empty <a>PrimArray</a>.
-emptyPrimArray :: PrimArray a
-
--- | Convert a <a>PrimArray</a> to a list.
-primArrayToList :: Prim a => PrimArray a -> [a]
-
--- | Create a <a>PrimArray</a> from a list of a known length. If the length
---   of the list does not match the given length, this throws an exception.
-primArrayFromListN :: Prim a => Int -> [a] -> PrimArray a
-
--- | Create a <a>PrimArray</a> from a list.
+-- | Traverse a primitive array. The traversal performs all of the
+--   applicative effects <i>before</i> forcing the resulting values and
+--   writing them to the new primitive array. Consequently:
 --   
 --   <pre>
---   primArrayFromList vs = <a>primArrayFromListN</a> (length vs) vs
+--   &gt;&gt;&gt; traversePrimArray (\x -&gt; print x $&gt; bool x undefined (x == 2)) (fromList [1, 2, 3 :: Int])
+--   1
+--   2
+--   3
+--   *** Exception: Prelude.undefined
 --   </pre>
-primArrayFromList :: Prim a => [a] -> PrimArray a
-
--- | Arrays of unboxed elements. This accepts types like <a>Double</a>,
---   <a>Char</a>, <a>Int</a> and <a>Word</a>, as well as their fixed-length
---   variants (<tt>Word8</tt>, <tt>Word16</tt>, etc.). Since the elements
---   are unboxed, a <a>PrimArray</a> is strict in its elements. This
---   differs from the behavior of <a>Array</a>, which is lazy in its
---   elements.
-data PrimArray a
-PrimArray :: ByteArray# -> PrimArray a
-
--- | Mutable primitive arrays associated with a primitive state token.
---   These can be written to and read from in a monadic context that
---   supports sequencing, such as <a>IO</a> or <a>ST</a>. Typically, a
---   mutable primitive array will be built and then converted to an
---   immutable primitive array using <a>unsafeFreezePrimArray</a>. However,
---   it is also acceptable to simply discard a mutable primitive array
---   since it lives in managed memory and will be garbage collected when no
---   longer referenced.
-data MutablePrimArray s a
-MutablePrimArray :: MutableByteArray# s -> MutablePrimArray s a
-
--- | Execute the monadic action and freeze the resulting array.
 --   
---   <pre>
---   runByteArray m = runST $ m &gt;&gt;= unsafeFreezeByteArray
---   </pre>
-runByteArray :: (forall s. () => ST s (MutableByteArray s)) -> ByteArray
+--   The function <a>traversePrimArrayP</a> always outperforms this
+--   function, but it requires a <a>PrimMonad</a> constraint, and it forces
+--   the values as it performs the effects.
+traversePrimArray :: (Applicative f, Prim a, Prim b) => (a -> f b) -> PrimArray a -> f (PrimArray b)
 
--- | Return a newly allocated mutable array with the specified subrange of
---   the provided mutable array. The provided mutable array should contain
---   the full subrange specified by the two Ints, but this is not checked.
-cloneMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> m (MutableByteArray (PrimState m))
+-- | Traverse a primitive array with the index of each element.
+itraversePrimArray :: (Applicative f, Prim a, Prim b) => (Int -> a -> f b) -> PrimArray a -> f (PrimArray b)
+
+-- | Traverse a primitive array with the indices. The traversal forces the
+--   resulting values and writes them to the new primitive array as it
+--   performs the monadic effects.
+itraversePrimArrayP :: (Prim a, Prim b, PrimMonad m) => (Int -> a -> m b) -> PrimArray a -> m (PrimArray b)
+
+-- | Generate a primitive array.
+generatePrimArray :: Prim a => Int -> (Int -> a) -> PrimArray a
+
+-- | Create a primitive array by copying the element the given number of
+--   times.
+replicatePrimArray :: Prim a => Int -> a -> PrimArray a
+
+-- | Generate a primitive array by evaluating the applicative generator
+--   function at each index.
+generatePrimArrayA :: (Applicative f, Prim a) => Int -> (Int -> f a) -> f (PrimArray a)
+
+-- | Execute the applicative action the given number of times and store the
+--   results in a <a>PrimArray</a>.
+replicatePrimArrayA :: (Applicative f, Prim a) => Int -> f a -> f (PrimArray a)
+
+-- | Traverse the primitive array, discarding the results. There is no
+--   <a>PrimMonad</a> variant of this function, since it would not provide
+--   any performance benefit.
+traversePrimArray_ :: (Applicative f, Prim a) => (a -> f b) -> PrimArray a -> f ()
+
+-- | Traverse the primitive array with the indices, discarding the results.
+--   There is no <a>PrimMonad</a> variant of this function, since it would
+--   not provide any performance benefit.
+itraversePrimArray_ :: (Applicative f, Prim a) => (Int -> a -> f b) -> PrimArray a -> f ()
+
+-- | Create a <i>pinned</i> primitive array of the specified size (in
+--   elements). The garbage collector is guaranteed not to move it.
+newPinnedPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
+
+-- | Create a <i>pinned</i> primitive array of the specified size (in
+--   elements) and with the alignment given by its <a>Prim</a> instance.
+--   The garbage collector is guaranteed not to move it.
+newAlignedPinnedPrimArray :: (PrimMonad m, Prim a) => Int -> m (MutablePrimArray (PrimState m) a)
+
+-- | Yield a pointer to the array's data. This operation is only safe on
+--   <i>pinned</i> prim arrays allocated by <tt>newPinnedByteArray</tt> or
+--   <tt>newAlignedPinnedByteArray</tt>.
+primArrayContents :: PrimArray a -> Ptr a
+
+-- | Yield a pointer to the array's data. This operation is only safe on
+--   <i>pinned</i> byte arrays allocated by <tt>newPinnedByteArray</tt> or
+--   <tt>newAlignedPinnedByteArray</tt>.
+mutablePrimArrayContents :: MutablePrimArray s a -> Ptr a
 
 -- | Return a newly allocated array with the specified subrange of the
 --   provided array. The provided array should contain the full subrange
 --   specified by the two Ints, but this is not checked.
-cloneByteArray :: ByteArray -> Int -> Int -> ByteArray
+clonePrimArray :: Prim a => PrimArray a -> Int -> Int -> PrimArray a
 
--- | The empty <a>ByteArray</a>.
-emptyByteArray :: ByteArray
-
--- | Lexicographic comparison of equal-length slices into two byte arrays.
---   This wraps the <tt>compareByteArrays#</tt> primop, which wraps
---   <tt>memcmp</tt>.
-compareByteArrays :: ByteArray -> Int -> ByteArray -> Int -> Int -> Ordering
-
--- | Fill a slice of a mutable byte array with a byte.
---   
---   <i>Note:</i> this function does not do bounds checking.
-fillByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> Word8 -> m ()
-
--- | Fill a slice of a mutable byte array with a value. The offset and
---   length are given in elements of type <tt>a</tt> rather than in bytes.
---   
---   <i>Note:</i> this function does not do bounds checking.
-setByteArray :: (Prim a, PrimMonad m) => MutableByteArray (PrimState m) -> Int -> Int -> a -> m ()
-
--- | Copy a slice of a mutable byte array to an unmanaged address. These
---   must not overlap.
---   
---   Note: This function is just <a>copyMutableByteArrayToPtr</a> where
---   <tt>a</tt> is <a>Word8</a>.
-copyMutableByteArrayToAddr :: PrimMonad m => Ptr Word8 -> MutableByteArray (PrimState m) -> Int -> Int -> m ()
-
--- | Copy a slice of a byte array to an unmanaged address. These must not
---   overlap.
---   
---   Note: This function is just <a>copyByteArrayToPtr</a> where <tt>a</tt>
---   is <a>Word8</a>.
-copyByteArrayToAddr :: PrimMonad m => Ptr Word8 -> ByteArray -> Int -> Int -> m ()
-
--- | Copy a slice of a mutable byte array to an unmanaged pointer address.
---   These must not overlap. The offset and length are given in elements,
---   not in bytes.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyMutableByteArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> MutableByteArray (PrimState m) -> Int -> Int -> m ()
-
--- | Copy a slice of a byte array to an unmanaged pointer address. These
---   must not overlap. The offset and length are given in elements, not in
---   bytes.
---   
---   <i>Note:</i> this function does not do bounds or overlap checking.
-copyByteArrayToPtr :: (PrimMonad m, Prim a) => Ptr a -> ByteArray -> Int -> Int -> m ()
-
--- | Create a <a>ByteArray</a> from a list of a known length. If the length
---   of the list does not match the given length, this throws an exception.
-byteArrayFromListN :: Prim a => Int -> [a] -> ByteArray
-
--- | Create a <a>ByteArray</a> from a list.
---   
---   <pre>
---   byteArrayFromList xs = <a>byteArrayFromListN</a> (length xs) xs
---   </pre>
-byteArrayFromList :: Prim a => [a] -> ByteArray
-
--- | Right-fold over the elements of a <a>ByteArray</a>.
-foldrByteArray :: Prim a => (a -> b -> b) -> b -> ByteArray -> b
-
--- | Check whether or not the mutable byte array is pinned. This function
---   is only available when compiling with GHC 8.2 or newer.
-isMutableByteArrayPinned :: MutableByteArray s -> Bool
-
--- | Check whether or not the byte array is pinned. Pinned byte arrays
---   cannot be moved by the garbage collector. It is safe to use
---   <a>byteArrayContents</a> on such byte arrays. This function is only
---   available when compiling with GHC 8.2 or newer.
-isByteArrayPinned :: ByteArray -> Bool
-
--- | Size of the mutable byte array in bytes. This function's behavior is
---   undefined if <a>resizeMutableByteArray</a> is ever called on the
---   mutable byte array given as the argument. Consequently, use of this
---   function is discouraged. Prefer <a>getSizeofMutableByteArray</a>,
---   which ensures correct sequencing in the presence of resizing.
-sizeofMutableByteArray :: MutableByteArray s -> Int
-
--- | Size of the byte array in bytes.
-sizeofByteArray :: ByteArray -> Int
-
--- | Convert an immutable byte array to a mutable one without copying. The
---   original array should not be used after the conversion.
-unsafeThawByteArray :: PrimMonad m => ByteArray -> m (MutableByteArray (PrimState m))
-
--- | Convert a mutable byte array to an immutable one without copying. The
---   array should not be modified after the conversion.
-unsafeFreezeByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> m ByteArray
-
--- | Create a mutable byte array from a slice of an immutable byte array.
---   The offset and length are given in bytes.
---   
---   This operation makes a copy of the specified slice, so it is safe to
---   use the immutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-thawByteArray :: PrimMonad m => ByteArray -> Int -> Int -> m (MutableByteArray (PrimState m))
-
--- | Create an immutable copy of a slice of a byte array. The offset and
---   length are given in bytes.
---   
---   This operation makes a copy of the specified section, so it is safe to
---   continue using the mutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-freezeByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> Int -> m ByteArray
-
--- | Get the size of a byte array in bytes. Unlike
---   <a>sizeofMutableByteArray</a>, this function ensures sequencing in the
---   presence of resizing.
-getSizeofMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> m Int
-
--- | Resize a mutable byte array. The new size is given in bytes.
---   
---   This will either resize the array in-place or, if not possible,
---   allocate the contents into a new, unpinned array and copy the original
---   array's contents.
---   
---   To avoid undefined behaviour, the original <a>MutableByteArray</a>
---   shall not be accessed anymore after a <a>resizeMutableByteArray</a>
---   has been performed. Moreover, no reference to the old one should be
---   kept in order to allow garbage collection of the original
---   <a>MutableByteArray</a> in case a new <a>MutableByteArray</a> had to
---   be allocated.
-resizeMutableByteArray :: PrimMonad m => MutableByteArray (PrimState m) -> Int -> m (MutableByteArray (PrimState m))
-
--- | Check if the two arrays refer to the same memory block.
-sameMutableByteArray :: MutableByteArray s -> MutableByteArray s -> Bool
-
--- | Yield a pointer to the array's data. This operation is only safe on
---   <i>pinned</i> byte arrays allocated by <a>newPinnedByteArray</a> or
---   <a>newAlignedPinnedByteArray</a>.
-mutableByteArrayContents :: MutableByteArray s -> Ptr Word8
-
--- | Yield a pointer to the array's data. This operation is only safe on
---   <i>pinned</i> byte arrays allocated by <a>newPinnedByteArray</a> or
---   <a>newAlignedPinnedByteArray</a>.
-byteArrayContents :: ByteArray -> Ptr Word8
-
--- | Create a <i>pinned</i> byte array of the specified size in bytes and
---   with the given alignment. The garbage collector is guaranteed not to
---   move it.
---   
---   <i>Note:</i> this function does not check if the input is
---   non-negative.
-newAlignedPinnedByteArray :: PrimMonad m => Int -> Int -> m (MutableByteArray (PrimState m))
-
--- | Create a <i>pinned</i> byte array of the specified size in bytes. The
---   garbage collector is guaranteed not to move it.
---   
---   <i>Note:</i> this function does not check if the input is
---   non-negative.
-newPinnedByteArray :: PrimMonad m => Int -> m (MutableByteArray (PrimState m))
-
--- | Create a new mutable byte array of the specified size in bytes.
---   
---   <i>Note:</i> this function does not check if the input is
---   non-negative.
-newByteArray :: PrimMonad m => Int -> m (MutableByteArray (PrimState m))
-
--- | Create an array from a list.
-arrayFromList :: [a] -> Array a
-
--- | Create an array from a list of a known length. If the length of the
---   list does not match the given length, this throws an exception.
-arrayFromListN :: Int -> [a] -> Array a
-
--- | Strict map over the elements of the array.
-mapArray' :: (a -> b) -> Array a -> Array b
-
--- | This is the fastest, most straightforward way to traverse an array,
---   but it only works correctly with a sufficiently "affine"
---   <a>PrimMonad</a> instance. In particular, it must only produce
---   <i>one</i> result array. <a>ListT</a>-transformed monads, for example,
---   will not work right at all.
-traverseArrayP :: PrimMonad m => (a -> m b) -> Array a -> m (Array b)
-
--- | Create an array of the given size with a default value, apply the
---   monadic function and freeze the result. If the size is 0, return
---   <a>emptyArray</a> (rather than a new copy thereof).
---   
---   <pre>
---   createArray 0 _ _ = emptyArray
---   createArray n x f = runArray $ do
---     mary &lt;- newArray n x
---     f mary
---     pure mary
---   </pre>
-createArray :: Int -> a -> (forall s. () => MutableArray s a -> ST s ()) -> Array a
+-- | Return a newly allocated mutable array with the specified subrange of
+--   the provided mutable array. The provided mutable array should contain
+--   the full subrange specified by the two Ints, but this is not checked.
+cloneMutablePrimArray :: (PrimMonad m, Prim a) => MutablePrimArray (PrimState m) a -> Int -> Int -> m (MutablePrimArray (PrimState m) a)
 
 -- | Execute the monadic action and freeze the resulting array.
 --   
 --   <pre>
---   runArray m = runST $ m &gt;&gt;= unsafeFreezeArray
+--   runPrimArray m = runST $ m &gt;&gt;= unsafeFreezePrimArray
 --   </pre>
-runArray :: (forall s. () => ST s (MutableArray s a)) -> Array a
-
--- | The empty <a>Array</a>.
-emptyArray :: Array a
-
--- | Return a newly allocated <a>Array</a> with the specified subrange of
---   the provided <a>Array</a>.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-cloneArray :: Array a -> Int -> Int -> Array a
-
--- | Check whether the two arrays refer to the same memory block.
-sameMutableArray :: MutableArray s a -> MutableArray s a -> Bool
-
--- | Convert an immutable array to an mutable one without copying. The
---   immutable array should not be used after the conversion.
-unsafeThawArray :: PrimMonad m => Array a -> m (MutableArray (PrimState m) a)
-
--- | Create a mutable array from a slice of an immutable array.
---   
---   This operation makes a copy of the specified slice, so it is safe to
---   use the immutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-thawArray :: PrimMonad m => Array a -> Int -> Int -> m (MutableArray (PrimState m) a)
-
--- | Convert a mutable array to an immutable one without copying. The array
---   should not be modified after the conversion.
-unsafeFreezeArray :: PrimMonad m => MutableArray (PrimState m) a -> m (Array a)
-
--- | Create an immutable copy of a slice of an array.
---   
---   This operation makes a copy of the specified section, so it is safe to
---   continue using the mutable array afterward.
---   
---   <i>Note:</i> The provided array should contain the full subrange
---   specified by the two Ints, but this is not checked.
-freezeArray :: PrimMonad m => MutableArray (PrimState m) a -> Int -> Int -> m (Array a)
-
--- | Monadically read a value from the immutable array at the given index.
---   This allows us to be strict in the array while remaining lazy in the
---   read element which is very useful for collective operations. Suppose
---   we want to copy an array. We could do something like this:
---   
---   <pre>
---   copy marr arr ... = do ...
---                          writeArray marr i (indexArray arr i) ...
---                          ...
---   </pre>
---   
---   But since the arrays are lazy, the calls to <a>indexArray</a> will not
---   be evaluated. Rather, <tt>marr</tt> will be filled with thunks each of
---   which would retain a reference to <tt>arr</tt>. This is definitely not
---   what we want!
---   
---   With <a>indexArrayM</a>, we can instead write
---   
---   <pre>
---   copy marr arr ... = do ...
---                          x &lt;- indexArrayM arr i
---                          writeArray marr i x
---                          ...
---   </pre>
---   
---   Now, indexing is executed immediately although the returned element is
---   still not evaluated.
---   
---   <i>Note:</i> this function does not do bounds checking.
-indexArrayM :: Monad m => Array a -> Int -> m a
-
--- | Read a value from the immutable array at the given index, returning
---   the result in an unboxed unary tuple. This is currently used to
---   implement folds.
---   
---   <i>Note:</i> this function does not do bounds checking.
-indexArray## :: Array a -> Int -> (# a #)
-
--- | Read a value from the immutable array at the given index.
---   
---   <i>Note:</i> this function does not do bounds checking.
-indexArray :: Array a -> Int -> a
-
--- | Create a new mutable array of the specified size and initialise all
---   elements with the given value.
---   
---   <i>Note:</i> this function does not check if the input is
---   non-negative.
-newArray :: PrimMonad m => Int -> a -> m (MutableArray (PrimState m) a)
-
--- | Boxed arrays.
-data Array a
-Array :: Array# a -> Array a
-[array#] :: Array a -> Array# a
+runPrimArray :: (forall s. () => ST s (MutablePrimArray s a)) -> PrimArray a
 readArray :: CheckCtx => PrimMonad m => MutableArray (PrimState m) a -> Int -> m a
 writeArray :: CheckCtx => PrimMonad m => MutableArray (PrimState m) a -> Int -> a -> m ()
 copyArray :: CheckCtx => PrimMonad m => MutableArray (PrimState m) a -> Int -> Array a -> Int -> Int -> m ()
@@ -1745,45 +1748,51 @@ WriteGitRepo :: Text -> Maybe Text -> WriteGitRepo
 [$sel:branch:WriteGitRepo] :: WriteGitRepo -> Maybe Text
 writeToRead :: WriteRepo -> ReadRepo
 writeToReadGit :: WriteGitRepo -> ReadGitRepo
-writePathToRead :: WriteRemotePath -> ReadRemoteNamespace
+writeNamespaceToRead :: WriteRemoteNamespace Void -> ReadRemoteNamespace void
 printReadGitRepo :: ReadGitRepo -> Text
 printWriteGitRepo :: WriteGitRepo -> Text
 
 -- | print remote namespace
-printNamespace :: ReadRemoteNamespace -> Text
+printReadRemoteNamespace :: (a -> Text) -> ReadRemoteNamespace a -> Text
 
--- | Render a <a>WriteRemotePath</a> as text.
-printWriteRemotePath :: WriteRemotePath -> Text
+-- | Render a <a>WriteRemoteNamespace</a> as text.
+printWriteRemoteNamespace :: WriteRemoteNamespace (ProjectAndBranch ProjectName ProjectBranchName) -> Text
 maybePrintPath :: Path -> Text
-data ReadRemoteNamespace
-ReadRemoteNamespaceGit :: ReadGitRemoteNamespace -> ReadRemoteNamespace
-ReadRemoteNamespaceShare :: ReadShareRemoteNamespace -> ReadRemoteNamespace
-data ReadGitRemoteNamespace
-ReadGitRemoteNamespace :: ReadGitRepo -> Maybe ShortCausalHash -> Path -> ReadGitRemoteNamespace
-[$sel:repo:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> ReadGitRepo
-[$sel:sch:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> Maybe ShortCausalHash
-[$sel:path:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> Path
-data ReadShareRemoteNamespace
-ReadShareRemoteNamespace :: ShareCodeserver -> ShareUserHandle -> Path -> ReadShareRemoteNamespace
-[$sel:server:ReadShareRemoteNamespace] :: ReadShareRemoteNamespace -> ShareCodeserver
-[$sel:repo:ReadShareRemoteNamespace] :: ReadShareRemoteNamespace -> ShareUserHandle
-[$sel:path:ReadShareRemoteNamespace] :: ReadShareRemoteNamespace -> Path
-isPublic :: ReadShareRemoteNamespace -> Bool
-data WriteRemotePath
-WriteRemotePathGit :: WriteGitRemotePath -> WriteRemotePath
-WriteRemotePathShare :: WriteShareRemotePath -> WriteRemotePath
+data ReadRemoteNamespace a
+ReadRemoteNamespaceGit :: !ReadGitRemoteNamespace -> ReadRemoteNamespace a
+ReadShare'LooseCode :: !ReadShareLooseCode -> ReadRemoteNamespace a
 
--- | A lens which focuses the path of a remote path.
-remotePath_ :: Lens' WriteRemotePath Path
-data WriteGitRemotePath
-WriteGitRemotePath :: WriteGitRepo -> Path -> WriteGitRemotePath
-[$sel:repo:WriteGitRemotePath] :: WriteGitRemotePath -> WriteGitRepo
-[$sel:path:WriteGitRemotePath] :: WriteGitRemotePath -> Path
-data WriteShareRemotePath
-WriteShareRemotePath :: ShareCodeserver -> ShareUserHandle -> Path -> WriteShareRemotePath
-[$sel:server:WriteShareRemotePath] :: WriteShareRemotePath -> ShareCodeserver
-[$sel:repo:WriteShareRemotePath] :: WriteShareRemotePath -> ShareUserHandle
-[$sel:path:WriteShareRemotePath] :: WriteShareRemotePath -> Path
+-- | A remote project+branch, specified by name (e.g.
+--   @unison<i>base</i>main). Currently assumed to be hosted on Share,
+--   though we could include a ShareCodeserver in here, too.
+ReadShare'ProjectBranch :: !a -> ReadRemoteNamespace a
+data ReadGitRemoteNamespace
+ReadGitRemoteNamespace :: !ReadGitRepo -> !Maybe ShortCausalHash -> !Path -> ReadGitRemoteNamespace
+[$sel:repo:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> !ReadGitRepo
+[$sel:sch:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> !Maybe ShortCausalHash
+[$sel:path:ReadGitRemoteNamespace] :: ReadGitRemoteNamespace -> !Path
+data ReadShareLooseCode
+ReadShareLooseCode :: !ShareCodeserver -> !ShareUserHandle -> !Path -> ReadShareLooseCode
+[$sel:server:ReadShareLooseCode] :: ReadShareLooseCode -> !ShareCodeserver
+[$sel:repo:ReadShareLooseCode] :: ReadShareLooseCode -> !ShareUserHandle
+[$sel:path:ReadShareLooseCode] :: ReadShareLooseCode -> !Path
+isPublic :: ReadShareLooseCode -> Bool
+data WriteRemoteNamespace a
+WriteRemoteNamespaceGit :: !WriteGitRemoteNamespace -> WriteRemoteNamespace a
+WriteRemoteNamespaceShare :: !WriteShareRemoteNamespace -> WriteRemoteNamespace a
+WriteRemoteProjectBranch :: a -> WriteRemoteNamespace a
+
+-- | A lens which focuses the path of a remote namespace.
+remotePath_ :: Lens' (WriteRemoteNamespace Void) Path
+data WriteGitRemoteNamespace
+WriteGitRemoteNamespace :: !WriteGitRepo -> !Path -> WriteGitRemoteNamespace
+[$sel:repo:WriteGitRemoteNamespace] :: WriteGitRemoteNamespace -> !WriteGitRepo
+[$sel:path:WriteGitRemoteNamespace] :: WriteGitRemoteNamespace -> !Path
+data WriteShareRemoteNamespace
+WriteShareRemoteNamespace :: !ShareCodeserver -> !ShareUserHandle -> !Path -> WriteShareRemoteNamespace
+[$sel:server:WriteShareRemoteNamespace] :: WriteShareRemoteNamespace -> !ShareCodeserver
+[$sel:repo:WriteShareRemoteNamespace] :: WriteShareRemoteNamespace -> !ShareUserHandle
+[$sel:path:WriteShareRemoteNamespace] :: WriteShareRemoteNamespace -> !Path
 instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.ShareCodeserver
 instance GHC.Classes.Ord Unison.Codebase.Editor.RemoteRepo.ShareCodeserver
 instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.ShareCodeserver
@@ -1804,16 +1813,19 @@ instance GHC.Classes.Ord Unison.Codebase.Editor.RemoteRepo.WriteRepo
 instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteRepo
 instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.ReadGitRemoteNamespace
 instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.ReadGitRemoteNamespace
-instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.ReadShareRemoteNamespace
-instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.ReadShareRemoteNamespace
-instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.ReadRemoteNamespace
-instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.ReadRemoteNamespace
-instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.WriteGitRemotePath
-instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteGitRemotePath
-instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.WriteShareRemotePath
-instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteShareRemotePath
-instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.WriteRemotePath
-instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteRemotePath
+instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.ReadShareLooseCode
+instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.ReadShareLooseCode
+instance GHC.Generics.Generic (Unison.Codebase.Editor.RemoteRepo.ReadRemoteNamespace a)
+instance GHC.Show.Show a => GHC.Show.Show (Unison.Codebase.Editor.RemoteRepo.ReadRemoteNamespace a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (Unison.Codebase.Editor.RemoteRepo.ReadRemoteNamespace a)
+instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.WriteGitRemoteNamespace
+instance GHC.Generics.Generic Unison.Codebase.Editor.RemoteRepo.WriteGitRemoteNamespace
+instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteGitRemoteNamespace
+instance GHC.Show.Show Unison.Codebase.Editor.RemoteRepo.WriteShareRemoteNamespace
+instance GHC.Classes.Eq Unison.Codebase.Editor.RemoteRepo.WriteShareRemoteNamespace
+instance GHC.Show.Show a => GHC.Show.Show (Unison.Codebase.Editor.RemoteRepo.WriteRemoteNamespace a)
+instance GHC.Base.Functor Unison.Codebase.Editor.RemoteRepo.WriteRemoteNamespace
+instance GHC.Classes.Eq a => GHC.Classes.Eq (Unison.Codebase.Editor.RemoteRepo.WriteRemoteNamespace a)
 
 module Unison.Codebase.SqliteCodebase.GitError
 data GitSqliteCodebaseError
@@ -3484,9 +3496,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) (TypeLookup v_a4oBU loc_a4oBV)
-termsByShortname :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) (Map Name [NamedReference v_a4oBU loc_a4oBV])
-ambientAbilities :: forall v_a4oBU loc_a4oBV. Lens' (Env v_a4oBU loc_a4oBV) [Type v_a4oBU loc_a4oBV]
+typeLookup :: forall v_a4q06 loc_a4q07. Lens' (Env v_a4q06 loc_a4q07) (TypeLookup v_a4q06 loc_a4q07)
+termsByShortname :: forall v_a4q06 loc_a4q07. Lens' (Env v_a4q06 loc_a4q07) (Map Name [NamedReference v_a4q06 loc_a4q07])
+ambientAbilities :: forall v_a4q06 loc_a4q07. Lens' (Env v_a4q06 loc_a4q07) [Type v_a4q06 loc_a4q07]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -4452,7 +4464,7 @@ before :: CausalHash -> CausalHash -> Transaction Bool
 --   NOTE: this method requires an up-to-date name lookup index, which is
 --   currently not kept up-to-date automatically (because it's slow to do
 --   so).
-namesAtPath :: Path -> Path -> Transaction ScopedNames
+namesAtPath :: BranchHash -> Path -> Path -> Transaction ScopedNames
 
 -- | Add an index for the provided branch hash if one doesn't already
 --   exist.
@@ -4652,6 +4664,10 @@ branchExists :: CausalHash -> Transaction Bool
 -- | Get a branch from the codebase.
 getBranchForHash :: Monad m => Codebase m v a -> CausalHash -> m (Maybe (Branch m))
 
+-- | Like <a>getBranchForHash</a>, but for when the hash is known to be in
+--   the codebase.
+expectBranchForHash :: Monad m => Codebase m v a -> CausalHash -> m (Branch m)
+
 -- | Put a branch into the codebase, which includes its children, its
 --   patches, and the branch itself, if they don't already exist.
 --   
@@ -4702,7 +4718,7 @@ expectRootCausalHash :: Transaction CausalHash
 --   NOTE: this method requires an up-to-date name lookup index, which is
 --   currently not kept up-to-date automatically (because it's slow to do
 --   so).
-namesAtPath :: Path -> Path -> Transaction ScopedNames
+namesAtPath :: BranchHash -> Path -> Path -> Transaction ScopedNames
 
 -- | Check whether the given patch exists in the codebase.
 patchExists :: PatchHash -> Transaction Bool

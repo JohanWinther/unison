@@ -505,10 +505,12 @@ fromField :: FromField a => FieldParser a
 --   Note that instances can defined outside of sqlite-simple, which is
 --   often useful. For example, here's an instance for a user-defined pair:
 --   
---   @data User = User { name :: String, fileQuota :: Int }
+--   <pre>
+--   data User = User { name :: String, fileQuota :: Int }
 --   
---   instance <a>FromRow</a> User where fromRow = User &lt;$&gt;
---   <a>field</a> &lt;*&gt; <a>field</a> @
+--   instance <a>FromRow</a> User where
+--       fromRow = User &lt;$&gt; <a>field</a> &lt;*&gt; <a>field</a>
+--   </pre>
 --   
 --   The number of calls to <a>field</a> must match the number of fields
 --   returned in a single row of the query result. Otherwise, a
@@ -516,6 +518,25 @@ fromField :: FromField a => FieldParser a
 --   
 --   Note the caveats associated with user-defined implementations of
 --   <a>fromRow</a>.
+--   
+--   <h3>Generic implementation</h3>
+--   
+--   Since version 0.4.18.1 it is possible in some cases to derive a
+--   generic implementation for <a>FromRow</a>. With a <a>Generic</a>
+--   instance for <tt>User</tt>, the example above could be written:
+--   
+--   <pre>
+--   instance <a>FromRow</a> User where
+--   </pre>
+--   
+--   With <tt>-XDeriveAnyClass -XDerivingStrategies</tt> the same can be
+--   written:
+--   
+--   <pre>
+--   deriving anyclass instance <a>FromRow</a> User
+--   </pre>
+--   
+--   For more details refer to <a>GFromRow</a>.
 class FromRow a
 fromRow :: FromRow a => RowParser a
 
@@ -556,6 +577,10 @@ toField :: ToField a => a -> SQLData
 
 -- | A collection type that can be turned into a list of <a>SQLData</a>
 --   elements.
+--   
+--   Since version 0.4.18.1 it is possible in some cases to derive a
+--   generic implementation for <a>ToRow</a>. Refer to the documentation
+--   for <a>FromRow</a> to see how this can be done.
 class ToRow a
 
 -- | <a>ToField</a> a collection of values.

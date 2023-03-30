@@ -778,6 +778,9 @@ forM_ :: (Foldable t, Monad m) => t a -> (a -> m b) -> m ()
 --   to <a>Monad</a>.
 mapM_ :: (Foldable t, Monad m) => (a -> m b) -> t a -> m ()
 
+-- | Uninhabited data type
+data Void
+
 -- | Monads in which <a>IO</a> computations may be embedded. Any monad
 --   built by applying a sequence of monad transformers to the <a>IO</a>
 --   monad will be an instance of this class.
@@ -2212,6 +2215,99 @@ withUnliftIO :: MonadUnliftIO m => (UnliftIO m -> IO a) -> m a
 --   This is parameterized on the exception type. To catch all synchronous
 --   exceptions, use <a>tryAny</a>.
 try :: (MonadUnliftIO m, Exception e) => m a -> m (Either e a)
+
+-- | This is the same as <a>tryFrom</a> except that the type variables are
+--   in the opposite order.
+--   
+--   <pre>
+--   -- Avoid this:
+--   tryFrom x :: Either (TryFromException s t) t
+--   
+--   -- Prefer this:
+--   tryInto @t x
+--   </pre>
+tryInto :: forall target source. TryFrom source target => source -> Either (TryFromException source target) target
+
+-- | This is the same as <a>from</a> except that the type variables are in
+--   the opposite order.
+--   
+--   <pre>
+--   -- Avoid this:
+--   from x :: t
+--   
+--   -- Prefer this:
+--   into @t x
+--   </pre>
+into :: forall target source. From source target => source -> target
+
+-- | This type class is for converting values from some <tt>source</tt>
+--   type into some other <tt>target</tt> type. The constraint
+--   <tt><a>TryFrom</a> source target</tt> means that you may be able to
+--   convert from a value of type <tt>source</tt> into a value of type
+--   <tt>target</tt>, but that conversion may fail at runtime.
+--   
+--   This type class is for conversions that can sometimes fail. If your
+--   conversion always succeeds, consider implementing <tt>From</tt>
+--   instead.
+class TryFrom source target
+
+-- | This method implements the conversion of a value between types. At
+--   call sites you may want to use <tt>tryInto</tt> instead.
+--   
+--   <pre>
+--   -- Avoid this:
+--   tryFrom (x :: s)
+--   
+--   -- Prefer this:
+--   tryFrom @s
+--   </pre>
+--   
+--   Consider using <tt>maybeTryFrom</tt> or <tt>eitherTryFrom</tt> to
+--   implement this method.
+tryFrom :: TryFrom source target => source -> Either (TryFromException source target) target
+
+-- | This exception is thrown when a <tt>TryFrom</tt> conversion fails. It
+--   has the original <tt>source</tt> value that caused the failure and it
+--   knows the <tt>target</tt> type it was trying to convert into. It also
+--   has an optional <a>SomeException</a> for communicating what went wrong
+--   while converting.
+data TryFromException source target
+TryFromException :: source -> Maybe SomeException -> TryFromException source target
+
+-- | This type class is for converting values from some <tt>source</tt>
+--   type into some other <tt>target</tt> type. The constraint
+--   <tt><a>From</a> source target</tt> means that you can convert from a
+--   value of type <tt>source</tt> into a value of type <tt>target</tt>.
+--   
+--   This type class is for conversions that always succeed. If your
+--   conversion sometimes fails, consider implementing <tt>TryFrom</tt>
+--   instead.
+class From source target
+
+-- | This method implements the conversion of a value between types. At
+--   call sites you may prefer to use <tt>into</tt> instead.
+--   
+--   <pre>
+--   -- Avoid this:
+--   from (x :: s)
+--   
+--   -- Prefer this:
+--   from @s x
+--   </pre>
+--   
+--   The default implementation of this method simply calls <a>coerce</a>,
+--   which works for types that have the same runtime representation. This
+--   means that for <tt>newtype</tt>s you do not need to implement this
+--   method at all. For example:
+--   
+--   <pre>
+--   &gt;&gt;&gt; newtype Name = Name String
+--   
+--   &gt;&gt;&gt; instance From Name String
+--   
+--   &gt;&gt;&gt; instance From String Name
+--   </pre>
+from :: From source target => source -> target
 
 -- | <pre>
 --   <a>forMaybe</a> = <a>flip</a> <a>wither</a>

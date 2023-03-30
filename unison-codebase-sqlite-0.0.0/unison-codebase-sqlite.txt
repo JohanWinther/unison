@@ -26,6 +26,18 @@ BranchHashId :: HashId -> BranchHashId
 newtype CausalHashId
 CausalHashId :: HashId -> CausalHashId
 [$sel:unCausalHashId:CausalHashId] :: CausalHashId -> HashId
+newtype ProjectBranchId
+ProjectBranchId :: UUID -> ProjectBranchId
+[$sel:unProjectBranchId:ProjectBranchId] :: ProjectBranchId -> UUID
+newtype ProjectId
+ProjectId :: UUID -> ProjectId
+[$sel:unProjectId:ProjectId] :: ProjectId -> UUID
+newtype RemoteProjectBranchId
+RemoteProjectBranchId :: Text -> RemoteProjectBranchId
+[$sel:unRemoteProjectBranchId:RemoteProjectBranchId] :: RemoteProjectBranchId -> Text
+newtype RemoteProjectId
+RemoteProjectId :: Text -> RemoteProjectId
+[$sel:unRemoteProjectId:RemoteProjectId] :: RemoteProjectId -> Text
 newtype SchemaVersion
 SchemaVersion :: Word64 -> SchemaVersion
 instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.HashVersion
@@ -104,6 +116,26 @@ instance GHC.Real.Real U.Codebase.Sqlite.DbId.CausalHashId
 instance GHC.Num.Num U.Codebase.Sqlite.DbId.CausalHashId
 instance GHC.Classes.Ord U.Codebase.Sqlite.DbId.CausalHashId
 instance GHC.Classes.Eq U.Codebase.Sqlite.DbId.CausalHashId
+instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.ProjectBranchId
+instance GHC.Show.Show U.Codebase.Sqlite.DbId.ProjectBranchId
+instance GHC.Classes.Ord U.Codebase.Sqlite.DbId.ProjectBranchId
+instance Database.SQLite.Simple.FromField.FromField U.Codebase.Sqlite.DbId.ProjectBranchId
+instance GHC.Classes.Eq U.Codebase.Sqlite.DbId.ProjectBranchId
+instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.ProjectId
+instance GHC.Show.Show U.Codebase.Sqlite.DbId.ProjectId
+instance GHC.Classes.Ord U.Codebase.Sqlite.DbId.ProjectId
+instance Database.SQLite.Simple.FromField.FromField U.Codebase.Sqlite.DbId.ProjectId
+instance GHC.Classes.Eq U.Codebase.Sqlite.DbId.ProjectId
+instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.RemoteProjectBranchId
+instance GHC.Show.Show U.Codebase.Sqlite.DbId.RemoteProjectBranchId
+instance GHC.Classes.Ord U.Codebase.Sqlite.DbId.RemoteProjectBranchId
+instance Database.SQLite.Simple.FromField.FromField U.Codebase.Sqlite.DbId.RemoteProjectBranchId
+instance GHC.Classes.Eq U.Codebase.Sqlite.DbId.RemoteProjectBranchId
+instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.RemoteProjectId
+instance GHC.Show.Show U.Codebase.Sqlite.DbId.RemoteProjectId
+instance GHC.Classes.Ord U.Codebase.Sqlite.DbId.RemoteProjectId
+instance Database.SQLite.Simple.FromField.FromField U.Codebase.Sqlite.DbId.RemoteProjectId
+instance GHC.Classes.Eq U.Codebase.Sqlite.DbId.RemoteProjectId
 instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.DbId.SchemaVersion
 instance Database.SQLite.Simple.FromField.FromField U.Codebase.Sqlite.DbId.SchemaVersion
 instance Data.Bits.Bits U.Codebase.Sqlite.DbId.SchemaVersion
@@ -509,6 +541,31 @@ applyPatchDiffs :: Patch -> [PatchDiff] -> Patch
 localPatchToPatch :: PatchLocalIds -> LocalPatch -> Patch
 localPatchDiffToPatchDiff :: PatchLocalIds -> LocalPatchDiff -> PatchDiff
 
+module U.Codebase.Sqlite.Project
+
+-- | A project.
+data Project
+Project :: ProjectId -> ProjectName -> Project
+[$sel:projectId:Project] :: Project -> ProjectId
+[$sel:name:Project] :: Project -> ProjectName
+instance Database.SQLite.Simple.FromRow.FromRow U.Codebase.Sqlite.Project.Project
+instance Database.SQLite.Simple.ToRow.ToRow U.Codebase.Sqlite.Project.Project
+instance GHC.Show.Show U.Codebase.Sqlite.Project.Project
+instance GHC.Generics.Generic U.Codebase.Sqlite.Project.Project
+
+module U.Codebase.Sqlite.ProjectBranch
+
+-- | A project branch.
+data ProjectBranch
+ProjectBranch :: ProjectId -> ProjectBranchId -> ProjectBranchName -> ProjectBranch
+[$sel:projectId:ProjectBranch] :: ProjectBranch -> ProjectId
+[$sel:branchId:ProjectBranch] :: ProjectBranch -> ProjectBranchId
+[$sel:name:ProjectBranch] :: ProjectBranch -> ProjectBranchName
+instance Database.SQLite.Simple.FromRow.FromRow U.Codebase.Sqlite.ProjectBranch.ProjectBranch
+instance Database.SQLite.Simple.ToRow.ToRow U.Codebase.Sqlite.ProjectBranch.ProjectBranch
+instance GHC.Show.Show U.Codebase.Sqlite.ProjectBranch.ProjectBranch
+instance GHC.Generics.Generic U.Codebase.Sqlite.ProjectBranch.ProjectBranch
+
 module U.Codebase.Sqlite.Reference
 type Reference = Reference' TextId ObjectId
 
@@ -588,6 +645,31 @@ localizeBranch :: DbBranch -> (BranchLocalIds, LocalBranch)
 
 -- | Localize a patch object.
 localizePatch :: Patch -> (PatchLocalIds, LocalPatch)
+
+module U.Codebase.Sqlite.RemoteProject
+
+-- | A remote project.
+data RemoteProject
+RemoteProject :: RemoteProjectId -> URI -> ProjectName -> RemoteProject
+[$sel:projectId:RemoteProject] :: RemoteProject -> RemoteProjectId
+[$sel:host:RemoteProject] :: RemoteProject -> URI
+[$sel:name:RemoteProject] :: RemoteProject -> ProjectName
+instance Database.SQLite.Simple.FromRow.FromRow U.Codebase.Sqlite.RemoteProject.RemoteProject
+instance Database.SQLite.Simple.ToRow.ToRow U.Codebase.Sqlite.RemoteProject.RemoteProject
+instance GHC.Show.Show U.Codebase.Sqlite.RemoteProject.RemoteProject
+instance GHC.Generics.Generic U.Codebase.Sqlite.RemoteProject.RemoteProject
+
+module U.Codebase.Sqlite.RemoteProjectBranch
+data RemoteProjectBranch
+RemoteProjectBranch :: RemoteProjectId -> RemoteProjectBranchId -> URI -> ProjectBranchName -> RemoteProjectBranch
+[$sel:projectId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectId
+[$sel:branchId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectBranchId
+[$sel:host:RemoteProjectBranch] :: RemoteProjectBranch -> URI
+[$sel:name:RemoteProjectBranch] :: RemoteProjectBranch -> ProjectBranchName
+instance Database.SQLite.Simple.FromRow.FromRow U.Codebase.Sqlite.RemoteProjectBranch.RemoteProjectBranch
+instance Database.SQLite.Simple.ToRow.ToRow U.Codebase.Sqlite.RemoteProjectBranch.RemoteProjectBranch
+instance GHC.Show.Show U.Codebase.Sqlite.RemoteProjectBranch.RemoteProjectBranch
+instance GHC.Generics.Generic U.Codebase.Sqlite.RemoteProjectBranch.RemoteProjectBranch
 
 module U.Codebase.Sqlite.Symbol
 data Symbol
@@ -987,6 +1069,48 @@ loadWatchKindsByReference :: IdH -> Transaction [WatchKind]
 
 -- | Delete all watches that were put by <tt>putWatch</tt>.
 clearWatches :: Transaction ()
+
+-- | Does a project exist with this id?
+projectExists :: ProjectId -> Transaction Bool
+
+-- | Does a project exist by this name?
+projectExistsByName :: ProjectName -> Transaction Bool
+loadProject :: ProjectId -> Transaction (Maybe Project)
+loadProjectByName :: ProjectName -> Transaction (Maybe Project)
+expectProject :: ProjectId -> Transaction Project
+
+-- | Insert a <tt>project</tt> row.
+insertProject :: ProjectId -> ProjectName -> Transaction ()
+
+-- | Does a project branch exist by this name?
+projectBranchExistsByName :: ProjectId -> ProjectBranchName -> Transaction Bool
+loadProjectBranchByName :: ProjectId -> ProjectBranchName -> Transaction (Maybe ProjectBranch)
+expectProjectBranch :: ProjectId -> ProjectBranchId -> Transaction ProjectBranch
+loadProjectAndBranchNames :: ProjectId -> ProjectBranchId -> Transaction (Maybe (ProjectName, ProjectBranchName))
+
+-- | Insert a <tt>project_branch</tt> row.
+insertProjectBranch :: ProjectId -> ProjectBranchId -> ProjectBranchName -> Transaction ()
+markProjectBranchChild :: ProjectId -> ProjectBranchId -> ProjectBranchId -> Transaction ()
+loadProjectBranch :: ProjectId -> ProjectBranchId -> Transaction (Maybe ProjectBranch)
+loadRemoteProject :: RemoteProjectId -> URI -> Transaction (Maybe RemoteProject)
+ensureRemoteProject :: RemoteProjectId -> URI -> ProjectName -> Transaction ()
+expectRemoteProjectName :: RemoteProjectId -> URI -> Transaction ProjectName
+setRemoteProjectName :: RemoteProjectId -> ProjectName -> Transaction ()
+
+-- | Determine the remote mapping for a local project/branch by looking at
+--   the mapping for the given pair, then falling back to the project of
+--   the nearest ancestor.
+loadRemoteProjectBranch :: ProjectId -> URI -> ProjectBranchId -> Transaction (Maybe (RemoteProjectId, Maybe RemoteProjectBranchId))
+
+-- | Load the default merge target for a local branch (i.e. The nearest
+--   ancestor's remote mapping)
+loadDefaultMergeTargetForLocalProjectBranch :: ProjectId -> URI -> ProjectBranchId -> Transaction (Maybe (RemoteProjectId, RemoteProjectBranchId))
+loadRemoteBranch :: RemoteProjectId -> URI -> RemoteProjectBranchId -> Transaction (Maybe RemoteProjectBranch)
+ensureRemoteProjectBranch :: RemoteProjectId -> URI -> RemoteProjectBranchId -> ProjectBranchName -> Transaction ()
+expectRemoteProjectBranchName :: URI -> RemoteProjectId -> RemoteProjectBranchId -> Transaction ProjectBranchName
+setRemoteProjectBranchName :: RemoteProjectId -> URI -> RemoteProjectBranchId -> ProjectBranchName -> Transaction ()
+insertBranchRemoteMapping :: ProjectId -> ProjectBranchId -> RemoteProjectId -> URI -> RemoteProjectBranchId -> Transaction ()
+ensureBranchRemoteMapping :: ProjectId -> ProjectBranchId -> RemoteProjectId -> URI -> RemoteProjectBranchId -> Transaction ()
 addToDependentsIndex :: [Reference] -> Id -> Transaction ()
 
 -- | Which dependents should be returned?
@@ -1030,21 +1154,6 @@ getDependencyIdsForDependent :: Id -> Transaction [Id]
 --   
 --   ...then `getDependenciesBetweenTerms A B` would return the set {X Y Z}
 getDependenciesBetweenTerms :: ObjectId -> ObjectId -> Transaction (Set ObjectId)
-currentSchemaVersion :: SchemaVersion
-countObjects :: Transaction Int
-countCausals :: Transaction Int
-countWatches :: Transaction Int
-
--- | Finds all causals that refer to a branch for which we don't have an
---   object stored. Although there are plans to support this in the future,
---   currently all such cases are the result of database inconsistencies
---   and are unexpected.
-getCausalsWithoutBranchObjects :: Transaction [CausalHashId]
-
--- | Delete all hash objects of a given hash version. Leaves the
---   corresponding <tt>hash</tt>es in the hash table alone.
-removeHashObjectsByHashingVersion :: HashVersion -> Transaction ()
-fixScopedNameLookupTables :: Transaction ()
 addToTypeIndex :: Reference' TextId HashId -> Id -> Transaction ()
 getReferentsByType :: Reference' TextId HashId -> Transaction [Id]
 getTypeReferenceForReferent :: Id -> Transaction (Reference' TextId HashId)
@@ -1231,19 +1340,36 @@ deleteTempEntity :: Hash32 -> Transaction ()
 --   (because we take the set of transitive dependencies {A,B,C} and
 --   subtract the set we already have, {A,B}).
 elaborateHashes :: NonEmpty Hash32 -> Transaction [Text]
+createSchema :: Transaction ()
 addTempEntityTables :: Transaction ()
-addNamespaceStatsTables :: Transaction ()
 addReflogTable :: Transaction ()
+addNamespaceStatsTables :: Transaction ()
+addProjectTables :: Transaction ()
+fixScopedNameLookupTables :: Transaction ()
+currentSchemaVersion :: SchemaVersion
+
+-- | Expect the given schema version.
+expectSchemaVersion :: SchemaVersion -> Transaction ()
+setSchemaVersion :: SchemaVersion -> Transaction ()
+countObjects :: Transaction Int
+countCausals :: Transaction Int
+countWatches :: Transaction Int
+
+-- | Finds all causals that refer to a branch for which we don't have an
+--   object stored. Although there are plans to support this in the future,
+--   currently all such cases are the result of database inconsistencies
+--   and are unexpected.
+getCausalsWithoutBranchObjects :: Transaction [CausalHashId]
+
+-- | Delete all hash objects of a given hash version. Leaves the
+--   corresponding <tt>hash</tt>es in the hash table alone.
+removeHashObjectsByHashingVersion :: HashVersion -> Transaction ()
 addTypeMentionsToIndexForTerm :: Id -> Set Reference -> Transaction ()
 addTypeToIndexForTerm :: Id -> Reference -> Transaction ()
 
 -- | implementation detail of c2{s,w}Term The Type is optional, because we
 --   don't store them for watch expression results.
 c2xTerm :: forall m t d. Monad m => (Text -> m t) -> (Hash -> m d) -> Term Symbol -> Maybe (Type Symbol) -> m (LocalIds' t d, Term, Maybe Type)
-createSchema :: Transaction ()
-
--- | Expect the given schema version.
-expectSchemaVersion :: SchemaVersion -> Transaction ()
 
 -- | implementation detail of {s,w}2c*Term* &amp; s2cDecl
 localIdsToLookups :: Monad m => (t -> m Text) -> (d -> m Hash) -> LocalIds' t d -> m (LocalTextId -> Text, LocalDefnId -> Hash)
@@ -1259,7 +1385,6 @@ saveReferenceH :: Reference -> Transaction ReferenceH
 saveSyncEntity :: HashHandle -> Hash32 -> SyncEntity -> Transaction (Either CausalHashId ObjectId)
 saveTermComponent :: HashHandle -> Maybe ByteString -> Hash -> [(Term Symbol, Type Symbol)] -> Transaction ObjectId
 schemaVersion :: Transaction SchemaVersion
-setSchemaVersion :: SchemaVersion -> Transaction ()
 
 -- | implementation detail of {s,w}2c*Term*
 x2cTType :: (LocalTextId -> Text) -> (LocalDefnId -> Hash) -> Type -> Type Symbol
@@ -1267,11 +1392,17 @@ x2cTType :: (LocalTextId -> Text) -> (LocalDefnId -> Hash) -> Type -> Type Symbo
 -- | implementation detail of {s,w}2c*Term*
 x2cTerm :: (LocalTextId -> Text) -> (LocalDefnId -> Hash) -> Term -> Term Symbol
 
+-- | Checks whether the codebase contains the actual branch value for a
+--   given causal hash.
+checkBranchExistsForCausalHash :: CausalHash -> Transaction Bool
+
 -- | A namespace rendered as a path, no leading <a>.</a> E.g. "base.data"
 type NamespaceText = Text
 type TextPathSegments = [Text]
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Queries.UnexpectedSchemaVersion
 instance GHC.Show.Show U.Codebase.Sqlite.Queries.UnexpectedSchemaVersion
+instance GHC.Classes.Eq U.Codebase.Sqlite.Queries.LoadRemoteBranchFlag
+instance GHC.Show.Show U.Codebase.Sqlite.Queries.LoadRemoteBranchFlag
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Queries.EmptyName
 instance GHC.Show.Show U.Codebase.Sqlite.Queries.EmptyName
 instance GHC.Classes.Eq U.Codebase.Sqlite.Queries.EmptyName
@@ -1375,10 +1506,10 @@ termsHavingType :: Reference -> Transaction (Set Id)
 addTypeMentionsToIndexForTerm :: Id -> Set Reference -> Transaction ()
 termsMentioningType :: Reference -> Transaction (Set Id)
 
--- | Get all the term and type names for the root namespace from the lookup
---   table. Requires that an index for this branch hash already exists,
---   which is currently only true on Share.
-rootNamesByPath :: Maybe Text -> Transaction NamesByPath
+-- | Get all the term and type names for the given namespace from the
+--   lookup table. Requires that an index for this branch hash already
+--   exists, which is currently only true on Share.
+namesByPath :: BranchHash -> Maybe Text -> Transaction NamesByPath
 data NamesByPath
 NamesByPath :: [NamedRef (Referent, Maybe ConstructorType)] -> [NamedRef Reference] -> NamesByPath
 [$sel:termNamesInPath:NamesByPath] :: NamesByPath -> [NamedRef (Referent, Maybe ConstructorType)]
@@ -1401,7 +1532,7 @@ typeNamesBySuffix :: BranchHash -> NamespaceText -> ReversedSegments -> Transact
 termRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
 typeRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef Reference]
 
--- | Check whether we've already got an index for a given causal hash.
+-- | Check whether we've already got an index for a given branch hash.
 checkBranchHashNameLookupExists :: BranchHash -> Transaction Bool
 
 -- | Apply a set of name updates to an existing index.

@@ -111,6 +111,40 @@ instance (Data.Foldable.Foldable f, GHC.Base.Functor f, forall a1. GHC.Classes.E
 instance (forall a1. GHC.Classes.Eq a1 => GHC.Classes.Eq (f a1), Data.Foldable.Foldable f, GHC.Base.Functor f, forall a1. GHC.Classes.Ord a1 => GHC.Classes.Ord (f a1), U.Core.ABT.Var.Var v) => GHC.Classes.Ord (U.Core.ABT.Term f v a)
 instance (forall a1. GHC.Show.Show a1 => GHC.Show.Show (f a1), GHC.Show.Show v) => GHC.Show.Show (U.Core.ABT.Term f v a)
 
+
+-- | Project-related types.
+--   
+--   A larger API, including orphan instances for parsing from <a>Text</a>,
+--   is available in <a>Unison.Project</a>. Here, we just define the types,
+--   which are shared among the low-level database layer (which assumes
+--   without verifying that project names and such are syntactically valid)
+--   and the higher-level project manipulation exposed by UCM.
+module Unison.Core.Project
+
+-- | The name of a project.
+newtype ProjectName
+UnsafeProjectName :: Text -> ProjectName
+
+-- | The name of a branch of a project.
+newtype ProjectBranchName
+UnsafeProjectBranchName :: Text -> ProjectBranchName
+
+-- | A generic data structure that contains information about a project and
+--   a branch in that project.
+data ProjectAndBranch a b
+ProjectAndBranch :: a -> b -> ProjectAndBranch a b
+[project] :: ProjectAndBranch a b -> a
+[branch] :: ProjectAndBranch a b -> b
+instance GHC.Show.Show Unison.Core.Project.ProjectName
+instance GHC.Classes.Ord Unison.Core.Project.ProjectName
+instance GHC.Classes.Eq Unison.Core.Project.ProjectName
+instance GHC.Show.Show Unison.Core.Project.ProjectBranchName
+instance GHC.Classes.Ord Unison.Core.Project.ProjectBranchName
+instance GHC.Classes.Eq Unison.Core.Project.ProjectBranchName
+instance (GHC.Show.Show a, GHC.Show.Show b) => GHC.Show.Show (Unison.Core.Project.ProjectAndBranch a b)
+instance GHC.Generics.Generic (Unison.Core.Project.ProjectAndBranch a b)
+instance (GHC.Classes.Eq a, GHC.Classes.Eq b) => GHC.Classes.Eq (Unison.Core.Project.ProjectAndBranch a b)
+
 module Unison.Util.Alphabetical
 class (Eq n) => Alphabetical n
 compareAlphabetical :: Alphabetical n => n -> n -> Ordering

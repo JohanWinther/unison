@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.Codebase.Editor.HandleInput.CreatePullRequest</span><span>
+</span><span id="line-2"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.CreatePullRequest.html#handleCreatePullRequest"><span class="hs-identifier">handleCreatePullRequest</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-3"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span class="hs-keyword">where</span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Reader</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ask</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.These</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">These</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier">Cli</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Cli</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Branch</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Branch</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch.Merge</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Branch</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Editor.Git</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Git</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.NamespaceDiffUtils.html"><span class="hs-identifier">Unison.Codebase.Editor.HandleInput.NamespaceDiffUtils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.NamespaceDiffUtils.html#diffHelper"><span class="hs-identifier">diffHelper</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.Pull.html"><span class="hs-identifier">Unison.Codebase.Editor.HandleInput.Pull</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.Pull.html#loadShareLooseCodeIntoMemory"><span class="hs-identifier">loadShareLooseCodeIntoMemory</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Output.html"><span class="hs-identifier">Unison.Codebase.Editor.Output</span></a></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Output.html"><span class="hs-identifier">Unison.Codebase.Editor.Output</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Output</span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Editor.RemoteRepo</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Project</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ProjectBranchName</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ProjectName</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.CreatePullRequest.html#handleCreatePullRequest"><span class="hs-identifier hs-type">handleCreatePullRequest</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-24"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-25"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-26"></span><span>  </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span id="handleCreatePullRequest"><span class="annot"><span class="annottext">handleCreatePullRequest :: ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; Cli ()
+</span><a href="Unison.Codebase.Editor.HandleInput.CreatePullRequest.html#handleCreatePullRequest"><span class="hs-identifier hs-var hs-var">handleCreatePullRequest</span></a></span></span><span> </span><span id="local-6989586621679685321"><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+</span><a href="#local-6989586621679685321"><span class="hs-identifier hs-var">baseRepo0</span></a></span></span><span> </span><span id="local-6989586621679685320"><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+</span><a href="#local-6989586621679685320"><span class="hs-identifier hs-var">headRepo0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-28"></span><span>  </span><span class="annot"><a href="Unison.Cli.Monad.html#Env"><span class="hs-identifier hs-type">Cli.Env</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679685318"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+$sel:codebase:Env :: Env -&gt; Codebase IO Symbol Ann
+codebase :: Codebase IO Symbol Ann
+</span><a href="Unison.Cli.Monad.html#%24sel%3Acodebase%3AEnv"><span class="hs-identifier hs-var hs-var">codebase</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Env
+forall r (m :: * -&gt; *). MonadReader r m =&gt; m r
+</span><span class="hs-identifier hs-var">ask</span></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679685316"><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685316"><span class="hs-identifier hs-var">baseRepo</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679685315"><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685315"><span class="hs-identifier hs-var">headRepo</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-31"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679685314"><span class="hs-identifier hs-type">rejectProjectBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-32"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-33"></span><span>          </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespace</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>        </span><span id="local-6989586621679685314"><span class="annot"><span class="annottext">rejectProjectBranch :: ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; Cli (ReadRemoteNamespace Void)
+</span><a href="#local-6989586621679685314"><span class="hs-identifier hs-var hs-var">rejectProjectBranch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-35"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">ReadShare'ProjectBranch</span></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-36"></span><span>            </span><span class="annot"><span class="annottext">Output -&gt; Cli (ReadRemoteNamespace Void)
+forall a. Output -&gt; Cli a
+</span><a href="Unison.Cli.Monad.html#returnEarly"><span class="hs-identifier hs-var">Cli.returnEarly</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Output
+</span><a href="Unison.Codebase.Editor.Output.html#NotImplementedYet"><span class="hs-identifier hs-var">Output.NotImplementedYet</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;creating a pull request from a project branch&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespaceGit</span></span><span> </span><span id="local-6989586621679685309"><span class="annot"><span class="annottext">ReadGitRemoteNamespace
+</span><a href="#local-6989586621679685309"><span class="hs-identifier hs-var">namespace</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void -&gt; Cli (ReadRemoteNamespace Void)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadGitRemoteNamespace -&gt; ReadRemoteNamespace Void
+forall a. ReadGitRemoteNamespace -&gt; ReadRemoteNamespace a
+</span><span class="hs-identifier hs-var">ReadRemoteNamespaceGit</span></span><span> </span><span class="annot"><span class="annottext">ReadGitRemoteNamespace
+</span><a href="#local-6989586621679685309"><span class="hs-identifier hs-var">namespace</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">ReadShare'LooseCode</span></span><span> </span><span id="local-6989586621679685307"><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679685307"><span class="hs-identifier hs-var">namespace</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void -&gt; Cli (ReadRemoteNamespace Void)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadShareLooseCode -&gt; ReadRemoteNamespace Void
+forall a. ReadShareLooseCode -&gt; ReadRemoteNamespace a
+</span><span class="hs-identifier hs-var">ReadShare'LooseCode</span></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679685307"><span class="hs-identifier hs-var">namespace</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>     </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ReadRemoteNamespace Void
+ -&gt; ReadRemoteNamespace Void
+ -&gt; (ReadRemoteNamespace Void, ReadRemoteNamespace Void))
+-&gt; Cli (ReadRemoteNamespace Void)
+-&gt; Cli
+     (ReadRemoteNamespace Void
+      -&gt; (ReadRemoteNamespace Void, ReadRemoteNamespace Void))
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; Cli (ReadRemoteNamespace Void)
+</span><a href="#local-6989586621679685314"><span class="hs-identifier hs-var">rejectProjectBranch</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+</span><a href="#local-6989586621679685321"><span class="hs-identifier hs-var">baseRepo0</span></a></span><span> </span><span class="annot"><span class="annottext">Cli
+  (ReadRemoteNamespace Void
+   -&gt; (ReadRemoteNamespace Void, ReadRemoteNamespace Void))
+-&gt; Cli (ReadRemoteNamespace Void)
+-&gt; Cli (ReadRemoteNamespace Void, ReadRemoteNamespace Void)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; Cli (ReadRemoteNamespace Void)
+</span><a href="#local-6989586621679685314"><span class="hs-identifier hs-var">rejectProjectBranch</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+</span><a href="#local-6989586621679685320"><span class="hs-identifier hs-var">headRepo0</span></a></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679685305"><span class="hs-identifier hs-type">withBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespace</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679685354"><span class="annot"><a href="#local-6989586621679685354"><span class="hs-identifier hs-type">x</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Branch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679685354"><span class="hs-identifier hs-type">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679685354"><span class="hs-identifier hs-type">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>      </span><span id="local-6989586621679685305"><span class="annot"><span class="annottext">withBranch :: ReadRemoteNamespace Void -&gt; forall x. (Branch IO -&gt; Cli x) -&gt; Cli x
+</span><a href="#local-6989586621679685305"><span class="hs-identifier hs-var hs-var">withBranch</span></a></span></span><span> </span><span id="local-6989586621679685304"><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685304"><span class="hs-identifier hs-var">rrn</span></a></span></span><span> </span><span id="local-6989586621679685303"><span class="annot"><span class="annottext">Branch IO -&gt; Cli x
+</span><a href="#local-6989586621679685303"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685304"><span class="hs-identifier hs-var">rrn</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-43"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">ReadRemoteNamespaceGit</span></span><span> </span><span id="local-6989586621679685302"><span class="annot"><span class="annottext">ReadGitRemoteNamespace
+</span><a href="#local-6989586621679685302"><span class="hs-identifier hs-var">repo</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-44"></span><span>          </span><span class="annot"><span class="annottext">(forall x. (Branch IO -&gt; IO x) -&gt; IO (Either GitError x))
+-&gt; (Either GitError (Branch IO) -&gt; Cli x) -&gt; Cli x
+forall a e b.
+(forall x. (a -&gt; IO x) -&gt; IO (Either e x))
+-&gt; (Either e a -&gt; Cli b) -&gt; Cli b
+</span><a href="Unison.Cli.Monad.html#withE"><span class="hs-identifier hs-var">Cli.withE</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+-&gt; ReadGitRemoteNamespace
+-&gt; GitBranchBehavior
+-&gt; (Branch IO -&gt; IO x)
+-&gt; IO (Either GitError x)
+forall (m :: * -&gt; *) v a r.
+MonadIO m =&gt;
+Codebase m v a
+-&gt; ReadGitRemoteNamespace
+-&gt; GitBranchBehavior
+-&gt; (Branch m -&gt; m r)
+-&gt; m (Either GitError r)
+</span><span class="hs-identifier hs-var">Codebase.viewRemoteBranch</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679685318"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">ReadGitRemoteNamespace
+</span><a href="#local-6989586621679685302"><span class="hs-identifier hs-var">repo</span></a></span><span> </span><span class="annot"><span class="annottext">GitBranchBehavior
+</span><span class="hs-identifier hs-var">Git.RequireExistingBranch</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-45"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679685298"><span class="annot"><span class="annottext">GitError
+</span><a href="#local-6989586621679685298"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Output -&gt; Cli x
+forall a. Output -&gt; Cli a
+</span><a href="Unison.Cli.Monad.html#returnEarly"><span class="hs-identifier hs-var">Cli.returnEarly</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">GitError -&gt; Output
+</span><a href="Unison.Codebase.Editor.Output.html#GitError"><span class="hs-identifier hs-var">Output.GitError</span></a></span><span> </span><span class="annot"><span class="annottext">GitError
+</span><a href="#local-6989586621679685298"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679685296"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685296"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Branch IO -&gt; Cli x
+</span><a href="#local-6989586621679685303"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685296"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-47"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">ReadShare'LooseCode</span></span><span> </span><span id="local-6989586621679685295"><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679685295"><span class="hs-identifier hs-var">repo</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Branch IO -&gt; Cli x
+</span><a href="#local-6989586621679685303"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">(Branch IO -&gt; Cli x) -&gt; Cli (Branch IO) -&gt; Cli x
+forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode -&gt; Cli (Branch IO)
+</span><a href="Unison.Codebase.Editor.HandleInput.Pull.html#loadShareLooseCodeIntoMemory"><span class="hs-identifier hs-var">loadShareLooseCodeIntoMemory</span></a></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679685295"><span class="hs-identifier hs-var">repo</span></a></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679685293"><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679685293"><span class="hs-identifier hs-var">ppe</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679685292"><span class="annot"><span class="annottext">BranchDiffOutput Symbol Ann
+</span><a href="#local-6989586621679685292"><span class="hs-identifier hs-var">diff</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+-&gt; (Branch IO -&gt; Cli (PrettyPrintEnv, BranchDiffOutput Symbol Ann))
+-&gt; Cli (PrettyPrintEnv, BranchDiffOutput Symbol Ann)
+ReadRemoteNamespace Void -&gt; forall x. (Branch IO -&gt; Cli x) -&gt; Cli x
+</span><a href="#local-6989586621679685305"><span class="hs-identifier hs-var">withBranch</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685316"><span class="hs-identifier hs-var">baseRepo</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679685291"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685291"><span class="hs-identifier hs-var">baseBranch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+-&gt; (Branch IO -&gt; Cli (PrettyPrintEnv, BranchDiffOutput Symbol Ann))
+-&gt; Cli (PrettyPrintEnv, BranchDiffOutput Symbol Ann)
+ReadRemoteNamespace Void -&gt; forall x. (Branch IO -&gt; Cli x) -&gt; Cli x
+</span><a href="#local-6989586621679685305"><span class="hs-identifier hs-var">withBranch</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685315"><span class="hs-identifier hs-var">headRepo</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679685290"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685290"><span class="hs-identifier hs-var">headBranch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-50"></span><span>    </span><span id="local-6989586621679685289"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685289"><span class="hs-identifier hs-var">merged</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (Branch IO) -&gt; Cli (Branch IO)
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Branch IO -&gt; Branch IO -&gt; IO (Maybe (Branch IO)))
+-&gt; MergeMode -&gt; Branch IO -&gt; Branch IO -&gt; IO (Branch IO)
+forall (m :: * -&gt; *).
+Monad m =&gt;
+(Branch m -&gt; Branch m -&gt; m (Maybe (Branch m)))
+-&gt; MergeMode -&gt; Branch m -&gt; Branch m -&gt; m (Branch m)
+</span><span class="hs-identifier hs-var">Branch.merge''</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+-&gt; Branch IO -&gt; Branch IO -&gt; IO (Maybe (Branch IO))
+forall (m :: * -&gt; *) v a.
+MonadIO m =&gt;
+Codebase m v a -&gt; Branch m -&gt; Branch m -&gt; m (Maybe (Branch m))
+</span><span class="hs-identifier hs-var">Codebase.lca</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679685318"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">MergeMode
+</span><span class="hs-identifier hs-var">Branch.RegularMerge</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685291"><span class="hs-identifier hs-var">baseBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685290"><span class="hs-identifier hs-var">headBranch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><span class="annottext">Branch0 IO
+-&gt; Branch0 IO -&gt; Cli (PrettyPrintEnv, BranchDiffOutput Symbol Ann)
+</span><a href="Unison.Codebase.Editor.HandleInput.NamespaceDiffUtils.html#diffHelper"><span class="hs-identifier hs-var">diffHelper</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Branch IO -&gt; Branch0 IO
+forall (m :: * -&gt; *). Branch m -&gt; Branch0 m
+</span><span class="hs-identifier hs-var">Branch.head</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685291"><span class="hs-identifier hs-var">baseBranch</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Branch IO -&gt; Branch0 IO
+forall (m :: * -&gt; *). Branch m -&gt; Branch0 m
+</span><span class="hs-identifier hs-var">Branch.head</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679685289"><span class="hs-identifier hs-var">merged</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>  </span><span class="annot"><span class="annottext">NumberedOutput -&gt; Cli ()
+</span><a href="Unison.Cli.Monad.html#respondNumbered"><span class="hs-identifier hs-var">Cli.respondNumbered</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+-&gt; ReadRemoteNamespace Void
+-&gt; PrettyPrintEnv
+-&gt; BranchDiffOutput Symbol Ann
+-&gt; NumberedOutput
+</span><a href="Unison.Codebase.Editor.Output.html#ShowDiffAfterCreatePR"><span class="hs-identifier hs-var">ShowDiffAfterCreatePR</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685316"><span class="hs-identifier hs-var">baseRepo</span></a></span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace Void
+</span><a href="#local-6989586621679685315"><span class="hs-identifier hs-var">headRepo</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679685293"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">BranchDiffOutput Symbol Ann
+</span><a href="#local-6989586621679685292"><span class="hs-identifier hs-var">diff</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span></pre></body></html>

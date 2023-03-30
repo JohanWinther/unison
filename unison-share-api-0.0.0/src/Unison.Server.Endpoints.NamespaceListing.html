@@ -4,89 +4,87 @@
 </span><span id="line-4"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.Server.Endpoints.NamespaceListing</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#serve"><span class="hs-identifier">serve</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListingAPI"><span class="hs-identifier">NamespaceListingAPI</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier">NamespaceListing</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier">NamespaceObject</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier">NamedNamespace</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier">NamedPatch</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier">KindExpression</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-5"></span><span>
 </span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Except</span></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Reader</span></span><span>
-</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToSchema</span></span><span class="hs-special">)</span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant</span></span><span>
-</span><span id="line-11"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">QueryParam</span></span><span class="hs-special">,</span><span>
-</span><span id="line-12"></span><span>    </span><span class="annot"><span class="hs-operator">(:&gt;)</span></span><span class="hs-special">,</span><span>
-</span><span id="line-13"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.Docs</span></span><span>
-</span><span id="line-15"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">DocQueryParam</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-16"></span><span>    </span><span class="annot"><span class="hs-identifier">ParamKind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Normal</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-17"></span><span>    </span><span class="annot"><span class="hs-identifier">ToParam</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-18"></span><span>    </span><span class="annot"><span class="hs-identifier">ToSample</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NamespaceStats</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Causal</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V2Causal</span></span><span>
-</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.HashTags</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CausalHash</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Operations</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Operations</span></span><span>
-</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
-</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
-</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
-</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.ShortCausalHash</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ShortCausalHash</span></span><span class="hs-special">)</span><span>
-</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Hash</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hash</span></span><span>
-</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span>
-</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Parser.Ann</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ann</span></span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
-</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.PrettyPrintEnv</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">PPE</span></span><span>
-</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier">Backend</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Backend</span></span><span>
-</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Types.html"><span class="hs-identifier">Unison.Server.Types</span></a></span><span>
-</span><span id="line-37"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#APIGet"><span class="hs-identifier">APIGet</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-38"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#HashQualifiedName"><span class="hs-identifier">HashQualifiedName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-39"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#NamedTerm"><span class="hs-identifier">NamedTerm</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#NamedType"><span class="hs-identifier">NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-41"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier">UnisonHash</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-42"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier">UnisonName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-43"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#v2CausalBranchToUnisonHash"><span class="hs-identifier">v2CausalBranchToUnisonHash</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Symbol</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Symbol</span></span><span class="hs-special">)</span><span>
-</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Width</span></span><span class="hs-special">)</span><span>
-</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Var</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Var</span></span><span class="hs-special">)</span><span>
-</span><span id="line-48"></span><span>
-</span><span id="line-49"></span><span class="hs-keyword">type</span><span> </span><span id="NamespaceListingAPI"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListingAPI"><span class="hs-identifier hs-var">NamespaceListingAPI</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-50"></span><span>  </span><span class="annot"><span class="hs-string">&quot;list&quot;</span></span><span>
-</span><span id="line-51"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;rootBranch&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span><span>
-</span><span id="line-52"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;relativeTo&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span>
-</span><span id="line-53"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;namespace&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span>
-</span><span id="line-54"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#APIGet"><span class="hs-identifier hs-type">APIGet</span></a></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
-</span><span id="line-55"></span><span>
-</span><span id="line-56"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParam</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;namespace&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-57"></span><span>  </span><span id="local-6989586621679315271"><span class="annot"><span class="annottext">toParam :: Proxy (QueryParam &quot;namespace&quot; Text) -&gt; DocQueryParam
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ToSchema</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant</span></span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">QueryParam</span></span><span class="hs-special">,</span><span>
+</span><span id="line-11"></span><span>    </span><span class="annot"><span class="hs-operator">(:&gt;)</span></span><span class="hs-special">,</span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.Docs</span></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">DocQueryParam</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-15"></span><span>    </span><span class="annot"><span class="hs-identifier">ParamKind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Normal</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-16"></span><span>    </span><span class="annot"><span class="hs-identifier">ToParam</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-17"></span><span>    </span><span class="annot"><span class="hs-identifier">ToSample</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-18"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NamespaceStats</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Causal</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V2Causal</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.HashTags</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CausalHash</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.ShortCausalHash</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ShortCausalHash</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Hash</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hash</span></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Parser.Ann</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ann</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.PrettyPrintEnv</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">PPE</span></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier">Backend</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Backend</span></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Types.html"><span class="hs-identifier">Unison.Server.Types</span></a></span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#APIGet"><span class="hs-identifier">APIGet</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#HashQualifiedName"><span class="hs-identifier">HashQualifiedName</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-37"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#NamedTerm"><span class="hs-identifier">NamedTerm</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-38"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#NamedType"><span class="hs-identifier">NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-39"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier">UnisonHash</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier">UnisonName</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#v2CausalBranchToUnisonHash"><span class="hs-identifier">v2CausalBranchToUnisonHash</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Symbol</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Symbol</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Width</span></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Var</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Var</span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">type</span><span> </span><span id="NamespaceListingAPI"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListingAPI"><span class="hs-identifier hs-var">NamespaceListingAPI</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-48"></span><span>  </span><span class="annot"><span class="hs-string">&quot;list&quot;</span></span><span>
+</span><span id="line-49"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;rootBranch&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;relativeTo&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;namespace&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span>
+</span><span id="line-52"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#APIGet"><span class="hs-identifier hs-type">APIGet</span></a></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParam</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;namespace&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-55"></span><span>  </span><span id="local-6989586621679316341"><span class="annot"><span class="annottext">toParam :: Proxy (QueryParam &quot;namespace&quot; Text) -&gt; DocQueryParam
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toParam</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy (QueryParam &quot;namespace&quot; Text)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-58"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String -&gt; ParamKind -&gt; DocQueryParam
+</span><span id="line-56"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String -&gt; ParamKind -&gt; DocQueryParam
 </span><span class="hs-identifier hs-var">DocQueryParam</span></span><span>
-</span><span id="line-59"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span id="line-57"></span><span>      </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;namespace&quot;</span></span><span>
-</span><span id="line-60"></span><span>      </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
+</span><span id="line-58"></span><span>      </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;.&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;.base.List&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;foo.bar&quot;</span></span><span class="hs-special">]</span><span>
-</span><span id="line-61"></span><span>      </span><span class="annot"><span class="annottext">String
+</span><span id="line-59"></span><span>      </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;The fully qualified name of a namespace. The leading `.` is optional.&quot;</span></span><span>
-</span><span id="line-62"></span><span>      </span><span class="annot"><span class="annottext">ParamKind
+</span><span id="line-60"></span><span>      </span><span class="annot"><span class="annottext">ParamKind
 </span><span class="hs-identifier hs-var">Normal</span></span><span>
-</span><span id="line-63"></span><span>
-</span><span id="line-64"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSample</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-65"></span><span>  </span><span id="local-6989586621679315266"><span class="annot"><span class="annottext">toSamples :: Proxy NamespaceListing -&gt; [(Text, NamespaceListing)]
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSample</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-63"></span><span>  </span><span id="local-6989586621679316336"><span class="annot"><span class="annottext">toSamples :: Proxy NamespaceListing -&gt; [(Text, NamespaceListing)]
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toSamples</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy NamespaceListing
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-66"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span id="line-64"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;When no value is provided for `namespace`, the root namespace `.` is &quot;</span></span><span>
-</span><span id="line-67"></span><span>          </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><span id="line-65"></span><span>          </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;listed by default&quot;</span></span><span class="hs-special">,</span><span>
-</span><span id="line-68"></span><span>        </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; [NamespaceObject] -&gt; NamespaceListing
+</span><span id="line-66"></span><span>        </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; [NamespaceObject] -&gt; NamespaceListing
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span><span>
-</span><span id="line-69"></span><span>          </span><span class="annot"><span class="annottext">Text
+</span><span id="line-67"></span><span>          </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;.&quot;</span></span><span>
-</span><span id="line-70"></span><span>          </span><span class="annot"><span class="annottext">Text
+</span><span id="line-68"></span><span>          </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#gjlk0dna8dongct6lsd19d1o9hi5n642t8jttga5e81e91fviqjdffem0tlddj7ahodjo5&quot;</span></span><span>
-</span><span id="line-71"></span><span>          </span><span class="hs-special">[</span><span class="annot"><span class="annottext">NamedNamespace -&gt; NamespaceObject
+</span><span id="line-69"></span><span>          </span><span class="hs-special">[</span><span class="annot"><span class="annottext">NamedNamespace -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#Subnamespace"><span class="hs-identifier hs-var">Subnamespace</span></a></span><span> </span><span class="annot"><span class="annottext">(NamedNamespace -&gt; NamespaceObject)
 -&gt; NamedNamespace -&gt; NamespaceObject
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -95,18 +93,18 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;base&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#19d1o9hi5n642t8jttg&quot;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">237</span></span><span class="hs-special">]</span><span>
-</span><span id="line-72"></span><span>      </span><span class="hs-special">)</span><span>
-</span><span id="line-73"></span><span>    </span><span class="hs-special">]</span><span>
-</span><span id="line-74"></span><span>
-</span><span id="line-75"></span><span id="local-6989586621679315260"><span id="local-6989586621679315261"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamespaceListing"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamespaceListing"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span></span><span>
-</span><span id="line-76"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AnamespaceListingFQN%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; Text
+</span><span id="line-70"></span><span>      </span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span id="local-6989586621679316330"><span id="local-6989586621679316331"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamespaceListing"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamespaceListing"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span></span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AnamespaceListingFQN%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceListingFQN%3ANamespaceListing"><span class="hs-identifier hs-var hs-var">namespaceListingFQN</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier hs-type">UnisonName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-77"></span><span>    </span><span id="%24sel%3AnamespaceListingHash%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; Text
+</span><span id="line-75"></span><span>    </span><span id="%24sel%3AnamespaceListingHash%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceListingHash%3ANamespaceListing"><span class="hs-identifier hs-var hs-var">namespaceListingHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier hs-type">UnisonHash</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-78"></span><span>    </span><span id="%24sel%3AnamespaceListingChildren%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; [NamespaceObject]
+</span><span id="line-76"></span><span>    </span><span id="%24sel%3AnamespaceListingChildren%3ANamespaceListing"><span class="annot"><span class="annottext">NamespaceListing -&gt; [NamespaceObject]
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceListingChildren%3ANamespaceListing"><span class="hs-identifier hs-var hs-var">namespaceListingChildren</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-79"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-80"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamespaceListing -&gt; Rep NamespaceListing x)
+</span><span id="line-77"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamespaceListing -&gt; Rep NamespaceListing x)
 -&gt; (forall x. Rep NamespaceListing x -&gt; NamespaceListing)
 -&gt; Generic NamespaceListing
 forall x. Rep NamespaceListing x -&gt; NamespaceListing
@@ -115,7 +113,7 @@ forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep NamespaceListing x -&gt; NamespaceListing
 $cfrom :: forall x. NamespaceListing -&gt; Rep NamespaceListing x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315248"><span id="local-6989586621679315250"><span id="local-6989586621679315252"><span class="annot"><span class="annottext">Int -&gt; NamespaceListing -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316318"><span id="local-6989586621679316320"><span id="local-6989586621679316322"><span class="annot"><span class="annottext">Int -&gt; NamespaceListing -&gt; ShowS
 [NamespaceListing] -&gt; ShowS
 NamespaceListing -&gt; String
 (Int -&gt; NamespaceListing -&gt; ShowS)
@@ -131,33 +129,33 @@ $cshow :: NamespaceListing -&gt; String
 showsPrec :: Int -&gt; NamespaceListing -&gt; ShowS
 $cshowsPrec :: Int -&gt; NamespaceListing -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-81"></span><span>
-</span><span id="line-82"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315240"><span id="local-6989586621679315242"><span id="local-6989586621679315245"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-83"></span><span>  </span><span id="local-6989586621679315238"><span class="annot"><span class="annottext">toEncoding :: NamespaceListing -&gt; Encoding
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316310"><span id="local-6989586621679316312"><span id="local-6989586621679316315"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-81"></span><span>  </span><span id="local-6989586621679316308"><span class="annot"><span class="annottext">toEncoding :: NamespaceListing -&gt; Encoding
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamespaceListing -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-84"></span><span>
-</span><span id="line-85"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315232"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-86"></span><span>  </span><span id="local-6989586621679315230"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamespaceListing
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316302"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621679316300"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamespaceListing
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamespaceListing
 forall a.
 (Generic a, GFromJSON Zero (Rep a)) =&gt;
 Options -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">genericParseJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
+</span><span id="line-85"></span><span>
+</span><span id="line-86"></span><span id="local-6989586621679316295"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span><span>
 </span><span id="line-87"></span><span>
-</span><span id="line-88"></span><span id="local-6989586621679315225"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span></span><span>
-</span><span id="line-89"></span><span>
-</span><span id="line-90"></span><span id="local-6989586621679315222"><span id="local-6989586621679315223"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamespaceObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-var">NamespaceObject</span></a></span></span><span>
-</span><span id="line-91"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Subnamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#Subnamespace"><span class="hs-identifier hs-var">Subnamespace</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span><span>
-</span><span id="line-92"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TermObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#TermObject"><span class="hs-identifier hs-var">TermObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#NamedTerm"><span class="hs-identifier hs-type">NamedTerm</span></a></span><span>
-</span><span id="line-93"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TypeObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#TypeObject"><span class="hs-identifier hs-var">TypeObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#NamedType"><span class="hs-identifier hs-type">NamedType</span></a></span><span>
-</span><span id="line-94"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PatchObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#PatchObject"><span class="hs-identifier hs-var">PatchObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span><span>
-</span><span id="line-95"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamespaceObject -&gt; Rep NamespaceObject x)
+</span><span id="line-88"></span><span id="local-6989586621679316292"><span id="local-6989586621679316293"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamespaceObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-var">NamespaceObject</span></a></span></span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Subnamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#Subnamespace"><span class="hs-identifier hs-var">Subnamespace</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span><span>
+</span><span id="line-90"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TermObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#TermObject"><span class="hs-identifier hs-var">TermObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#NamedTerm"><span class="hs-identifier hs-type">NamedTerm</span></a></span><span>
+</span><span id="line-91"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TypeObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#TypeObject"><span class="hs-identifier hs-var">TypeObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Types.html#NamedType"><span class="hs-identifier hs-type">NamedType</span></a></span><span>
+</span><span id="line-92"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PatchObject"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#PatchObject"><span class="hs-identifier hs-var">PatchObject</span></a></span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamespaceObject -&gt; Rep NamespaceObject x)
 -&gt; (forall x. Rep NamespaceObject x -&gt; NamespaceObject)
 -&gt; Generic NamespaceObject
 forall x. Rep NamespaceObject x -&gt; NamespaceObject
@@ -166,7 +164,7 @@ forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep NamespaceObject x -&gt; NamespaceObject
 $cfrom :: forall x. NamespaceObject -&gt; Rep NamespaceObject x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315211"><span id="local-6989586621679315213"><span id="local-6989586621679315215"><span class="annot"><span class="annottext">Int -&gt; NamespaceObject -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316281"><span id="local-6989586621679316283"><span id="local-6989586621679316285"><span class="annot"><span class="annottext">Int -&gt; NamespaceObject -&gt; ShowS
 [NamespaceObject] -&gt; ShowS
 NamespaceObject -&gt; String
 (Int -&gt; NamespaceObject -&gt; ShowS)
@@ -182,36 +180,36 @@ $cshow :: NamespaceObject -&gt; String
 showsPrec :: Int -&gt; NamespaceObject -&gt; ShowS
 $cshowsPrec :: Int -&gt; NamespaceObject -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-96"></span><span>
-</span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315204"><span id="local-6989586621679315206"><span id="local-6989586621679315209"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-98"></span><span>  </span><span id="local-6989586621679315203"><span class="annot"><span class="annottext">toEncoding :: NamespaceObject -&gt; Encoding
-</span><a href="#local-6989586621679315203"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamespaceObject -&gt; Encoding
+</span><span id="line-94"></span><span>
+</span><span id="line-95"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316274"><span id="local-6989586621679316276"><span id="local-6989586621679316279"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-96"></span><span>  </span><span id="local-6989586621679316273"><span class="annot"><span class="annottext">toEncoding :: NamespaceObject -&gt; Encoding
+</span><a href="#local-6989586621679316273"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamespaceObject -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-99"></span><span>
-</span><span id="line-100"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315200"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-101"></span><span>  </span><span id="local-6989586621679315199"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamespaceObject
-</span><a href="#local-6989586621679315199"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamespaceObject
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316270"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621679316269"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamespaceObject
+</span><a href="#local-6989586621679316269"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamespaceObject
 forall a.
 (Generic a, GFromJSON Zero (Rep a)) =&gt;
 Options -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">genericParseJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span id="local-6989586621679316266"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span><span>
 </span><span id="line-102"></span><span>
-</span><span id="line-103"></span><span id="local-6989586621679315196"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span><span>
-</span><span id="line-104"></span><span>
-</span><span id="line-105"></span><span id="local-6989586621679315194"><span id="local-6989586621679315195"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamedNamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-var">NamedNamespace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamedNamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-var">NamedNamespace</span></a></span></span><span>
-</span><span id="line-106"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AnamespaceName%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Text
+</span><span id="line-103"></span><span id="local-6989586621679316264"><span id="local-6989586621679316265"></span></span><span class="hs-keyword">data</span><span> </span><span id="NamedNamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-var">NamedNamespace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamedNamespace"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-var">NamedNamespace</span></a></span></span><span>
+</span><span id="line-104"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AnamespaceName%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceName%3ANamedNamespace"><span class="hs-identifier hs-var hs-var">namespaceName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier hs-type">UnisonName</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-107"></span><span>    </span><span id="%24sel%3AnamespaceHash%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Text
+</span><span id="line-105"></span><span>    </span><span id="%24sel%3AnamespaceHash%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceHash%3ANamedNamespace"><span class="hs-identifier hs-var hs-var">namespaceHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier hs-type">UnisonHash</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-108"></span><span>    </span><span id="%24sel%3AnamespaceSize%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Int
+</span><span id="line-106"></span><span>    </span><span id="%24sel%3AnamespaceSize%3ANamedNamespace"><span class="annot"><span class="annottext">NamedNamespace -&gt; Int
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceSize%3ANamedNamespace"><span class="hs-identifier hs-var hs-var">namespaceSize</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
-</span><span id="line-109"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-110"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamedNamespace -&gt; Rep NamedNamespace x)
+</span><span id="line-107"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-108"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamedNamespace -&gt; Rep NamedNamespace x)
 -&gt; (forall x. Rep NamedNamespace x -&gt; NamedNamespace)
 -&gt; Generic NamedNamespace
 forall x. Rep NamedNamespace x -&gt; NamedNamespace
@@ -220,7 +218,7 @@ forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep NamedNamespace x -&gt; NamedNamespace
 $cfrom :: forall x. NamedNamespace -&gt; Rep NamedNamespace x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315183"><span id="local-6989586621679315185"><span id="local-6989586621679315187"><span class="annot"><span class="annottext">Int -&gt; NamedNamespace -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316253"><span id="local-6989586621679316255"><span id="local-6989586621679316257"><span class="annot"><span class="annottext">Int -&gt; NamedNamespace -&gt; ShowS
 [NamedNamespace] -&gt; ShowS
 NamedNamespace -&gt; String
 (Int -&gt; NamedNamespace -&gt; ShowS)
@@ -236,30 +234,30 @@ $cshow :: NamedNamespace -&gt; String
 showsPrec :: Int -&gt; NamedNamespace -&gt; ShowS
 $cshowsPrec :: Int -&gt; NamedNamespace -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-111"></span><span>
-</span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315176"><span id="local-6989586621679315178"><span id="local-6989586621679315181"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-113"></span><span>  </span><span id="local-6989586621679315175"><span class="annot"><span class="annottext">toEncoding :: NamedNamespace -&gt; Encoding
-</span><a href="#local-6989586621679315175"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamedNamespace -&gt; Encoding
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316246"><span id="local-6989586621679316248"><span id="local-6989586621679316251"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-111"></span><span>  </span><span id="local-6989586621679316245"><span class="annot"><span class="annottext">toEncoding :: NamedNamespace -&gt; Encoding
+</span><a href="#local-6989586621679316245"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamedNamespace -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-114"></span><span>
-</span><span id="line-115"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315172"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-116"></span><span>  </span><span id="local-6989586621679315171"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamedNamespace
-</span><a href="#local-6989586621679315171"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamedNamespace
+</span><span id="line-112"></span><span>
+</span><span id="line-113"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316242"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-114"></span><span>  </span><span id="local-6989586621679316241"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamedNamespace
+</span><a href="#local-6989586621679316241"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamedNamespace
 forall a.
 (Generic a, GFromJSON Zero (Rep a)) =&gt;
 Options -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">genericParseJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span id="local-6989586621679316238"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span><span>
 </span><span id="line-117"></span><span>
-</span><span id="line-118"></span><span id="local-6989586621679315168"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span></span><span>
-</span><span id="line-119"></span><span>
-</span><span id="line-120"></span><span id="local-6989586621679315166"><span id="local-6989586621679315167"></span></span><span class="hs-keyword">newtype</span><span> </span><span id="NamedPatch"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-var">NamedPatch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamedPatch"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-var">NamedPatch</span></a></span></span><span> </span><span class="hs-special">{</span><span id="%24sel%3ApatchName%3ANamedPatch"><span class="annot"><span class="annottext">NamedPatch -&gt; Text
+</span><span id="line-118"></span><span id="local-6989586621679316236"><span id="local-6989586621679316237"></span></span><span class="hs-keyword">newtype</span><span> </span><span id="NamedPatch"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-var">NamedPatch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NamedPatch"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-var">NamedPatch</span></a></span></span><span> </span><span class="hs-special">{</span><span id="%24sel%3ApatchName%3ANamedPatch"><span class="annot"><span class="annottext">NamedPatch -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3ApatchName%3ANamedPatch"><span class="hs-identifier hs-var hs-var">patchName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#HashQualifiedName"><span class="hs-identifier hs-type">HashQualifiedName</span></a></span><span class="hs-special">}</span><span>
-</span><span id="line-121"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamedPatch -&gt; Rep NamedPatch x)
+</span><span id="line-119"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. NamedPatch -&gt; Rep NamedPatch x)
 -&gt; (forall x. Rep NamedPatch x -&gt; NamedPatch) -&gt; Generic NamedPatch
 forall x. Rep NamedPatch x -&gt; NamedPatch
 forall x. NamedPatch -&gt; Rep NamedPatch x
@@ -267,7 +265,7 @@ forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep NamedPatch x -&gt; NamedPatch
 $cfrom :: forall x. NamedPatch -&gt; Rep NamedPatch x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315156"><span id="local-6989586621679315158"><span id="local-6989586621679315160"><span class="annot"><span class="annottext">Int -&gt; NamedPatch -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316226"><span id="local-6989586621679316228"><span id="local-6989586621679316230"><span class="annot"><span class="annottext">Int -&gt; NamedPatch -&gt; ShowS
 [NamedPatch] -&gt; ShowS
 NamedPatch -&gt; String
 (Int -&gt; NamedPatch -&gt; ShowS)
@@ -283,7 +281,7 @@ $cshow :: NamedPatch -&gt; String
 showsPrec :: Int -&gt; NamedPatch -&gt; ShowS
 $cshowsPrec :: Int -&gt; NamedPatch -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-122"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679315153"><span class="annot"><span class="annottext">Typeable NamedPatch
+</span><span id="line-120"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679316223"><span class="annot"><span class="annottext">Typeable NamedPatch
 Typeable NamedPatch
 -&gt; (Proxy NamedPatch -&gt; Declare (Definitions Schema) NamedSchema)
 -&gt; ToSchema NamedPatch
@@ -295,29 +293,29 @@ Typeable a
 declareNamedSchema :: Proxy NamedPatch -&gt; Declare (Definitions Schema) NamedSchema
 $cdeclareNamedSchema :: Proxy NamedPatch -&gt; Declare (Definitions Schema) NamedSchema
 $cp1ToSchema :: Typeable NamedPatch
-</span><a href="#local-6989586621679315153"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var">ToSchema</span></a></span></span><span class="hs-special">)</span><span>
-</span><span id="line-123"></span><span>
-</span><span id="line-124"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315146"><span id="local-6989586621679315148"><span id="local-6989586621679315151"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-125"></span><span>  </span><span id="local-6989586621679315145"><span class="annot"><span class="annottext">toEncoding :: NamedPatch -&gt; Encoding
-</span><a href="#local-6989586621679315145"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamedPatch -&gt; Encoding
+</span><a href="#local-6989586621679316223"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var">ToSchema</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316216"><span id="local-6989586621679316218"><span id="local-6989586621679316221"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-123"></span><span>  </span><span id="local-6989586621679316215"><span class="annot"><span class="annottext">toEncoding :: NamedPatch -&gt; Encoding
+</span><a href="#local-6989586621679316215"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; NamedPatch -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-126"></span><span>
-</span><span id="line-127"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315142"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-128"></span><span>  </span><span id="local-6989586621679315141"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamedPatch
-</span><a href="#local-6989586621679315141"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamedPatch
+</span><span id="line-124"></span><span>
+</span><span id="line-125"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316212"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedPatch"><span class="hs-identifier hs-type">NamedPatch</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-126"></span><span>  </span><span id="local-6989586621679316211"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NamedPatch
+</span><a href="#local-6989586621679316211"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser NamedPatch
 forall a.
 (Generic a, GFromJSON Zero (Rep a)) =&gt;
 Options -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">genericParseJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-129"></span><span>
-</span><span id="line-130"></span><span id="local-6989586621679315139"><span id="local-6989586621679315140"></span></span><span class="hs-keyword">newtype</span><span> </span><span id="KindExpression"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-var">KindExpression</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="KindExpression"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-var">KindExpression</span></a></span></span><span> </span><span class="hs-special">{</span><span id="%24sel%3AkindExpressionText%3AKindExpression"><span class="annot"><span class="annottext">KindExpression -&gt; Text
+</span><span id="line-127"></span><span>
+</span><span id="line-128"></span><span id="local-6989586621679316209"><span id="local-6989586621679316210"></span></span><span class="hs-keyword">newtype</span><span> </span><span id="KindExpression"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-var">KindExpression</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="KindExpression"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-var">KindExpression</span></a></span></span><span> </span><span class="hs-special">{</span><span id="%24sel%3AkindExpressionText%3AKindExpression"><span class="annot"><span class="annottext">KindExpression -&gt; Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AkindExpressionText%3AKindExpression"><span class="hs-identifier hs-var hs-var">kindExpressionText</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">}</span><span>
-</span><span id="line-131"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. KindExpression -&gt; Rep KindExpression x)
+</span><span id="line-129"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall x. KindExpression -&gt; Rep KindExpression x)
 -&gt; (forall x. Rep KindExpression x -&gt; KindExpression)
 -&gt; Generic KindExpression
 forall x. Rep KindExpression x -&gt; KindExpression
@@ -326,7 +324,7 @@ forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep KindExpression x -&gt; KindExpression
 $cfrom :: forall x. KindExpression -&gt; Rep KindExpression x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315129"><span id="local-6989586621679315131"><span id="local-6989586621679315133"><span class="annot"><span class="annottext">Int -&gt; KindExpression -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316199"><span id="local-6989586621679316201"><span id="local-6989586621679316203"><span class="annot"><span class="annottext">Int -&gt; KindExpression -&gt; ShowS
 [KindExpression] -&gt; ShowS
 KindExpression -&gt; String
 (Int -&gt; KindExpression -&gt; ShowS)
@@ -342,7 +340,7 @@ $cshow :: KindExpression -&gt; String
 showsPrec :: Int -&gt; KindExpression -&gt; ShowS
 $cshowsPrec :: Int -&gt; KindExpression -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-132"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679315126"><span class="annot"><span class="annottext">Typeable KindExpression
+</span><span id="line-130"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679316196"><span class="annot"><span class="annottext">Typeable KindExpression
 Typeable KindExpression
 -&gt; (Proxy KindExpression
     -&gt; Declare (Definitions Schema) NamedSchema)
@@ -355,31 +353,31 @@ Typeable a
 declareNamedSchema :: Proxy KindExpression -&gt; Declare (Definitions Schema) NamedSchema
 $cdeclareNamedSchema :: Proxy KindExpression -&gt; Declare (Definitions Schema) NamedSchema
 $cp1ToSchema :: Typeable KindExpression
-</span><a href="#local-6989586621679315126"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var">ToSchema</span></a></span></span><span class="hs-special">)</span><span>
-</span><span id="line-133"></span><span>
-</span><span id="line-134"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679315119"><span id="local-6989586621679315121"><span id="local-6989586621679315124"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-type">KindExpression</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-135"></span><span>  </span><span id="local-6989586621679315118"><span class="annot"><span class="annottext">toEncoding :: KindExpression -&gt; Encoding
-</span><a href="#local-6989586621679315118"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; KindExpression -&gt; Encoding
+</span><a href="#local-6989586621679316196"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var">ToSchema</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span>
+</span><span id="line-132"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679316189"><span id="local-6989586621679316191"><span id="local-6989586621679316194"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#KindExpression"><span class="hs-identifier hs-type">KindExpression</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621679316188"><span class="annot"><span class="annottext">toEncoding :: KindExpression -&gt; Encoding
+</span><a href="#local-6989586621679316188"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; KindExpression -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
-</span><span id="line-136"></span><span>
-</span><span id="line-137"></span><span id="local-6989586621679315283"><span id="local-6989586621679315284"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#backendListEntryToNamespaceObject"><span class="hs-identifier hs-type">backendListEntryToNamespaceObject</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-138"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621679315284"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
-</span><span id="line-139"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">PPE.PrettyPrintEnv</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-140"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-141"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowListEntry"><span class="hs-identifier hs-type">Backend.ShallowListEntry</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679315284"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679315283"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-142"></span><span>  </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span></span><span>
-</span><span id="line-143"></span><span id="backendListEntryToNamespaceObject"><span class="annot"><span class="annottext">backendListEntryToNamespaceObject :: PrettyPrintEnv
+</span><span id="line-134"></span><span>
+</span><span id="line-135"></span><span id="local-6989586621679316353"><span id="local-6989586621679316354"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#backendListEntryToNamespaceObject"><span class="hs-identifier hs-type">backendListEntryToNamespaceObject</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-136"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621679316354"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
+</span><span id="line-137"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">PPE.PrettyPrintEnv</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-138"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-139"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowListEntry"><span class="hs-identifier hs-type">Backend.ShallowListEntry</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679316354"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679316353"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-140"></span><span>  </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceObject"><span class="hs-identifier hs-type">NamespaceObject</span></a></span></span></span><span>
+</span><span id="line-141"></span><span id="backendListEntryToNamespaceObject"><span class="annot"><span class="annottext">backendListEntryToNamespaceObject :: PrettyPrintEnv
 -&gt; Maybe Width -&gt; ShallowListEntry v a -&gt; NamespaceObject
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#backendListEntryToNamespaceObject"><span class="hs-identifier hs-var hs-var">backendListEntryToNamespaceObject</span></a></span></span><span> </span><span id="local-6989586621679315116"><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315116"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span id="local-6989586621679315115"><span class="annot"><span class="annottext">Maybe Width
-</span><a href="#local-6989586621679315115"><span class="hs-identifier hs-var">typeWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-144"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowTermEntry"><span class="hs-identifier hs-type">Backend.ShallowTermEntry</span></a></span><span> </span><span id="local-6989586621679315113"><span class="annot"><span class="annottext">TermEntry v a
-</span><a href="#local-6989586621679315113"><span class="hs-identifier hs-var">te</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-145"></span><span>    </span><span class="annot"><span class="annottext">NamedTerm -&gt; NamespaceObject
+</span><a href="Unison.Server.Endpoints.NamespaceListing.html#backendListEntryToNamespaceObject"><span class="hs-identifier hs-var hs-var">backendListEntryToNamespaceObject</span></a></span></span><span> </span><span id="local-6989586621679316186"><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679316186"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span id="local-6989586621679316185"><span class="annot"><span class="annottext">Maybe Width
+</span><a href="#local-6989586621679316185"><span class="hs-identifier hs-var">typeWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-142"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowTermEntry"><span class="hs-identifier hs-type">Backend.ShallowTermEntry</span></a></span><span> </span><span id="local-6989586621679316183"><span class="annot"><span class="annottext">TermEntry v a
+</span><a href="#local-6989586621679316183"><span class="hs-identifier hs-var">te</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-143"></span><span>    </span><span class="annot"><span class="annottext">NamedTerm -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#TermObject"><span class="hs-identifier hs-var">TermObject</span></a></span><span> </span><span class="annot"><span class="annottext">(NamedTerm -&gt; NamespaceObject) -&gt; NamedTerm -&gt; NamespaceObject
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; Maybe Width -&gt; TermEntry v a -&gt; NamedTerm
@@ -387,60 +385,60 @@ forall v a.
 Var v =&gt;
 PrettyPrintEnv -&gt; Maybe Width -&gt; TermEntry v a -&gt; NamedTerm
 </span><a href="Unison.Server.Backend.html#termEntryToNamedTerm"><span class="hs-identifier hs-var">Backend.termEntryToNamedTerm</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315116"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Width
-</span><a href="#local-6989586621679315115"><span class="hs-identifier hs-var">typeWidth</span></a></span><span> </span><span class="annot"><span class="annottext">TermEntry v a
-</span><a href="#local-6989586621679315113"><span class="hs-identifier hs-var">te</span></a></span><span>
-</span><span id="line-146"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowTypeEntry"><span class="hs-identifier hs-type">Backend.ShallowTypeEntry</span></a></span><span> </span><span id="local-6989586621679315110"><span class="annot"><span class="annottext">TypeEntry
-</span><a href="#local-6989586621679315110"><span class="hs-identifier hs-var">te</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NamedType -&gt; NamespaceObject
+</span><a href="#local-6989586621679316186"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Width
+</span><a href="#local-6989586621679316185"><span class="hs-identifier hs-var">typeWidth</span></a></span><span> </span><span class="annot"><span class="annottext">TermEntry v a
+</span><a href="#local-6989586621679316183"><span class="hs-identifier hs-var">te</span></a></span><span>
+</span><span id="line-144"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowTypeEntry"><span class="hs-identifier hs-type">Backend.ShallowTypeEntry</span></a></span><span> </span><span id="local-6989586621679316180"><span class="annot"><span class="annottext">TypeEntry
+</span><a href="#local-6989586621679316180"><span class="hs-identifier hs-var">te</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NamedType -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#TypeObject"><span class="hs-identifier hs-var">TypeObject</span></a></span><span> </span><span class="annot"><span class="annottext">(NamedType -&gt; NamespaceObject) -&gt; NamedType -&gt; NamespaceObject
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">TypeEntry -&gt; NamedType
 </span><a href="Unison.Server.Backend.html#typeEntryToNamedType"><span class="hs-identifier hs-var">Backend.typeEntryToNamedType</span></a></span><span> </span><span class="annot"><span class="annottext">TypeEntry
-</span><a href="#local-6989586621679315110"><span class="hs-identifier hs-var">te</span></a></span><span>
-</span><span id="line-147"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowBranchEntry"><span class="hs-identifier hs-type">Backend.ShallowBranchEntry</span></a></span><span> </span><span id="local-6989586621679315107"><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679315107"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679315106"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315106"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NamespaceStats</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679315104"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679316180"><span class="hs-identifier hs-var">te</span></a></span><span>
+</span><span id="line-145"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowBranchEntry"><span class="hs-identifier hs-type">Backend.ShallowBranchEntry</span></a></span><span> </span><span id="local-6989586621679316177"><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679316177"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679316176"><span class="annot"><span class="annottext">CausalHash
+</span><a href="#local-6989586621679316176"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">NamespaceStats</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679316174"><span class="annot"><span class="annottext">Int
 numContainedTerms :: NamespaceStats -&gt; Int
 numContainedTerms :: Int
-</span><span class="hs-identifier hs-var hs-var">numContainedTerms</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315102"><span class="annot"><span class="annottext">Int
+</span><span class="hs-identifier hs-var hs-var">numContainedTerms</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316172"><span class="annot"><span class="annottext">Int
 numContainedTypes :: NamespaceStats -&gt; Int
 numContainedTypes :: Int
-</span><span class="hs-identifier hs-var hs-var">numContainedTypes</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315100"><span class="annot"><span class="annottext">Int
+</span><span class="hs-identifier hs-var hs-var">numContainedTypes</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316170"><span class="annot"><span class="annottext">Int
 numContainedPatches :: NamespaceStats -&gt; Int
 numContainedPatches :: Int
 </span><span class="hs-identifier hs-var hs-var">numContainedPatches</span></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-148"></span><span>    </span><span class="annot"><span class="annottext">NamedNamespace -&gt; NamespaceObject
+</span><span id="line-146"></span><span>    </span><span class="annot"><span class="annottext">NamedNamespace -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#Subnamespace"><span class="hs-identifier hs-var">Subnamespace</span></a></span><span> </span><span class="annot"><span class="annottext">(NamedNamespace -&gt; NamespaceObject)
 -&gt; NamedNamespace -&gt; NamespaceObject
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
-</span><span id="line-149"></span><span>      </span><span class="annot"><span class="annottext">NamedNamespace :: Text -&gt; Text -&gt; Int -&gt; NamedNamespace
+</span><span id="line-147"></span><span>      </span><span class="annot"><span class="annottext">NamedNamespace :: Text -&gt; Text -&gt; Int -&gt; NamedNamespace
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#NamedNamespace"><span class="hs-identifier hs-type">NamedNamespace</span></a></span><span>
-</span><span id="line-150"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:namespaceName:NamedNamespace :: Text
+</span><span id="line-148"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:namespaceName:NamedNamespace :: Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceName%3ANamedNamespace"><span class="hs-identifier hs-var">namespaceName</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Text
 </span><span class="hs-identifier hs-var hs-var">NameSegment.toText</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679315107"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-151"></span><span>          </span><span class="annot"><span class="annottext">$sel:namespaceHash:NamedNamespace :: Text
+</span><a href="#local-6989586621679316177"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-149"></span><span>          </span><span class="annot"><span class="annottext">$sel:namespaceHash:NamedNamespace :: Text
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceHash%3ANamedNamespace"><span class="hs-identifier hs-var">namespaceHash</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Hash -&gt; Text
 </span><span class="hs-identifier hs-var">Hash.toBase32HexText</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalHash -&gt; Hash
 </span><span class="hs-identifier hs-var hs-var">unCausalHash</span></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315106"><span class="hs-identifier hs-var">hash</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-152"></span><span>          </span><span class="annot"><span class="annottext">$sel:namespaceSize:NamedNamespace :: Int
+</span><a href="#local-6989586621679316176"><span class="hs-identifier hs-var">hash</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-150"></span><span>          </span><span class="annot"><span class="annottext">$sel:namespaceSize:NamedNamespace :: Int
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#%24sel%3AnamespaceSize%3ANamedNamespace"><span class="hs-identifier hs-var">namespaceSize</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679315104"><span class="hs-identifier hs-var">numContainedTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679316174"><span class="hs-identifier hs-var">numContainedTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679315102"><span class="hs-identifier hs-var">numContainedTypes</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+</span><a href="#local-6989586621679316172"><span class="hs-identifier hs-var">numContainedTypes</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
 forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679315100"><span class="hs-identifier hs-var">numContainedPatches</span></a></span><span>
-</span><span id="line-153"></span><span>        </span><span class="hs-special">}</span><span>
-</span><span id="line-154"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowPatchEntry"><span class="hs-identifier hs-type">Backend.ShallowPatchEntry</span></a></span><span> </span><span id="local-6989586621679315093"><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679315093"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">NamedPatch -&gt; NamespaceObject
+</span><a href="#local-6989586621679316170"><span class="hs-identifier hs-var">numContainedPatches</span></a></span><span>
+</span><span id="line-151"></span><span>        </span><span class="hs-special">}</span><span>
+</span><span id="line-152"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#ShallowPatchEntry"><span class="hs-identifier hs-type">Backend.ShallowPatchEntry</span></a></span><span> </span><span id="local-6989586621679316163"><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679316163"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-153"></span><span>    </span><span class="annot"><span class="annottext">NamedPatch -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#PatchObject"><span class="hs-identifier hs-var">PatchObject</span></a></span><span> </span><span class="annot"><span class="annottext">(NamedPatch -&gt; NamespaceObject)
 -&gt; (Text -&gt; NamedPatch) -&gt; Text -&gt; NamespaceObject
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -449,35 +447,28 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Text
 </span><span class="hs-identifier hs-var hs-var">NameSegment.toText</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679315093"><span class="hs-identifier hs-var">name</span></a></span><span>
-</span><span id="line-156"></span><span>
-</span><span id="line-157"></span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#serve"><span class="hs-identifier hs-type">serve</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-158"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-159"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-160"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-161"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-162"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend.Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
-</span><span id="line-163"></span><span id="serve"><span class="annot"><span class="annottext">serve :: Codebase IO Symbol Ann
--&gt; Maybe ShortCausalHash
+</span><a href="#local-6989586621679316163"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><span id="line-154"></span><span>
+</span><span id="line-155"></span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#serve"><span class="hs-identifier hs-type">serve</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-156"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-157"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-158"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-159"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-160"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend.Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
+</span><span id="line-161"></span><span id="serve"><span class="annot"><span class="annottext">serve :: Codebase IO Symbol Ann
+-&gt; Maybe (Either ShortCausalHash CausalHash)
 -&gt; Maybe Path
 -&gt; Maybe Path
 -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serve"><span class="hs-identifier hs-var hs-var">serve</span></a></span></span><span> </span><span id="local-6989586621679315091"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679315090"><span class="annot"><span class="annottext">Maybe ShortCausalHash
-</span><a href="#local-6989586621679315090"><span class="hs-identifier hs-var">maySCH</span></a></span></span><span> </span><span id="local-6989586621679315089"><span class="annot"><span class="annottext">Maybe Path
-</span><a href="#local-6989586621679315089"><span class="hs-identifier hs-var">mayRelativeTo</span></a></span></span><span> </span><span id="local-6989586621679315088"><span class="annot"><span class="annottext">Maybe Path
-</span><a href="#local-6989586621679315088"><span class="hs-identifier hs-var">mayNamespaceName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-164"></span><span>  </span><span id="local-6989586621679315087"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679315087"><span class="hs-identifier hs-var">useIndex</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(BackendEnv -&gt; Bool) -&gt; Backend IO Bool
-forall r (m :: * -&gt; *) a. MonadReader r m =&gt; (r -&gt; a) -&gt; m a
-</span><span class="hs-identifier hs-var">asks</span></span><span> </span><span class="annot"><span class="annottext">BackendEnv -&gt; Bool
-</span><a href="Unison.Server.Backend.html#%24sel%3AuseNamesIndex%3ABackendEnv"><span class="hs-identifier hs-var hs-var">Backend.useNamesIndex</span></a></span><span>
-</span><span id="line-165"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679315084"><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315084"><span class="hs-identifier hs-var">mayRootHash</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315083"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315083"><span class="hs-identifier hs-var">codebaseRootHash</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-166"></span><span>    </span><span class="annot"><span class="annottext">(forall x. Transaction x -&gt; IO x)
--&gt; Backend Transaction (Maybe CausalHash, CausalHash)
--&gt; Backend IO (Maybe CausalHash, CausalHash)
+</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serve"><span class="hs-identifier hs-var hs-var">serve</span></a></span></span><span> </span><span id="local-6989586621679316161"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679316161"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679316160"><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
+</span><a href="#local-6989586621679316160"><span class="hs-identifier hs-var">maySCH</span></a></span></span><span> </span><span id="local-6989586621679316159"><span class="annot"><span class="annottext">Maybe Path
+</span><a href="#local-6989586621679316159"><span class="hs-identifier hs-var">mayRelativeTo</span></a></span></span><span> </span><span id="local-6989586621679316158"><span class="annot"><span class="annottext">Maybe Path
+</span><a href="#local-6989586621679316158"><span class="hs-identifier hs-var">mayNamespaceName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-162"></span><span>  </span><span id="local-6989586621679316157"><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679316157"><span class="hs-identifier hs-var">rootCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(forall x. Transaction x -&gt; IO x)
+-&gt; Backend Transaction (CausalBranch Transaction)
+-&gt; Backend IO (CausalBranch Transaction)
 forall (m :: * -&gt; *) (n :: * -&gt; *) a.
 (forall x. m x -&gt; n x) -&gt; Backend m a -&gt; Backend n a
 </span><a href="Unison.Server.Backend.html#hoistBackend"><span class="hs-identifier hs-var">Backend.hoistBackend</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Codebase IO Symbol Ann -&gt; Transaction x -&gt; IO x
@@ -485,191 +476,55 @@ forall (m :: * -&gt; *) v a b.
 MonadIO m =&gt;
 Codebase m v a -&gt; Transaction b -&gt; m b
 </span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-167"></span><span>      </span><span id="local-6989586621679315080"><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315080"><span class="hs-identifier hs-var">mayRootHash</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(ShortCausalHash -&gt; Backend Transaction CausalHash)
--&gt; Maybe ShortCausalHash -&gt; Backend Transaction (Maybe CausalHash)
-forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
-(Traversable t, Applicative f) =&gt;
-(a -&gt; f b) -&gt; t a -&gt; f (t b)
-</span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="annot"><span class="annottext">ShortCausalHash -&gt; Backend Transaction CausalHash
-</span><a href="Unison.Server.Backend.html#expandShortCausalHash"><span class="hs-identifier hs-var">Backend.expandShortCausalHash</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe ShortCausalHash
-</span><a href="#local-6989586621679315090"><span class="hs-identifier hs-var">maySCH</span></a></span><span>
-</span><span id="line-168"></span><span>      </span><span id="local-6989586621679315077"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315077"><span class="hs-identifier hs-var">codebaseRootHash</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction CausalHash -&gt; Backend Transaction CausalHash
-forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
-(MonadTrans t, Monad m) =&gt;
-m a -&gt; t m a
-</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">Transaction CausalHash
-</span><span class="hs-identifier hs-var">Operations.expectRootCausalHash</span></span><span>
-</span><span id="line-169"></span><span>      </span><span class="annot"><span class="annottext">(Maybe CausalHash, CausalHash)
--&gt; Backend Transaction (Maybe CausalHash, CausalHash)
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315080"><span class="hs-identifier hs-var">mayRootHash</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315077"><span class="hs-identifier hs-var">codebaseRootHash</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-170"></span><span>
-</span><span id="line-171"></span><span>  </span><span class="hs-comment">-- Relative and Listing Path resolution</span><span>
+</span><a href="#local-6989586621679316161"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Backend Transaction (CausalBranch Transaction)
+ -&gt; Backend IO (CausalBranch Transaction))
+-&gt; Backend Transaction (CausalBranch Transaction)
+-&gt; Backend IO (CausalBranch Transaction)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
+-&gt; Backend Transaction (CausalBranch Transaction)
+</span><a href="Unison.Server.Backend.html#normaliseRootCausalHash"><span class="hs-identifier hs-var">Backend.normaliseRootCausalHash</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
+</span><a href="#local-6989586621679316160"><span class="hs-identifier hs-var">maySCH</span></a></span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span>  </span><span class="hs-comment">-- Relative and Listing Path resolution</span><span>
+</span><span id="line-165"></span><span>  </span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span>  </span><span class="hs-comment">-- The full listing path is a combination of the relativeToPath (prefix) and the namespace path</span><span>
+</span><span id="line-167"></span><span>  </span><span class="hs-comment">--</span><span>
+</span><span id="line-168"></span><span>  </span><span class="hs-comment">-- For example:</span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-comment">--            &quot;base.List&quot;    &lt;&gt;    &quot;Nonempty&quot;</span><span>
+</span><span id="line-170"></span><span>  </span><span class="hs-comment">--                &#8593;                    &#8593;</span><span>
+</span><span id="line-171"></span><span>  </span><span class="hs-comment">--         relativeToPath        namespacePath</span><span>
 </span><span id="line-172"></span><span>  </span><span class="hs-comment">--</span><span>
-</span><span id="line-173"></span><span>  </span><span class="hs-comment">-- The full listing path is a combination of the relativeToPath (prefix) and the namespace path</span><span>
-</span><span id="line-174"></span><span>  </span><span class="hs-comment">--</span><span>
-</span><span id="line-175"></span><span>  </span><span class="hs-comment">-- For example:</span><span>
-</span><span id="line-176"></span><span>  </span><span class="hs-comment">--            &quot;base.List&quot;    &lt;&gt;    &quot;Nonempty&quot;</span><span>
-</span><span id="line-177"></span><span>  </span><span class="hs-comment">--                &#8593;                    &#8593;</span><span>
-</span><span id="line-178"></span><span>  </span><span class="hs-comment">--         relativeToPath        namespacePath</span><span>
-</span><span id="line-179"></span><span>  </span><span class="hs-comment">--</span><span>
-</span><span id="line-180"></span><span>  </span><span class="hs-comment">-- resulting in &quot;base.List.map&quot; which we can use via the root branch (usually the codebase hash)</span><span>
-</span><span id="line-181"></span><span>  </span><span class="hs-comment">-- to look up the namespace listing and present shallow name, so that the</span><span>
-</span><span id="line-182"></span><span>  </span><span class="hs-comment">-- definition &quot;base.List.Nonempty.map&quot;, simple has the name &quot;map&quot;</span><span>
-</span><span id="line-183"></span><span>  </span><span class="hs-comment">--</span><span>
-</span><span id="line-184"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315074"><span class="annot"><span class="annottext">relativeToPath :: Path
-</span><a href="#local-6989586621679315074"><span class="hs-identifier hs-var hs-var">relativeToPath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Path -&gt; Path
+</span><span id="line-173"></span><span>  </span><span class="hs-comment">-- resulting in &quot;base.List.map&quot; which we can use via the root branch (usually the codebase hash)</span><span>
+</span><span id="line-174"></span><span>  </span><span class="hs-comment">-- to look up the namespace listing and present shallow name, so that the</span><span>
+</span><span id="line-175"></span><span>  </span><span class="hs-comment">-- definition &quot;base.List.Nonempty.map&quot;, simple has the name &quot;map&quot;</span><span>
+</span><span id="line-176"></span><span>  </span><span class="hs-comment">--</span><span>
+</span><span id="line-177"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316153"><span class="annot"><span class="annottext">relativeToPath :: Path
+</span><a href="#local-6989586621679316153"><span class="hs-identifier hs-var hs-var">relativeToPath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Path -&gt; Path
 forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="annot"><span class="annottext">Path
 </span><span class="hs-identifier hs-var">Path.empty</span></span><span> </span><span class="annot"><span class="annottext">Maybe Path
-</span><a href="#local-6989586621679315089"><span class="hs-identifier hs-var">mayRelativeTo</span></a></span><span>
-</span><span id="line-185"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315071"><span class="annot"><span class="annottext">namespacePath :: Path
-</span><a href="#local-6989586621679315071"><span class="hs-identifier hs-var hs-var">namespacePath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Path -&gt; Path
+</span><a href="#local-6989586621679316159"><span class="hs-identifier hs-var">mayRelativeTo</span></a></span><span>
+</span><span id="line-178"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316150"><span class="annot"><span class="annottext">namespacePath :: Path
+</span><a href="#local-6989586621679316150"><span class="hs-identifier hs-var hs-var">namespacePath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Path -&gt; Path
 forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="annot"><span class="annottext">Path
 </span><span class="hs-identifier hs-var">Path.empty</span></span><span> </span><span class="annot"><span class="annottext">Maybe Path
-</span><a href="#local-6989586621679315088"><span class="hs-identifier hs-var">mayNamespaceName</span></a></span><span>
-</span><span id="line-186"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315070"><span class="annot"><span class="annottext">path :: Path
-</span><a href="#local-6989586621679315070"><span class="hs-identifier hs-var hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679315074"><span class="hs-identifier hs-var">relativeToPath</span></a></span><span> </span><span class="annot"><span class="annottext">Path -&gt; Path -&gt; Path
+</span><a href="#local-6989586621679316158"><span class="hs-identifier hs-var">mayNamespaceName</span></a></span><span>
+</span><span id="line-179"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316149"><span class="annot"><span class="annottext">path :: Path
+</span><a href="#local-6989586621679316149"><span class="hs-identifier hs-var hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679316153"><span class="hs-identifier hs-var">relativeToPath</span></a></span><span> </span><span class="annot"><span class="annottext">Path -&gt; Path -&gt; Path
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679315071"><span class="hs-identifier hs-var">namespacePath</span></a></span><span>
-</span><span id="line-187"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315069"><span class="annot"><span class="annottext">path' :: Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var hs-var">path'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Path'
+</span><a href="#local-6989586621679316150"><span class="hs-identifier hs-var">namespacePath</span></a></span><span>
+</span><span id="line-180"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316148"><span class="annot"><span class="annottext">path' :: Path'
+</span><a href="#local-6989586621679316148"><span class="hs-identifier hs-var hs-var">path'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Path'
 </span><span class="hs-identifier hs-var">Path.toPath'</span></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679315070"><span class="hs-identifier hs-var">path</span></a></span><span>
-</span><span id="line-188"></span><span>
-</span><span id="line-189"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679315087"><span class="hs-identifier hs-var">useIndex</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315084"><span class="hs-identifier hs-var">mayRootHash</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-190"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><span class="hs-identifier hs-var">Nothing</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-191"></span><span>      </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Maybe CausalHash -&gt; Path' -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromIndex"><span class="hs-identifier hs-var">serveFromIndex</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315084"><span class="hs-identifier hs-var">mayRootHash</span></a></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var">path'</span></a></span><span>
-</span><span id="line-192"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679315066"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315066"><span class="hs-identifier hs-var">rh</span></a></span></span><span class="hs-special">)</span><span>
-</span><span id="line-193"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315066"><span class="hs-identifier hs-var">rh</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHash -&gt; CausalHash -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315083"><span class="hs-identifier hs-var">codebaseRootHash</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-194"></span><span>          </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Maybe CausalHash -&gt; Path' -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromIndex"><span class="hs-identifier hs-var">serveFromIndex</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315084"><span class="hs-identifier hs-var">mayRootHash</span></a></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var">path'</span></a></span><span>
-</span><span id="line-195"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-196"></span><span>          </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Path' -&gt; CausalHash -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromBranch"><span class="hs-identifier hs-var">serveFromBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var">path'</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315066"><span class="hs-identifier hs-var">rh</span></a></span><span>
-</span><span id="line-197"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679315064"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315064"><span class="hs-identifier hs-var">rh</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-198"></span><span>      </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Path' -&gt; CausalHash -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromBranch"><span class="hs-identifier hs-var">serveFromBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var">path'</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315064"><span class="hs-identifier hs-var">rh</span></a></span><span>
-</span><span id="line-199"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><span class="hs-identifier hs-var">Nothing</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-200"></span><span>      </span><span id="local-6989586621679315063"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315063"><span class="hs-identifier hs-var">ch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO CausalHash -&gt; Backend IO CausalHash
-forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
-</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO CausalHash -&gt; Backend IO CausalHash)
--&gt; IO CausalHash -&gt; Backend IO CausalHash
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann -&gt; Transaction CausalHash -&gt; IO CausalHash
-forall (m :: * -&gt; *) v a b.
-MonadIO m =&gt;
-Codebase m v a -&gt; Transaction b -&gt; m b
-</span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction CausalHash
-</span><span class="hs-identifier hs-var">Operations.expectRootCausalHash</span></span><span>
-</span><span id="line-201"></span><span>      </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Path' -&gt; CausalHash -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromBranch"><span class="hs-identifier hs-var">serveFromBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315091"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315069"><span class="hs-identifier hs-var">path'</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315063"><span class="hs-identifier hs-var">ch</span></a></span><span>
-</span><span id="line-202"></span><span>
-</span><span id="line-203"></span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromBranch"><span class="hs-identifier hs-type">serveFromBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-204"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-205"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-206"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-207"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend.Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
-</span><span id="line-208"></span><span id="serveFromBranch"><span class="annot"><span class="annottext">serveFromBranch :: Codebase IO Symbol Ann
--&gt; Path' -&gt; CausalHash -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromBranch"><span class="hs-identifier hs-var hs-var">serveFromBranch</span></a></span></span><span> </span><span id="local-6989586621679315061"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315061"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679315060"><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315060"><span class="hs-identifier hs-var">path'</span></a></span></span><span> </span><span id="local-6989586621679315059"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315059"><span class="hs-identifier hs-var">rootHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-209"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315058"><span class="annot"><span class="annottext">absPath :: Absolute
-</span><a href="#local-6989586621679315058"><span class="hs-identifier hs-var hs-var">absPath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Absolute
-</span><span class="hs-identifier hs-var">Path.Absolute</span></span><span> </span><span class="annot"><span class="annottext">(Path -&gt; Absolute) -&gt; (Path' -&gt; Path) -&gt; Path' -&gt; Absolute
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Path' -&gt; Path
-</span><span class="hs-identifier hs-var">Path.fromPath'</span></span><span> </span><span class="annot"><span class="annottext">(Path' -&gt; Absolute) -&gt; Path' -&gt; Absolute
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315060"><span class="hs-identifier hs-var">path'</span></a></span><span>
-</span><span id="line-210"></span><span>  </span><span class="hs-comment">-- TODO: Currently the ppe is just used to render the types returned from the namespace</span><span>
-</span><span id="line-211"></span><span>  </span><span class="hs-comment">-- listing, which are currently unused because we don't show types in the side-bar.</span><span>
-</span><span id="line-212"></span><span>  </span><span class="hs-comment">-- If we ever show types on hover we need to build and use a proper PPE here, but it's not</span><span>
-</span><span id="line-213"></span><span>  </span><span class="hs-comment">-- worth slowing down the request for this right now.</span><span>
-</span><span id="line-214"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315055"><span class="annot"><span class="annottext">ppe :: PrettyPrintEnv
-</span><a href="#local-6989586621679315055"><span class="hs-identifier hs-var hs-var">ppe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><span class="hs-identifier hs-var">PPE.empty</span></span><span>
-</span><span id="line-215"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315053"><span class="annot"><span class="annottext">listingFQN :: Text
-</span><a href="#local-6989586621679315053"><span class="hs-identifier hs-var hs-var">listingFQN</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Text
-</span><span class="hs-identifier hs-var">Path.toText</span></span><span> </span><span class="annot"><span class="annottext">(Path -&gt; Text)
--&gt; (Either Absolute Relative -&gt; Path)
--&gt; Either Absolute Relative
--&gt; Text
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Path
-</span><span class="hs-identifier hs-var hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">(Absolute -&gt; Path)
--&gt; (Either Absolute Relative -&gt; Absolute)
--&gt; Either Absolute Relative
--&gt; Path
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(Absolute -&gt; Absolute)
--&gt; (Relative -&gt; Absolute) -&gt; Either Absolute Relative -&gt; Absolute
-forall a c b. (a -&gt; c) -&gt; (b -&gt; c) -&gt; Either a b -&gt; c
-</span><span class="hs-identifier hs-var">either</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Absolute
-forall a. a -&gt; a
-</span><span class="hs-identifier hs-var">id</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; Absolute
-</span><span class="hs-identifier hs-var">Path.Absolute</span></span><span> </span><span class="annot"><span class="annottext">(Path -&gt; Absolute) -&gt; (Relative -&gt; Path) -&gt; Relative -&gt; Absolute
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Relative -&gt; Path
-</span><span class="hs-identifier hs-var hs-var">Path.unrelative</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Either Absolute Relative -&gt; Text)
--&gt; Either Absolute Relative -&gt; Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Path' -&gt; Either Absolute Relative
-</span><span class="hs-identifier hs-var hs-var">Path.unPath'</span></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315060"><span class="hs-identifier hs-var">path'</span></a></span><span>
-</span><span id="line-216"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679315046"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315046"><span class="hs-identifier hs-var">causalAtPath</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315045"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315045"><span class="hs-identifier hs-var">branchAtPath</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-217"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO (CausalBranch Transaction, Branch Transaction)
+</span><a href="#local-6989586621679316149"><span class="hs-identifier hs-var">path</span></a></span><span>
+</span><span id="line-181"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679316146"><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679316146"><span class="hs-identifier hs-var">listingCausal</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679316145"><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679316145"><span class="hs-identifier hs-var">listingBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-182"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO (CausalBranch Transaction, Branch Transaction)
 -&gt; Backend IO (CausalBranch Transaction, Branch Transaction)
 forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
@@ -688,126 +543,37 @@ forall (m :: * -&gt; *) v a b.
 MonadIO m =&gt;
 Codebase m v a -&gt; Transaction b -&gt; m b
 </span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315061"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-218"></span><span>      </span><span id="local-6989586621679315044"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315044"><span class="hs-identifier hs-var">causalAtPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash -&gt; Path -&gt; Transaction (CausalBranch Transaction)
-</span><span class="hs-identifier hs-var">Codebase.getShallowCausalFromRoot</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalHash -&gt; Maybe CausalHash
-forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679315059"><span class="hs-identifier hs-var">rootHash</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Path
-</span><span class="hs-identifier hs-var hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679315058"><span class="hs-identifier hs-var">absPath</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-219"></span><span>      </span><span id="local-6989586621679315042"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315042"><span class="hs-identifier hs-var">branchAtPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Transaction (Branch Transaction)
-forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
-</span><span class="hs-identifier hs-var hs-var">V2Causal.value</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315044"><span class="hs-identifier hs-var">causalAtPath</span></a></span><span>
-</span><span id="line-220"></span><span>      </span><span class="annot"><span class="annottext">(CausalBranch Transaction, Branch Transaction)
--&gt; Transaction (CausalBranch Transaction, Branch Transaction)
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315044"><span class="hs-identifier hs-var">causalAtPath</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315042"><span class="hs-identifier hs-var">branchAtPath</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-221"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315040"><span class="annot"><span class="annottext">listingHash :: Text
-</span><a href="#local-6989586621679315040"><span class="hs-identifier hs-var hs-var">listingHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Text
-forall (m :: * -&gt; *). CausalBranch m -&gt; Text
-</span><a href="Unison.Server.Types.html#v2CausalBranchToUnisonHash"><span class="hs-identifier hs-var">v2CausalBranchToUnisonHash</span></a></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315046"><span class="hs-identifier hs-var">causalAtPath</span></a></span><span>
-</span><span id="line-222"></span><span>  </span><span id="local-6989586621679315039"><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
-</span><a href="#local-6989586621679315039"><span class="hs-identifier hs-var">listingEntries</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO [ShallowListEntry Symbol Ann]
--&gt; Backend IO [ShallowListEntry Symbol Ann]
-forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
-</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO [ShallowListEntry Symbol Ann]
- -&gt; Backend IO [ShallowListEntry Symbol Ann])
--&gt; IO [ShallowListEntry Symbol Ann]
--&gt; Backend IO [ShallowListEntry Symbol Ann]
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Branch Transaction -&gt; IO [ShallowListEntry Symbol Ann]
-forall (m :: * -&gt; *) (n :: * -&gt; *).
-MonadIO m =&gt;
-Codebase m Symbol Ann
--&gt; Branch n -&gt; m [ShallowListEntry Symbol Ann]
-</span><a href="Unison.Server.Backend.html#lsBranch"><span class="hs-identifier hs-var">Backend.lsBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315061"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315045"><span class="hs-identifier hs-var">branchAtPath</span></a></span><span>
-</span><span id="line-223"></span><span>  </span><span class="annot"><span class="annottext">PrettyPrintEnv
--&gt; Text
--&gt; Text
--&gt; [ShallowListEntry Symbol Ann]
--&gt; Backend IO NamespaceListing
-forall a.
-PrettyPrintEnv
--&gt; Text
--&gt; Text
--&gt; [ShallowListEntry Symbol a]
--&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-var">makeNamespaceListing</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315055"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315053"><span class="hs-identifier hs-var">listingFQN</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315040"><span class="hs-identifier hs-var">listingHash</span></a></span><span> </span><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
-</span><a href="#local-6989586621679315039"><span class="hs-identifier hs-var">listingEntries</span></a></span><span>
-</span><span id="line-224"></span><span>
-</span><span id="line-225"></span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromIndex"><span class="hs-identifier hs-type">serveFromIndex</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-226"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-227"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-228"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-229"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend.Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
-</span><span id="line-230"></span><span id="serveFromIndex"><span class="annot"><span class="annottext">serveFromIndex :: Codebase IO Symbol Ann
--&gt; Maybe CausalHash -&gt; Path' -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#serveFromIndex"><span class="hs-identifier hs-var hs-var">serveFromIndex</span></a></span></span><span> </span><span id="local-6989586621679315036"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315036"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679315035"><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315035"><span class="hs-identifier hs-var">mayRootHash</span></a></span></span><span> </span><span id="local-6989586621679315034"><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315034"><span class="hs-identifier hs-var">path'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-231"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679315033"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315033"><span class="hs-identifier hs-var">listingCausal</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679315032"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315032"><span class="hs-identifier hs-var">listingBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-232"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO (CausalBranch Transaction, Branch Transaction)
--&gt; Backend IO (CausalBranch Transaction, Branch Transaction)
-forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
-(MonadTrans t, Monad m) =&gt;
-m a -&gt; t m a
-</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (CausalBranch Transaction, Branch Transaction)
- -&gt; Backend IO (CausalBranch Transaction, Branch Transaction))
--&gt; (Transaction (CausalBranch Transaction, Branch Transaction)
-    -&gt; IO (CausalBranch Transaction, Branch Transaction))
--&gt; Transaction (CausalBranch Transaction, Branch Transaction)
--&gt; Backend IO (CausalBranch Transaction, Branch Transaction)
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
--&gt; Transaction (CausalBranch Transaction, Branch Transaction)
--&gt; IO (CausalBranch Transaction, Branch Transaction)
-forall (m :: * -&gt; *) v a b.
-MonadIO m =&gt;
-Codebase m v a -&gt; Transaction b -&gt; m b
-</span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315036"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-233"></span><span>      </span><span id="local-6989586621679315031"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315031"><span class="hs-identifier hs-var">listingCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash -&gt; Path -&gt; Transaction (CausalBranch Transaction)
-</span><a href="Unison.Server.Backend.html#getShallowCausalAtPathFromRootHash"><span class="hs-identifier hs-var">Backend.getShallowCausalAtPathFromRootHash</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash
-</span><a href="#local-6989586621679315035"><span class="hs-identifier hs-var">mayRootHash</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path' -&gt; Path
+</span><a href="#local-6989586621679316161"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-183"></span><span>      </span><span id="local-6989586621679316143"><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679316143"><span class="hs-identifier hs-var">listingCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Path
+-&gt; Maybe (CausalBranch Transaction)
+-&gt; Transaction (CausalBranch Transaction)
+</span><span class="hs-identifier hs-var">Codebase.getShallowCausalAtPath</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path' -&gt; Path
 </span><span class="hs-identifier hs-var">Path.fromPath'</span></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315034"><span class="hs-identifier hs-var">path'</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-234"></span><span>      </span><span id="local-6989586621679315029"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315029"><span class="hs-identifier hs-var">listingBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Transaction (Branch Transaction)
+</span><a href="#local-6989586621679316148"><span class="hs-identifier hs-var">path'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Maybe (CausalBranch Transaction)
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679316157"><span class="hs-identifier hs-var">rootCausal</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-184"></span><span>      </span><span id="local-6989586621679316140"><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679316140"><span class="hs-identifier hs-var">listingBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Transaction (Branch Transaction)
 forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
 </span><span class="hs-identifier hs-var hs-var">V2Causal.value</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315031"><span class="hs-identifier hs-var">listingCausal</span></a></span><span>
-</span><span id="line-235"></span><span>      </span><span class="annot"><span class="annottext">(CausalBranch Transaction, Branch Transaction)
+</span><a href="#local-6989586621679316143"><span class="hs-identifier hs-var">listingCausal</span></a></span><span>
+</span><span id="line-185"></span><span>      </span><span class="annot"><span class="annottext">(CausalBranch Transaction, Branch Transaction)
 -&gt; Transaction (CausalBranch Transaction, Branch Transaction)
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315031"><span class="hs-identifier hs-var">listingCausal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315029"><span class="hs-identifier hs-var">listingBranch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-236"></span><span>  </span><span class="hs-comment">-- TODO: Currently the ppe is just used to render the types returned from the namespace</span><span>
-</span><span id="line-237"></span><span>  </span><span class="hs-comment">-- listing, which are currently unused because we don't show types in the side-bar.</span><span>
-</span><span id="line-238"></span><span>  </span><span class="hs-comment">-- If we ever show types on hover we need to build and use a proper PPE here, but it's not</span><span>
-</span><span id="line-239"></span><span>  </span><span class="hs-comment">-- shallowPPE &lt;- liftIO $ Backend.shallowPPE codebase listingBranch</span><span>
-</span><span id="line-240"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315028"><span class="annot"><span class="annottext">shallowPPE :: PrettyPrintEnv
-</span><a href="#local-6989586621679315028"><span class="hs-identifier hs-var hs-var">shallowPPE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679316143"><span class="hs-identifier hs-var">listingCausal</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679316140"><span class="hs-identifier hs-var">listingBranch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span>  </span><span class="hs-comment">-- TODO: Currently the ppe is just used to render the types returned from the namespace</span><span>
+</span><span id="line-187"></span><span>  </span><span class="hs-comment">-- listing, which are currently unused because we don't show types in the side-bar.</span><span>
+</span><span id="line-188"></span><span>  </span><span class="hs-comment">-- If we ever show types on hover we need to build and use a proper PPE here, but it's not</span><span>
+</span><span id="line-189"></span><span>  </span><span class="hs-comment">-- shallowPPE &lt;- liftIO $ Backend.shallowPPE codebase listingBranch</span><span>
+</span><span id="line-190"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316138"><span class="annot"><span class="annottext">shallowPPE :: PrettyPrintEnv
+</span><a href="#local-6989586621679316138"><span class="hs-identifier hs-var hs-var">shallowPPE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
 </span><span class="hs-identifier hs-var">PPE.empty</span></span><span>
-</span><span id="line-241"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315027"><span class="annot"><span class="annottext">listingFQN :: Text
-</span><a href="#local-6989586621679315027"><span class="hs-identifier hs-var hs-var">listingFQN</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Text
+</span><span id="line-191"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316136"><span class="annot"><span class="annottext">listingFQN :: Text
+</span><a href="#local-6989586621679316136"><span class="hs-identifier hs-var hs-var">listingFQN</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Text
 </span><span class="hs-identifier hs-var">Path.toText</span></span><span> </span><span class="annot"><span class="annottext">(Path -&gt; Text)
 -&gt; (Either Absolute Relative -&gt; Path)
 -&gt; Either Absolute Relative
@@ -833,14 +599,14 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Path' -&gt; Either Absolute Relative
 </span><span class="hs-identifier hs-var hs-var">Path.unPath'</span></span><span> </span><span class="annot"><span class="annottext">Path'
-</span><a href="#local-6989586621679315034"><span class="hs-identifier hs-var">path'</span></a></span><span>
-</span><span id="line-242"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679315026"><span class="annot"><span class="annottext">listingHash :: Text
-</span><a href="#local-6989586621679315026"><span class="hs-identifier hs-var hs-var">listingHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Text
+</span><a href="#local-6989586621679316148"><span class="hs-identifier hs-var">path'</span></a></span><span>
+</span><span id="line-192"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679316128"><span class="annot"><span class="annottext">listingHash :: Text
+</span><a href="#local-6989586621679316128"><span class="hs-identifier hs-var hs-var">listingHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction -&gt; Text
 forall (m :: * -&gt; *). CausalBranch m -&gt; Text
 </span><a href="Unison.Server.Types.html#v2CausalBranchToUnisonHash"><span class="hs-identifier hs-var">v2CausalBranchToUnisonHash</span></a></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679315033"><span class="hs-identifier hs-var">listingCausal</span></a></span><span>
-</span><span id="line-243"></span><span>  </span><span id="local-6989586621679315025"><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
-</span><a href="#local-6989586621679315025"><span class="hs-identifier hs-var">listingEntries</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO [ShallowListEntry Symbol Ann]
+</span><a href="#local-6989586621679316146"><span class="hs-identifier hs-var">listingCausal</span></a></span><span>
+</span><span id="line-193"></span><span>  </span><span id="local-6989586621679316127"><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
+</span><a href="#local-6989586621679316127"><span class="hs-identifier hs-var">listingEntries</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO [ShallowListEntry Symbol Ann]
 -&gt; Backend IO [ShallowListEntry Symbol Ann]
 forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
@@ -852,9 +618,9 @@ MonadIO m =&gt;
 Codebase m Symbol Ann
 -&gt; Branch n -&gt; m [ShallowListEntry Symbol Ann]
 </span><a href="Unison.Server.Backend.html#lsBranch"><span class="hs-identifier hs-var">Backend.lsBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679315036"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679315032"><span class="hs-identifier hs-var">listingBranch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-244"></span><span>  </span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679316161"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679316145"><span class="hs-identifier hs-var">listingBranch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span>  </span><span class="annot"><span class="annottext">PrettyPrintEnv
 -&gt; Text
 -&gt; Text
 -&gt; [ShallowListEntry Symbol Ann]
@@ -866,29 +632,29 @@ PrettyPrintEnv
 -&gt; [ShallowListEntry Symbol a]
 -&gt; Backend IO NamespaceListing
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-var">makeNamespaceListing</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315028"><span class="hs-identifier hs-var">shallowPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315027"><span class="hs-identifier hs-var">listingFQN</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315026"><span class="hs-identifier hs-var">listingHash</span></a></span><span> </span><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
-</span><a href="#local-6989586621679315025"><span class="hs-identifier hs-var">listingEntries</span></a></span><span>
-</span><span id="line-245"></span><span>
-</span><span id="line-246"></span><span id="local-6989586621679315289"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-type">makeNamespaceListing</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-247"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PPE.PrettyPrintEnv</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-248"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier hs-type">UnisonName</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-249"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier hs-type">UnisonHash</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-250"></span><span>    </span><span class="hs-special">[</span><span class="annot"><a href="Unison.Server.Backend.html#ShallowListEntry"><span class="hs-identifier hs-type">Backend.ShallowListEntry</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><a href="#local-6989586621679315289"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-251"></span><span>    </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
-</span><span id="line-252"></span><span>  </span><span class="hs-special">)</span></span><span>
-</span><span id="line-253"></span><span id="makeNamespaceListing"><span class="annot"><span class="annottext">makeNamespaceListing :: PrettyPrintEnv
+</span><a href="#local-6989586621679316138"><span class="hs-identifier hs-var">shallowPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679316136"><span class="hs-identifier hs-var">listingFQN</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679316128"><span class="hs-identifier hs-var">listingHash</span></a></span><span> </span><span class="annot"><span class="annottext">[ShallowListEntry Symbol Ann]
+</span><a href="#local-6989586621679316127"><span class="hs-identifier hs-var">listingEntries</span></a></span><span>
+</span><span id="line-195"></span><span>
+</span><span id="line-196"></span><span id="local-6989586621679316359"><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-type">makeNamespaceListing</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-197"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PPE.PrettyPrintEnv</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-198"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonName"><span class="hs-identifier hs-type">UnisonName</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-199"></span><span>    </span><span class="annot"><a href="Unison.Server.Types.html#UnisonHash"><span class="hs-identifier hs-type">UnisonHash</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-200"></span><span>    </span><span class="hs-special">[</span><span class="annot"><a href="Unison.Server.Backend.html#ShallowListEntry"><span class="hs-identifier hs-type">Backend.ShallowListEntry</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><a href="#local-6989586621679316359"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-201"></span><span>    </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-type">NamespaceListing</span></a></span><span>
+</span><span id="line-202"></span><span>  </span><span class="hs-special">)</span></span><span>
+</span><span id="line-203"></span><span id="makeNamespaceListing"><span class="annot"><span class="annottext">makeNamespaceListing :: PrettyPrintEnv
 -&gt; Text
 -&gt; Text
 -&gt; [ShallowListEntry Symbol a]
 -&gt; Backend IO NamespaceListing
-</span><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-var hs-var">makeNamespaceListing</span></a></span></span><span> </span><span id="local-6989586621679315024"><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315024"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span id="local-6989586621679315023"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315023"><span class="hs-identifier hs-var">fqn</span></a></span></span><span> </span><span id="local-6989586621679315022"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315022"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679315021"><span class="annot"><span class="annottext">[ShallowListEntry Symbol a]
-</span><a href="#local-6989586621679315021"><span class="hs-identifier hs-var">entries</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-254"></span><span>  </span><span class="annot"><span class="annottext">NamespaceListing -&gt; Backend IO NamespaceListing
+</span><a href="Unison.Server.Endpoints.NamespaceListing.html#makeNamespaceListing"><span class="hs-identifier hs-var hs-var">makeNamespaceListing</span></a></span></span><span> </span><span id="local-6989586621679316124"><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621679316124"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span id="local-6989586621679316123"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679316123"><span class="hs-identifier hs-var">fqn</span></a></span></span><span> </span><span id="local-6989586621679316122"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679316122"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679316121"><span class="annot"><span class="annottext">[ShallowListEntry Symbol a]
+</span><a href="#local-6989586621679316121"><span class="hs-identifier hs-var">entries</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-204"></span><span>  </span><span class="annot"><span class="annottext">NamespaceListing -&gt; Backend IO NamespaceListing
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(NamespaceListing -&gt; Backend IO NamespaceListing)
 -&gt; ([NamespaceObject] -&gt; NamespaceListing)
@@ -897,25 +663,25 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; [NamespaceObject] -&gt; NamespaceListing
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#NamespaceListing"><span class="hs-identifier hs-var">NamespaceListing</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315023"><span class="hs-identifier hs-var">fqn</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679315022"><span class="hs-identifier hs-var">hash</span></a></span><span> </span><span class="annot"><span class="annottext">([NamespaceObject] -&gt; Backend IO NamespaceListing)
+</span><a href="#local-6989586621679316123"><span class="hs-identifier hs-var">fqn</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679316122"><span class="hs-identifier hs-var">hash</span></a></span><span> </span><span class="annot"><span class="annottext">([NamespaceObject] -&gt; Backend IO NamespaceListing)
 -&gt; [NamespaceObject] -&gt; Backend IO NamespaceListing
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
-</span><span id="line-255"></span><span>    </span><span class="annot"><span class="annottext">(ShallowListEntry Symbol a -&gt; NamespaceObject)
+</span><span id="line-205"></span><span>    </span><span class="annot"><span class="annottext">(ShallowListEntry Symbol a -&gt; NamespaceObject)
 -&gt; [ShallowListEntry Symbol a] -&gt; [NamespaceObject]
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span>
-</span><span id="line-256"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><span id="line-206"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PrettyPrintEnv
 -&gt; Maybe Width -&gt; ShallowListEntry Symbol a -&gt; NamespaceObject
 forall v a.
 Var v =&gt;
 PrettyPrintEnv
 -&gt; Maybe Width -&gt; ShallowListEntry v a -&gt; NamespaceObject
 </span><a href="Unison.Server.Endpoints.NamespaceListing.html#backendListEntryToNamespaceObject"><span class="hs-identifier hs-var">backendListEntryToNamespaceObject</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679315024"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Width
+</span><a href="#local-6989586621679316124"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Width
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span class="hs-special">)</span><span>
-</span><span id="line-257"></span><span>      </span><span class="annot"><span class="annottext">[ShallowListEntry Symbol a]
-</span><a href="#local-6989586621679315021"><span class="hs-identifier hs-var">entries</span></a></span><span>
-</span><span id="line-258"></span></pre></body></html>
+</span><span id="line-207"></span><span>      </span><span class="annot"><span class="annottext">[ShallowListEntry Symbol a]
+</span><a href="#local-6989586621679316121"><span class="hs-identifier hs-var">entries</span></a></span><span>
+</span><span id="line-208"></span></pre></body></html>
