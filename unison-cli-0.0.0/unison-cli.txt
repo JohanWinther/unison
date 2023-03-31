@@ -1258,6 +1258,9 @@ ClearScreen :: Output
 PulledEmptyBranch :: ReadRemoteNamespace RemoteProjectBranch -> Output
 CreatedProject :: ProjectName -> ProjectBranchName -> Output
 CreatedProjectBranch :: ProjectBranchName -> ProjectBranchName -> Output
+CreatedRemoteProject :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+CreatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+RemoteProjectBranchIsUpToDate :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 InvalidProjectName :: Text -> Output
 InvalidProjectBranchName :: Text -> Output
 RefusedToCreateProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> Output
@@ -1274,6 +1277,8 @@ RemoteProjectBranchHeadMismatch :: URI -> ProjectAndBranch ProjectName ProjectBr
 Unauthorized :: Text -> Output
 ServantClientError :: ClientError -> Output
 MarkdownOut :: Text -> Output
+DownloadedEntities :: Int -> Output
+UploadedEntities :: Int -> Output
 NotImplementedYet :: Text -> Output
 data DisplayDefinitionsOutput
 DisplayDefinitionsOutput :: (TermReference -> Bool) -> Maybe FilePath -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann)) -> Map Reference (DisplayObject () (Decl Symbol Ann)) -> DisplayDefinitionsOutput
@@ -2125,7 +2130,8 @@ getProjectById :: RemoteProjectId -> Cli (Maybe RemoteProject)
 --   On success, update the <tt>remote_project</tt> table.
 getProjectByName :: ProjectName -> Cli (Maybe RemoteProject)
 
--- | Create a new project.
+-- | Create a new project. Kinda weird: returns <a>Nothing</a> if the user
+--   handle part of the project doesn't exist.
 --   
 --   On success, update the <tt>remote_project</tt> table.
 createProject :: ProjectName -> Cli (Maybe RemoteProject)
@@ -2468,7 +2474,7 @@ loadPropagateDiffDefaultPatch :: Text -> Maybe Path' -> Absolute -> Cli ()
 --   unchangedMessage if you want to display it if merge had no effect
 mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Branch IO -> Maybe Path' -> Absolute -> Cli ()
 propagatePatch :: Text -> Patch -> Absolute -> Cli Bool
-withEntitiesDownloadedProgressCallback :: ((Int -> IO ()) -> IO a) -> IO a
+withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO a
 
 
 -- | <tt>project.clone</tt> input handler
