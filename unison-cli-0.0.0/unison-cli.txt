@@ -295,6 +295,7 @@ DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
 ProjectCloneI :: These ProjectName ProjectBranchName -> Input
 ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
+ProjectsI :: Input
 data DiffNamespaceToPatchInput
 DiffNamespaceToPatchInput :: BranchId -> BranchId -> Split' -> DiffNamespaceToPatchInput
 [$sel:branchId1:DiffNamespaceToPatchInput] :: DiffNamespaceToPatchInput -> BranchId
@@ -1321,6 +1322,7 @@ DeletedDespiteDependents :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet L
 -- | size limit, history , how the history ends
 History :: Maybe Int -> HashLength -> [(CausalHash, Diff)] -> HistoryTail -> NumberedOutput
 ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
+ListProjects :: [Project] -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -1515,6 +1517,7 @@ diffNamespaceToPatch :: InputPattern
 projectClone :: InputPattern
 projectCreate :: InputPattern
 projectSwitch :: InputPattern
+projects :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -1892,6 +1895,11 @@ displayPretty :: forall m. Monad m => PrettyPrintEnvDecl -> (Reference -> m (May
 displayDoc :: forall v m. (Var v, Monad m) => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term v ()))) -> (Referent -> m (Maybe (Type v ()))) -> (Term v () -> m (Maybe (Term v ()))) -> (Reference -> m (Maybe (Decl v ()))) -> Term v () -> m Pretty
 termName :: PrettyPrintEnv -> Referent -> Pretty
 typeName :: PrettyPrintEnv -> Reference -> Pretty
+
+
+-- | <tt>projects</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Projects
+handleProjects :: Cli ()
 
 module Unison.Codebase.Editor.HandleInput.AuthLogin
 
