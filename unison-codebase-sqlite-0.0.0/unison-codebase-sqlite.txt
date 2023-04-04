@@ -1089,6 +1089,13 @@ insertProject :: ProjectId -> ProjectName -> Transaction ()
 projectBranchExistsByName :: ProjectId -> ProjectBranchName -> Transaction Bool
 loadProjectBranchByName :: ProjectId -> ProjectBranchName -> Transaction (Maybe ProjectBranch)
 expectProjectBranch :: ProjectId -> ProjectBranchId -> Transaction ProjectBranch
+
+-- | Load info about all branches in a project, for display by the
+--   <tt>branches</tt> command.
+--   
+--   Each branch name maps to a possibly-empty collection of associated
+--   remote branches.
+loadAllProjectBranchInfo :: ProjectId -> Transaction (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
 loadProjectAndBranchNames :: ProjectId -> ProjectBranchId -> Transaction (Maybe (ProjectName, ProjectBranchName))
 
 -- | Insert a <tt>project_branch</tt> row.

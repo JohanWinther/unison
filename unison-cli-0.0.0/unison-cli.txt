@@ -296,6 +296,7 @@ ProjectCloneI :: These ProjectName ProjectBranchName -> Input
 ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
 ProjectsI :: Input
+BranchesI :: Input
 data DiffNamespaceToPatchInput
 DiffNamespaceToPatchInput :: BranchId -> BranchId -> Split' -> DiffNamespaceToPatchInput
 [$sel:branchId1:DiffNamespaceToPatchInput] :: DiffNamespaceToPatchInput -> BranchId
@@ -1323,6 +1324,7 @@ DeletedDespiteDependents :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet L
 History :: Maybe Int -> HashLength -> [(CausalHash, Diff)] -> HistoryTail -> NumberedOutput
 ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
 ListProjects :: [Project] -> NumberedOutput
+ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -1518,6 +1520,7 @@ projectClone :: InputPattern
 projectCreate :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
+branches :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -2344,6 +2347,13 @@ resolveConfiguredUrl :: PushPull -> Path' -> Cli (WriteRemoteNamespace Void)
 -- | Project-related utilities.
 module Unison.Cli.ProjectUtils
 
+-- | Get the current project that a user is on.
+getCurrentProject :: Cli (Maybe Project)
+
+-- | Like <a>getCurrentProject</a>, but fails with a message if the user is
+--   not on a project branch.
+expectCurrentProject :: Cli Project
+
 -- | Get the current project+branch that a user is on.
 --   
 --   Note that if a user has (somehow) cd'd into a namespace *within* a
@@ -2455,6 +2465,11 @@ module Unison.Codebase.Editor.HandleInput.ProjectCreate
 --   do (3) eventually, and we'd rather not waste too much time getting
 --   everything perfectly correct before we get there.
 projectCreate :: ProjectName -> Cli ()
+
+
+-- | <tt>branches</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Branches
+handleBranches :: Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
