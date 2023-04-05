@@ -2437,6 +2437,7 @@ valuesVector :: Map k v -> Vector v
 
 module Unison.Util.Monoid
 foldMapM :: (Monad m, Foldable f, Monoid b) => (a -> m b) -> f a -> m b
+ifoldMapM :: (Monoid r, Applicative f, Foldable t, TraversableWithIndex i t) => (i -> a -> f r) -> t a -> f r
 fromMaybe :: Monoid a => Maybe a -> a
 intercalateMap :: (Foldable t, Monoid a) => a -> (b -> a) -> t b -> a
 intercalateMapM :: (Traversable t, Monad m, Monoid a) => a -> (b -> m a) -> t b -> m a

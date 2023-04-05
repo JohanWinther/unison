@@ -1546,7 +1546,7 @@ typeRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef 
 checkBranchHashNameLookupExists :: BranchHash -> Transaction Bool
 
 -- | Apply a set of name updates to an existing index.
-buildNameLookupForBranchHash :: Maybe BranchHash -> BranchHash -> ([NamedRef (Referent, Maybe ConstructorType)], [NamedRef Referent]) -> ([NamedRef Reference], [NamedRef Reference]) -> Transaction ()
+buildNameLookupForBranchHash :: Maybe BranchHash -> BranchHash -> ((([NamedRef (Referent, Maybe ConstructorType)], [NamedRef Referent]) -> ([NamedRef Reference], [NamedRef Reference]) -> Transaction ()) -> Transaction ()) -> Transaction ()
 
 -- | Get the name within the provided namespace that has the longest
 --   matching suffix with the provided name, but a different ref. This is a

@@ -9,9 +9,9 @@ module U.Codebase.Branch.Diff
 
 -- | A tree of local diffs. Each node of the tree contains the definition
 --   diffs at that path.
-newtype TreeDiff
-TreeDiff :: Cofree (Map NameSegment) DefinitionDiffs -> TreeDiff
-[$sel:unTreeDiff:TreeDiff] :: TreeDiff -> Cofree (Map NameSegment) DefinitionDiffs
+newtype TreeDiff m
+TreeDiff :: Cofree (Compose (Map NameSegment) m) DefinitionDiffs -> TreeDiff m
+[$sel:unTreeDiff:TreeDiff] :: TreeDiff m -> Cofree (Compose (Map NameSegment) m) DefinitionDiffs
 
 -- | A summary of a <a>TreeDiff</a>, containing all names added and
 --   removed. Note that there isn't a clear notion of a name "changing"
@@ -53,35 +53,42 @@ NameBasedDiff :: Relation Reference Reference -> Relation Reference Reference ->
 [$sel:types:NameBasedDiff] :: NameBasedDiff -> Relation Reference Reference
 
 -- | Diff two Branches, returning a tree containing all of the changes
-diffBranches :: forall m. Monad m => Branch m -> Branch m -> m TreeDiff
+diffBranches :: forall m. Monad m => Branch m -> Branch m -> TreeDiff m
 
 -- | Get a summary of all of the name adds and removals from a tree diff.
 --   
 --   The provided name will be prepended to all names in the output diff,
 --   and can be useful if diffing branches at a specific sub-tree, but you
 --   can pass <a>Nothing</a> if you're diffing from the root.
-nameChanges :: Maybe Name -> TreeDiff -> NameChanges
+allNameChanges :: Monad m => Maybe Name -> TreeDiff m -> m NameChanges
 
 -- | Get a <a>NameBasedDiff</a> from a <a>TreeDiff</a>.
-nameBasedDiff :: TreeDiff -> NameBasedDiff
+nameBasedDiff :: Monad m => TreeDiff m -> m NameBasedDiff
+
+-- | Stream a summary of all of the name adds and removals from a tree
+--   diff. Callback is passed the diff from one namespace level at a time,
+--   with the name representing that location. Accumulator is folded
+--   strictly, use <tt>()</tt> if you don't need one.
+streamNameChanges :: (Monad m, Monoid r) => Maybe Name -> TreeDiff m -> (Maybe Name -> NameChanges -> m r) -> m r
 instance GHC.Classes.Ord a => GHC.Classes.Ord (U.Codebase.Branch.Diff.Diff a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (U.Codebase.Branch.Diff.Diff a)
 instance GHC.Show.Show a => GHC.Show.Show (U.Codebase.Branch.Diff.Diff a)
 instance GHC.Classes.Ord U.Codebase.Branch.Diff.DefinitionDiffs
 instance GHC.Classes.Eq U.Codebase.Branch.Diff.DefinitionDiffs
 instance GHC.Show.Show U.Codebase.Branch.Diff.DefinitionDiffs
-instance GHC.Classes.Ord U.Codebase.Branch.Diff.TreeDiff
-instance GHC.Classes.Eq U.Codebase.Branch.Diff.TreeDiff
-instance GHC.Show.Show U.Codebase.Branch.Diff.TreeDiff
+instance Data.Functor.Classes.Ord1 m => GHC.Classes.Ord (U.Codebase.Branch.Diff.TreeDiff m)
+instance Data.Functor.Classes.Eq1 m => GHC.Classes.Eq (U.Codebase.Branch.Diff.TreeDiff m)
+instance Data.Functor.Classes.Show1 m => GHC.Show.Show (U.Codebase.Branch.Diff.TreeDiff m)
+instance GHC.Classes.Eq U.Codebase.Branch.Diff.NameChanges
+instance GHC.Show.Show U.Codebase.Branch.Diff.NameChanges
 instance GHC.Show.Show U.Codebase.Branch.Diff.NameBasedDiff
 instance GHC.Generics.Generic U.Codebase.Branch.Diff.NameBasedDiff
 instance GHC.Base.Monoid U.Codebase.Branch.Diff.NameBasedDiff
 instance GHC.Base.Semigroup U.Codebase.Branch.Diff.NameBasedDiff
 instance GHC.Base.Semigroup U.Codebase.Branch.Diff.NameChanges
 instance GHC.Base.Monoid U.Codebase.Branch.Diff.NameChanges
-instance GHC.Base.Semigroup U.Codebase.Branch.Diff.TreeDiff
-instance GHC.Base.Monoid U.Codebase.Branch.Diff.TreeDiff
-instance Control.Lens.Empty.AsEmpty U.Codebase.Branch.Diff.TreeDiff
+instance GHC.Base.Applicative m => GHC.Base.Semigroup (U.Codebase.Branch.Diff.TreeDiff m)
+instance GHC.Base.Applicative m => GHC.Base.Monoid (U.Codebase.Branch.Diff.TreeDiff m)
 instance GHC.Base.Semigroup U.Codebase.Branch.Diff.DefinitionDiffs
 instance GHC.Base.Monoid U.Codebase.Branch.Diff.DefinitionDiffs
 
@@ -3496,9 +3503,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4q08 loc_a4q09. Lens' (Env v_a4q08 loc_a4q09) (TypeLookup v_a4q08 loc_a4q09)
-termsByShortname :: forall v_a4q08 loc_a4q09. Lens' (Env v_a4q08 loc_a4q09) (Map Name [NamedReference v_a4q08 loc_a4q09])
-ambientAbilities :: forall v_a4q08 loc_a4q09. Lens' (Env v_a4q08 loc_a4q09) [Type v_a4q08 loc_a4q09]
+typeLookup :: forall v_a4r9h loc_a4r9i. Lens' (Env v_a4r9h loc_a4r9i) (TypeLookup v_a4r9h loc_a4r9i)
+termsByShortname :: forall v_a4r9h loc_a4r9i. Lens' (Env v_a4r9h loc_a4r9i) (Map Name [NamedReference v_a4r9h loc_a4r9i])
+ambientAbilities :: forall v_a4r9h loc_a4r9i. Lens' (Env v_a4r9h loc_a4r9i) [Type v_a4r9h loc_a4r9i]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
