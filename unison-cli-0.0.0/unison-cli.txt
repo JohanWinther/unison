@@ -210,8 +210,6 @@ PreviewMergeLocalBranchI :: Path' -> Path' -> Input
 DiffNamespaceI :: BranchId -> BranchId -> Input
 PullRemoteBranchI :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Input
 PushRemoteBranchI :: PushRemoteBranchInput -> Input
-CreatePullRequestI :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> ReadRemoteNamespace (These ProjectName ProjectBranchName) -> Input
-LoadPullRequestI :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> ReadRemoteNamespace (These ProjectName ProjectBranchName) -> Path' -> Input
 ResetRootI :: Either ShortCausalHash Path' -> Input
 CreateMessage :: Pretty ColorText -> Input
 SwitchBranchI :: Maybe Path' -> Input
@@ -1137,7 +1135,6 @@ NoMainFunction :: String -> PrettyPrintEnv -> [Type Symbol Ann] -> Output
 --   misleading here; we weren't necessarily looking for a "main".
 BadMainFunction :: String -> String -> Type Symbol Ann -> PrettyPrintEnv -> [Type Symbol Ann] -> Output
 BranchEmpty :: WhichBranchEmpty -> Output
-BranchNotEmpty :: Path' -> Output
 LoadPullRequest :: ReadRemoteNamespace Void -> ReadRemoteNamespace Void -> Path' -> Path' -> Path' -> Path' -> Output
 CreatedNewBranch :: Absolute -> Output
 BranchAlreadyExists :: Path' -> Output
@@ -1304,7 +1301,6 @@ ShowDiffAfterMerge :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Sy
 ShowDiffAfterMergePropagate :: Path' -> Absolute -> Path' -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterMergePreview :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterPull :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterCreatePR :: ReadRemoteNamespace Void -> ReadRemoteNamespace Void -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterCreateAuthor :: NameSegment -> Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 
 -- | Invariant: there's at least one conflict or edit in the TodoOutput.
@@ -1468,8 +1464,6 @@ push :: InputPattern
 pushCreate :: InputPattern
 pushForce :: InputPattern
 pushExhaustive :: InputPattern
-createPullRequest :: InputPattern
-loadPullRequest :: InputPattern
 squashMerge :: InputPattern
 mergeLocal :: InputPattern
 diffNamespace :: InputPattern
@@ -2506,9 +2500,6 @@ module Unison.Codebase.Editor.HandleInput.ProjectClone
 -- | Clone a remote project or remote project branch.
 projectClone :: These ProjectName ProjectBranchName -> Cli ()
 
-module Unison.Codebase.Editor.HandleInput.LoadPullRequest
-handleLoadPullRequest :: Text -> ReadRemoteNamespace (These ProjectName ProjectBranchName) -> ReadRemoteNamespace (These ProjectName ProjectBranchName) -> Path' -> Cli ()
-
 
 -- | Helpers<i>utils that have to do with term</i>type metadata.
 module Unison.Codebase.Editor.HandleInput.MetadataUtils
@@ -2521,9 +2512,6 @@ addDefaultMetadata :: SlurpComponent -> Cli ()
 --   operation to add<i>remove</i>alter metadata mappings. e.g.
 --   <a>insert</a> is passed to add metadata links.
 manageLinks :: Bool -> [HQSplit'] -> [HashQualified Name] -> (forall r. Ord r => (r, Type, Value) -> Star r NameSegment -> Star r NameSegment) -> Cli ()
-
-module Unison.Codebase.Editor.HandleInput.CreatePullRequest
-handleCreatePullRequest :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> ReadRemoteNamespace (These ProjectName ProjectBranchName) -> Cli ()
 
 
 -- | Utilities that have to do with constructing names objects.
