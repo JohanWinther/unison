@@ -380,8 +380,9 @@ data DeleteTarget
 DeleteTarget'TermOrType :: DeleteOutput -> [HQSplit'] -> DeleteTarget
 DeleteTarget'Term :: DeleteOutput -> [HQSplit'] -> DeleteTarget
 DeleteTarget'Type :: DeleteOutput -> [HQSplit'] -> DeleteTarget
-DeleteTarget'Branch :: Insistence -> Maybe Split' -> DeleteTarget
+DeleteTarget'Namespace :: Insistence -> Maybe Split' -> DeleteTarget
 DeleteTarget'Patch :: Split' -> DeleteTarget
+DeleteTarget'ProjectBranch :: These ProjectName ProjectBranchName -> DeleteTarget
 instance GHC.Show.Show Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Ord Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.OptionalPatch
@@ -1256,13 +1257,12 @@ DisplayDebugCompletions :: [Completion] -> Output
 ClearScreen :: Output
 PulledEmptyBranch :: ReadRemoteNamespace RemoteProjectBranch -> Output
 CreatedProject :: ProjectName -> ProjectBranchName -> Output
-CreatedProjectBranch :: ProjectBranchName -> ProjectBranchName -> Output
+CreatedProjectBranch :: Maybe ProjectBranchName -> ProjectBranchName -> Output
 CreatedRemoteProject :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 CreatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RemoteProjectBranchIsUpToDate :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 InvalidProjectName :: Text -> Output
 InvalidProjectBranchName :: Text -> Output
-RefusedToCreateProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> Output
 ProjectNameAlreadyExists :: ProjectName -> Output
 ProjectNameRequiresUserSlug :: ProjectName -> Output
 ProjectAndBranchNameAlreadyExists :: ProjectAndBranch ProjectName ProjectBranchName -> Output
@@ -1434,6 +1434,7 @@ deleteTypeVerbose :: InputPattern
 deleteTermReplacementCommand :: String
 deleteTypeReplacementCommand :: String
 deleteReplacement :: Bool -> InputPattern
+deleteBranch :: InputPattern
 deleteTermReplacement :: InputPattern
 deleteTypeReplacement :: InputPattern
 aliasTerm :: InputPattern
@@ -2372,6 +2373,15 @@ expectCurrentProjectBranch :: Cli (ProjectAndBranch Project ProjectBranch)
 --   </pre>
 projectPath :: ProjectId -> Absolute
 
+-- | Get the path that a project's branches are stored at. Users aren't
+--   supposed to go here.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchesPath "ABCD"
+--   .__projects._ABCD.branches
+--   </pre>
+projectBranchesPath :: ProjectId -> Absolute
+
 -- | Get the path that a branch is stored at. Users aren't supposed to go
 --   here.
 --   
@@ -2380,6 +2390,14 @@ projectPath :: ProjectId -> Absolute
 --   .__projects._ABCD.branches._DEFG
 --   </pre>
 projectBranchPath :: ProjectAndBranch ProjectId ProjectBranchId -> Absolute
+
+-- | Get the name segment that a branch is stored at.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchSegment "DEFG"
+--   "_DEFG"
+--   </pre>
+projectBranchSegment :: ProjectBranchId -> NameSegment
 
 -- | The prism between paths like
 --   
@@ -2460,6 +2478,18 @@ module Unison.Codebase.Editor.HandleInput.ProjectCreate
 --   do (3) eventually, and we'd rather not waste too much time getting
 --   everything perfectly correct before we get there.
 projectCreate :: ProjectName -> Cli ()
+
+
+-- | <tt>delete.branch</tt> input handler
+module Unison.Codebase.Editor.HandleInput.DeleteBranch
+
+-- | Delete a project branch.
+--   
+--   Currently, deleting a branch means deleting its
+--   <tt>project_branch</tt> row, then deleting its contents from the
+--   namespace. Its children branches, if any, are reparented to their
+--   grandparent, if any. You may delete the only branch in a project.
+handleDeleteBranch :: These ProjectName ProjectBranchName -> Cli ()
 
 
 -- | <tt>branches</tt> input handler

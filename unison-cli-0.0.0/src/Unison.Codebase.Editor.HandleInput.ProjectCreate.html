@@ -6,140 +6,160 @@
 </span><span id="line-6"></span><span>
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.UUID.V4</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">UUID</span></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.DbId</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Queries</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Queries</span></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier">Cli</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Cli</span></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Cli.MonadUtils.html"><span class="hs-identifier">Unison.Cli.MonadUtils</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Cli</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.MonadUtils.html#stepAt"><span class="hs-identifier">stepAt</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Cli.ProjectUtils.html"><span class="hs-identifier">Unison.Cli.ProjectUtils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.ProjectUtils.html#projectBranchPath"><span class="hs-identifier">projectBranchPath</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Branch0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Branch</span></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Output.html"><span class="hs-identifier">Unison.Codebase.Editor.Output</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Output</span></span><span>
-</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
-</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Project</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ProjectName</span></span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Witch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unsafeFrom</span></span><span class="hs-special">)</span><span>
-</span><span id="line-21"></span><span>
-</span><span id="line-22"></span><span class="hs-comment">-- | Create a new project.</span><span>
-</span><span id="line-23"></span><span class="hs-comment">--</span><span>
-</span><span id="line-24"></span><span class="hs-comment">-- 1. If a project already exists with the given name, bail.</span><span>
-</span><span id="line-25"></span><span class="hs-comment">--</span><span>
-</span><span id="line-26"></span><span class="hs-comment">-- 2. Otherwise, create a scaffold out a new project with a &quot;main&quot; branch, and add it to the namespace (at a magic</span><span>
-</span><span id="line-27"></span><span class="hs-comment">--    location that the user isn't supposed to look at).</span><span>
-</span><span id="line-28"></span><span class="hs-comment">--</span><span>
-</span><span id="line-29"></span><span class="hs-comment">-- Big danger: we first commit the project identity and metadata (like its name) to the codebase, then manipulate our</span><span>
-</span><span id="line-30"></span><span class="hs-comment">-- in-memory namespace and flush its contents out in a separate transaction. This means that if lightning strikes at the</span><span>
-</span><span id="line-31"></span><span class="hs-comment">-- wrong time, we'll be in an inconsistent state.</span><span>
-</span><span id="line-32"></span><span class="hs-comment">--</span><span>
-</span><span id="line-33"></span><span class="hs-comment">-- This could be fixed in a few different ways:</span><span>
-</span><span id="line-34"></span><span class="hs-comment">--</span><span>
-</span><span id="line-35"></span><span class="hs-comment">--   1. Make a better `stepAt` helper that can mutate the namespace in a transaction.</span><span>
-</span><span id="line-36"></span><span class="hs-comment">--</span><span>
-</span><span id="line-37"></span><span class="hs-comment">--   2. Add more code to detect the inconsistency and work around it. For example, if we ever see that a project id</span><span>
-</span><span id="line-38"></span><span class="hs-comment">--      exists in the codebase but not at its corresponding place in the namespace, we could consider it garbage and</span><span>
-</span><span id="line-39"></span><span class="hs-comment">--      delete it. Then, any user who tried to create a project called &quot;foo&quot; shortly before getting hit by lightning</span><span>
-</span><span id="line-40"></span><span class="hs-comment">--      could simply try creating &quot;foo&quot; again later.</span><span>
-</span><span id="line-41"></span><span class="hs-comment">--</span><span>
-</span><span id="line-42"></span><span class="hs-comment">--   3. Don't store projects in the root namespace at all. We don't even want them there, it's just a little too</span><span>
-</span><span id="line-43"></span><span class="hs-comment">--      convenient because *not* storing them in the root namespace would require a lot of reworking and rewriting. We'd</span><span>
-</span><span id="line-44"></span><span class="hs-comment">--      rather hit some shorter-term project milestones and clean our mess up Later (TM).</span><span>
-</span><span id="line-45"></span><span class="hs-comment">--</span><span>
-</span><span id="line-46"></span><span class="hs-comment">-- For now, it doesn't seem worth it to do (1) or (2), since we want to do (3) eventually, and we'd rather not waste too</span><span>
-</span><span id="line-47"></span><span class="hs-comment">-- much time getting everything perfectly correct before we get there.</span><span>
-</span><span id="line-48"></span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#projectCreate"><span class="hs-identifier hs-type">projectCreate</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-49"></span><span id="projectCreate"><span class="annot"><span class="annottext">projectCreate :: ProjectName -&gt; Cli ()
-</span><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#projectCreate"><span class="hs-identifier hs-var hs-var">projectCreate</span></a></span></span><span> </span><span id="local-6989586621679683548"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679683548"><span class="hs-identifier hs-var">projectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-50"></span><span>  </span><span id="local-6989586621679683547"><span class="annot"><span class="annottext">ProjectId
-</span><a href="#local-6989586621679683547"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO ProjectId -&gt; Cli ProjectId
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.ProjectBranch</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sqlite</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Queries</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Queries</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier">Cli</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html"><span class="hs-identifier">Unison.Cli.Monad</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Cli</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Cli.MonadUtils.html"><span class="hs-identifier">Unison.Cli.MonadUtils</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Cli</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.MonadUtils.html#stepAt"><span class="hs-identifier">stepAt</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Cli.ProjectUtils.html"><span class="hs-identifier">Unison.Cli.ProjectUtils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Cli.ProjectUtils.html#projectBranchPath"><span class="hs-identifier">projectBranchPath</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Branch0</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Branch</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Branch</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Output.html"><span class="hs-identifier">Unison.Codebase.Editor.Output</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Output</span></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Project</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ProjectName</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Witch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unsafeFrom</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | Create a new project.</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 1. If a project already exists with the given name, bail.</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 2. Otherwise, create a scaffold out a new project with a &quot;main&quot; branch, and add it to the namespace (at a magic</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--    location that the user isn't supposed to look at).</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- Big danger: we first commit the project identity and metadata (like its name) to the codebase, then manipulate our</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- in-memory namespace and flush its contents out in a separate transaction. This means that if lightning strikes at the</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- wrong time, we'll be in an inconsistent state.</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- This could be fixed in a few different ways:</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--   1. Make a better `stepAt` helper that can mutate the namespace in a transaction.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--   2. Add more code to detect the inconsistency and work around it. For example, if we ever see that a project id</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--      exists in the codebase but not at its corresponding place in the namespace, we could consider it garbage and</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--      delete it. Then, any user who tried to create a project called &quot;foo&quot; shortly before getting hit by lightning</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--      could simply try creating &quot;foo&quot; again later.</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--   3. Don't store projects in the root namespace at all. We don't even want them there, it's just a little too</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--      convenient because *not* storing them in the root namespace would require a lot of reworking and rewriting. We'd</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--      rather hit some shorter-term project milestones and clean our mess up Later (TM).</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- For now, it doesn't seem worth it to do (1) or (2), since we want to do (3) eventually, and we'd rather not waste too</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- much time getting everything perfectly correct before we get there.</span><span>
+</span><span id="line-49"></span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#projectCreate"><span class="hs-identifier hs-type">projectCreate</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span id="projectCreate"><span class="annot"><span class="annottext">projectCreate :: ProjectName -&gt; Cli ()
+</span><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#projectCreate"><span class="hs-identifier hs-var hs-var">projectCreate</span></a></span></span><span> </span><span id="local-6989586621679684319"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679684319"><span class="hs-identifier hs-var">projectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-51"></span><span>  </span><span id="local-6989586621679684318"><span class="annot"><span class="annottext">ProjectId
+</span><a href="#local-6989586621679684318"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO ProjectId -&gt; Cli ProjectId
 forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UUID -&gt; ProjectId
 </span><span class="hs-identifier hs-var">ProjectId</span></span><span> </span><span class="annot"><span class="annottext">(UUID -&gt; ProjectId) -&gt; IO UUID -&gt; IO ProjectId
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">IO UUID
 </span><span class="hs-identifier hs-var">UUID.nextRandom</span></span><span class="hs-special">)</span><span>
-</span><span id="line-51"></span><span>  </span><span id="local-6989586621679683542"><span class="annot"><span class="annottext">ProjectBranchId
-</span><a href="#local-6989586621679683542"><span class="hs-identifier hs-var">branchId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO ProjectBranchId -&gt; Cli ProjectBranchId
+</span><span id="line-52"></span><span>  </span><span id="local-6989586621679684313"><span class="annot"><span class="annottext">ProjectBranchId
+</span><a href="#local-6989586621679684313"><span class="hs-identifier hs-var">branchId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO ProjectBranchId -&gt; Cli ProjectBranchId
 forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UUID -&gt; ProjectBranchId
 </span><span class="hs-identifier hs-var">ProjectBranchId</span></span><span> </span><span class="annot"><span class="annottext">(UUID -&gt; ProjectBranchId) -&gt; IO UUID -&gt; IO ProjectBranchId
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">IO UUID
 </span><span class="hs-identifier hs-var">UUID.nextRandom</span></span><span class="hs-special">)</span><span>
-</span><span id="line-52"></span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679683540"><span class="annot"><span class="annottext">branchName :: ProjectBranchName
-</span><a href="#local-6989586621679683540"><span class="hs-identifier hs-var hs-var">branchName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; ProjectBranchName
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679684311"><span class="annot"><span class="annottext">branchName :: ProjectBranchName
+</span><a href="#local-6989586621679684311"><span class="hs-identifier hs-var hs-var">branchName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; ProjectBranchName
 forall source target.
 (HasCallStack, TryFrom source target, Show source, Typeable source,
  Typeable target) =&gt;
 source -&gt; target
 </span><span class="hs-identifier hs-var">unsafeFrom</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;main&quot;</span></span><span>
-</span><span id="line-54"></span><span>  </span><span class="annot"><span class="annottext">Transaction (Either Output ()) -&gt; Cli ()
+</span><span id="line-55"></span><span>  </span><span class="annot"><span class="annottext">Transaction (Either Output ()) -&gt; Cli ()
 forall a. Transaction (Either Output a) -&gt; Cli a
 </span><a href="Unison.Cli.Monad.html#runEitherTransaction"><span class="hs-identifier hs-var">Cli.runEitherTransaction</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-55"></span><span>    </span><span class="annot"><span class="annottext">ProjectName -&gt; Transaction Bool
+</span><span id="line-56"></span><span>    </span><span class="annot"><span class="annottext">ProjectName -&gt; Transaction Bool
 </span><span class="hs-identifier hs-var">Queries.projectExistsByName</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679683548"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction Bool
+</span><a href="#local-6989586621679684319"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction Bool
 -&gt; (Bool -&gt; Transaction (Either Output ()))
 -&gt; Transaction (Either Output ())
 forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-56"></span><span>      </span><span class="annot"><span class="annottext">Bool
+</span><span id="line-57"></span><span>      </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-57"></span><span>        </span><span class="annot"><span class="annottext">ProjectId -&gt; ProjectName -&gt; Transaction ()
+</span><span id="line-58"></span><span>        </span><span class="annot"><span class="annottext">ProjectId -&gt; ProjectName -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Queries.insertProject</span></span><span> </span><span class="annot"><span class="annottext">ProjectId
-</span><a href="#local-6989586621679683547"><span class="hs-identifier hs-var">projectId</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679683548"><span class="hs-identifier hs-var">projectName</span></a></span><span>
-</span><span id="line-58"></span><span>        </span><span class="annot"><span class="annottext">ProjectId -&gt; ProjectBranchId -&gt; ProjectBranchName -&gt; Transaction ()
-</span><span class="hs-identifier hs-var">Queries.insertProjectBranch</span></span><span> </span><span class="annot"><span class="annottext">ProjectId
-</span><a href="#local-6989586621679683547"><span class="hs-identifier hs-var">projectId</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchId
-</span><a href="#local-6989586621679683542"><span class="hs-identifier hs-var">branchId</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679683540"><span class="hs-identifier hs-var">branchName</span></a></span><span>
-</span><span id="line-59"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; Either Output ()
+</span><a href="#local-6989586621679684318"><span class="hs-identifier hs-var">projectId</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679684319"><span class="hs-identifier hs-var">projectName</span></a></span><span>
+</span><span id="line-59"></span><span>        </span><span class="annot"><span class="annottext">ProjectBranch -&gt; Transaction ()
+</span><span class="hs-identifier hs-var">Queries.insertProjectBranch</span></span><span>
+</span><span id="line-60"></span><span>          </span><span class="annot"><span class="annottext">ProjectBranch :: ProjectId
+-&gt; ProjectBranchId
+-&gt; ProjectBranchName
+-&gt; Maybe ProjectBranchId
+-&gt; ProjectBranch
+</span><span class="hs-identifier hs-type">Sqlite.ProjectBranch</span></span><span>
+</span><span id="line-61"></span><span>            </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">ProjectId
+$sel:projectId:ProjectBranch :: ProjectId
+projectId :: ProjectId
+</span><span class="hs-identifier hs-var hs-var">projectId</span></span><span class="hs-special">,</span><span>
+</span><span id="line-62"></span><span>              </span><span class="annot"><span class="annottext">ProjectBranchId
+$sel:branchId:ProjectBranch :: ProjectBranchId
+branchId :: ProjectBranchId
+</span><span class="hs-identifier hs-var hs-var">branchId</span></span><span class="hs-special">,</span><span>
+</span><span id="line-63"></span><span>              </span><span class="annot"><span class="annottext">$sel:name:ProjectBranch :: ProjectBranchName
+</span><span class="hs-identifier hs-var">name</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679684311"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-64"></span><span>              </span><span class="annot"><span class="annottext">$sel:parentBranchId:ProjectBranch :: Maybe ProjectBranchId
+</span><span class="hs-identifier hs-var">parentBranchId</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe ProjectBranchId
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-65"></span><span>            </span><span class="hs-special">}</span><span>
+</span><span id="line-66"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; Either Output ()
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-60"></span><span>      </span><span class="annot"><span class="annottext">Bool
+</span><span id="line-67"></span><span>      </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Either Output () -&gt; Transaction (Either Output ())
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Output -&gt; Either Output ()
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Output
 </span><a href="Unison.Codebase.Editor.Output.html#ProjectNameAlreadyExists"><span class="hs-identifier hs-var">Output.ProjectNameAlreadyExists</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679683548"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-61"></span><span>
-</span><span id="line-62"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679683534"><span class="annot"><span class="annottext">path :: Absolute
-</span><a href="#local-6989586621679683534"><span class="hs-identifier hs-var hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ProjectAndBranch ProjectId ProjectBranchId -&gt; Absolute
+</span><a href="#local-6989586621679684319"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679684300"><span class="annot"><span class="annottext">path :: Absolute
+</span><a href="#local-6989586621679684300"><span class="hs-identifier hs-var hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ProjectAndBranch ProjectId ProjectBranchId -&gt; Absolute
 </span><a href="Unison.Cli.ProjectUtils.html#projectBranchPath"><span class="hs-identifier hs-var">projectBranchPath</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectAndBranch :: forall a b. a -&gt; b -&gt; ProjectAndBranch a b
 </span><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">project :: ProjectId
 </span><span class="hs-identifier hs-var">project</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ProjectId
-</span><a href="#local-6989586621679683547"><span class="hs-identifier hs-var">projectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">branch :: ProjectBranchId
+</span><a href="#local-6989586621679684318"><span class="hs-identifier hs-var">projectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">branch :: ProjectBranchId
 </span><span class="hs-identifier hs-var">branch</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ProjectBranchId
-</span><a href="#local-6989586621679683542"><span class="hs-identifier hs-var">branchId</span></a></span><span class="hs-special">}</span><span>
-</span><span id="line-63"></span><span>  </span><span class="annot"><span class="annottext">Text -&gt; (Path, Branch0 IO -&gt; Branch0 IO) -&gt; Cli ()
+</span><a href="#local-6989586621679684313"><span class="hs-identifier hs-var">branchId</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-70"></span><span>  </span><span class="annot"><span class="annottext">Text -&gt; (Path, Branch0 IO -&gt; Branch0 IO) -&gt; Cli ()
 </span><a href="Unison.Cli.MonadUtils.html#stepAt"><span class="hs-identifier hs-var">Cli.stepAt</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;project.create&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679683534"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch0 IO -&gt; Branch0 IO -&gt; Branch0 IO
+</span><a href="#local-6989586621679684300"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch0 IO -&gt; Branch0 IO -&gt; Branch0 IO
 forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">Branch0 IO
 forall (m :: * -&gt; *). Branch0 m
 </span><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#mainBranchContents"><span class="hs-identifier hs-var">mainBranchContents</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-64"></span><span>  </span><span class="annot"><span class="annottext">Output -&gt; Cli ()
+</span><span id="line-71"></span><span>  </span><span class="annot"><span class="annottext">Output -&gt; Cli ()
 </span><a href="Unison.Cli.Monad.html#respond"><span class="hs-identifier hs-var">Cli.respond</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; ProjectBranchName -&gt; Output
 </span><a href="Unison.Codebase.Editor.Output.html#CreatedProject"><span class="hs-identifier hs-var">Output.CreatedProject</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679683548"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679683540"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-65"></span><span>  </span><span class="annot"><span class="annottext">Absolute -&gt; Cli ()
+</span><a href="#local-6989586621679684319"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679684311"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>  </span><span class="annot"><span class="annottext">Absolute -&gt; Cli ()
 </span><a href="Unison.Cli.Monad.html#cd"><span class="hs-identifier hs-var">Cli.cd</span></a></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679683534"><span class="hs-identifier hs-var">path</span></a></span><span>
-</span><span id="line-66"></span><span>
-</span><span id="line-67"></span><span class="hs-comment">-- The initial contents of the main branch of a new project.</span><span>
-</span><span id="line-68"></span><span class="hs-comment">--</span><span>
-</span><span id="line-69"></span><span class="hs-comment">-- FIXME we should put a README here, or something</span><span>
-</span><span id="line-70"></span><span id="local-6989586621679683554"><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#mainBranchContents"><span class="hs-identifier hs-type">mainBranchContents</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Branch0</span></span><span> </span><span class="annot"><a href="#local-6989586621679683554"><span class="hs-identifier hs-type">m</span></a></span></span><span>
-</span><span id="line-71"></span><span id="mainBranchContents"><span class="annot"><span class="annottext">mainBranchContents :: Branch0 m
+</span><a href="#local-6989586621679684300"><span class="hs-identifier hs-var">path</span></a></span><span>
+</span><span id="line-73"></span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- The initial contents of the main branch of a new project.</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- FIXME we should put a README here, or something</span><span>
+</span><span id="line-77"></span><span id="local-6989586621679684325"><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#mainBranchContents"><span class="hs-identifier hs-type">mainBranchContents</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Branch0</span></span><span> </span><span class="annot"><a href="#local-6989586621679684325"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-78"></span><span id="mainBranchContents"><span class="annot"><span class="annottext">mainBranchContents :: Branch0 m
 </span><a href="Unison.Codebase.Editor.HandleInput.ProjectCreate.html#mainBranchContents"><span class="hs-identifier hs-var hs-var">mainBranchContents</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-72"></span><span>  </span><span class="annot"><span class="annottext">Branch0 m
+</span><span id="line-79"></span><span>  </span><span class="annot"><span class="annottext">Branch0 m
 forall (m :: * -&gt; *). Branch0 m
 </span><span class="hs-identifier hs-var">Branch.empty0</span></span><span>
-</span><span id="line-73"></span></pre></body></html>
+</span><span id="line-80"></span></pre></body></html>
