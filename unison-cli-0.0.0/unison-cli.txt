@@ -205,8 +205,8 @@ namespaceDependencies :: Codebase m Symbol a -> Branch0 m -> Transaction (Map La
 module Unison.Codebase.Editor.Input
 data Input
 ForkLocalBranchI :: Either ShortCausalHash Path' -> Path' -> Input
-MergeLocalBranchI :: Path' -> Path' -> MergeMode -> Input
-PreviewMergeLocalBranchI :: Path' -> Path' -> Input
+MergeLocalBranchI :: LooseCodeOrProject -> LooseCodeOrProject -> MergeMode -> Input
+PreviewMergeLocalBranchI :: LooseCodeOrProject -> LooseCodeOrProject -> Input
 DiffNamespaceI :: BranchId -> BranchId -> Input
 PullRemoteBranchI :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Input
 PushRemoteBranchI :: PushRemoteBranchInput -> Input
@@ -350,6 +350,7 @@ FileLocation :: FilePath -> OutputLocation
 type PatchPath = Split'
 type BranchId = Either ShortCausalHash Path'
 type AbsBranchId = Either ShortCausalHash Absolute
+type LooseCodeOrProject = Either Path' (Maybe ProjectName, ProjectBranchName)
 parseBranchId :: String -> Either String BranchId
 parseShortCausalHash :: String -> Either String ShortCausalHash
 type HashOrHQSplit' = Either ShortHash HQSplit'
@@ -1216,8 +1217,8 @@ PullSuccessful :: ReadRemoteNamespace RemoteProjectBranch -> PullTarget (Project
 -- | Indicates a trivial merge where the destination was empty and was just
 --   replaced.
 MergeOverEmpty :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
-MergeAlreadyUpToDate :: Path' -> Path' -> Output
-PreviewMergeAlreadyUpToDate :: Path' -> Path' -> Output
+MergeAlreadyUpToDate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Output
+PreviewMergeAlreadyUpToDate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Output
 
 -- | No conflicts or edits remain for the current patch.
 NoConflictsOrEdits :: Output
@@ -1297,9 +1298,9 @@ ShowDiffAfterUndo :: PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOu
 ShowDiffAfterDeleteDefinitions :: PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterDeleteBranch :: Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterModifyBranch :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMerge :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMergePropagate :: Path' -> Absolute -> Path' -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMergePreview :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMerge :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMergePropagate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> Path' -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMergePreview :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterPull :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterCreateAuthor :: NameSegment -> Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 
@@ -1467,6 +1468,7 @@ pushForce :: InputPattern
 pushExhaustive :: InputPattern
 squashMerge :: InputPattern
 mergeLocal :: InputPattern
+parseLooseCodeOrProject :: String -> Either String LooseCodeOrProject
 diffNamespace :: InputPattern
 previewMergeLocal :: InputPattern
 replaceEdit :: (HashQualified Name -> HashQualified Name -> Maybe PatchPath -> Input) -> InputPattern
@@ -1830,6 +1832,7 @@ prettyHash32 :: IsString s => Hash32 -> Pretty s
 prettyProjectName :: ProjectName -> Pretty
 prettyProjectBranchName :: ProjectBranchName -> Pretty
 prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
+prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
 formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
 displayDefinitions' :: Var v => Ord a1 => PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a1)) -> Map Reference (DisplayObject (Type v a1) (Term v a1)) -> Pretty
 displayRendered :: Maybe FilePath -> Pretty -> IO Pretty
@@ -2516,11 +2519,11 @@ diffHelper :: Branch0 IO -> Branch0 IO -> Cli (PrettyPrintEnv, BranchDiffOutput 
 module Unison.Codebase.Editor.HandleInput.Pull
 doPullRemoteBranch :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Text -> Cli ()
 loadShareLooseCodeIntoMemory :: ReadShareLooseCode -> Cli (Branch IO)
-loadPropagateDiffDefaultPatch :: Text -> Maybe Path' -> Absolute -> Cli ()
+loadPropagateDiffDefaultPatch :: Text -> Maybe (Either Path' (ProjectAndBranch ProjectName ProjectBranchName)) -> Absolute -> Cli ()
 
 -- | supply <tt>dest0</tt> if you want to print diff messages supply
 --   unchangedMessage if you want to display it if merge had no effect
-mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Branch IO -> Maybe Path' -> Absolute -> Cli ()
+mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Branch IO -> Maybe (Either Path' (ProjectAndBranch ProjectName ProjectBranchName)) -> Absolute -> Cli ()
 propagatePatch :: Text -> Patch -> Absolute -> Cli Bool
 withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO a
 
