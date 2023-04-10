@@ -295,6 +295,7 @@ ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
 ProjectsI :: Input
 BranchesI :: Input
+BranchI :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
 data DiffNamespaceToPatchInput
 DiffNamespaceToPatchInput :: BranchId -> BranchId -> Split' -> DiffNamespaceToPatchInput
 [$sel:branchId1:DiffNamespaceToPatchInput] :: DiffNamespaceToPatchInput -> BranchId
@@ -1258,7 +1259,7 @@ DisplayDebugCompletions :: [Completion] -> Output
 ClearScreen :: Output
 PulledEmptyBranch :: ReadRemoteNamespace RemoteProjectBranch -> Output
 CreatedProject :: ProjectName -> ProjectBranchName -> Output
-CreatedProjectBranch :: Maybe ProjectBranchName -> ProjectBranchName -> Output
+CreatedProjectBranch :: CreatedProjectBranchFrom -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 CreatedRemoteProject :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 CreatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RemoteProjectBranchIsUpToDate :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
@@ -1280,6 +1281,20 @@ MarkdownOut :: Text -> Output
 DownloadedEntities :: Int -> Output
 UploadedEntities :: Int -> Output
 NotImplementedYet :: Text -> Output
+
+-- | What did we create a project branch from?
+--   
+--   <ul>
+--   <li>Loose code</li>
+--   <li>Nothingness (we made an empty branch)</li>
+--   <li>Other branch (in another project)</li>
+--   <li>Parent branch (in this project)</li>
+--   </ul>
+data CreatedProjectBranchFrom
+CreatedProjectBranchFrom'LooseCode :: Absolute -> CreatedProjectBranchFrom
+CreatedProjectBranchFrom'Nothingness :: CreatedProjectBranchFrom
+CreatedProjectBranchFrom'OtherBranch :: ProjectAndBranch ProjectName ProjectBranchName -> CreatedProjectBranchFrom
+CreatedProjectBranchFrom'ParentBranch :: ProjectBranchName -> CreatedProjectBranchFrom
 data DisplayDefinitionsOutput
 DisplayDefinitionsOutput :: (TermReference -> Bool) -> Maybe FilePath -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann)) -> Map Reference (DisplayObject () (Decl Symbol Ann)) -> DisplayDefinitionsOutput
 [$sel:isTest:DisplayDefinitionsOutput] :: DisplayDefinitionsOutput -> TermReference -> Bool
@@ -1518,6 +1533,7 @@ projectCreate :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
+branch :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -1831,6 +1847,16 @@ prettyHash :: IsString s => Hash -> Pretty s
 prettyHash32 :: IsString s => Hash32 -> Pretty s
 prettyProjectName :: ProjectName -> Pretty
 prettyProjectBranchName :: ProjectBranchName -> Pretty
+
+-- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
+--   This is used in some outputs to encourage/advertise an unambiguous
+--   syntax for project branches, as there's an ambiguity with
+--   single-segment relative paths.
+--   
+--   Not all project branches are printed such: for example, when listing
+--   all branches of a project, we probably don't need or want to prefix
+--   every one with a forward slash.
+prettySlashProjectBranchName :: ProjectBranchName -> Pretty
 prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
 prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
 formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
@@ -2498,6 +2524,14 @@ handleDeleteBranch :: These ProjectName ProjectBranchName -> Cli ()
 -- | <tt>branches</tt> input handler
 module Unison.Codebase.Editor.HandleInput.Branches
 handleBranches :: Cli ()
+
+
+-- | <tt>branch</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Branch
+
+-- | Create a new project branch from an existing project branch or
+--   namespace.
+handleBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
