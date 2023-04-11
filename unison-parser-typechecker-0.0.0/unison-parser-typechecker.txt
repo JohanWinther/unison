@@ -4986,7 +4986,11 @@ instance GHC.Classes.Ord Unison.Codebase.SqliteCodebase.Migrations.CodebaseVersi
 instance GHC.Classes.Eq Unison.Codebase.SqliteCodebase.Migrations.CodebaseVersionStatus
 
 module Unison.Codebase.SqliteCodebase
-init :: HasCallStack => MonadUnliftIO m => Init m Symbol Ann
+init :: (HasCallStack, MonadUnliftIO m) => Init m Symbol Ann
+
+-- | Like <a>init</a>, but allows passing in an action to be perform when a
+--   new codebase is created.
+initWithSetup :: (HasCallStack, MonadUnliftIO m) => Transaction () -> Init m Symbol Ann
 data MigrationStrategy
 
 -- | Perform a migration immediately if one is required.
