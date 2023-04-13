@@ -1255,6 +1255,11 @@ checkBranchHashNameLookupExists :: BranchHashId -> Transaction Bool
 -- | Inserts a new record into the name_lookups table
 trackNewBranchHashNameLookup :: BranchHashId -> Transaction ()
 
+-- | Delete the specified name lookup. This should only be used if you're
+--   sure it's unused, or if you're going to re-create it in the same
+--   transaction.
+deleteNameLookup :: BranchHashId -> Transaction ()
+
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   

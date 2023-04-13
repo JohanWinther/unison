@@ -3503,9 +3503,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4r9m loc_a4r9n. Lens' (Env v_a4r9m loc_a4r9n) (TypeLookup v_a4r9m loc_a4r9n)
-termsByShortname :: forall v_a4r9m loc_a4r9n. Lens' (Env v_a4r9m loc_a4r9n) (Map Name [NamedReference v_a4r9m loc_a4r9n])
-ambientAbilities :: forall v_a4r9m loc_a4r9n. Lens' (Env v_a4r9m loc_a4r9n) [Type v_a4r9m loc_a4r9n]
+typeLookup :: forall v_a4r9n loc_a4r9o. Lens' (Env v_a4r9n loc_a4r9o) (TypeLookup v_a4r9n loc_a4r9o)
+termsByShortname :: forall v_a4r9n loc_a4r9o. Lens' (Env v_a4r9n loc_a4r9o) (Map Name [NamedReference v_a4r9n loc_a4r9o])
+ambientAbilities :: forall v_a4r9n loc_a4r9o. Lens' (Env v_a4r9n loc_a4r9o) [Type v_a4r9n loc_a4r9o]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -4476,6 +4476,12 @@ namesAtPath :: BranchHash -> Path -> Path -> Transaction ScopedNames
 -- | Add an index for the provided branch hash if one doesn't already
 --   exist.
 ensureNameLookupForBranchHash :: (Reference -> Transaction ConstructorType) -> Maybe BranchHash -> BranchHash -> Transaction ()
+
+-- | Regenerate the name lookup index for the given branch hash from
+--   scratch. This shouldn't be necessary in normal operation, but it's
+--   useful to fix name lookups if they somehow get corrupt, or during
+--   local testing and debugging.
+regenerateNameLookup :: (Reference -> Transaction ConstructorType) -> BranchHash -> Transaction ()
 
 -- | Given a transaction, return a transaction that first checks a
 --   semispace cache of the given size.

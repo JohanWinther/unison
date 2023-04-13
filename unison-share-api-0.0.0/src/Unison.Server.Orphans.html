@@ -41,18 +41,18 @@
 </span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Syntax.Name</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Name</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromTextEither</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">toText</span></span><span class="hs-special">)</span><span>
 </span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Width</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-43"></span><span>
-</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309682"><span id="local-6989586621679309684"><span id="local-6989586621679309686"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-45"></span><span>  </span><span id="local-6989586621679309680"><span class="annot"><span class="annottext">toJSON :: Hash -&gt; Value
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span id="local-6989586621679309678"><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679309678"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309684"><span id="local-6989586621679309686"><span id="local-6989586621679309688"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-45"></span><span>  </span><span id="local-6989586621679309682"><span class="annot"><span class="annottext">toJSON :: Hash -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span id="local-6989586621679309680"><span class="annot"><span class="annottext">Hash
+</span><a href="#local-6989586621679309680"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value) -&gt; Text -&gt; Value
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Hash -&gt; Text
 </span><span class="hs-identifier hs-var">Hash.toBase32HexText</span></span><span> </span><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679309678"><span class="hs-identifier hs-var">h</span></a></span><span>
+</span><a href="#local-6989586621679309680"><span class="hs-identifier hs-var">h</span></a></span><span>
 </span><span id="line-46"></span><span>
-</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309673"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-48"></span><span>  </span><span id="local-6989586621679309671"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser Hash
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309675"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621679309673"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser Hash
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; (Text -&gt; Parser Hash) -&gt; Value -&gt; Parser Hash
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -66,20 +66,20 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Hash
 </span><span class="hs-identifier hs-var">Hash.unsafeFromBase32HexText</span></span><span>
 </span><span id="line-49"></span><span>
-</span><span id="line-50"></span><span id="local-6989586621679309659"><span id="local-6989586621679309661"><span id="local-6989586621679309663"><span id="local-6989586621679309665"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span></span></span><span>
+</span><span id="line-50"></span><span id="local-6989586621679309661"><span id="local-6989586621679309663"><span id="local-6989586621679309665"><span id="local-6989586621679309667"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span></span></span><span>
 </span><span id="line-51"></span><span>
-</span><span id="line-52"></span><span id="local-6989586621679309655"><span id="local-6989586621679309657"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span><span>
+</span><span id="line-52"></span><span id="local-6989586621679309657"><span id="local-6989586621679309659"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span><span>
 </span><span id="line-53"></span><span>
-</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309648"><span id="local-6989586621679309650"><span id="local-6989586621679309652"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-55"></span><span>  </span><span id="local-6989586621679309647"><span class="annot"><span class="annottext">toJSON :: ShortHash -&gt; Value
-</span><a href="#local-6989586621679309647"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309650"><span id="local-6989586621679309652"><span id="local-6989586621679309654"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-55"></span><span>  </span><span id="local-6989586621679309649"><span class="annot"><span class="annottext">toJSON :: ShortHash -&gt; Value
+</span><a href="#local-6989586621679309649"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value) -&gt; (ShortHash -&gt; Text) -&gt; ShortHash -&gt; Value
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Text
 </span><span class="hs-identifier hs-var">SH.toText</span></span><span>
 </span><span id="line-56"></span><span>
-</span><span id="line-57"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309643"><span class="annot"><span class="hs-identifier hs-type">ToJSONKey</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-58"></span><span>  </span><span id="local-6989586621679309641"><span class="annot"><span class="annottext">toJSONKey :: ToJSONKeyFunction ShortHash
+</span><span id="line-57"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309645"><span class="annot"><span class="hs-identifier hs-type">ToJSONKey</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-58"></span><span>  </span><span id="local-6989586621679309643"><span class="annot"><span class="annottext">toJSONKey :: ToJSONKeyFunction ShortHash
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSONKey</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ShortHash -&gt; Text)
 -&gt; ToJSONKeyFunction Text -&gt; ToJSONKeyFunction ShortHash
 forall (f :: * -&gt; *) a b. Contravariant f =&gt; (a -&gt; b) -&gt; f b -&gt; f a
@@ -88,16 +88,16 @@ forall (f :: * -&gt; *) a b. Contravariant f =&gt; (a -&gt; b) -&gt; f b -&gt; f
 forall a. ToJSONKey a =&gt; ToJSONKeyFunction a
 </span><span class="hs-identifier hs-var">toJSONKey</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-59"></span><span>
-</span><span id="line-60"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309636"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-61"></span><span>  </span><span id="local-6989586621679309635"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser ShortHash
-</span><a href="#local-6989586621679309635"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; (Text -&gt; Parser ShortHash) -&gt; Value -&gt; Parser ShortHash
+</span><span id="line-60"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309638"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-61"></span><span>  </span><span id="local-6989586621679309637"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser ShortHash
+</span><a href="#local-6989586621679309637"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; (Text -&gt; Parser ShortHash) -&gt; Value -&gt; Parser ShortHash
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;ShortHash&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309634"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309634"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-string">&quot;ShortHash&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309636"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309636"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-62"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe ShortHash
 </span><span class="hs-identifier hs-var">SH.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309634"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679309636"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-63"></span><span>      </span><span class="annot"><span class="annottext">Maybe ShortHash
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Parser ShortHash
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
@@ -108,23 +108,23 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309634"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-64"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679309631"><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621679309631"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Parser ShortHash
+</span><a href="#local-6989586621679309636"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><span id="line-64"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679309633"><span class="annot"><span class="annottext">ShortHash
+</span><a href="#local-6989586621679309633"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Parser ShortHash
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621679309631"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621679309633"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-65"></span><span>
-</span><span id="line-66"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309628"><span class="annot"><span class="hs-identifier hs-type">FromJSONKey</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-67"></span><span>  </span><span id="local-6989586621679309626"><span class="annot"><span class="annottext">fromJSONKey :: FromJSONKeyFunction ShortHash
+</span><span id="line-66"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309630"><span class="annot"><span class="hs-identifier hs-type">FromJSONKey</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-67"></span><span>  </span><span id="local-6989586621679309628"><span class="annot"><span class="annottext">fromJSONKey :: FromJSONKeyFunction ShortHash
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromJSONKey</span></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-68"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Parser ShortHash) -&gt; FromJSONKeyFunction ShortHash
 forall a. (Text -&gt; Parser a) -&gt; FromJSONKeyFunction a
-</span><span class="hs-identifier hs-var">Aeson.FromJSONKeyTextParser</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309623"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309623"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-identifier hs-var">Aeson.FromJSONKeyTextParser</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309625"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309625"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-69"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe ShortHash
 </span><span class="hs-identifier hs-var">SH.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309623"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679309625"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-70"></span><span>        </span><span class="annot"><span class="annottext">Maybe ShortHash
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Parser ShortHash
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
@@ -135,15 +135,15 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309623"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-71"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679309622"><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621679309622"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Parser ShortHash
+</span><a href="#local-6989586621679309625"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><span id="line-71"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679309624"><span class="annot"><span class="annottext">ShortHash
+</span><a href="#local-6989586621679309624"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Parser ShortHash
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ShortHash
-</span><a href="#local-6989586621679309622"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621679309624"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-72"></span><span>
-</span><span id="line-73"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309617"><span id="local-6989586621679309619"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-74"></span><span>  </span><span id="local-6989586621679309615"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text ShortCausalHash
+</span><span id="line-73"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309619"><span id="local-6989586621679309621"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621679309617"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text ShortCausalHash
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Either Text ShortCausalHash
 -&gt; (ShortCausalHash -&gt; Either Text ShortCausalHash)
 -&gt; Maybe ShortCausalHash
@@ -163,8 +163,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">SCH.fromText</span></span><span>
 </span><span id="line-75"></span><span>
 </span><span id="line-76"></span><span class="hs-comment">-- | Always renders to the form: #abcdef</span><span>
-</span><span id="line-77"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309606"><span id="local-6989586621679309608"><span id="local-6989586621679309610"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-78"></span><span>  </span><span id="local-6989586621679309603"><span class="annot"><span class="annottext">toQueryParam :: ShortHash -&gt; Text
+</span><span id="line-77"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309608"><span id="local-6989586621679309610"><span id="local-6989586621679309612"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-78"></span><span>  </span><span id="local-6989586621679309605"><span class="annot"><span class="annottext">toQueryParam :: ShortHash -&gt; Text
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShortHash -&gt; Text
 </span><span class="hs-identifier hs-var">SH.toText</span></span><span>
 </span><span id="line-79"></span><span>
@@ -174,30 +174,30 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span id="line-83"></span><span class="hs-comment">-- #abcdef</span><span>
 </span><span id="line-84"></span><span class="hs-comment">-- ##builtin</span><span>
 </span><span id="line-85"></span><span class="hs-comment">-- abcdef</span><span>
-</span><span id="line-86"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309597"><span id="local-6989586621679309599"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-87"></span><span>  </span><span id="local-6989586621679309596"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text ShortHash
-</span><a href="#local-6989586621679309596"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309595"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309595"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-86"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309599"><span id="local-6989586621679309601"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-87"></span><span>  </span><span id="local-6989586621679309598"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text ShortHash
+</span><a href="#local-6989586621679309598"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309597"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309597"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replace</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;@&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309595"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309597"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-89"></span><span>      </span><span class="annot"><span class="annottext">Text -&gt; (Text -&gt; Either Text ShortHash) -&gt; Either Text ShortHash
 forall a b. a -&gt; (a -&gt; b) -&gt; b
-</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309592"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309592"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309594"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309594"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-90"></span><span>        </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Bool
 </span><span class="hs-identifier hs-var">Text.isPrefixOf</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309592"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309594"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-91"></span><span>            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309592"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309594"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-92"></span><span>            </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309592"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309594"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-93"></span><span>        </span><span class="hs-special">)</span><span>
 </span><span id="line-94"></span><span>          </span><span class="annot"><span class="annottext">Text -&gt; (Text -&gt; Maybe ShortHash) -&gt; Maybe ShortHash
 forall a b. a -&gt; (a -&gt; b) -&gt; b
@@ -220,7 +220,7 @@ forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span>
 </span><span id="line-96"></span><span>
 </span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-98"></span><span>  </span><span id="local-6989586621679309587"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy ShortHash -&gt; Declare (Definitions Schema) NamedSchema
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621679309589"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy ShortHash -&gt; Declare (Definitions Schema) NamedSchema
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy ShortHash
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Proxy Text -&gt; Declare (Definitions Schema) NamedSchema
 forall a.
@@ -231,15 +231,15 @@ forall k (t :: k). Proxy t
 </span><span class="hs-identifier hs-var">Proxy</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-99"></span><span>
 </span><span id="line-100"></span><span class="hs-comment">-- | Always renders to the form: #abcdef</span><span>
-</span><span id="line-101"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309579"><span id="local-6989586621679309581"><span id="local-6989586621679309583"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-102"></span><span>  </span><span id="local-6989586621679309577"><span class="annot"><span class="annottext">toQueryParam :: Reference -&gt; Text
-</span><a href="#local-6989586621679309577"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Text
+</span><span id="line-101"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309581"><span id="local-6989586621679309583"><span id="local-6989586621679309585"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621679309579"><span class="annot"><span class="annottext">toQueryParam :: Reference -&gt; Text
+</span><a href="#local-6989586621679309579"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Text
 </span><span class="hs-identifier hs-var">Reference.toText</span></span><span>
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="hs-comment">-- | Always renders to the form: #abcdef</span><span>
-</span><span id="line-105"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309570"><span id="local-6989586621679309572"><span id="local-6989586621679309574"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-106"></span><span>  </span><span id="local-6989586621679309568"><span class="annot"><span class="annottext">toQueryParam :: Referent -&gt; Text
-</span><a href="#local-6989586621679309568"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Referent -&gt; Text
+</span><span id="line-105"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309572"><span id="local-6989586621679309574"><span id="local-6989586621679309576"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-106"></span><span>  </span><span id="local-6989586621679309570"><span class="annot"><span class="annottext">toQueryParam :: Referent -&gt; Text
+</span><a href="#local-6989586621679309570"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Referent -&gt; Text
 </span><span class="hs-identifier hs-var">Referent.toText</span></span><span>
 </span><span id="line-107"></span><span>
 </span><span id="line-108"></span><span class="hs-comment">-- | Accepts shorthashes of any of the following forms:</span><span>
@@ -248,30 +248,30 @@ forall k (t :: k). Proxy t
 </span><span id="line-111"></span><span class="hs-comment">-- #abcdef</span><span>
 </span><span id="line-112"></span><span class="hs-comment">-- ##builtin</span><span>
 </span><span id="line-113"></span><span class="hs-comment">-- abcdef</span><span>
-</span><span id="line-114"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309562"><span id="local-6989586621679309564"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-115"></span><span>  </span><span id="local-6989586621679309561"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Reference
-</span><a href="#local-6989586621679309561"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309560"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309560"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-114"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309564"><span id="local-6989586621679309566"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-115"></span><span>  </span><span id="local-6989586621679309563"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Reference
+</span><a href="#local-6989586621679309563"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309562"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309562"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-116"></span><span>    </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replace</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;@&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309560"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309562"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-117"></span><span>      </span><span class="annot"><span class="annottext">Text -&gt; (Text -&gt; Either Text Reference) -&gt; Either Text Reference
 forall a b. a -&gt; (a -&gt; b) -&gt; b
-</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309559"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309559"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309561"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309561"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-118"></span><span>        </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Bool
 </span><span class="hs-identifier hs-var">Text.isPrefixOf</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309559"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309561"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-119"></span><span>            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309559"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309561"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-120"></span><span>            </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309559"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309561"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-121"></span><span>        </span><span class="hs-special">)</span><span>
 </span><span id="line-122"></span><span>          </span><span class="annot"><span class="annottext">Text
 -&gt; (Text -&gt; Either String Reference) -&gt; Either String Reference
@@ -294,30 +294,30 @@ forall a c b. (a -&gt; c) -&gt; Either a b -&gt; Either c b
 </span><span id="line-128"></span><span class="hs-comment">-- #abcdef</span><span>
 </span><span id="line-129"></span><span class="hs-comment">-- ##builtin</span><span>
 </span><span id="line-130"></span><span class="hs-comment">-- abcdef</span><span>
-</span><span id="line-131"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309551"><span id="local-6989586621679309553"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-132"></span><span>  </span><span id="local-6989586621679309550"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Referent
-</span><a href="#local-6989586621679309550"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309549"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309549"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-131"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309553"><span id="local-6989586621679309555"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-132"></span><span>  </span><span id="local-6989586621679309552"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Referent
+</span><a href="#local-6989586621679309552"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309551"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309551"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-133"></span><span>    </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replace</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;@&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309549"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309551"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-134"></span><span>      </span><span class="annot"><span class="annottext">Text -&gt; (Text -&gt; Either Text Referent) -&gt; Either Text Referent
 forall a b. a -&gt; (a -&gt; b) -&gt; b
-</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309548"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309548"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309550"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309550"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-135"></span><span>        </span><span class="hs-special">(</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Bool
 </span><span class="hs-identifier hs-var">Text.isPrefixOf</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309548"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309550"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-136"></span><span>            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309548"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679309550"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-137"></span><span>            </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309548"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309550"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-138"></span><span>        </span><span class="hs-special">)</span><span>
 </span><span id="line-139"></span><span>          </span><span class="annot"><span class="annottext">Text -&gt; (Text -&gt; Maybe Referent) -&gt; Maybe Referent
 forall a b. a -&gt; (a -&gt; b) -&gt; b
@@ -339,8 +339,8 @@ forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span>
 </span><span id="line-141"></span><span>
 </span><span id="line-142"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-143"></span><span>  </span><span id="local-6989586621679309544"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Reference -&gt; Declare (Definitions Schema) NamedSchema
-</span><a href="#local-6989586621679309544"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Reference
+</span><span id="line-143"></span><span>  </span><span id="local-6989586621679309546"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Reference -&gt; Declare (Definitions Schema) NamedSchema
+</span><a href="#local-6989586621679309546"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Reference
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Proxy Text -&gt; Declare (Definitions Schema) NamedSchema
 forall a.
 ToSchema a =&gt;
@@ -349,14 +349,14 @@ Proxy a -&gt; Declare (Definitions Schema) NamedSchema
 forall k (t :: k). Proxy t
 </span><span class="hs-identifier hs-var">Proxy</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-144"></span><span>
-</span><span id="line-145"></span><span id="local-6989586621679309538"><span id="local-6989586621679309540"><span id="local-6989586621679309542"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortByteString</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span></span></span><span>
+</span><span id="line-145"></span><span id="local-6989586621679309540"><span id="local-6989586621679309542"><span id="local-6989586621679309544"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortByteString</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span></span></span></span><span>
 </span><span id="line-146"></span><span>
-</span><span id="line-147"></span><span id="local-6989586621679309531"><span id="local-6989586621679309533"><span id="local-6989586621679309535"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span></span><span>
+</span><span id="line-147"></span><span id="local-6989586621679309533"><span id="local-6989586621679309535"><span id="local-6989586621679309537"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Hash</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Binary</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span></span></span></span><span>
 </span><span id="line-148"></span><span>
-</span><span id="line-149"></span><span id="local-6989586621679309523"><span id="local-6989586621679309525"><span id="local-6989586621679309527"><span id="local-6989586621679309529"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span></span></span></span><span>
+</span><span id="line-149"></span><span id="local-6989586621679309525"><span id="local-6989586621679309527"><span id="local-6989586621679309529"><span id="local-6989586621679309531"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span></span></span></span><span>
 </span><span id="line-150"></span><span>
-</span><span id="line-151"></span><span id="local-6989586621679309521"><span id="local-6989586621679309522"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309514"><span id="local-6989586621679309516"><span id="local-6989586621679309519"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="#local-6989586621679309522"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="#local-6989586621679309521"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DisplayObject</span></span><span> </span><span class="annot"><a href="#local-6989586621679309522"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679309521"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-152"></span><span>  </span><span id="local-6989586621679309513"><span class="annot"><span class="annottext">toEncoding :: DisplayObject b a -&gt; Encoding
+</span><span id="line-151"></span><span id="local-6989586621679309523"><span id="local-6989586621679309524"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309516"><span id="local-6989586621679309518"><span id="local-6989586621679309521"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="#local-6989586621679309524"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="#local-6989586621679309523"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DisplayObject</span></span><span> </span><span class="annot"><a href="#local-6989586621679309524"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679309523"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-152"></span><span>  </span><span id="local-6989586621679309515"><span class="annot"><span class="annottext">toEncoding :: DisplayObject b a -&gt; Encoding
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; DisplayObject b a -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
@@ -364,7 +364,7 @@ Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span></span></span><span>
 </span><span id="line-153"></span><span>
-</span><span id="line-154"></span><span id="local-6989586621679309505"><span id="local-6989586621679309508"><span id="local-6989586621679309509"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309509"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309508"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DisplayObject</span></span><span> </span><span class="annot"><a href="#local-6989586621679309509"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679309508"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-154"></span><span id="local-6989586621679309507"><span id="local-6989586621679309510"><span id="local-6989586621679309511"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309511"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309510"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">DisplayObject</span></span><span> </span><span class="annot"><a href="#local-6989586621679309511"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679309510"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span></span><span>
 </span><span id="line-155"></span><span>
 </span><span id="line-156"></span><span class="hs-comment">-- [21/10/07] Hello, this is Mitchell. Name refactor in progress. Changing internal representation from a flat text to a</span><span>
 </span><span id="line-157"></span><span class="hs-comment">-- list of segments (in reverse order) plus an &quot;is absolute?&quot; bit.</span><span>
@@ -372,16 +372,16 @@ Options -&gt; a -&gt; Encoding
 </span><span id="line-159"></span><span class="hs-comment">-- To preserve backwards compatibility (for now, anyway -- is this even important long term?), the ToJSON and ToSchema</span><span>
 </span><span id="line-160"></span><span class="hs-comment">-- instances below treat Name as before.</span><span>
 </span><span id="line-161"></span><span>
-</span><span id="line-162"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309499"><span id="local-6989586621679309501"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-163"></span><span>  </span><span id="local-6989586621679309498"><span class="annot"><span class="annottext">toEncoding :: Name -&gt; Encoding
-</span><a href="#local-6989586621679309498"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Encoding
+</span><span id="line-162"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309501"><span id="local-6989586621679309503"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-163"></span><span>  </span><span id="local-6989586621679309500"><span class="annot"><span class="annottext">toEncoding :: Name -&gt; Encoding
+</span><a href="#local-6989586621679309500"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Encoding
 forall a. ToJSON a =&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">toEncoding</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Encoding) -&gt; (Name -&gt; Text) -&gt; Name -&gt; Encoding
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Text
 </span><span class="hs-identifier hs-var">Name.toText</span></span><span>
-</span><span id="line-164"></span><span>  </span><span id="local-6989586621679309497"><span class="annot"><span class="annottext">toJSON :: Name -&gt; Value
-</span><a href="#local-6989586621679309497"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-164"></span><span>  </span><span id="local-6989586621679309499"><span class="annot"><span class="annottext">toJSON :: Name -&gt; Value
+</span><a href="#local-6989586621679309499"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 forall a. ToJSON a =&gt; a -&gt; Value
 </span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value) -&gt; (Name -&gt; Text) -&gt; Name -&gt; Value
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -389,8 +389,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">Name.toText</span></span><span>
 </span><span id="line-165"></span><span>
 </span><span id="line-166"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-167"></span><span>  </span><span id="local-6989586621679309494"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Name -&gt; Declare (Definitions Schema) NamedSchema
-</span><a href="#local-6989586621679309494"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Name
+</span><span id="line-167"></span><span>  </span><span id="local-6989586621679309496"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Name -&gt; Declare (Definitions Schema) NamedSchema
+</span><a href="#local-6989586621679309496"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Name
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Proxy Text -&gt; Declare (Definitions Schema) NamedSchema
 forall a.
 ToSchema a =&gt;
@@ -399,10 +399,10 @@ Proxy a -&gt; Declare (Definitions Schema) NamedSchema
 forall k (t :: k). Proxy t
 </span><span class="hs-identifier hs-var">Proxy</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-168"></span><span>
-</span><span id="line-169"></span><span id="local-6989586621679309492"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span><span>
+</span><span id="line-169"></span><span id="local-6989586621679309494"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span></span><span>
 </span><span id="line-170"></span><span>
 </span><span id="line-171"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-172"></span><span>  </span><span id="local-6989586621679309489"><span class="annot"><span class="annottext">toParamSchema :: Proxy ShortHash -&gt; Schema
+</span><span id="line-172"></span><span>  </span><span id="local-6989586621679309491"><span class="annot"><span class="annottext">toParamSchema :: Proxy ShortHash -&gt; Schema
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy ShortHash
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-173"></span><span>    </span><span class="annot"><span class="annottext">Schema
@@ -433,8 +433,8 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;@abcdef&quot;</span></span><span>
 </span><span id="line-176"></span><span>
 </span><span id="line-177"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-178"></span><span>  </span><span id="local-6989586621679309482"><span class="annot"><span class="annottext">toParamSchema :: Proxy Reference -&gt; Schema
-</span><a href="#local-6989586621679309482"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Reference
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621679309484"><span class="annot"><span class="annottext">toParamSchema :: Proxy Reference -&gt; Schema
+</span><a href="#local-6989586621679309484"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Reference
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-179"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -464,8 +464,8 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;@abcdef&quot;</span></span><span>
 </span><span id="line-182"></span><span>
 </span><span id="line-183"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-184"></span><span>  </span><span id="local-6989586621679309480"><span class="annot"><span class="annottext">toParamSchema :: Proxy Referent -&gt; Schema
-</span><a href="#local-6989586621679309480"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Referent
+</span><span id="line-184"></span><span>  </span><span id="local-6989586621679309482"><span class="annot"><span class="annottext">toParamSchema :: Proxy Referent -&gt; Schema
+</span><a href="#local-6989586621679309482"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Referent
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-185"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -495,8 +495,8 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;@abcdef&quot;</span></span><span>
 </span><span id="line-188"></span><span>
 </span><span id="line-189"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-190"></span><span>  </span><span id="local-6989586621679309478"><span class="annot"><span class="annottext">toParamSchema :: Proxy Name -&gt; Schema
-</span><a href="#local-6989586621679309478"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Name
+</span><span id="line-190"></span><span>  </span><span id="local-6989586621679309480"><span class="annot"><span class="annottext">toParamSchema :: Proxy Name -&gt; Schema
+</span><a href="#local-6989586621679309480"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Name
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-191"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -526,8 +526,8 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;base.List.map&quot;</span></span><span>
 </span><span id="line-194"></span><span>
 </span><span id="line-195"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-196"></span><span>  </span><span id="local-6989586621679309476"><span class="annot"><span class="annottext">toParamSchema :: Proxy Path -&gt; Schema
-</span><a href="#local-6989586621679309476"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Path
+</span><span id="line-196"></span><span>  </span><span id="local-6989586621679309478"><span class="annot"><span class="annottext">toParamSchema :: Proxy Path -&gt; Schema
+</span><a href="#local-6989586621679309478"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Path
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-197"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -557,8 +557,8 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;base.List&quot;</span></span><span>
 </span><span id="line-200"></span><span>
 </span><span id="line-201"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Relative</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-202"></span><span>  </span><span id="local-6989586621679309474"><span class="annot"><span class="annottext">toParamSchema :: Proxy Relative -&gt; Schema
-</span><a href="#local-6989586621679309474"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Relative
+</span><span id="line-202"></span><span>  </span><span id="local-6989586621679309476"><span class="annot"><span class="annottext">toParamSchema :: Proxy Relative -&gt; Schema
+</span><a href="#local-6989586621679309476"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Relative
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-203"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -588,7 +588,7 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-string">&quot;base.List&quot;</span></span><span>
 </span><span id="line-206"></span><span>
 </span><span id="line-207"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParam</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">QueryParam</span></span><span> </span><span class="annot"><span class="hs-string">&quot;name&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-208"></span><span>  </span><span id="local-6989586621679309471"><span class="annot"><span class="annottext">toParam :: Proxy (QueryParam &quot;name&quot; Name) -&gt; DocQueryParam
+</span><span id="line-208"></span><span>  </span><span id="local-6989586621679309473"><span class="annot"><span class="annottext">toParam :: Proxy (QueryParam &quot;name&quot; Name) -&gt; DocQueryParam
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toParam</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy (QueryParam &quot;name&quot; Name)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-209"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; String -&gt; ParamKind -&gt; DocQueryParam
@@ -601,44 +601,44 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span id="line-213"></span><span>      </span><span class="annot"><span class="annottext">ParamKind
 </span><span class="hs-identifier hs-var">Normal</span></span><span>
 </span><span id="line-214"></span><span>
-</span><span id="line-215"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309464"><span id="local-6989586621679309466"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-216"></span><span>  </span><span id="local-6989586621679309462"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text Name
+</span><span id="line-215"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309466"><span id="local-6989586621679309468"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-216"></span><span>  </span><span id="local-6989586621679309464"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text Name
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseQueryParam</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Name
 </span><span class="hs-identifier hs-var">Name.fromTextEither</span></span><span>
 </span><span id="line-217"></span><span>
-</span><span id="line-218"></span><span id="local-6989586621679309455"><span id="local-6989586621679309457"><span id="local-6989586621679309459"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span></span></span><span>
+</span><span id="line-218"></span><span id="local-6989586621679309457"><span id="local-6989586621679309459"><span id="local-6989586621679309461"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span></span></span><span>
 </span><span id="line-219"></span><span>
-</span><span id="line-220"></span><span id="local-6989586621679309447"><span id="local-6989586621679309449"><span id="local-6989586621679309451"><span id="local-6989586621679309453"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span></span></span></span><span>
+</span><span id="line-220"></span><span id="local-6989586621679309449"><span id="local-6989586621679309451"><span id="local-6989586621679309453"><span id="local-6989586621679309455"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span></span></span></span><span>
 </span><span id="line-221"></span><span>
-</span><span id="line-222"></span><span id="local-6989586621679309445"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span><span>
+</span><span id="line-222"></span><span id="local-6989586621679309447"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span></span><span>
 </span><span id="line-223"></span><span>
-</span><span id="line-224"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309438"><span id="local-6989586621679309440"><span id="local-6989586621679309443"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ConstructorType</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-225"></span><span>  </span><span id="local-6989586621679309437"><span class="annot"><span class="annottext">toEncoding :: ConstructorType -&gt; Encoding
-</span><a href="#local-6989586621679309437"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; ConstructorType -&gt; Encoding
+</span><span id="line-224"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309440"><span id="local-6989586621679309442"><span id="local-6989586621679309445"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ConstructorType</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-225"></span><span>  </span><span id="local-6989586621679309439"><span class="annot"><span class="annottext">toEncoding :: ConstructorType -&gt; Encoding
+</span><a href="#local-6989586621679309439"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEncoding</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; ConstructorType -&gt; Encoding
 forall a.
 (Generic a, GToJSON' Encoding Zero (Rep a)) =&gt;
 Options -&gt; a -&gt; Encoding
 </span><span class="hs-identifier hs-var">genericToEncoding</span></span><span> </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier hs-var">defaultOptions</span></span><span>
 </span><span id="line-226"></span><span>
-</span><span id="line-227"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309432"><span id="local-6989586621679309434"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Relative</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-228"></span><span>  </span><span id="local-6989586621679309431"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Relative
-</span><a href="#local-6989586621679309431"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309430"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309430"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
+</span><span id="line-227"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309434"><span id="local-6989586621679309436"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Relative</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-228"></span><span>  </span><span id="local-6989586621679309433"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Relative
+</span><a href="#local-6989586621679309433"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309432"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309432"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
 </span><span class="hs-identifier hs-var">Path.parsePath'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309430"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-229"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309428"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309428"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Relative
+</span><a href="#local-6989586621679309432"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-229"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309430"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679309430"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Relative
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309428"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-230"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.RelativePath'</span></span><span> </span><span id="local-6989586621679309426"><span class="annot"><span class="annottext">Relative
-</span><a href="#local-6989586621679309426"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Relative -&gt; Either Text Relative
+</span><a href="#local-6989586621679309430"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-230"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.RelativePath'</span></span><span> </span><span id="local-6989586621679309428"><span class="annot"><span class="annottext">Relative
+</span><a href="#local-6989586621679309428"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Relative -&gt; Either Text Relative
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Relative
-</span><a href="#local-6989586621679309426"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679309428"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-231"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.AbsolutePath'</span></span><span> </span><span class="annot"><span class="annottext">Absolute
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Relative
 forall a b. a -&gt; Either a b
@@ -648,30 +648,30 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;Expected relative path, but &quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309430"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><a href="#local-6989586621679309432"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; was absolute.&quot;</span></span><span>
 </span><span id="line-232"></span><span>
-</span><span id="line-233"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309418"><span id="local-6989586621679309420"><span id="local-6989586621679309422"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Relative</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-234"></span><span>  </span><span id="local-6989586621679309417"><span class="annot"><span class="annottext">toUrlPiece :: Relative -&gt; Text
+</span><span id="line-233"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309420"><span id="local-6989586621679309422"><span id="local-6989586621679309424"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Relative</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-234"></span><span>  </span><span id="local-6989586621679309419"><span class="annot"><span class="annottext">toUrlPiece :: Relative -&gt; Text
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toUrlPiece</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Relative -&gt; Text
 forall a. Show a =&gt; a -&gt; Text
 </span><span class="hs-identifier hs-var">tShow</span></span><span>
 </span><span id="line-235"></span><span>
-</span><span id="line-236"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309410"><span id="local-6989586621679309412"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-237"></span><span>  </span><span id="local-6989586621679309409"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Absolute
-</span><a href="#local-6989586621679309409"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309408"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309408"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
+</span><span id="line-236"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309412"><span id="local-6989586621679309414"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-237"></span><span>  </span><span id="local-6989586621679309411"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Absolute
+</span><a href="#local-6989586621679309411"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309410"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309410"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
 </span><span class="hs-identifier hs-var">Path.parsePath'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309408"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-238"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309407"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309407"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Absolute
+</span><a href="#local-6989586621679309410"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-238"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309409"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679309409"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Absolute
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309407"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309409"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-239"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.RelativePath'</span></span><span> </span><span class="annot"><span class="annottext">Relative
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Absolute
 forall a b. a -&gt; Either a b
@@ -681,26 +681,26 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;Expected absolute path, but &quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309408"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><a href="#local-6989586621679309410"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; was relative.&quot;</span></span><span>
-</span><span id="line-240"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.AbsolutePath'</span></span><span> </span><span id="local-6989586621679309406"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679309406"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Either Text Absolute
+</span><span id="line-240"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.AbsolutePath'</span></span><span> </span><span id="local-6989586621679309408"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679309408"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Either Text Absolute
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679309406"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679309408"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-241"></span><span>
-</span><span id="line-242"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309399"><span id="local-6989586621679309401"><span id="local-6989586621679309403"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-243"></span><span>  </span><span id="local-6989586621679309398"><span class="annot"><span class="annottext">toUrlPiece :: Absolute -&gt; Text
-</span><a href="#local-6989586621679309398"><span class="hs-identifier hs-var hs-var hs-var hs-var">toUrlPiece</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Text
+</span><span id="line-242"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309401"><span id="local-6989586621679309403"><span id="local-6989586621679309405"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-243"></span><span>  </span><span id="local-6989586621679309400"><span class="annot"><span class="annottext">toUrlPiece :: Absolute -&gt; Text
+</span><a href="#local-6989586621679309400"><span class="hs-identifier hs-var hs-var hs-var hs-var">toUrlPiece</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Text
 forall a. Show a =&gt; a -&gt; Text
 </span><span class="hs-identifier hs-var">tShow</span></span><span>
 </span><span id="line-244"></span><span>
-</span><span id="line-245"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309393"><span id="local-6989586621679309395"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-246"></span><span>  </span><span id="local-6989586621679309392"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Path'
-</span><a href="#local-6989586621679309392"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309391"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309391"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Text) -&gt; Either String Path' -&gt; Either Text Path'
+</span><span id="line-245"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309395"><span id="local-6989586621679309397"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-246"></span><span>  </span><span id="local-6989586621679309394"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Path'
+</span><a href="#local-6989586621679309394"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309393"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309393"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Text) -&gt; Either String Path' -&gt; Either Text Path'
 forall a c b. (a -&gt; c) -&gt; Either a b -&gt; Either c b
 </span><span class="hs-identifier hs-var">mapLeft</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">(Either String Path' -&gt; Either Text Path')
@@ -709,33 +709,33 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
 </span><span class="hs-identifier hs-var">Path.parsePath'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309391"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309393"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-247"></span><span>
-</span><span id="line-248"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309384"><span id="local-6989586621679309386"><span id="local-6989586621679309388"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-249"></span><span>  </span><span id="local-6989586621679309383"><span class="annot"><span class="annottext">toUrlPiece :: Path' -&gt; Text
-</span><a href="#local-6989586621679309383"><span class="hs-identifier hs-var hs-var hs-var hs-var">toUrlPiece</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path' -&gt; Text
+</span><span id="line-248"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309386"><span id="local-6989586621679309388"><span id="local-6989586621679309390"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-249"></span><span>  </span><span id="local-6989586621679309385"><span class="annot"><span class="annottext">toUrlPiece :: Path' -&gt; Text
+</span><a href="#local-6989586621679309385"><span class="hs-identifier hs-var hs-var hs-var hs-var">toUrlPiece</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path' -&gt; Text
 forall a. Show a =&gt; a -&gt; Text
 </span><span class="hs-identifier hs-var">tShow</span></span><span>
 </span><span id="line-250"></span><span>
-</span><span id="line-251"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309378"><span id="local-6989586621679309380"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-252"></span><span>  </span><span id="local-6989586621679309377"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Path
-</span><a href="#local-6989586621679309377"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309376"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309376"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
+</span><span id="line-251"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309380"><span id="local-6989586621679309382"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-252"></span><span>  </span><span id="local-6989586621679309379"><span class="annot"><span class="annottext">parseUrlPiece :: Text -&gt; Either Text Path
+</span><a href="#local-6989586621679309379"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseUrlPiece</span></a></span></span><span> </span><span id="local-6989586621679309378"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309378"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String Path'
 </span><span class="hs-identifier hs-var">Path.parsePath'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309376"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-253"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309375"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309375"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Path
+</span><a href="#local-6989586621679309378"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-253"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679309377"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679309377"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Path
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679309375"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-254"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.RelativePath'</span></span><span> </span><span id="local-6989586621679309374"><span class="annot"><span class="annottext">Relative
-</span><a href="#local-6989586621679309374"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Either Text Path
+</span><a href="#local-6989586621679309377"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-254"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.RelativePath'</span></span><span> </span><span id="local-6989586621679309376"><span class="annot"><span class="annottext">Relative
+</span><a href="#local-6989586621679309376"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Either Text Path
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Relative -&gt; Path
 </span><span class="hs-identifier hs-var hs-var">Path.unrelative</span></span><span> </span><span class="annot"><span class="annottext">Relative
-</span><a href="#local-6989586621679309374"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309376"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-255"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.AbsolutePath'</span></span><span> </span><span class="annot"><span class="annottext">Absolute
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Either Text Path
 forall a b. a -&gt; Either a b
@@ -745,13 +745,13 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;Expected relative path, but &quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309376"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><a href="#local-6989586621679309378"><span class="hs-identifier hs-var">txt</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; was absolute.&quot;</span></span><span>
 </span><span id="line-256"></span><span>
 </span><span id="line-257"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToCapture</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Capture</span></span><span> </span><span class="annot"><span class="hs-string">&quot;hash&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortHash</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-258"></span><span>  </span><span id="local-6989586621679309370"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; ShortHash) -&gt; DocCapture
+</span><span id="line-258"></span><span>  </span><span id="local-6989586621679309372"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; ShortHash) -&gt; DocCapture
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;hash&quot; ShortHash)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-259"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; String -&gt; DocCapture
@@ -762,8 +762,8 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-string">&quot;A shorthash for a term or type. E.g. @abcdef, #abcdef, @@builtin, ##builtin, abcdef&quot;</span></span><span>
 </span><span id="line-262"></span><span>
 </span><span id="line-263"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToCapture</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Capture</span></span><span> </span><span class="annot"><span class="hs-string">&quot;hash&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-264"></span><span>  </span><span id="local-6989586621679309367"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; Reference) -&gt; DocCapture
-</span><a href="#local-6989586621679309367"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;hash&quot; Reference)
+</span><span id="line-264"></span><span>  </span><span id="local-6989586621679309369"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; Reference) -&gt; DocCapture
+</span><a href="#local-6989586621679309369"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;hash&quot; Reference)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-265"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; String -&gt; DocCapture
 </span><span class="hs-identifier hs-var">DocCapture</span></span><span>
@@ -773,8 +773,8 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-string">&quot;A hash reference for a type. E.g. @abcdef, #abcdef, @@builtin, ##builtin, abcdef&quot;</span></span><span>
 </span><span id="line-268"></span><span>
 </span><span id="line-269"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToCapture</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Capture</span></span><span> </span><span class="annot"><span class="hs-string">&quot;hash&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent.Referent</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-270"></span><span>  </span><span id="local-6989586621679309365"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; Referent) -&gt; DocCapture
-</span><a href="#local-6989586621679309365"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;hash&quot; Referent)
+</span><span id="line-270"></span><span>  </span><span id="local-6989586621679309367"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;hash&quot; Referent) -&gt; DocCapture
+</span><a href="#local-6989586621679309367"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;hash&quot; Referent)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-271"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; String -&gt; DocCapture
 </span><span class="hs-identifier hs-var">DocCapture</span></span><span>
@@ -784,8 +784,8 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-string">&quot;A hash reference for a term. E.g. @abcdef, #abcdef, @@builtin, ##builtin, abcdef&quot;</span></span><span>
 </span><span id="line-274"></span><span>
 </span><span id="line-275"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToCapture</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Capture</span></span><span> </span><span class="annot"><span class="hs-string">&quot;fqn&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-276"></span><span>  </span><span id="local-6989586621679309363"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;fqn&quot; Name) -&gt; DocCapture
-</span><a href="#local-6989586621679309363"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;fqn&quot; Name)
+</span><span id="line-276"></span><span>  </span><span id="local-6989586621679309365"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;fqn&quot; Name) -&gt; DocCapture
+</span><a href="#local-6989586621679309365"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;fqn&quot; Name)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-277"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; String -&gt; DocCapture
 </span><span class="hs-identifier hs-var">DocCapture</span></span><span>
@@ -795,8 +795,8 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-string">&quot;The fully qualified name of a definition.&quot;</span></span><span>
 </span><span id="line-280"></span><span>
 </span><span id="line-281"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToCapture</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Capture</span></span><span> </span><span class="annot"><span class="hs-string">&quot;namespace&quot;</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-282"></span><span>  </span><span id="local-6989586621679309361"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;namespace&quot; Path) -&gt; DocCapture
-</span><a href="#local-6989586621679309361"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;namespace&quot; Path)
+</span><span id="line-282"></span><span>  </span><span id="local-6989586621679309363"><span class="annot"><span class="annottext">toCapture :: Proxy (Capture &quot;namespace&quot; Path) -&gt; DocCapture
+</span><a href="#local-6989586621679309363"><span class="hs-identifier hs-var hs-var hs-var hs-var">toCapture</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (Capture &quot;namespace&quot; Path)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-283"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; String -&gt; DocCapture
 </span><span class="hs-identifier hs-var">DocCapture</span></span><span>
@@ -805,18 +805,18 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span id="line-285"></span><span>      </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;E.g. base.List&quot;</span></span><span>
 </span><span id="line-286"></span><span>
-</span><span id="line-287"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309354"><span id="local-6989586621679309356"><span id="local-6989586621679309358"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-288"></span><span>  </span><span id="local-6989586621679309353"><span class="annot"><span class="annottext">toJSON :: Path -&gt; Value
-</span><a href="#local-6989586621679309353"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span id="local-6989586621679309352"><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679309352"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-287"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309356"><span id="local-6989586621679309358"><span id="local-6989586621679309360"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-288"></span><span>  </span><span id="local-6989586621679309355"><span class="annot"><span class="annottext">toJSON :: Path -&gt; Value
+</span><a href="#local-6989586621679309355"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span id="local-6989586621679309354"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679309354"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; Text
 forall a. Show a =&gt; a -&gt; Text
 </span><span class="hs-identifier hs-var">tShow</span></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679309352"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679309354"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-289"></span><span>
 </span><span id="line-290"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-291"></span><span>  </span><span id="local-6989586621679309349"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Path -&gt; Declare (Definitions Schema) NamedSchema
-</span><a href="#local-6989586621679309349"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Path
+</span><span id="line-291"></span><span>  </span><span id="local-6989586621679309351"><span class="annot"><span class="annottext">declareNamedSchema :: Proxy Path -&gt; Declare (Definitions Schema) NamedSchema
+</span><a href="#local-6989586621679309351"><span class="hs-identifier hs-var hs-var hs-var hs-var">declareNamedSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy Path
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Proxy Text -&gt; Declare (Definitions Schema) NamedSchema
 forall a.
 ToSchema a =&gt;
@@ -825,9 +825,9 @@ Proxy a -&gt; Declare (Definitions Schema) NamedSchema
 forall k (t :: k). Proxy t
 </span><span class="hs-identifier hs-var">Proxy</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-292"></span><span>
-</span><span id="line-293"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309342"><span id="local-6989586621679309344"><span id="local-6989586621679309346"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-294"></span><span>  </span><span id="local-6989586621679309341"><span class="annot"><span class="annottext">toJSON :: HashQualified Name -&gt; Value
-</span><a href="#local-6989586621679309341"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-293"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309344"><span id="local-6989586621679309346"><span id="local-6989586621679309348"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-294"></span><span>  </span><span id="local-6989586621679309343"><span class="annot"><span class="annottext">toJSON :: HashQualified Name -&gt; Value
+</span><a href="#local-6989586621679309343"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value)
 -&gt; (HashQualified Name -&gt; Text) -&gt; HashQualified Name -&gt; Value
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -836,9 +836,9 @@ forall n. (n -&gt; Text) -&gt; HashQualified n -&gt; Text
 </span><span class="hs-identifier hs-var">HQ.toTextWith</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Text
 </span><span class="hs-identifier hs-var">Name.toText</span></span><span>
 </span><span id="line-295"></span><span>
-</span><span id="line-296"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309333"><span id="local-6989586621679309335"><span id="local-6989586621679309337"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-297"></span><span>  </span><span id="local-6989586621679309332"><span class="annot"><span class="annottext">toJSON :: HashQualified NameSegment -&gt; Value
-</span><a href="#local-6989586621679309332"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-296"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309335"><span id="local-6989586621679309337"><span id="local-6989586621679309339"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-297"></span><span>  </span><span id="local-6989586621679309334"><span class="annot"><span class="annottext">toJSON :: HashQualified NameSegment -&gt; Value
+</span><a href="#local-6989586621679309334"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value)
 -&gt; (HashQualified NameSegment -&gt; Text)
 -&gt; HashQualified NameSegment
@@ -849,9 +849,9 @@ forall n. (n -&gt; Text) -&gt; HashQualified n -&gt; Text
 </span><span class="hs-identifier hs-var">HQ.toTextWith</span></span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Text
 </span><span class="hs-identifier hs-var hs-var">NameSegment.toText</span></span><span>
 </span><span id="line-298"></span><span>
-</span><span id="line-299"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309324"><span id="local-6989586621679309326"><span id="local-6989586621679309328"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-300"></span><span>  </span><span id="local-6989586621679309323"><span class="annot"><span class="annottext">toJSON :: HashQualified Name -&gt; Value
-</span><a href="#local-6989586621679309323"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-299"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309326"><span id="local-6989586621679309328"><span id="local-6989586621679309330"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-300"></span><span>  </span><span id="local-6989586621679309325"><span class="annot"><span class="annottext">toJSON :: HashQualified Name -&gt; Value
+</span><a href="#local-6989586621679309325"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value)
 -&gt; (HashQualified Name -&gt; Text) -&gt; HashQualified Name -&gt; Value
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -860,9 +860,9 @@ forall n. (n -&gt; Text) -&gt; HashQualified n -&gt; Text
 </span><span class="hs-identifier hs-var">HQ'.toTextWith</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Text
 </span><span class="hs-identifier hs-var">Name.toText</span></span><span>
 </span><span id="line-301"></span><span>
-</span><span id="line-302"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309315"><span id="local-6989586621679309317"><span id="local-6989586621679309319"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-303"></span><span>  </span><span id="local-6989586621679309314"><span class="annot"><span class="annottext">toJSON :: HashQualified NameSegment -&gt; Value
-</span><a href="#local-6989586621679309314"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
+</span><span id="line-302"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309317"><span id="local-6989586621679309319"><span id="local-6989586621679309321"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-303"></span><span>  </span><span id="local-6989586621679309316"><span class="annot"><span class="annottext">toJSON :: HashQualified NameSegment -&gt; Value
+</span><a href="#local-6989586621679309316"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Value
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Value)
 -&gt; (HashQualified NameSegment -&gt; Text)
 -&gt; HashQualified NameSegment
@@ -873,16 +873,16 @@ forall n. (n -&gt; Text) -&gt; HashQualified n -&gt; Text
 </span><span class="hs-identifier hs-var">HQ'.toTextWith</span></span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Text
 </span><span class="hs-identifier hs-var hs-var">NameSegment.toText</span></span><span>
 </span><span id="line-304"></span><span>
-</span><span id="line-305"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309311"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-306"></span><span>  </span><span id="local-6989586621679309310"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified Name)
-</span><a href="#local-6989586621679309310"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-305"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309313"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-306"></span><span>  </span><span id="local-6989586621679309312"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified Name)
+</span><a href="#local-6989586621679309312"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 -&gt; (Text -&gt; Parser (HashQualified Name))
 -&gt; Value
 -&gt; Parser (HashQualified Name)
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;HashQualified'&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309309"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309309"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-string">&quot;HashQualified'&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309311"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309311"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-307"></span><span>    </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
 -&gt; (HashQualified Name -&gt; Parser (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
@@ -898,18 +898,18 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (HashQualified Name)
 </span><span class="hs-identifier hs-var">HQ'.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309309"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309311"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-308"></span><span>
-</span><span id="line-309"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309306"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-310"></span><span>  </span><span id="local-6989586621679309305"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified Name)
-</span><a href="#local-6989586621679309305"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-309"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309308"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-310"></span><span>  </span><span id="local-6989586621679309307"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified Name)
+</span><a href="#local-6989586621679309307"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 -&gt; (Text -&gt; Parser (HashQualified Name))
 -&gt; Value
 -&gt; Parser (HashQualified Name)
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;HashQualified&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309304"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309304"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-string">&quot;HashQualified&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309306"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309306"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-311"></span><span>    </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
 -&gt; (HashQualified Name -&gt; Parser (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
@@ -925,20 +925,20 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (HashQualified Name)
 </span><span class="hs-identifier hs-var">HQ.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309304"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309306"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-312"></span><span>
-</span><span id="line-313"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309301"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-314"></span><span>  </span><span id="local-6989586621679309300"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified NameSegment)
-</span><a href="#local-6989586621679309300"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-313"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309303"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-314"></span><span>  </span><span id="local-6989586621679309302"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified NameSegment)
+</span><a href="#local-6989586621679309302"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 -&gt; (Text -&gt; Parser (HashQualified NameSegment))
 -&gt; Value
 -&gt; Parser (HashQualified NameSegment)
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;HashQualified'&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309299"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309299"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-315"></span><span>    </span><span id="local-6989586621679309298"><span class="annot"><span class="annottext">HashQualified Name
-</span><a href="#local-6989586621679309298"><span class="hs-identifier hs-var">hqName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
+</span><span class="hs-string">&quot;HashQualified'&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309301"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309301"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-315"></span><span>    </span><span id="local-6989586621679309300"><span class="annot"><span class="annottext">HashQualified Name
+</span><a href="#local-6989586621679309300"><span class="hs-identifier hs-var">hqName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
 -&gt; (HashQualified Name -&gt; Parser (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
 -&gt; Parser (HashQualified Name)
@@ -953,7 +953,7 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (HashQualified Name)
 </span><span class="hs-identifier hs-var">HQ'.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309299"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309301"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-316"></span><span>    </span><span class="annot"><span class="annottext">HashQualified Name
 -&gt; (Name -&gt; Parser NameSegment)
 -&gt; Parser (HashQualified NameSegment)
@@ -961,15 +961,15 @@ forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Traversable t, Applicative f) =&gt;
 t a -&gt; (a -&gt; f b) -&gt; f (t b)
 </span><span class="hs-identifier hs-var">for</span></span><span> </span><span class="annot"><span class="annottext">HashQualified Name
-</span><a href="#local-6989586621679309298"><span class="hs-identifier hs-var">hqName</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309296"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679309296"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; NonEmpty NameSegment
+</span><a href="#local-6989586621679309300"><span class="hs-identifier hs-var">hqName</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309298"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679309298"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; NonEmpty NameSegment
 </span><span class="hs-identifier hs-var">Name.segments</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679309296"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-317"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679309294"><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679309294"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Parser NameSegment
+</span><a href="#local-6989586621679309298"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-317"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679309296"><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679309296"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Parser NameSegment
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679309294"><span class="hs-identifier hs-var">ns</span></a></span><span>
+</span><a href="#local-6989586621679309296"><span class="hs-identifier hs-var">ns</span></a></span><span>
 </span><span id="line-318"></span><span>      </span><span class="annot"><span class="annottext">NonEmpty NameSegment
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Parser NameSegment
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
@@ -980,20 +980,20 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309299"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309301"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-319"></span><span>
-</span><span id="line-320"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309290"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-321"></span><span>  </span><span id="local-6989586621679309289"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified NameSegment)
-</span><a href="#local-6989586621679309289"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-320"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309292"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-321"></span><span>  </span><span id="local-6989586621679309291"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (HashQualified NameSegment)
+</span><a href="#local-6989586621679309291"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 -&gt; (Text -&gt; Parser (HashQualified NameSegment))
 -&gt; Value
 -&gt; Parser (HashQualified NameSegment)
 forall a. String -&gt; (Text -&gt; Parser a) -&gt; Value -&gt; Parser a
 </span><span class="hs-identifier hs-var">Aeson.withText</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;HashQualified&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309288"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309288"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-322"></span><span>    </span><span id="local-6989586621679309287"><span class="annot"><span class="annottext">HashQualified Name
-</span><a href="#local-6989586621679309287"><span class="hs-identifier hs-var">hqName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
+</span><span class="hs-string">&quot;HashQualified&quot;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309290"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309290"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-322"></span><span>    </span><span id="local-6989586621679309289"><span class="annot"><span class="annottext">HashQualified Name
+</span><a href="#local-6989586621679309289"><span class="hs-identifier hs-var">hqName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parser (HashQualified Name)
 -&gt; (HashQualified Name -&gt; Parser (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
 -&gt; Parser (HashQualified Name)
@@ -1008,7 +1008,7 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (HashQualified Name)
 </span><span class="hs-identifier hs-var">HQ.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309288"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309290"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-323"></span><span>    </span><span class="annot"><span class="annottext">HashQualified Name
 -&gt; (Name -&gt; Parser NameSegment)
 -&gt; Parser (HashQualified NameSegment)
@@ -1016,15 +1016,15 @@ forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Traversable t, Applicative f) =&gt;
 t a -&gt; (a -&gt; f b) -&gt; f (t b)
 </span><span class="hs-identifier hs-var">for</span></span><span> </span><span class="annot"><span class="annottext">HashQualified Name
-</span><a href="#local-6989586621679309287"><span class="hs-identifier hs-var">hqName</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309286"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679309286"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; NonEmpty NameSegment
+</span><a href="#local-6989586621679309289"><span class="hs-identifier hs-var">hqName</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679309288"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679309288"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; NonEmpty NameSegment
 </span><span class="hs-identifier hs-var">Name.segments</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679309286"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-324"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679309285"><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679309285"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Parser NameSegment
+</span><a href="#local-6989586621679309288"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-324"></span><span>      </span><span class="hs-special">(</span><span id="local-6989586621679309287"><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679309287"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:|</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Parser NameSegment
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679309285"><span class="hs-identifier hs-var">ns</span></a></span><span>
+</span><a href="#local-6989586621679309287"><span class="hs-identifier hs-var">ns</span></a></span><span>
 </span><span id="line-325"></span><span>      </span><span class="annot"><span class="annottext">NonEmpty NameSegment
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Parser NameSegment
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
@@ -1035,17 +1035,17 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309288"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309290"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-326"></span><span>
-</span><span id="line-327"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309281"><span id="local-6989586621679309283"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-328"></span><span>  </span><span id="local-6989586621679309279"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text (HashQualified Name)
-</span><a href="#local-6989586621679309279"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseQueryParam</span></a></span></span><span> </span><span id="local-6989586621679309278"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309278"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-327"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309283"><span id="local-6989586621679309285"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-328"></span><span>  </span><span id="local-6989586621679309281"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text (HashQualified Name)
+</span><a href="#local-6989586621679309281"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseQueryParam</span></a></span></span><span> </span><span id="local-6989586621679309280"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309280"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-329"></span><span>    </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replace</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;@&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309278"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309280"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-330"></span><span>      </span><span class="annot"><span class="annottext">Text
 -&gt; (Text -&gt; Maybe (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
@@ -1068,15 +1068,15 @@ forall a b. a -&gt; Either a b
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span>
 </span><span id="line-332"></span><span>
-</span><span id="line-333"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309274"><span id="local-6989586621679309276"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-334"></span><span>  </span><span id="local-6989586621679309272"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text (HashQualified Name)
-</span><a href="#local-6989586621679309272"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseQueryParam</span></a></span></span><span> </span><span id="local-6989586621679309271"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309271"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-333"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309276"><span id="local-6989586621679309278"><span class="annot"><span class="hs-identifier hs-type">FromHttpApiData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-334"></span><span>  </span><span id="local-6989586621679309274"><span class="annot"><span class="annottext">parseQueryParam :: Text -&gt; Either Text (HashQualified Name)
+</span><a href="#local-6989586621679309274"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseQueryParam</span></a></span></span><span> </span><span id="local-6989586621679309273"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679309273"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-335"></span><span>    </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replace</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;@&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;#&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679309271"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679309273"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-336"></span><span>      </span><span class="annot"><span class="annottext">Text
 -&gt; (Text -&gt; Maybe (HashQualified Name))
 -&gt; Maybe (HashQualified Name)
@@ -1099,9 +1099,9 @@ forall a b. a -&gt; Either a b
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span>
 </span><span id="line-338"></span><span>
-</span><span id="line-339"></span><span id="local-6989586621679309270"><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309270"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-340"></span><span>  </span><span id="local-6989586621679309268"><span class="annot"><span class="annottext">toParamSchema :: Proxy (HashQualified n) -&gt; Schema
-</span><a href="#local-6989586621679309268"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (HashQualified n)
+</span><span id="line-339"></span><span id="local-6989586621679309272"><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309272"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-340"></span><span>  </span><span id="local-6989586621679309270"><span class="annot"><span class="annottext">toParamSchema :: Proxy (HashQualified n) -&gt; Schema
+</span><a href="#local-6989586621679309270"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (HashQualified n)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-341"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -1130,9 +1130,9 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;name@hash&quot;</span></span></span><span>
 </span><span id="line-344"></span><span>
-</span><span id="line-345"></span><span id="local-6989586621679309267"><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309267"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-346"></span><span>  </span><span id="local-6989586621679309265"><span class="annot"><span class="annottext">toParamSchema :: Proxy (HashQualified n) -&gt; Schema
-</span><a href="#local-6989586621679309265"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (HashQualified n)
+</span><span id="line-345"></span><span id="local-6989586621679309269"><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToParamSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309269"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-346"></span><span>  </span><span id="local-6989586621679309267"><span class="annot"><span class="annottext">toParamSchema :: Proxy (HashQualified n) -&gt; Schema
+</span><a href="#local-6989586621679309267"><span class="hs-identifier hs-var hs-var hs-var hs-var">toParamSchema</span></a></span></span><span> </span><span class="annot"><span class="annottext">Proxy (HashQualified n)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-347"></span><span>    </span><span class="annot"><span class="annottext">Schema
 forall a. Monoid a =&gt; a
@@ -1161,14 +1161,14 @@ forall s t a b. ASetter s t a (Maybe b) -&gt; b -&gt; s -&gt; t
 </span><span class="hs-identifier hs-var">Aeson.String</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;name@hash&quot;</span></span></span><span>
 </span><span id="line-350"></span><span>
-</span><span id="line-351"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309259"><span id="local-6989586621679309261"><span id="local-6989586621679309263"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-352"></span><span>  </span><span id="local-6989586621679309257"><span class="annot"><span class="annottext">toQueryParam :: Name -&gt; Text
-</span><a href="#local-6989586621679309257"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Text
+</span><span id="line-351"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679309261"><span id="local-6989586621679309263"><span id="local-6989586621679309265"><span class="annot"><span class="hs-identifier hs-type">ToHttpApiData</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-352"></span><span>  </span><span id="local-6989586621679309259"><span class="annot"><span class="annottext">toQueryParam :: Name -&gt; Text
+</span><a href="#local-6989586621679309259"><span class="hs-identifier hs-var hs-var hs-var hs-var">toQueryParam</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Text
 </span><span class="hs-identifier hs-var">Name.toText</span></span><span>
 </span><span id="line-353"></span><span>
-</span><span id="line-354"></span><span id="local-6989586621679309254"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span></span><span>
+</span><span id="line-354"></span><span id="local-6989586621679309256"><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span></span><span>
 </span><span id="line-355"></span><span>
-</span><span id="line-356"></span><span id="local-6989586621679309251"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679309250"><span class="annot"><a href="#local-6989586621679309250"><span class="hs-keyword hs-type">anyclass</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309250"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309250"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-356"></span><span id="local-6989586621679309253"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679309252"><span class="annot"><a href="#local-6989586621679309252"><span class="hs-keyword hs-type">anyclass</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309252"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309252"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-357"></span><span>
-</span><span id="line-358"></span><span id="local-6989586621679309247"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679309246"><span class="annot"><a href="#local-6989586621679309246"><span class="hs-keyword hs-type">anyclass</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309246"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309246"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-358"></span><span id="local-6989586621679309249"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679309248"><span class="annot"><a href="#local-6989586621679309248"><span class="hs-keyword hs-type">anyclass</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="annot"><a href="#local-6989586621679309248"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToSchema</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ'.HashQualified</span></span><span> </span><span class="annot"><a href="#local-6989586621679309248"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-359"></span></pre></body></html>
