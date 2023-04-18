@@ -295,7 +295,7 @@ ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
 ProjectsI :: Input
 BranchesI :: Input
-BranchI :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
+BranchI :: Maybe LooseCodeOrProject -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
 data DiffNamespaceToPatchInput
 DiffNamespaceToPatchInput :: BranchId -> BranchId -> Split' -> DiffNamespaceToPatchInput
 [$sel:branchId1:DiffNamespaceToPatchInput] :: DiffNamespaceToPatchInput -> BranchId
@@ -351,7 +351,13 @@ FileLocation :: FilePath -> OutputLocation
 type PatchPath = Split'
 type BranchId = Either ShortCausalHash Path'
 type AbsBranchId = Either ShortCausalHash Absolute
-type LooseCodeOrProject = Either Path' (Maybe ProjectName, ProjectBranchName)
+
+-- | A lot of commands can take either a loose code path or a project
+--   branch in the same argument slot. Usually, those have distinct
+--   syntaxes, but sometimes it's ambiguous, in which case we'd parse a
+--   <a>These</a>. The command itself can decide what to do with the
+--   ambiguity.
+type LooseCodeOrProject = These Path' (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
 parseBranchId :: String -> Either String BranchId
 parseShortCausalHash :: String -> Either String ShortCausalHash
 type HashOrHQSplit' = Either ShortHash HQSplit'
@@ -1293,7 +1299,7 @@ NotImplementedYet :: Text -> Output
 data CreatedProjectBranchFrom
 CreatedProjectBranchFrom'LooseCode :: Absolute -> CreatedProjectBranchFrom
 CreatedProjectBranchFrom'Nothingness :: CreatedProjectBranchFrom
-CreatedProjectBranchFrom'OtherBranch :: ProjectAndBranch ProjectName ProjectBranchName -> CreatedProjectBranchFrom
+CreatedProjectBranchFrom'OtherBranch :: ProjectAndBranch Project ProjectBranch -> CreatedProjectBranchFrom
 CreatedProjectBranchFrom'ParentBranch :: ProjectBranchName -> CreatedProjectBranchFrom
 data DisplayDefinitionsOutput
 DisplayDefinitionsOutput :: (TermReference -> Bool) -> Maybe FilePath -> PrettyPrintEnvDecl -> Map Reference (DisplayObject (Type Symbol Ann) (Term Symbol Ann)) -> Map Reference (DisplayObject () (Decl Symbol Ann)) -> DisplayDefinitionsOutput
@@ -1533,7 +1539,7 @@ projectCreate :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
-branch :: InputPattern
+branchInputPattern :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -2531,7 +2537,7 @@ module Unison.Codebase.Editor.HandleInput.Branch
 
 -- | Create a new project branch from an existing project branch or
 --   namespace.
-handleBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
+handleBranch :: Maybe LooseCodeOrProject -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
