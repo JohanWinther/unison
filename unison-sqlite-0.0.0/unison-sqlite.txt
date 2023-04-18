@@ -39,7 +39,7 @@ execute_ :: Connection -> Sql -> IO ()
 queryStreamRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
 queryStreamCol :: forall a b r. (FromField b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
 queryListRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> IO [b]
-queryListRow2 :: FromRow a => Connection -> Sql2 -> IO [a]
+queryListRow2 :: forall a. FromRow a => Connection -> Sql2 -> IO [a]
 queryListCol :: forall a b. (FromField b, ToRow a) => Connection -> Sql -> a -> IO [b]
 queryListCol2 :: forall a. FromField a => Connection -> Sql2 -> IO [a]
 queryMaybeRow :: (ToRow a, FromRow b) => Connection -> Sql -> a -> IO (Maybe b)
@@ -135,6 +135,7 @@ instance Unison.Sqlite.Exception.SqliteExceptionReason Unison.Sqlite.Connection.
 instance GHC.Show.Show Unison.Sqlite.Connection.ExpectedExactlyOneRowException
 instance Unison.Sqlite.Exception.SqliteExceptionReason Unison.Sqlite.Connection.ExpectedAtMostOneRowException
 instance GHC.Show.Show Unison.Sqlite.Connection.ExpectedAtMostOneRowException
+instance GHC.Show.Show Unison.Sqlite.Connection.Query2
 instance GHC.Show.Show Unison.Sqlite.Connection.Query
 
 module Unison.Sqlite.Transaction
@@ -307,6 +308,8 @@ data Sql2
 --   For example, the query
 --   
 --   <pre>
+--   let qux = 5 :: Int
+--   
 --   [sql2|
 --     SELECT foo
 --     FROM bar
@@ -318,13 +321,16 @@ data Sql2
 --   
 --   <pre>
 --   Sql2
---     { query = "SELECT foo FROM bar WHERE baz = :qux"
---     , params = [":qux" := qux]
+--     { query = "SELECT foo FROM bar WHERE baz = ?"
+--     , params = [SQLInteger 5]
 --     }
 --   </pre>
 --   
 --   which, of course, will require a <tt>qux</tt> with a <a>ToField</a>
 --   instance in scope.
+--   
+--   There are three valid syntaxes for interpolating a variable:
+--   <tt>:colon</tt>, <tt>@at</tt>, and <tt>$dollar</tt>.
 sql2 :: QuasiQuoter
 
 -- | A <tt>VALUES</tt> literal.
