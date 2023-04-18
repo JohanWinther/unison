@@ -295,7 +295,20 @@ ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
 ProjectsI :: Input
 BranchesI :: Input
-BranchI :: Maybe LooseCodeOrProject -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
+BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
+
+-- | The source of a <a>$sel:branch:WriteGitRepo</a> command: what to make
+--   the new branch from.
+data BranchSourceI
+
+-- | Create a branch from the current context
+BranchSourceI'CurrentContext :: BranchSourceI
+
+-- | Create an empty branch
+BranchSourceI'Empty :: BranchSourceI
+
+-- | Create a branch from this loose-code-or-project
+BranchSourceI'LooseCodeOrProject :: LooseCodeOrProject -> BranchSourceI
 data DiffNamespaceToPatchInput
 DiffNamespaceToPatchInput :: BranchId -> BranchId -> Split' -> DiffNamespaceToPatchInput
 [$sel:branchId1:DiffNamespaceToPatchInput] :: DiffNamespaceToPatchInput -> BranchId
@@ -398,6 +411,8 @@ instance GHC.Classes.Eq Unison.Codebase.Editor.Input.Insistence
 instance GHC.Show.Show Unison.Codebase.Editor.Input.Insistence
 instance GHC.Show.Show Unison.Codebase.Editor.Input.PullMode
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.PullMode
+instance GHC.Show.Show Unison.Codebase.Editor.Input.BranchSourceI
+instance GHC.Classes.Eq Unison.Codebase.Editor.Input.BranchSourceI
 instance GHC.Show.Show Unison.Codebase.Editor.Input.DiffNamespaceToPatchInput
 instance GHC.Generics.Generic Unison.Codebase.Editor.Input.DiffNamespaceToPatchInput
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.DiffNamespaceToPatchInput
@@ -1280,6 +1295,8 @@ NoAssociatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBr
 LocalProjectBranchDoesntExist :: ProjectAndBranch ProjectName ProjectBranchName -> Output
 RemoteProjectDoesntExist :: URI -> ProjectName -> Output
 RemoteProjectBranchDoesntExist :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+RemoteProjectReleaseIsDeprecated :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+RemoteProjectPublishedReleaseCannotBeChanged :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RemoteProjectBranchHeadMismatch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 Unauthorized :: Text -> Output
 ServantClientError :: ClientError -> Output
@@ -1540,6 +1557,7 @@ projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
 branchInputPattern :: InputPattern
+branchEmptyInputPattern :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -2200,6 +2218,8 @@ SetProjectBranchHeadResponseNotFound :: SetProjectBranchHeadResponse
 
 -- | (expected, actual)
 SetProjectBranchHeadResponseExpectedCausalHashMismatch :: !Hash32 -> !Hash32 -> SetProjectBranchHeadResponse
+SetProjectBranchHeadResponsePublishedReleaseIsImmutable :: SetProjectBranchHeadResponse
+SetProjectBranchHeadResponseDeprecatedReleaseIsImmutable :: SetProjectBranchHeadResponse
 SetProjectBranchHeadResponseSuccess :: SetProjectBranchHeadResponse
 
 -- | Set a project branch head (can be a fast-forward or force-push).
@@ -2537,7 +2557,7 @@ module Unison.Codebase.Editor.HandleInput.Branch
 
 -- | Create a new project branch from an existing project branch or
 --   namespace.
-handleBranch :: Maybe LooseCodeOrProject -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
+handleBranch :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,

@@ -18,11 +18,11 @@
 </span><span id="line-18"></span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.Branches.html#handleBranches"><span class="hs-identifier hs-type">handleBranches</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-19"></span><span id="handleBranches"><span class="annot"><span class="annottext">handleBranches :: Cli ()
 </span><a href="Unison.Codebase.Editor.HandleInput.Branches.html#handleBranches"><span class="hs-identifier hs-var hs-var">handleBranches</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-20"></span><span>  </span><span id="local-6989586621679687686"><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679687686"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Project
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621679689066"><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679689066"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Project
 </span><a href="Unison.Cli.ProjectUtils.html#expectCurrentProject"><span class="hs-identifier hs-var">ProjectUtils.expectCurrentProject</span></a></span><span>
-</span><span id="line-21"></span><span>  </span><span id="local-6989586621679687684"><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
-</span><a href="#local-6989586621679687684"><span class="hs-identifier hs-var">branches</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction
+</span><span id="line-21"></span><span>  </span><span id="local-6989586621679689064"><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
+</span><a href="#local-6989586621679689064"><span class="hs-identifier hs-var">branches</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction
   (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
 -&gt; Cli
      (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
@@ -31,31 +31,31 @@ forall a. Transaction a -&gt; Cli a
 -&gt; Transaction
      (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
 </span><span class="hs-identifier hs-var">Queries.loadAllProjectBranchInfo</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679687686"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
+</span><a href="#local-6989586621679689066"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
 forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">IsLabel &quot;projectId&quot; (Getting ProjectId Project ProjectId)
 Getting ProjectId Project ProjectId
-</span><a href="#local-6989586621679687681"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679689061"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-22"></span><span>  </span><span class="annot"><span class="annottext">NumberedOutput -&gt; Cli ()
 </span><a href="Unison.Cli.Monad.html#respondNumbered"><span class="hs-identifier hs-var">Cli.respondNumbered</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName
 -&gt; [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])]
 -&gt; NumberedOutput
 </span><a href="Unison.Codebase.Editor.Output.html#ListBranches"><span class="hs-identifier hs-var">Output.ListBranches</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679687686"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectName Project ProjectName -&gt; ProjectName
+</span><a href="#local-6989586621679689066"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectName Project ProjectName -&gt; ProjectName
 forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">IsLabel &quot;name&quot; (Getting ProjectName Project ProjectName)
 Getting ProjectName Project ProjectName
-</span><a href="#local-6989586621679687678"><span class="hs-var">#name</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
+</span><a href="#local-6989586621679689058"><span class="hs-var">#name</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
 -&gt; [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])]
-</span><a href="#local-6989586621679687677"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
-</span><a href="#local-6989586621679687684"><span class="hs-identifier hs-var">branches</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679689057"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
+</span><a href="#local-6989586621679689064"><span class="hs-identifier hs-var">branches</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-23"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-24"></span><span>    </span><span class="annot"><a href="#local-6989586621679687677"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-24"></span><span>    </span><span class="annot"><a href="#local-6989586621679689057"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="hs-glyph">::</span><span>
 </span><span id="line-25"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-26"></span><span>      </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">]</span><span>
-</span><span id="line-27"></span><span>    </span><span id="local-6989586621679687677"><span class="annot"><span class="annottext">f :: Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
+</span><span id="line-27"></span><span>    </span><span id="local-6989586621679689057"><span class="annot"><span class="annottext">f :: Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName))
 -&gt; [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])]
-</span><a href="#local-6989586621679687677"><span class="hs-identifier hs-var hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679689057"><span class="hs-identifier hs-var hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-28"></span><span>      </span><span class="annot"><span class="annottext">ASetter
   [(ProjectBranchName, Map URI (ProjectName, ProjectBranchName))]
   [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])]
@@ -101,13 +101,13 @@ forall s t a b. Field2 s t a b =&gt; Lens s t a b
 -&gt; [(URI, (ProjectName, ProjectBranchName))]
 -&gt; [(URI, ProjectName, ProjectBranchName)]
 forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
-</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679687675"><span class="annot"><span class="annottext">URI
-</span><a href="#local-6989586621679687675"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679687674"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679687674"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679687673"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679687673"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">URI
-</span><a href="#local-6989586621679687675"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679687674"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679687673"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([(URI, (ProjectName, ProjectBranchName))]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679689055"><span class="annot"><span class="annottext">URI
+</span><a href="#local-6989586621679689055"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679689054"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679689054"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679689053"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679689053"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">URI
+</span><a href="#local-6989586621679689055"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679689054"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679689053"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([(URI, (ProjectName, ProjectBranchName))]
  -&gt; [(URI, ProjectName, ProjectBranchName)])
 -&gt; (Map URI (ProjectName, ProjectBranchName)
     -&gt; [(URI, (ProjectName, ProjectBranchName))])
