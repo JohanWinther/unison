@@ -5,15 +5,15 @@
 @package unison-sqlite
 @version 0.0.0
 
-module Unison.Sqlite.Connection.Internal
 
--- | A <i>non-thread safe</i> connection to a SQLite database.
-data Connection
-Connection :: String -> FilePath -> Connection -> Connection
-[$sel:name:Connection] :: Connection -> String
-[$sel:file:Connection] :: Connection -> FilePath
-[$sel:conn:Connection] :: Connection -> Connection
-instance GHC.Show.Show Unison.Sqlite.Connection.Internal.Connection
+-- | Internals exported for testing.
+module Unison.Sqlite.Internal
+
+-- | Parse a SQL string, and return the prettefied SQL string along with
+--   the named parameters it contains.
+--   
+--   Exported only for testing.
+internalParseSql :: Text -> Either String (Text, [Text])
 
 module Unison.Sqlite.Connection
 
@@ -33,12 +33,15 @@ Connection :: String -> FilePath -> Connection -> Connection
 --   foreign key integrity feature was implemented.
 withConnection :: MonadUnliftIO m => String -> FilePath -> (Connection -> m a) -> m a
 execute :: ToRow a => Connection -> Sql -> a -> IO ()
+execute2 :: Connection -> Sql2 -> IO ()
 executeMany :: ToRow a => Connection -> Sql -> [a] -> IO ()
 execute_ :: Connection -> Sql -> IO ()
 queryStreamRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
 queryStreamCol :: forall a b r. (FromField b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
 queryListRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> IO [b]
+queryListRow2 :: FromRow a => Connection -> Sql2 -> IO [a]
 queryListCol :: forall a b. (FromField b, ToRow a) => Connection -> Sql -> a -> IO [b]
+queryListCol2 :: forall a. FromField a => Connection -> Sql2 -> IO [a]
 queryMaybeRow :: (ToRow a, FromRow b) => Connection -> Sql -> a -> IO (Maybe b)
 queryMaybeCol :: forall a b. (ToRow a, FromField b) => Connection -> Sql -> a -> IO (Maybe b)
 queryOneRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> IO b
@@ -177,12 +180,15 @@ savepoint :: Transaction (Either a a) -> Transaction a
 unsafeIO :: IO a -> Transaction a
 unsafeGetConnection :: Transaction Connection
 execute :: ToRow a => Sql -> a -> Transaction ()
+execute2 :: Sql2 -> Transaction ()
 executeMany :: ToRow a => Sql -> [a] -> Transaction ()
 execute_ :: Sql -> Transaction ()
 queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryListRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction [a]
+queryListRow2 :: FromRow a => Sql2 -> Transaction [a]
 queryListCol :: (FromField a, ToRow b) => Sql -> b -> Transaction [a]
+queryListCol2 :: FromField a => Sql2 -> Transaction [a]
 queryMaybeRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction (Maybe a)
 queryMaybeCol :: (FromField a, ToRow b) => Sql -> b -> Transaction (Maybe a)
 queryOneRow :: (FromRow b, ToRow a) => Sql -> a -> Transaction b
@@ -212,22 +218,6 @@ rowsModified :: Transaction Int
 instance GHC.Base.Monad Unison.Sqlite.Transaction.Transaction
 instance GHC.Base.Functor Unison.Sqlite.Transaction.Transaction
 instance GHC.Base.Applicative Unison.Sqlite.Transaction.Transaction
-
-module Unison.Sqlite.Values
-
--- | A <tt>VALUES</tt> literal.
-newtype Values a
-Values :: NonEmpty a -> Values a
-
--- | Example: given a <a>Values</a> of length 3, where each element has a
---   <tt>toRow</tt> that produces 2 elements, produce the SQL string:
---   
---   <pre>
---   VALUES (?, ?), (?, ?), (?, ?)
---   </pre>
-valuesSql :: ToRow a => Values a -> Sql
-instance GHC.Show.Show a => GHC.Show.Show (Unison.Sqlite.Values.Values a)
-instance Database.SQLite.Simple.ToRow.ToRow a => Database.SQLite.Simple.ToRow.ToRow (Unison.Sqlite.Values.Values a)
 
 
 -- | The Unison monorepo interface to SQLite.
@@ -308,6 +298,35 @@ Sql :: Text -> Sql
 -- | A quasi-quoter that produces expressions of type <a>Sql</a>.
 sql :: QuasiQuoter
 
+-- | A SQL query.
+data Sql2
+
+-- | A quasi-quoter for producing a <a>Sql2</a> from a SQL query string,
+--   using the Haskell variables in scope for each named parameter.
+--   
+--   For example, the query
+--   
+--   <pre>
+--   [sql2|
+--     SELECT foo
+--     FROM bar
+--     WHERE baz = :qux
+--   |]
+--   </pre>
+--   
+--   would produce a value like
+--   
+--   <pre>
+--   Sql2
+--     { query = "SELECT foo FROM bar WHERE baz = :qux"
+--     , params = [":qux" := qux]
+--     }
+--   </pre>
+--   
+--   which, of course, will require a <tt>qux</tt> with a <a>ToField</a>
+--   instance in scope.
+sql2 :: QuasiQuoter
+
 -- | A <tt>VALUES</tt> literal.
 newtype Values a
 Values :: NonEmpty a -> Values a
@@ -320,12 +339,15 @@ Values :: NonEmpty a -> Values a
 --   </pre>
 valuesSql :: ToRow a => Values a -> Sql
 execute :: ToRow a => Sql -> a -> Transaction ()
+execute2 :: Sql2 -> Transaction ()
 executeMany :: ToRow a => Sql -> [a] -> Transaction ()
 execute_ :: Sql -> Transaction ()
 queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryListRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction [a]
+queryListRow2 :: FromRow a => Sql2 -> Transaction [a]
 queryListCol :: (FromField a, ToRow b) => Sql -> b -> Transaction [a]
+queryListCol2 :: FromField a => Sql2 -> Transaction [a]
 queryMaybeRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction (Maybe a)
 queryMaybeCol :: (FromField a, ToRow b) => Sql -> b -> Transaction (Maybe a)
 queryOneRow :: (FromRow b, ToRow a) => Sql -> a -> Transaction b
