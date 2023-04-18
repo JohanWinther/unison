@@ -862,10 +862,11 @@ fresh :: Pmc vt v loc m => m v
 getPrettyPrintEnv :: Pmc vt v loc m => m PrettyPrintEnv
 data EnumeratedConstructors vt v loc
 ConstructorType :: [(v, ConstructorReference, Type vt loc)] -> EnumeratedConstructors vt v loc
+AbilityType :: Type vt loc -> Map ConstructorReference (v, Type vt loc) -> EnumeratedConstructors vt v loc
 SequenceType :: [(ListPat, [Type vt loc])] -> EnumeratedConstructors vt v loc
 BooleanType :: EnumeratedConstructors vt v loc
 OtherType :: EnumeratedConstructors vt v loc
-traverseConstructors :: Applicative f => (v -> ConstructorReference -> Type vt loc -> f (v, ConstructorReference, Type vt loc)) -> EnumeratedConstructors vt v loc -> f (EnumeratedConstructors vt v loc)
+traverseConstructorTypes :: Applicative f => (v -> ConstructorReference -> Type vt loc -> f (Type vt loc)) -> EnumeratedConstructors vt v loc -> f (EnumeratedConstructors vt v loc)
 instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.Class.EnumeratedConstructors vt v loc)
 
 module Unison.PrettyPrintEnv.FQN
@@ -2695,6 +2696,8 @@ data PmGrd vt v loc
 -- | <tt>PmCon x Con xs ys</tt> corresponds to the constraint <tt>Con ys
 --   &lt;- x</tt>
 PmCon :: v -> ConstructorReference -> [(v, Type vt loc)] -> PmGrd vt v loc
+PmEffect :: v -> ConstructorReference -> [(v, Type vt loc)] -> PmGrd vt v loc
+PmEffectPure :: v -> (v, Type vt loc) -> PmGrd vt v loc
 PmLit :: v -> PmLit -> PmGrd vt v loc
 PmListHead :: v -> Int -> v -> Type vt loc -> PmGrd vt v loc
 PmListTail :: v -> Int -> v -> Type vt loc -> PmGrd vt v loc
@@ -2717,6 +2720,16 @@ module Unison.PatternMatchCoverage.Desugar
 desugarMatch :: forall loc vt v m. Pmc vt v loc m => loc -> Type vt loc -> v -> [MatchCase loc (Term' vt v loc)] -> m (GrdTree (PmGrd vt v loc) loc)
 instance GHC.Base.Functor (Unison.PatternMatchCoverage.Desugar.NormalizedListF loc)
 
+module Unison.PatternMatchCoverage.EffectHandler
+data EffectHandler
+NoEffect :: EffectHandler
+Effect :: ConstructorReference -> EffectHandler
+prettyEffectHandler :: PrettyPrintEnv -> EffectHandler -> Pretty ColorText
+instance GHC.Generics.Generic Unison.PatternMatchCoverage.EffectHandler.EffectHandler
+instance GHC.Classes.Ord Unison.PatternMatchCoverage.EffectHandler.EffectHandler
+instance GHC.Classes.Eq Unison.PatternMatchCoverage.EffectHandler.EffectHandler
+instance GHC.Show.Show Unison.PatternMatchCoverage.EffectHandler.EffectHandler
+
 module Unison.PatternMatchCoverage.Constraint
 
 -- | A constraint to add to a <a>normalized constraint set</a> (fig 6) See
@@ -2731,6 +2744,15 @@ PosCon :: v -> ConstructorReference -> [(v, Type vt loc)] -> Constraint vt v loc
 -- | Negative constraint concerning data type. States that the given
 --   variable must not be the given constructor.
 NegCon :: v -> ConstructorReference -> Constraint vt v loc
+
+-- | Positive constraint regarding data type. States that the given
+--   variable must be the given constructor, and it also binds variables
+--   corresponding to constructor arguments.
+PosEffect :: v -> EffectHandler -> [(v, Type vt loc)] -> Constraint vt v loc
+
+-- | Negative constraint concerning data type. States that the given
+--   variable must not be the given constructor.
+NegEffect :: v -> EffectHandler -> Constraint vt v loc
 
 -- | Positive constraint regarding literal
 PosLit :: v -> PmLit -> Constraint vt v loc
@@ -2807,6 +2829,7 @@ VarInfo :: v -> Type vt loc -> VarConstraints vt v loc -> EffectInfo -> VarInfo 
 --   negative constraints.
 data VarConstraints vt v loc
 Vc'Constructor :: Maybe (ConstructorReference, [(v, Type vt loc)]) -> Set ConstructorReference -> VarConstraints vt v loc
+Vc'Effect :: Maybe (EffectHandler, [(v, Type vt loc)]) -> Set EffectHandler -> VarConstraints vt v loc
 Vc'Boolean :: Maybe Bool -> Set Bool -> VarConstraints vt v loc
 Vc'Int :: Maybe Int64 -> Set Int64 -> VarConstraints vt v loc
 Vc'Nat :: Maybe Word64 -> Set Word64 -> VarConstraints vt v loc
@@ -2873,6 +2896,15 @@ PosCon :: v -> ConstructorReference -> [(v, Type vt loc)] -> Literal vt v loc
 -- | Negative constraint concerning data type. States that the given
 --   variable must not be the given constructor.
 NegCon :: v -> ConstructorReference -> Literal vt v loc
+
+-- | Positive constraint regarding data type. States that the given
+--   variable must be the given constructor, and it also binds variables
+--   corresponding to constructor arguments.
+PosEffect :: v -> EffectHandler -> [(v, Type vt loc)] -> Literal vt v loc
+
+-- | Negative constraint concerning data type. States that the given
+--   variable must not be the given constructor.
+NegEffect :: v -> EffectHandler -> Literal vt v loc
 
 -- | Positive constraint regarding literal
 PosLit :: v -> PmLit -> Literal vt v loc
@@ -3503,9 +3535,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4rbB loc_a4rbC. Lens' (Env v_a4rbB loc_a4rbC) (TypeLookup v_a4rbB loc_a4rbC)
-termsByShortname :: forall v_a4rbB loc_a4rbC. Lens' (Env v_a4rbB loc_a4rbC) (Map Name [NamedReference v_a4rbB loc_a4rbC])
-ambientAbilities :: forall v_a4rbB loc_a4rbC. Lens' (Env v_a4rbB loc_a4rbC) [Type v_a4rbB loc_a4rbC]
+typeLookup :: forall v_a4vQY loc_a4vQZ. Lens' (Env v_a4vQY loc_a4vQZ) (TypeLookup v_a4vQY loc_a4vQZ)
+termsByShortname :: forall v_a4vQY loc_a4vQZ. Lens' (Env v_a4vQY loc_a4vQZ) (Map Name [NamedReference v_a4vQY loc_a4vQZ])
+ambientAbilities :: forall v_a4vQY loc_a4vQZ. Lens' (Env v_a4vQY loc_a4vQZ) [Type v_a4vQY loc_a4vQZ]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
