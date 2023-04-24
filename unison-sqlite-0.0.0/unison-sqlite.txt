@@ -8,12 +8,15 @@
 
 -- | Internals exported for testing.
 module Unison.Sqlite.Internal
+data Param
+FieldParam :: !Text -> Param
+RowParam :: !Text -> !Int -> Param
 
 -- | Parse a SQL string, and return the prettefied SQL string along with
 --   the named parameters it contains.
 --   
 --   Exported only for testing.
-internalParseSql :: Text -> Either String (Text, [Text])
+internalParseSql :: Text -> Either String (Text, [Param])
 
 module Unison.Sqlite.Connection
 
@@ -346,7 +349,26 @@ data Sql2
 --   instance in scope.
 --   
 --   There are three valid syntaxes for interpolating a variable:
---   <tt>:colon</tt>, <tt>@at</tt>, and <tt>$dollar</tt>.
+--   
+--   <ul>
+--   <li><tt>:colon</tt>, or <tt>$dollar</tt>, which denote a single-field
+--   variable</li>
+--   <li><tt>@at</tt>, followed by 1+ bare <tt>@</tt>, which denotes a
+--   multi-field variable</li>
+--   </ul>
+--   
+--   As an example of the latter, consider a variable <tt>plonk</tt> with a
+--   two-field <a>ToRow</a> instance. A query that interpolates
+--   <tt>plonk</tt> might look like:
+--   
+--   <pre>
+--   [sql2|
+--     SELECT foo
+--     FROM bar
+--     WHERE stuff = @plonk
+--       AND other = @
+--   |]
+--   </pre>
 sql2 :: QuasiQuoter
 
 -- | A <tt>VALUES</tt> literal.

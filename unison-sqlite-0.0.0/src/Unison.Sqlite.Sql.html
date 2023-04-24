@@ -14,12 +14,12 @@
 </span><span id="line-14"></span><span class="hs-comment">-- | A SQL snippet.</span><span>
 </span><span id="line-15"></span><span class="hs-keyword">newtype</span><span> </span><span id="Sql"><span class="annot"><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier hs-var">Sql</span></a></span></span><span>
 </span><span id="line-16"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Sql"><span class="annot"><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier hs-var">Sql</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-17"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679132306"><span class="annot"><span class="annottext">String -&gt; Sql
+</span><span id="line-17"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679136317"><span class="annot"><span class="annottext">String -&gt; Sql
 (String -&gt; Sql) -&gt; IsString Sql
 forall a. (String -&gt; a) -&gt; IsString a
 fromString :: String -&gt; Sql
 $cfromString :: String -&gt; Sql
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">IsString</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679132298"><span id="local-6989586621679132300"><span id="local-6989586621679132302"><span class="annot"><span class="annottext">Semigroup Sql
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">IsString</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679136309"><span id="local-6989586621679136311"><span id="local-6989586621679136313"><span class="annot"><span class="annottext">Semigroup Sql
 Sql
 Semigroup Sql
 -&gt; Sql -&gt; (Sql -&gt; Sql -&gt; Sql) -&gt; ([Sql] -&gt; Sql) -&gt; Monoid Sql
@@ -34,7 +34,7 @@ $cmappend :: Sql -&gt; Sql -&gt; Sql
 mempty :: Sql
 $cmempty :: Sql
 $cp1Monoid :: Semigroup Sql
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Monoid</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679132291"><span id="local-6989586621679132293"><span id="local-6989586621679132295"><span class="annot"><span class="annottext">b -&gt; Sql -&gt; Sql
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Monoid</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679136302"><span id="local-6989586621679136304"><span id="local-6989586621679136306"><span class="annot"><span class="annottext">b -&gt; Sql -&gt; Sql
 NonEmpty Sql -&gt; Sql
 Sql -&gt; Sql -&gt; Sql
 (Sql -&gt; Sql -&gt; Sql)
@@ -53,7 +53,7 @@ sconcat :: NonEmpty Sql -&gt; Sql
 $csconcat :: NonEmpty Sql -&gt; Sql
 &lt;&gt; :: Sql -&gt; Sql -&gt; Sql
 $c&lt;&gt; :: Sql -&gt; Sql -&gt; Sql
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Semigroup</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679132284"><span id="local-6989586621679132286"><span id="local-6989586621679132288"><span class="annot"><span class="annottext">Int -&gt; Sql -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Semigroup</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679136295"><span id="local-6989586621679136297"><span id="local-6989586621679136299"><span class="annot"><span class="annottext">Int -&gt; Sql -&gt; ShowS
 [Sql] -&gt; ShowS
 Sql -&gt; String
 (Int -&gt; Sql -&gt; ShowS)
@@ -76,18 +76,18 @@ $cshowsPrec :: Int -&gt; Sql -&gt; ShowS
 </span><span class="hs-identifier hs-var">NeatInterpolation.trimming</span></span><span>
 </span><span id="line-23"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
 </span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-24"></span><span>        </span><span class="hs-glyph">\</span><span id="local-6989586621679132281"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679132281"><span class="hs-identifier hs-var">string</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-25"></span><span>          </span><span id="local-6989586621679132280"><span class="annot"><span class="annottext">Exp
-</span><a href="#local-6989586621679132280"><span class="hs-identifier hs-var">text</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">QuasiQuoter -&gt; String -&gt; Q Exp
+</span><span id="line-24"></span><span>        </span><span class="hs-glyph">\</span><span id="local-6989586621679136292"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679136292"><span class="hs-identifier hs-var">string</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-25"></span><span>          </span><span id="local-6989586621679136291"><span class="annot"><span class="annottext">Exp
+</span><a href="#local-6989586621679136291"><span class="hs-identifier hs-var">text</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">QuasiQuoter -&gt; String -&gt; Q Exp
 </span><span class="hs-identifier hs-var hs-var">quoteExp</span></span><span> </span><span class="annot"><span class="annottext">QuasiQuoter
 </span><span class="hs-identifier hs-var">NeatInterpolation.trimming</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679132281"><span class="hs-identifier hs-var">string</span></a></span><span>
+</span><a href="#local-6989586621679136292"><span class="hs-identifier hs-var">string</span></a></span><span>
 </span><span id="line-26"></span><span>          </span><span class="annot"><span class="annottext">Exp -&gt; Q Exp
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Exp -&gt; Exp -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.AppE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.ConE</span></span><span> </span><span class="hs-special">'</span><span class="hs-identifier">Sql</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Exp
-</span><a href="#local-6989586621679132280"><span class="hs-identifier hs-var">text</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679136291"><span class="hs-identifier hs-var">text</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-27"></span><span>    </span><span class="hs-special">}</span><span>
 </span><span id="line-28"></span></pre></body></html>
