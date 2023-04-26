@@ -171,24 +171,65 @@ data ProjectBranchName
 --   </pre>
 projectBranchNameUserSlug :: ProjectBranchName -> Maybe Text
 
--- | Prepend a user slug to a project branch name, if it doesn't already
---   have one.
+-- | Though a branch name is just a flat string, we have logic that handles
+--   certain strings specially.
+--   
+--   A branch's name indicates it is exactly one of the following:
+--   
+--   <ul>
+--   <li>A contributor branch like "@arya/topic"</li>
+--   <li>A draft release branch like "releases<i>drafts</i>1.2.3"</li>
+--   <li>A release branch like "releases/1.2.3"</li>
+--   <li>None of the above, like "topic"</li>
+--   </ul>
+--   
+--   Note these classifications are only tied to the branch's (mutable)
+--   name, and are not really otherwise indicative of much.
+--   
+--   For instance,
+--   
+--   <ul>
+--   <li>The existence of a local "releases/1.2.3" branch does not
+--   necessarily imply the existence of some remote release version
+--   "1.2.3".</li>
+--   <li>The existence of a local "<tt>arya/topic</tt> branch does not
+--   necessarily imply the existence of some remote "arya" user made some
+--   "topic" branch at some point.</li>
+--   </ul>
+--   
+--   That said, we do try to make the system mostly make sense by rejecting
+--   certain inputs (e.g. you should not be able to easily create a local
+--   branch called "releases/1.2.3" out of thin air; you should have to
+--   clone it from somewhere). But ultimately, again, branch names are best
+--   thought of as opaque, flat strings.
+data ProjectBranchNameKind
+ProjectBranchNameKind'Contributor :: !Text -> !ProjectBranchName -> ProjectBranchNameKind
+ProjectBranchNameKind'DraftRelease :: !Semver -> ProjectBranchNameKind
+ProjectBranchNameKind'Release :: !Semver -> ProjectBranchNameKind
+ProjectBranchNameKind'NothingSpecial :: ProjectBranchNameKind
+
+-- | Classify a project branch name.
 --   
 --   <pre>
---   &gt;&gt;&gt; prependUserSlugToProjectBranchName "arya" "topic"
---   "@arya/topic"
+--   &gt;&gt;&gt; classifyProjectBranchName "@arya/topic"
+--   Contributor "arya" "topic"
 --   </pre>
 --   
 --   <pre>
---   &gt;&gt;&gt; prependUserSlugToProjectBranchName "runar" "@unison/main"
---   "@unison/main"
+--   &gt;&gt;&gt; classifyProjectBranchName "releases/drafts/1.2.3"
+--   DraftRelease (Semver 1 2 3)
 --   </pre>
 --   
 --   <pre>
---   &gt;&gt;&gt; prependUserSlugToProjectBranchName "???invalid???" "@unison/main"
---   "@unison/main"
+--   &gt;&gt;&gt; classifyProjectBranchName "releases/1.2.3"
+--   Release (Semver 1 2 3)
 --   </pre>
-prependUserSlugToProjectBranchName :: Text -> ProjectBranchName -> ProjectBranchName
+--   
+--   <pre>
+--   &gt;&gt;&gt; classifyProjectBranchName "topic"
+--   NothingSpecial
+--   </pre>
+classifyProjectBranchName :: ProjectBranchName -> ProjectBranchNameKind
 
 -- | A generic data structure that contains information about a project and
 --   a branch in that project.
