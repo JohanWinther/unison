@@ -29,10 +29,10 @@
 </span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
 </span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Witch</span></span><span>
 </span><span id="line-31"></span><span>
-</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679206651"><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span></span><span>
+</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679206759"><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span></span><span>
 </span><span id="line-33"></span><span>
 </span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-35"></span><span>  </span><span id="local-6989586621679206647"><span class="annot"><span class="annottext">tryFrom :: Text -&gt; Either (TryFromException Text ProjectName) ProjectName
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621679206755"><span class="annot"><span class="annottext">tryFrom :: Text -&gt; Either (TryFromException Text ProjectName) ProjectName
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-36"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Maybe ProjectName)
 -&gt; Text -&gt; Either (TryFromException Text ProjectName) ProjectName
@@ -47,8 +47,8 @@ forall e s a. (Ord e, Stream s) =&gt; Parsec e s a -&gt; s -&gt; Maybe a
 </span><span id="line-38"></span><span class="annot"><a href="Unison.Project.html#projectNameParser"><span class="hs-identifier hs-type">projectNameParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span>
 </span><span id="line-39"></span><span id="projectNameParser"><span class="annot"><span class="annottext">projectNameParser :: Parsec Void Text ProjectName
 </span><a href="Unison.Project.html#projectNameParser"><span class="hs-identifier hs-var hs-var">projectNameParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-40"></span><span>  </span><span id="local-6989586621679206642"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206642"><span class="hs-identifier hs-var">userSlug</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621679206750"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206750"><span class="hs-identifier hs-var">userSlug</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-41"></span><span>    </span><span class="annot"><span class="annottext">[ParsecT Void Text Identity Builder]
 -&gt; ParsecT Void Text Identity Builder
 forall (t :: * -&gt; *) (f :: * -&gt; *) a.
@@ -56,15 +56,15 @@ forall (t :: * -&gt; *) (f :: * -&gt; *) a.
 t (f a) -&gt; f a
 </span><span class="hs-identifier hs-var">asum</span></span><span>
 </span><span id="line-42"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-43"></span><span>          </span><span id="local-6989586621679206640"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206640"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
+</span><span id="line-43"></span><span>          </span><span id="local-6989586621679206748"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206748"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
 </span><a href="Unison.Project.html#userSlugParser"><span class="hs-identifier hs-var">userSlugParser</span></a></span><span>
 </span><span id="line-44"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'@'</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206640"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206748"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
@@ -75,68 +75,68 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span>
 </span><span id="line-46"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-47"></span><span>  </span><span id="local-6989586621679206637"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206637"><span class="hs-identifier hs-var">projectSlug</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
-</span><a href="#local-6989586621679206636"><span class="hs-identifier hs-var">projectSlugParser</span></a></span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621679206745"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206745"><span class="hs-identifier hs-var">projectSlug</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206744"><span class="hs-identifier hs-var">projectSlugParser</span></a></span><span>
 </span><span id="line-48"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; ProjectName
 </span><span class="hs-identifier hs-var">UnsafeProjectName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206642"><span class="hs-identifier hs-var">userSlug</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206750"><span class="hs-identifier hs-var">userSlug</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206637"><span class="hs-identifier hs-var">projectSlug</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206745"><span class="hs-identifier hs-var">projectSlug</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-49"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-50"></span><span>    </span><span class="annot"><a href="#local-6989586621679206636"><span class="hs-identifier hs-type">projectSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
-</span><span id="line-51"></span><span>    </span><span id="local-6989586621679206636"><span class="annot"><span class="annottext">projectSlugParser :: ParsecT Void Text Identity Builder
-</span><a href="#local-6989586621679206636"><span class="hs-identifier hs-var hs-var">projectSlugParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-52"></span><span>      </span><span id="local-6989586621679206633"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206633"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
+</span><span id="line-50"></span><span>    </span><span class="annot"><a href="#local-6989586621679206744"><span class="hs-identifier hs-type">projectSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
+</span><span id="line-51"></span><span>    </span><span id="local-6989586621679206744"><span class="annot"><span class="annottext">projectSlugParser :: ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206744"><span class="hs-identifier hs-var hs-var">projectSlugParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-52"></span><span>      </span><span id="local-6989586621679206741"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679206741"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 (Token s -&gt; Bool) -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.satisfy</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 Token Text -&gt; Bool
-</span><a href="#local-6989586621679206631"><span class="hs-identifier hs-var">isStartChar</span></a></span><span>
-</span><span id="line-53"></span><span>      </span><span id="local-6989586621679206630"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206630"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679206739"><span class="hs-identifier hs-var">isStartChar</span></a></span><span>
+</span><span id="line-53"></span><span>      </span><span id="local-6989586621679206738"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206738"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
 -&gt; (Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Tokens Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 Maybe String -&gt; (Token s -&gt; Bool) -&gt; m (Tokens s)
 </span><span class="hs-identifier hs-var">Megaparsec.takeWhileP</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
 forall a. Maybe a
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206628"><span class="annot"><span class="annottext">Token Text
-</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679206631"><span class="hs-identifier hs-var">isStartChar</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206736"><span class="annot"><span class="annottext">Token Text
+</span><a href="#local-6989586621679206736"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679206739"><span class="hs-identifier hs-var">isStartChar</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206736"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206736"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206736"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span class="hs-special">)</span><span>
 </span><span id="line-54"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206633"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206741"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206630"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206738"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-55"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-56"></span><span>        </span><span class="annot"><a href="#local-6989586621679206631"><span class="hs-identifier hs-type">isStartChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
-</span><span id="line-57"></span><span>        </span><span id="local-6989586621679206631"><span class="annot"><span class="annottext">isStartChar :: Char -&gt; Bool
-</span><a href="#local-6989586621679206631"><span class="hs-identifier hs-var hs-var">isStartChar</span></a></span></span><span> </span><span id="local-6989586621679206624"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206624"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-56"></span><span>        </span><span class="annot"><a href="#local-6989586621679206739"><span class="hs-identifier hs-type">isStartChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-57"></span><span>        </span><span id="local-6989586621679206739"><span class="annot"><span class="annottext">isStartChar :: Char -&gt; Bool
+</span><a href="#local-6989586621679206739"><span class="hs-identifier hs-var hs-var">isStartChar</span></a></span></span><span> </span><span id="local-6989586621679206732"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679206732"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-58"></span><span>          </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isAlpha</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206624"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206732"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206624"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206732"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'_'</span></span><span>
@@ -150,11 +150,11 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span id="line-66"></span><span class="hs-comment">-- Nothing</span><span>
 </span><span id="line-67"></span><span class="annot"><a href="Unison.Project.html#projectNameUserSlug"><span class="hs-identifier hs-type">projectNameUserSlug</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-68"></span><span id="projectNameUserSlug"><span class="annot"><span class="annottext">projectNameUserSlug :: ProjectName -&gt; Maybe Text
-</span><a href="Unison.Project.html#projectNameUserSlug"><span class="hs-identifier hs-var hs-var">projectNameUserSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectName</span></span><span> </span><span id="local-6989586621679206622"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206622"><span class="hs-identifier hs-var">projectName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Project.html#projectNameUserSlug"><span class="hs-identifier hs-var hs-var">projectNameUserSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectName</span></span><span> </span><span id="local-6989586621679206730"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206730"><span class="hs-identifier hs-var">projectName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-69"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Char
 </span><span class="hs-identifier hs-var">Text.head</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206622"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206730"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'@'</span></span><span>
@@ -167,7 +167,7 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-char">'/'</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.drop</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206622"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206730"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-71"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Maybe Text
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
@@ -184,30 +184,30 @@ forall a. Maybe a
 </span><span id="line-82"></span><span class="hs-comment">-- &quot;@unison/base&quot;</span><span>
 </span><span id="line-83"></span><span class="annot"><a href="Unison.Project.html#prependUserSlugToProjectName"><span class="hs-identifier hs-type">prependUserSlugToProjectName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span>
 </span><span id="line-84"></span><span id="prependUserSlugToProjectName"><span class="annot"><span class="annottext">prependUserSlugToProjectName :: Text -&gt; ProjectName -&gt; ProjectName
-</span><a href="Unison.Project.html#prependUserSlugToProjectName"><span class="hs-identifier hs-var hs-var">prependUserSlugToProjectName</span></a></span></span><span> </span><span id="local-6989586621679206617"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206617"><span class="hs-identifier hs-var">userSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectName</span></span><span> </span><span id="local-6989586621679206616"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">projectName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Project.html#prependUserSlugToProjectName"><span class="hs-identifier hs-var hs-var">prependUserSlugToProjectName</span></a></span></span><span> </span><span id="local-6989586621679206725"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206725"><span class="hs-identifier hs-var">userSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectName</span></span><span> </span><span id="local-6989586621679206724"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206724"><span class="hs-identifier hs-var">projectName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-85"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Char
 </span><span class="hs-identifier hs-var">Text.head</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206724"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'@'</span></span><span>
 </span><span id="line-86"></span><span>    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Text -&gt; ProjectName
 </span><span class="hs-identifier hs-var">UnsafeProjectName</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">projectName</span></a></span><span>
+</span><a href="#local-6989586621679206724"><span class="hs-identifier hs-var">projectName</span></a></span><span>
 </span><span id="line-87"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; Maybe ProjectName -&gt; ProjectName
 forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; ProjectName
 </span><span class="hs-identifier hs-var">UnsafeProjectName</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec Void Text ProjectName -&gt; Text -&gt; Maybe ProjectName
+</span><a href="#local-6989586621679206724"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec Void Text ProjectName -&gt; Text -&gt; Maybe ProjectName
 forall e s a. (Ord e, Stream s) =&gt; Parsec e s a -&gt; s -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Megaparsec.parseMaybe</span></span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectName
 </span><a href="Unison.Project.html#projectNameParser"><span class="hs-identifier hs-var">projectNameParser</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206614"><span class="hs-identifier hs-var">newProjectName</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206722"><span class="hs-identifier hs-var">newProjectName</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-88"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-89"></span><span>    </span><span id="local-6989586621679206614"><span class="annot"><span class="annottext">newProjectName :: Text
-</span><a href="#local-6989586621679206614"><span class="hs-identifier hs-var hs-var">newProjectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-89"></span><span>    </span><span id="local-6989586621679206722"><span class="annot"><span class="annottext">newProjectName :: Text
+</span><a href="#local-6989586621679206722"><span class="hs-identifier hs-var hs-var">newProjectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-90"></span><span>      </span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">(Builder -&gt; Text) -&gt; Builder -&gt; Text
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -219,7 +219,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206617"><span class="hs-identifier hs-var">userSlug</span></a></span><span>
+</span><a href="#local-6989586621679206725"><span class="hs-identifier hs-var">userSlug</span></a></span><span>
 </span><span id="line-93"></span><span>          </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
@@ -229,15 +229,15 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">projectName</span></a></span><span>
+</span><a href="#local-6989586621679206724"><span class="hs-identifier hs-var">projectName</span></a></span><span>
 </span><span id="line-95"></span><span>
-</span><span id="line-96"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679206612"><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span></span><span>
+</span><span id="line-96"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679206720"><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span></span><span>
 </span><span id="line-97"></span><span>
 </span><span id="line-98"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-99"></span><span>  </span><span id="local-6989586621679206610"><span class="annot"><span class="annottext">tryFrom :: Text
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621679206718"><span class="annot"><span class="annottext">tryFrom :: Text
 -&gt; Either
      (TryFromException Text ProjectBranchName) ProjectBranchName
-</span><a href="#local-6989586621679206610"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679206718"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-100"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Maybe ProjectBranchName)
 -&gt; Text
 -&gt; Either
@@ -286,50 +286,50 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 -&gt; Text
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-117"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Contributor"><span class="hs-identifier hs-type">StructuredProjectBranchName'Contributor</span></a></span><span> </span><span id="local-6989586621679206599"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206599"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span id="local-6989586621679206598"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206598"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-117"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Contributor"><span class="hs-identifier hs-type">StructuredProjectBranchName'Contributor</span></a></span><span> </span><span id="local-6989586621679206707"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206707"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span id="local-6989586621679206706"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206706"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-118"></span><span>      </span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'@'</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206599"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206707"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'/'</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206598"><span class="hs-identifier hs-var">name</span></a></span><span>
-</span><span id="line-119"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27DraftRelease"><span class="hs-identifier hs-type">StructuredProjectBranchName'DraftRelease</span></a></span><span> </span><span id="local-6989586621679206597"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206597"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206706"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><span id="line-119"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27DraftRelease"><span class="hs-identifier hs-type">StructuredProjectBranchName'DraftRelease</span></a></span><span> </span><span id="local-6989586621679206705"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206705"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
 </span><span class="hs-string">&quot;releases/drafts/&quot;</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Semver -&gt; Builder
-</span><a href="#local-6989586621679206596"><span class="hs-identifier hs-var">unstructureSemver</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206597"><span class="hs-identifier hs-var">ver</span></a></span><span>
-</span><span id="line-120"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Release"><span class="hs-identifier hs-type">StructuredProjectBranchName'Release</span></a></span><span> </span><span id="local-6989586621679206595"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206595"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206704"><span class="hs-identifier hs-var">unstructureSemver</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206705"><span class="hs-identifier hs-var">ver</span></a></span><span>
+</span><span id="line-120"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Release"><span class="hs-identifier hs-type">StructuredProjectBranchName'Release</span></a></span><span> </span><span id="local-6989586621679206703"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206703"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
 </span><span class="hs-string">&quot;releases/&quot;</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Semver -&gt; Builder
-</span><a href="#local-6989586621679206596"><span class="hs-identifier hs-var">unstructureSemver</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206595"><span class="hs-identifier hs-var">ver</span></a></span><span>
-</span><span id="line-121"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27NothingSpecial"><span class="hs-identifier hs-type">StructuredProjectBranchName'NothingSpecial</span></a></span><span> </span><span id="local-6989586621679206594"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206594"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206594"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><a href="#local-6989586621679206704"><span class="hs-identifier hs-var">unstructureSemver</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206703"><span class="hs-identifier hs-var">ver</span></a></span><span>
+</span><span id="line-121"></span><span>    </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27NothingSpecial"><span class="hs-identifier hs-type">StructuredProjectBranchName'NothingSpecial</span></a></span><span> </span><span id="local-6989586621679206702"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206702"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206702"><span class="hs-identifier hs-var">name</span></a></span><span>
 </span><span id="line-122"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-123"></span><span>    </span><span class="annot"><a href="#local-6989586621679206596"><span class="hs-identifier hs-type">unstructureSemver</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-type">Semver</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
-</span><span id="line-124"></span><span>    </span><span id="local-6989586621679206596"><span class="annot"><span class="annottext">unstructureSemver :: Semver -&gt; Builder
-</span><a href="#local-6989586621679206596"><span class="hs-identifier hs-var hs-var">unstructureSemver</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-type">Semver</span></a></span><span> </span><span id="local-6989586621679206592"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206592"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679206591"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206591"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621679206590"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206590"><span class="hs-identifier hs-var">z</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-123"></span><span>    </span><span class="annot"><a href="#local-6989586621679206704"><span class="hs-identifier hs-type">unstructureSemver</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-type">Semver</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
+</span><span id="line-124"></span><span>    </span><span id="local-6989586621679206704"><span class="annot"><span class="annottext">unstructureSemver :: Semver -&gt; Builder
+</span><a href="#local-6989586621679206704"><span class="hs-identifier hs-var hs-var">unstructureSemver</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-type">Semver</span></a></span><span> </span><span id="local-6989586621679206700"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206700"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679206699"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206699"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621679206698"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206698"><span class="hs-identifier hs-var">z</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-125"></span><span>      </span><span class="annot"><span class="annottext">Int -&gt; Builder
 forall a. Integral a =&gt; a -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.decimal</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206592"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><a href="#local-6989586621679206700"><span class="hs-identifier hs-var">x</span></a></span><span>
 </span><span id="line-126"></span><span>        </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
@@ -340,7 +340,7 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Builder
 forall a. Integral a =&gt; a -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.decimal</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206591"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><a href="#local-6989586621679206699"><span class="hs-identifier hs-var">y</span></a></span><span>
 </span><span id="line-128"></span><span>        </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
@@ -351,13 +351,13 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Builder
 forall a. Integral a =&gt; a -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.decimal</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206590"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><a href="#local-6989586621679206698"><span class="hs-identifier hs-var">z</span></a></span><span>
 </span><span id="line-130"></span><span>
 </span><span id="line-131"></span><span class="annot"><a href="Unison.Project.html#structuredProjectBranchNameParser"><span class="hs-identifier hs-type">structuredProjectBranchNameParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName"><span class="hs-identifier hs-type">StructuredProjectBranchName</span></a></span><span>
 </span><span id="line-132"></span><span id="structuredProjectBranchNameParser"><span class="annot"><span class="annottext">structuredProjectBranchNameParser :: ParsecT Void Text Identity StructuredProjectBranchName
 </span><a href="Unison.Project.html#structuredProjectBranchNameParser"><span class="hs-identifier hs-var hs-var">structuredProjectBranchNameParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-133"></span><span>  </span><span id="local-6989586621679206588"><span class="annot"><span class="annottext">StructuredProjectBranchName
-</span><a href="#local-6989586621679206588"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621679206696"><span class="annot"><span class="annottext">StructuredProjectBranchName
+</span><a href="#local-6989586621679206696"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-134"></span><span>    </span><span class="annot"><span class="annottext">[ParsecT Void Text Identity StructuredProjectBranchName]
 -&gt; ParsecT Void Text Identity StructuredProjectBranchName
 forall (t :: * -&gt; *) (f :: * -&gt; *) a.
@@ -372,12 +372,12 @@ MonadParsec e s m =&gt;
 Tokens s -&gt; m (Tokens s)
 </span><span class="hs-identifier hs-var">Megaparsec.string</span></span><span> </span><span class="annot"><span class="annottext">Tokens Text
 </span><span class="hs-string">&quot;releases/drafts/&quot;</span></span><span>
-</span><span id="line-137"></span><span>          </span><span id="local-6989586621679206586"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206586"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text Semver
+</span><span id="line-137"></span><span>          </span><span id="local-6989586621679206694"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206694"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text Semver
 </span><a href="Unison.Project.html#semverParser"><span class="hs-identifier hs-var">semverParser</span></a></span><span>
 </span><span id="line-138"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Semver -&gt; StructuredProjectBranchName
 </span><a href="Unison.Project.html#StructuredProjectBranchName%27DraftRelease"><span class="hs-identifier hs-var">StructuredProjectBranchName'DraftRelease</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206586"><span class="hs-identifier hs-var">ver</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679206694"><span class="hs-identifier hs-var">ver</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-139"></span><span>        </span><span class="hs-keyword">do</span><span>
 </span><span id="line-140"></span><span>          </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Tokens Text -&gt; ParsecT Void Text Identity (Tokens Text)
@@ -386,30 +386,30 @@ MonadParsec e s m =&gt;
 Tokens s -&gt; m (Tokens s)
 </span><span class="hs-identifier hs-var">Megaparsec.string</span></span><span> </span><span class="annot"><span class="annottext">Tokens Text
 </span><span class="hs-string">&quot;releases/&quot;</span></span><span>
-</span><span id="line-141"></span><span>          </span><span id="local-6989586621679206584"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206584"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text Semver
+</span><span id="line-141"></span><span>          </span><span id="local-6989586621679206692"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206692"><span class="hs-identifier hs-var">ver</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text Semver
 </span><a href="Unison.Project.html#semverParser"><span class="hs-identifier hs-var">semverParser</span></a></span><span>
 </span><span id="line-142"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Semver -&gt; StructuredProjectBranchName
 </span><a href="Unison.Project.html#StructuredProjectBranchName%27Release"><span class="hs-identifier hs-var">StructuredProjectBranchName'Release</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206584"><span class="hs-identifier hs-var">ver</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679206692"><span class="hs-identifier hs-var">ver</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-143"></span><span>        </span><span class="hs-keyword">do</span><span>
-</span><span id="line-144"></span><span>          </span><span id="local-6989586621679206583"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206583"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
+</span><span id="line-144"></span><span>          </span><span id="local-6989586621679206691"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206691"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
 </span><a href="Unison.Project.html#userSlugParser"><span class="hs-identifier hs-var">userSlugParser</span></a></span><span>
-</span><span id="line-145"></span><span>          </span><span id="local-6989586621679206582"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206582"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
-</span><a href="#local-6989586621679206581"><span class="hs-identifier hs-var">branchSlugParser</span></a></span><span>
+</span><span id="line-145"></span><span>          </span><span id="local-6989586621679206690"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206690"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206689"><span class="hs-identifier hs-var">branchSlugParser</span></a></span><span>
 </span><span id="line-146"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; StructuredProjectBranchName
 </span><a href="Unison.Project.html#StructuredProjectBranchName%27Contributor"><span class="hs-identifier hs-var">StructuredProjectBranchName'Contributor</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206583"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206582"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679206691"><span class="hs-identifier hs-var">user</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206690"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-147"></span><span>        </span><span class="hs-keyword">do</span><span>
-</span><span id="line-148"></span><span>          </span><span id="local-6989586621679206580"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206580"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
-</span><a href="#local-6989586621679206581"><span class="hs-identifier hs-var">branchSlugParser</span></a></span><span>
+</span><span id="line-148"></span><span>          </span><span id="local-6989586621679206688"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206688"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206689"><span class="hs-identifier hs-var">branchSlugParser</span></a></span><span>
 </span><span id="line-149"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder -&gt; StructuredProjectBranchName
 </span><a href="Unison.Project.html#StructuredProjectBranchName%27NothingSpecial"><span class="hs-identifier hs-var">StructuredProjectBranchName'NothingSpecial</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206580"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206688"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-150"></span><span>      </span><span class="hs-special">]</span><span>
 </span><span id="line-151"></span><span>  </span><span class="hs-comment">-- Because our branch has a sort of /-delimited pseudo-structure, we fail on trailing forward slashes.</span><span>
 </span><span id="line-152"></span><span>  </span><span class="hs-comment">--</span><span>
@@ -426,59 +426,59 @@ Token s -&gt; m (Token s)
 Token Text
 </span><span class="hs-char">'/'</span></span><span class="hs-special">)</span><span>
 </span><span id="line-157"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">StructuredProjectBranchName
-</span><a href="#local-6989586621679206588"><span class="hs-identifier hs-var">branch</span></a></span><span>
+</span><a href="#local-6989586621679206696"><span class="hs-identifier hs-var">branch</span></a></span><span>
 </span><span id="line-158"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-159"></span><span>    </span><span class="annot"><a href="#local-6989586621679206581"><span class="hs-identifier hs-type">branchSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
-</span><span id="line-160"></span><span>    </span><span id="local-6989586621679206581"><span class="annot"><span class="annottext">branchSlugParser :: ParsecT Void Text Identity Builder
-</span><a href="#local-6989586621679206581"><span class="hs-identifier hs-var hs-var">branchSlugParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-161"></span><span>      </span><span id="local-6989586621679206577"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206577"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
+</span><span id="line-159"></span><span>    </span><span class="annot"><a href="#local-6989586621679206689"><span class="hs-identifier hs-type">branchSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder</span></span><span>
+</span><span id="line-160"></span><span>    </span><span id="local-6989586621679206689"><span class="annot"><span class="annottext">branchSlugParser :: ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206689"><span class="hs-identifier hs-var hs-var">branchSlugParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-161"></span><span>      </span><span id="local-6989586621679206685"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679206685"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 (Token s -&gt; Bool) -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.satisfy</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 Token Text -&gt; Bool
-</span><a href="#local-6989586621679206576"><span class="hs-identifier hs-var">isStartChar</span></a></span><span>
-</span><span id="line-162"></span><span>      </span><span id="local-6989586621679206575"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206575"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679206684"><span class="hs-identifier hs-var">isStartChar</span></a></span><span>
+</span><span id="line-162"></span><span>      </span><span id="local-6989586621679206683"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206683"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
 -&gt; (Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Tokens Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 Maybe String -&gt; (Token s -&gt; Bool) -&gt; m (Tokens s)
 </span><span class="hs-identifier hs-var">Megaparsec.takeWhileP</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
 forall a. Maybe a
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206574"><span class="annot"><span class="annottext">Token Text
-</span><a href="#local-6989586621679206574"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679206576"><span class="hs-identifier hs-var">isStartChar</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206682"><span class="annot"><span class="annottext">Token Text
+</span><a href="#local-6989586621679206682"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679206684"><span class="hs-identifier hs-var">isStartChar</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206574"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206682"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206574"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206682"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206574"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206682"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span class="hs-special">)</span><span>
 </span><span id="line-163"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206577"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206685"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206575"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206683"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-164"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-165"></span><span>        </span><span class="annot"><a href="#local-6989586621679206576"><span class="hs-identifier hs-type">isStartChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
-</span><span id="line-166"></span><span>        </span><span id="local-6989586621679206576"><span class="annot"><span class="annottext">isStartChar :: Char -&gt; Bool
-</span><a href="#local-6989586621679206576"><span class="hs-identifier hs-var hs-var">isStartChar</span></a></span></span><span> </span><span id="local-6989586621679206573"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206573"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-165"></span><span>        </span><span class="annot"><a href="#local-6989586621679206684"><span class="hs-identifier hs-type">isStartChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-166"></span><span>        </span><span id="local-6989586621679206684"><span class="annot"><span class="annottext">isStartChar :: Char -&gt; Bool
+</span><a href="#local-6989586621679206684"><span class="hs-identifier hs-var hs-var">isStartChar</span></a></span></span><span> </span><span id="local-6989586621679206681"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679206681"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-167"></span><span>          </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isAlpha</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206573"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206681"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206573"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206681"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'_'</span></span><span>
@@ -489,9 +489,9 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span id="line-172"></span><span class="annot"><a href="Unison.Project.html#semverParser"><span class="hs-identifier hs-type">semverParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-type">Semver</span></a></span><span>
 </span><span id="line-173"></span><span id="semverParser"><span class="annot"><span class="annottext">semverParser :: Parsec Void Text Semver
 </span><a href="Unison.Project.html#semverParser"><span class="hs-identifier hs-var hs-var">semverParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-174"></span><span>  </span><span id="local-6989586621679206572"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206572"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
-</span><a href="#local-6989586621679206571"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
+</span><span id="line-174"></span><span>  </span><span id="local-6989586621679206680"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206680"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
+</span><a href="#local-6989586621679206679"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
 </span><span id="line-175"></span><span>  </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
@@ -500,9 +500,9 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'.'</span></span><span>
-</span><span id="line-176"></span><span>  </span><span id="local-6989586621679206570"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206570"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
-</span><a href="#local-6989586621679206571"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621679206678"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206678"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
+</span><a href="#local-6989586621679206679"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
 </span><span id="line-177"></span><span>  </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
@@ -511,19 +511,19 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'.'</span></span><span>
-</span><span id="line-178"></span><span>  </span><span id="local-6989586621679206569"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206569"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
-</span><a href="#local-6989586621679206571"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621679206677"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206677"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Int
+</span><a href="#local-6989586621679206679"><span class="hs-identifier hs-var">decimalParser</span></a></span><span>
 </span><span id="line-179"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int -&gt; Semver
 </span><a href="Unison.Project.html#Semver"><span class="hs-identifier hs-var">Semver</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206572"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206570"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206569"><span class="hs-identifier hs-var">z</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206680"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206678"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206677"><span class="hs-identifier hs-var">z</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-180"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-181"></span><span>    </span><span id="local-6989586621679206571"><span class="annot"><span class="annottext">decimalParser :: ParsecT Void Text Identity Int
-</span><a href="#local-6989586621679206571"><span class="hs-identifier hs-var hs-var">decimalParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-182"></span><span>      </span><span id="local-6989586621679206568"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206568"><span class="hs-identifier hs-var">digits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><span id="line-181"></span><span>    </span><span id="local-6989586621679206679"><span class="annot"><span class="annottext">decimalParser :: ParsecT Void Text Identity Int
+</span><a href="#local-6989586621679206679"><span class="hs-identifier hs-var hs-var">decimalParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-182"></span><span>      </span><span id="local-6989586621679206676"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206676"><span class="hs-identifier hs-var">digits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
 -&gt; (Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Tokens Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
@@ -537,11 +537,11 @@ Token Text -&gt; Bool
 </span><span id="line-183"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Reader Int
 forall a. Integral a =&gt; Reader a
 </span><span class="hs-identifier hs-var">Text.decimal</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206568"><span class="hs-identifier hs-var">digits</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-184"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679206566"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206566"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206676"><span class="hs-identifier hs-var">digits</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-184"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679206674"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679206674"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679206566"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679206674"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-185"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-comment">-- impossible</span><span>
@@ -589,34 +589,34 @@ forall a. Integral a =&gt; Reader a
 </span><span id="line-227"></span><span class="hs-comment">-- NothingSpecial</span><span>
 </span><span id="line-228"></span><span class="annot"><a href="Unison.Project.html#classifyProjectBranchName"><span class="hs-identifier hs-type">classifyProjectBranchName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Project.html#ProjectBranchNameKind"><span class="hs-identifier hs-type">ProjectBranchNameKind</span></a></span><span>
 </span><span id="line-229"></span><span id="classifyProjectBranchName"><span class="annot"><span class="annottext">classifyProjectBranchName :: ProjectBranchName -&gt; ProjectBranchNameKind
-</span><a href="Unison.Project.html#classifyProjectBranchName"><span class="hs-identifier hs-var hs-var">classifyProjectBranchName</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectBranchName</span></span><span> </span><span id="local-6989586621679206561"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206561"><span class="hs-identifier hs-var">branchName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Project.html#classifyProjectBranchName"><span class="hs-identifier hs-var hs-var">classifyProjectBranchName</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectBranchName</span></span><span> </span><span id="local-6989586621679206669"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206669"><span class="hs-identifier hs-var">branchName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-230"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity StructuredProjectBranchName
 -&gt; Text -&gt; Maybe StructuredProjectBranchName
 forall e s a. (Ord e, Stream s) =&gt; Parsec e s a -&gt; s -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Megaparsec.parseMaybe</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity StructuredProjectBranchName
 </span><a href="Unison.Project.html#structuredProjectBranchNameParser"><span class="hs-identifier hs-var">structuredProjectBranchNameParser</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206561"><span class="hs-identifier hs-var">branchName</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-231"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Contributor"><span class="hs-identifier hs-type">StructuredProjectBranchName'Contributor</span></a></span><span> </span><span id="local-6989586621679206560"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206560"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span id="local-6989586621679206559"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206559"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679206669"><span class="hs-identifier hs-var">branchName</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-231"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Contributor"><span class="hs-identifier hs-type">StructuredProjectBranchName'Contributor</span></a></span><span> </span><span id="local-6989586621679206668"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206668"><span class="hs-identifier hs-var">user</span></a></span></span><span> </span><span id="local-6989586621679206667"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206667"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-232"></span><span>      </span><span class="annot"><span class="annottext">Text -&gt; ProjectBranchName -&gt; ProjectBranchNameKind
 </span><a href="Unison.Project.html#ProjectBranchNameKind%27Contributor"><span class="hs-identifier hs-var">ProjectBranchNameKind'Contributor</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206560"><span class="hs-identifier hs-var">user</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; ProjectBranchName
+</span><a href="#local-6989586621679206668"><span class="hs-identifier hs-var">user</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; ProjectBranchName
 </span><span class="hs-identifier hs-var">UnsafeProjectBranchName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206559"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-233"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27DraftRelease"><span class="hs-identifier hs-type">StructuredProjectBranchName'DraftRelease</span></a></span><span> </span><span id="local-6989586621679206558"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206558"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Semver -&gt; ProjectBranchNameKind
+</span><a href="#local-6989586621679206667"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-233"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27DraftRelease"><span class="hs-identifier hs-type">StructuredProjectBranchName'DraftRelease</span></a></span><span> </span><span id="local-6989586621679206666"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206666"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Semver -&gt; ProjectBranchNameKind
 </span><a href="Unison.Project.html#ProjectBranchNameKind%27DraftRelease"><span class="hs-identifier hs-var">ProjectBranchNameKind'DraftRelease</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206558"><span class="hs-identifier hs-var">ver</span></a></span><span>
-</span><span id="line-234"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Release"><span class="hs-identifier hs-type">StructuredProjectBranchName'Release</span></a></span><span> </span><span id="local-6989586621679206557"><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206557"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Semver -&gt; ProjectBranchNameKind
+</span><a href="#local-6989586621679206666"><span class="hs-identifier hs-var">ver</span></a></span><span>
+</span><span id="line-234"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27Release"><span class="hs-identifier hs-type">StructuredProjectBranchName'Release</span></a></span><span> </span><span id="local-6989586621679206665"><span class="annot"><span class="annottext">Semver
+</span><a href="#local-6989586621679206665"><span class="hs-identifier hs-var">ver</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Semver -&gt; ProjectBranchNameKind
 </span><a href="Unison.Project.html#ProjectBranchNameKind%27Release"><span class="hs-identifier hs-var">ProjectBranchNameKind'Release</span></a></span><span> </span><span class="annot"><span class="annottext">Semver
-</span><a href="#local-6989586621679206557"><span class="hs-identifier hs-var">ver</span></a></span><span>
-</span><span id="line-235"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27NothingSpecial"><span class="hs-identifier hs-type">StructuredProjectBranchName'NothingSpecial</span></a></span><span> </span><span id="local-6989586621679206556"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679206556"><span class="hs-identifier hs-var">_name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectBranchNameKind
+</span><a href="#local-6989586621679206665"><span class="hs-identifier hs-var">ver</span></a></span><span>
+</span><span id="line-235"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Project.html#StructuredProjectBranchName%27NothingSpecial"><span class="hs-identifier hs-type">StructuredProjectBranchName'NothingSpecial</span></a></span><span> </span><span id="local-6989586621679206664"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679206664"><span class="hs-identifier hs-var">_name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectBranchNameKind
 </span><a href="Unison.Project.html#ProjectBranchNameKind%27NothingSpecial"><span class="hs-identifier hs-var">ProjectBranchNameKind'NothingSpecial</span></a></span><span>
 </span><span id="line-236"></span><span>    </span><span class="annot"><span class="annottext">Maybe StructuredProjectBranchName
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ProjectBranchNameKind
@@ -628,7 +628,7 @@ forall a. HasCallStack =&gt; String -&gt; a
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; String
 </span><span class="hs-identifier hs-var">Text.unpack</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206561"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206669"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-237"></span><span>
 </span><span id="line-238"></span><span class="hs-comment">-- | Get the user slug at the beginning of a project branch name, if there is one.</span><span>
 </span><span id="line-239"></span><span class="hs-comment">--</span><span>
@@ -639,11 +639,11 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span id="line-244"></span><span class="hs-comment">-- Nothing</span><span>
 </span><span id="line-245"></span><span class="annot"><a href="Unison.Project.html#projectBranchNameUserSlug"><span class="hs-identifier hs-type">projectBranchNameUserSlug</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-246"></span><span id="projectBranchNameUserSlug"><span class="annot"><span class="annottext">projectBranchNameUserSlug :: ProjectBranchName -&gt; Maybe Text
-</span><a href="Unison.Project.html#projectBranchNameUserSlug"><span class="hs-identifier hs-var hs-var">projectBranchNameUserSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectBranchName</span></span><span> </span><span id="local-6989586621679206552"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206552"><span class="hs-identifier hs-var">branchName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Project.html#projectBranchNameUserSlug"><span class="hs-identifier hs-var hs-var">projectBranchNameUserSlug</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">UnsafeProjectBranchName</span></span><span> </span><span id="local-6989586621679206660"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206660"><span class="hs-identifier hs-var">branchName</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-247"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Char
 </span><span class="hs-identifier hs-var">Text.head</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206552"><span class="hs-identifier hs-var">branchName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206660"><span class="hs-identifier hs-var">branchName</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'@'</span></span><span>
@@ -656,7 +656,7 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-char">'/'</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.drop</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206552"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206660"><span class="hs-identifier hs-var">branchName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-249"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Maybe Text
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
@@ -664,15 +664,15 @@ forall a. Maybe a
 </span><span id="line-251"></span><span class="hs-comment">-- | @project/branch@ syntax for project+branch pair, with up to one</span><span>
 </span><span id="line-252"></span><span class="hs-comment">-- side optional. Missing value means &quot;the current one&quot;.</span><span>
 </span><span id="line-253"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-254"></span><span>  </span><span id="local-6989586621679206550"><span class="annot"><span class="annottext">from :: These ProjectName ProjectBranchName -&gt; Text
+</span><span id="line-254"></span><span>  </span><span id="local-6989586621679206658"><span class="annot"><span class="annottext">from :: These ProjectName ProjectBranchName -&gt; Text
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">from</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-255"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">This</span></span><span> </span><span id="local-6989586621679206547"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206547"><span class="hs-identifier hs-var">project1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; Text
+</span><span id="line-255"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">This</span></span><span> </span><span id="local-6989586621679206655"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206655"><span class="hs-identifier hs-var">project1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206547"><span class="hs-identifier hs-var">project1</span></a></span><span>
-</span><span id="line-256"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">That</span></span><span> </span><span id="local-6989586621679206544"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206544"><span class="hs-identifier hs-var">branch1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Text
+</span><a href="#local-6989586621679206655"><span class="hs-identifier hs-var">project1</span></a></span><span>
+</span><span id="line-256"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">That</span></span><span> </span><span id="local-6989586621679206652"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206652"><span class="hs-identifier hs-var">branch1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'/'</span></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
@@ -681,10 +681,10 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206544"><span class="hs-identifier hs-var">branch1</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-257"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span id="local-6989586621679206542"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206542"><span class="hs-identifier hs-var">project1</span></a></span></span><span> </span><span id="local-6989586621679206541"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206541"><span class="hs-identifier hs-var">branch1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679206652"><span class="hs-identifier hs-var">branch1</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-257"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span id="local-6989586621679206650"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206650"><span class="hs-identifier hs-var">project1</span></a></span></span><span> </span><span id="local-6989586621679206649"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206649"><span class="hs-identifier hs-var">branch1</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-258"></span><span>      </span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">(Builder -&gt; Text) -&gt; Builder -&gt; Text
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -693,7 +693,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206542"><span class="hs-identifier hs-var">project1</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206650"><span class="hs-identifier hs-var">project1</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-260"></span><span>          </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
@@ -705,14 +705,14 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206541"><span class="hs-identifier hs-var">branch1</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206649"><span class="hs-identifier hs-var">branch1</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-262"></span><span>
 </span><span id="line-263"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">These</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-264"></span><span>  </span><span id="local-6989586621679206539"><span class="annot"><span class="annottext">tryFrom :: Text
+</span><span id="line-264"></span><span>  </span><span id="local-6989586621679206647"><span class="annot"><span class="annottext">tryFrom :: Text
 -&gt; Either
      (TryFromException Text (These ProjectName ProjectBranchName))
      (These ProjectName ProjectBranchName)
-</span><a href="#local-6989586621679206539"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679206647"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-265"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Maybe (These ProjectName ProjectBranchName))
 -&gt; Text
 -&gt; Either
@@ -753,14 +753,14 @@ forall a b. b -&gt; These a b
 -&gt; Parsec Void Text (These ProjectName ProjectBranchName)
 forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
-</span><a href="#local-6989586621679206537"><span class="hs-identifier hs-var">branchParser</span></a></span><span>
-</span><span id="line-276"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206536"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206536"><span class="hs-identifier hs-var">prj</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679206645"><span class="hs-identifier hs-var">branchParser</span></a></span><span>
+</span><span id="line-276"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206644"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206644"><span class="hs-identifier hs-var">prj</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-277"></span><span>      </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
 -&gt; ParsecT Void Text Identity (Maybe ProjectBranchName)
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
 </span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
-</span><a href="#local-6989586621679206537"><span class="hs-identifier hs-var">branchParser</span></a></span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity (Maybe ProjectBranchName)
+</span><a href="#local-6989586621679206645"><span class="hs-identifier hs-var">branchParser</span></a></span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity (Maybe ProjectBranchName)
 -&gt; (Maybe ProjectBranchName -&gt; These ProjectName ProjectBranchName)
 -&gt; Parsec Void Text (These ProjectName ProjectBranchName)
 forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
@@ -769,17 +769,17 @@ forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; These ProjectName ProjectBranchName
 forall a b. a -&gt; These a b
 </span><span class="hs-identifier hs-var">This</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206536"><span class="hs-identifier hs-var">prj</span></a></span><span>
-</span><span id="line-279"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206534"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206534"><span class="hs-identifier hs-var">br</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206644"><span class="hs-identifier hs-var">prj</span></a></span><span>
+</span><span id="line-279"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206642"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206642"><span class="hs-identifier hs-var">br</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName
 -&gt; ProjectBranchName -&gt; These ProjectName ProjectBranchName
 forall a b. a -&gt; b -&gt; These a b
 </span><span class="hs-identifier hs-var">These</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206536"><span class="hs-identifier hs-var">prj</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206534"><span class="hs-identifier hs-var">br</span></a></span><span>
+</span><a href="#local-6989586621679206644"><span class="hs-identifier hs-var">prj</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206642"><span class="hs-identifier hs-var">br</span></a></span><span>
 </span><span id="line-280"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-281"></span><span>    </span><span id="local-6989586621679206537"><span class="annot"><span class="annottext">branchParser :: Parsec Void Text ProjectBranchName
-</span><a href="#local-6989586621679206537"><span class="hs-identifier hs-var hs-var">branchParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
+</span><span id="line-281"></span><span>    </span><span id="local-6989586621679206645"><span class="annot"><span class="annottext">branchParser :: Parsec Void Text ProjectBranchName
+</span><a href="#local-6989586621679206645"><span class="hs-identifier hs-var hs-var">branchParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 (MonadParsec e s m, Token s ~ Char) =&gt;
 Token s -&gt; m (Token s)
@@ -792,19 +792,19 @@ forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; m b -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
 </span><a href="Unison.Project.html#projectBranchNameParser"><span class="hs-identifier hs-var">projectBranchNameParser</span></a></span><span>
 </span><span id="line-282"></span><span>
-</span><span id="line-283"></span><span class="hs-comment">-- | @project/branch@ syntax, where the project is optional. The branch can optionally be preceded by a forward slash.</span><span>
-</span><span id="line-284"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-285"></span><span>  </span><span id="local-6989586621679206532"><span class="annot"><span class="annottext">from :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -&gt; Text
-</span><a href="#local-6989586621679206532"><span class="hs-identifier hs-var hs-var hs-var hs-var">from</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-286"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="annottext">Maybe ProjectName
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span id="local-6989586621679206530"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206530"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
+</span><span id="line-283"></span><span class="hs-comment">-- | @project/branch@ syntax, where the branch is optional.</span><span>
+</span><span id="line-284"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-285"></span><span>  </span><span id="local-6989586621679206640"><span class="annot"><span class="annottext">from :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -&gt; Text
+</span><a href="#local-6989586621679206640"><span class="hs-identifier hs-var hs-var hs-var hs-var">from</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-286"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span id="local-6989586621679206638"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206638"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="annot"><span class="annottext">Maybe ProjectBranchName
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
-</span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206530"><span class="hs-identifier hs-var">branch</span></a></span><span>
-</span><span id="line-287"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206529"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206529"><span class="hs-identifier hs-var">project</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679206528"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206528"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206638"><span class="hs-identifier hs-var">project</span></a></span><span>
+</span><span id="line-287"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span id="local-6989586621679206637"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206637"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206636"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206636"><span class="hs-identifier hs-var">branch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-288"></span><span>      </span><span class="annot"><span class="annottext">Builder -&gt; Text
 </span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">(Builder -&gt; Text) -&gt; Builder -&gt; Text
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -813,7 +813,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206529"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206637"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-290"></span><span>          </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
@@ -825,16 +825,112 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206528"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679206636"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-292"></span><span>
-</span><span id="line-293"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-294"></span><span>  </span><span id="local-6989586621679206526"><span class="annot"><span class="annottext">tryFrom :: Text
+</span><span id="line-293"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-294"></span><span>  </span><span id="local-6989586621679206634"><span class="annot"><span class="annottext">tryFrom :: Text
+-&gt; Either
+     (TryFromException
+        Text (ProjectAndBranch ProjectName (Maybe ProjectBranchName)))
+     (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+</span><a href="#local-6989586621679206634"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-295"></span><span>    </span><span class="annot"><span class="annottext">(Text
+ -&gt; Maybe (ProjectAndBranch ProjectName (Maybe ProjectBranchName)))
+-&gt; Text
+-&gt; Either
+     (TryFromException
+        Text (ProjectAndBranch ProjectName (Maybe ProjectBranchName)))
+     (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+forall source target.
+(source -&gt; Maybe target)
+-&gt; source -&gt; Either (TryFromException source target) target
+</span><span class="hs-identifier hs-var">maybeTryFrom</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec
+  Void Text (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+-&gt; Text
+-&gt; Maybe (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+forall e s a. (Ord e, Stream s) =&gt; Parsec e s a -&gt; s -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Megaparsec.parseMaybe</span></span><span> </span><span class="annot"><span class="annottext">Parsec
+  Void Text (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+</span><a href="Unison.Project.html#projectWithOptionalBranchParser"><span class="hs-identifier hs-var">projectWithOptionalBranchParser</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-296"></span><span>
+</span><span id="line-297"></span><span class="hs-comment">-- Valid things:</span><span>
+</span><span id="line-298"></span><span class="hs-comment">--</span><span>
+</span><span id="line-299"></span><span class="hs-comment">--   1. project</span><span>
+</span><span id="line-300"></span><span class="hs-comment">--   2. project/branch</span><span>
+</span><span id="line-301"></span><span class="annot"><a href="Unison.Project.html#projectWithOptionalBranchParser"><span class="hs-identifier hs-type">projectWithOptionalBranchParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-302"></span><span id="projectWithOptionalBranchParser"><span class="annot"><span class="annottext">projectWithOptionalBranchParser :: Parsec
+  Void Text (ProjectAndBranch ProjectName (Maybe ProjectBranchName))
+</span><a href="Unison.Project.html#projectWithOptionalBranchParser"><span class="hs-identifier hs-var hs-var">projectWithOptionalBranchParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-303"></span><span>  </span><span id="local-6989586621679206632"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206632"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectName
+</span><a href="Unison.Project.html#projectNameParser"><span class="hs-identifier hs-var">projectNameParser</span></a></span><span>
+</span><span id="line-304"></span><span>  </span><span id="local-6989586621679206631"><span class="annot"><span class="annottext">Maybe ProjectBranchName
+</span><a href="#local-6989586621679206631"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-305"></span><span>    </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
+-&gt; ParsecT Void Text Identity (Maybe ProjectBranchName)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-306"></span><span>      </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token Text
+</span><span class="hs-char">'/'</span></span><span>
+</span><span id="line-307"></span><span>      </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
+</span><a href="Unison.Project.html#projectBranchNameParser"><span class="hs-identifier hs-var">projectBranchNameParser</span></a></span><span>
+</span><span id="line-308"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName
+-&gt; Maybe ProjectBranchName
+-&gt; ProjectAndBranch ProjectName (Maybe ProjectBranchName)
+forall a b. a -&gt; b -&gt; ProjectAndBranch a b
+</span><span class="hs-identifier hs-var">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206632"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe ProjectBranchName
+</span><a href="#local-6989586621679206631"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-309"></span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- | @project/branch@ syntax, where the project is optional. The branch can optionally be preceded by a forward slash.</span><span>
+</span><span id="line-311"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">From</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-312"></span><span>  </span><span id="local-6989586621679206629"><span class="annot"><span class="annottext">from :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -&gt; Text
+</span><a href="#local-6989586621679206629"><span class="hs-identifier hs-var hs-var hs-var hs-var">from</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-313"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="annottext">Maybe ProjectName
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span id="local-6989586621679206628"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
+forall target source. From source target =&gt; source -&gt; target
+</span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206628"><span class="hs-identifier hs-var">branch</span></a></span><span>
+</span><span id="line-314"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679206627"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206627"><span class="hs-identifier hs-var">project</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679206626"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206626"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-315"></span><span>      </span><span class="annot"><span class="annottext">Builder -&gt; Text
+</span><span class="hs-identifier hs-var">Text.Builder.run</span></span><span> </span><span class="annot"><span class="annottext">(Builder -&gt; Text) -&gt; Builder -&gt; Text
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-316"></span><span>        </span><span class="annot"><span class="annottext">Text -&gt; Builder
+</span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Text
+forall target source. From source target =&gt; source -&gt; target
+</span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206627"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-317"></span><span>          </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Builder
+</span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'/'</span></span><span>
+</span><span id="line-318"></span><span>          </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
+</span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectBranchName -&gt; Text
+forall target source. From source target =&gt; source -&gt; target
+</span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206626"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-319"></span><span>
+</span><span id="line-320"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TryFrom</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-321"></span><span>  </span><span id="local-6989586621679206624"><span class="annot"><span class="annottext">tryFrom :: Text
 -&gt; Either
      (TryFromException
         Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName))
      (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
-</span><a href="#local-6989586621679206526"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-295"></span><span>    </span><span class="annot"><span class="annottext">(Text
+</span><a href="#local-6989586621679206624"><span class="hs-identifier hs-var hs-var hs-var hs-var">tryFrom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-322"></span><span>    </span><span class="annot"><span class="annottext">(Text
  -&gt; Maybe (ProjectAndBranch (Maybe ProjectName) ProjectBranchName))
 -&gt; Text
 -&gt; Either
@@ -852,17 +948,17 @@ forall e s a. (Ord e, Stream s) =&gt; Parsec e s a -&gt; s -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Megaparsec.parseMaybe</span></span><span> </span><span class="annot"><span class="annottext">Parsec
   Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
 </span><a href="Unison.Project.html#branchWithOptionalProjectParser"><span class="hs-identifier hs-var">branchWithOptionalProjectParser</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-296"></span><span>
-</span><span id="line-297"></span><span class="hs-comment">-- Valid things:</span><span>
-</span><span id="line-298"></span><span class="hs-comment">--</span><span>
-</span><span id="line-299"></span><span class="hs-comment">--   1. branch</span><span>
-</span><span id="line-300"></span><span class="hs-comment">--   2. /branch</span><span>
-</span><span id="line-301"></span><span class="hs-comment">--   3. project/branch</span><span>
-</span><span id="line-302"></span><span class="annot"><a href="Unison.Project.html#branchWithOptionalProjectParser"><span class="hs-identifier hs-type">branchWithOptionalProjectParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span>
-</span><span id="line-303"></span><span id="branchWithOptionalProjectParser"><span class="annot"><span class="annottext">branchWithOptionalProjectParser :: Parsec
+</span><span id="line-323"></span><span>
+</span><span id="line-324"></span><span class="hs-comment">-- Valid things:</span><span>
+</span><span id="line-325"></span><span class="hs-comment">--</span><span>
+</span><span id="line-326"></span><span class="hs-comment">--   1. branch</span><span>
+</span><span id="line-327"></span><span class="hs-comment">--   2. /branch</span><span>
+</span><span id="line-328"></span><span class="hs-comment">--   3. project/branch</span><span>
+</span><span id="line-329"></span><span class="annot"><a href="Unison.Project.html#branchWithOptionalProjectParser"><span class="hs-identifier hs-type">branchWithOptionalProjectParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span class="hs-special">)</span><span>
+</span><span id="line-330"></span><span id="branchWithOptionalProjectParser"><span class="annot"><span class="annottext">branchWithOptionalProjectParser :: Parsec
   Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
 </span><a href="Unison.Project.html#branchWithOptionalProjectParser"><span class="hs-identifier hs-var hs-var">branchWithOptionalProjectParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-304"></span><span>  </span><span class="annot"><span class="annottext">[Parsec
+</span><span id="line-331"></span><span>  </span><span class="annot"><span class="annottext">[Parsec
    Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)]
 -&gt; Parsec
      Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
@@ -870,16 +966,16 @@ forall (t :: * -&gt; *) (f :: * -&gt; *) a.
 (Foldable t, Alternative f) =&gt;
 t (f a) -&gt; f a
 </span><span class="hs-identifier hs-var">asum</span></span><span>
-</span><span id="line-305"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Parsec
+</span><span id="line-332"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Parsec
   Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
 -&gt; Parsec
      Void Text (ProjectAndBranch (Maybe ProjectName) ProjectBranchName)
 forall e s (m :: * -&gt; *) a. MonadParsec e s m =&gt; m a -&gt; m a
 </span><span class="hs-identifier hs-var">Megaparsec.try</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-306"></span><span>        </span><span id="local-6989586621679206523"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206523"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectName
+</span><span id="line-333"></span><span>        </span><span id="local-6989586621679206621"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679206621"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectName
 </span><a href="Unison.Project.html#projectNameParser"><span class="hs-identifier hs-var">projectNameParser</span></a></span><span>
-</span><span id="line-307"></span><span>        </span><span class="annot"><span class="annottext">Char
+</span><span id="line-334"></span><span>        </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 (MonadParsec e s m, Token s ~ Char) =&gt;
@@ -887,20 +983,20 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'/'</span></span><span>
-</span><span id="line-308"></span><span>        </span><span id="local-6989586621679206522"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206522"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
+</span><span id="line-335"></span><span>        </span><span id="local-6989586621679206620"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206620"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
 </span><a href="Unison.Project.html#projectBranchNameParser"><span class="hs-identifier hs-var">projectBranchNameParser</span></a></span><span>
-</span><span id="line-309"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe ProjectName
+</span><span id="line-336"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe ProjectName
 -&gt; ProjectBranchName
 -&gt; ProjectAndBranch (Maybe ProjectName) ProjectBranchName
 forall a b. a -&gt; b -&gt; ProjectAndBranch a b
 </span><span class="hs-identifier hs-var">ProjectAndBranch</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Maybe ProjectName
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679206523"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206522"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-310"></span><span>      </span><span class="hs-keyword">do</span><span>
-</span><span id="line-311"></span><span>        </span><span class="annot"><span class="annottext">Maybe Char
+</span><a href="#local-6989586621679206621"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206620"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-337"></span><span>      </span><span class="hs-keyword">do</span><span>
+</span><span id="line-338"></span><span>        </span><span class="annot"><span class="annottext">Maybe Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void Text Identity Char
 -&gt; ParsecT Void Text Identity (Maybe Char)
 forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
@@ -911,31 +1007,31 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'/'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-312"></span><span>        </span><span id="local-6989586621679206521"><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206521"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
+</span><span id="line-339"></span><span>        </span><span id="local-6989586621679206619"><span class="annot"><span class="annottext">ProjectBranchName
+</span><a href="#local-6989586621679206619"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec Void Text ProjectBranchName
 </span><a href="Unison.Project.html#projectBranchNameParser"><span class="hs-identifier hs-var">projectBranchNameParser</span></a></span><span>
-</span><span id="line-313"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe ProjectName
+</span><span id="line-340"></span><span>        </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe ProjectName
 -&gt; ProjectBranchName
 -&gt; ProjectAndBranch (Maybe ProjectName) ProjectBranchName
 forall a b. a -&gt; b -&gt; ProjectAndBranch a b
 </span><span class="hs-identifier hs-var">ProjectAndBranch</span></span><span> </span><span class="annot"><span class="annottext">Maybe ProjectName
 forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">ProjectBranchName
-</span><a href="#local-6989586621679206521"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-314"></span><span>    </span><span class="hs-special">]</span><span>
-</span><span id="line-315"></span><span>
-</span><span id="line-316"></span><span class="hs-comment">------------------------------------------------------------------------------------------------------------------------</span><span>
-</span><span id="line-317"></span><span>
-</span><span id="line-318"></span><span class="hs-comment">-- Projects and branches may begin with a &quot;user slug&quot;, which looks like &quot;@arya/&quot;. This parser parses such slugs,</span><span>
-</span><span id="line-319"></span><span class="hs-comment">-- returning just the username (e.g. &quot;arya&quot;).</span><span>
-</span><span id="line-320"></span><span class="hs-comment">--</span><span>
-</span><span id="line-321"></span><span class="hs-comment">-- slug       = @ start-char char* /</span><span>
-</span><span id="line-322"></span><span class="hs-comment">-- start-char = alpha</span><span>
-</span><span id="line-323"></span><span class="hs-comment">-- char       = alpha | digit | -</span><span>
-</span><span id="line-324"></span><span class="annot"><a href="Unison.Project.html#userSlugParser"><span class="hs-identifier hs-type">userSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder.Builder</span></span><span>
-</span><span id="line-325"></span><span id="userSlugParser"><span class="annot"><span class="annottext">userSlugParser :: ParsecT Void Text Identity Builder
+</span><a href="#local-6989586621679206619"><span class="hs-identifier hs-var">branch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-341"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-342"></span><span>
+</span><span id="line-343"></span><span class="hs-comment">------------------------------------------------------------------------------------------------------------------------</span><span>
+</span><span id="line-344"></span><span>
+</span><span id="line-345"></span><span class="hs-comment">-- Projects and branches may begin with a &quot;user slug&quot;, which looks like &quot;@arya/&quot;. This parser parses such slugs,</span><span>
+</span><span id="line-346"></span><span class="hs-comment">-- returning just the username (e.g. &quot;arya&quot;).</span><span>
+</span><span id="line-347"></span><span class="hs-comment">--</span><span>
+</span><span id="line-348"></span><span class="hs-comment">-- slug       = @ start-char char* /</span><span>
+</span><span id="line-349"></span><span class="hs-comment">-- start-char = alpha</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- char       = alpha | digit | -</span><span>
+</span><span id="line-351"></span><span class="annot"><a href="Unison.Project.html#userSlugParser"><span class="hs-identifier hs-type">userSlugParser</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Megaparsec.Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text.Builder.Builder</span></span><span>
+</span><span id="line-352"></span><span id="userSlugParser"><span class="annot"><span class="annottext">userSlugParser :: ParsecT Void Text Identity Builder
 </span><a href="Unison.Project.html#userSlugParser"><span class="hs-identifier hs-var hs-var">userSlugParser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-326"></span><span>  </span><span class="annot"><span class="annottext">Char
+</span><span id="line-353"></span><span>  </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 (MonadParsec e s m, Token s ~ Char) =&gt;
@@ -943,38 +1039,38 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'@'</span></span><span>
-</span><span id="line-327"></span><span>  </span><span id="local-6989586621679206520"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206520"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
+</span><span id="line-354"></span><span>  </span><span id="local-6989586621679206618"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679206618"><span class="hs-identifier hs-var">c0</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 (Token s -&gt; Bool) -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.satisfy</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 Token Text -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isAlpha</span></span><span>
-</span><span id="line-328"></span><span>  </span><span id="local-6989586621679206519"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206519"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><span id="line-355"></span><span>  </span><span id="local-6989586621679206617"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679206617"><span class="hs-identifier hs-var">c1</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe String
 -&gt; (Token Text -&gt; Bool) -&gt; ParsecT Void Text Identity (Tokens Text)
 forall e s (m :: * -&gt; *).
 MonadParsec e s m =&gt;
 Maybe String -&gt; (Token s -&gt; Bool) -&gt; m (Tokens s)
 </span><span class="hs-identifier hs-var">Megaparsec.takeWhileP</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
 forall a. Maybe a
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206518"><span class="annot"><span class="annottext">Token Text
-</span><a href="#local-6989586621679206518"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679206616"><span class="annot"><span class="annottext">Token Text
+</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isAlpha</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206518"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><span class="hs-identifier hs-var">Char.isDigit</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206518"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
-</span><a href="#local-6989586621679206518"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
+</span><a href="#local-6989586621679206616"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-329"></span><span>  </span><span class="annot"><span class="annottext">Char
+</span><span id="line-356"></span><span>  </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token Text -&gt; ParsecT Void Text Identity (Token Text)
 forall e s (m :: * -&gt; *).
 (MonadParsec e s m, Token s ~ Char) =&gt;
@@ -982,11 +1078,11 @@ Token s -&gt; m (Token s)
 </span><span class="hs-identifier hs-var">Megaparsec.char</span></span><span> </span><span class="annot"><span class="annottext">Char
 Token Text
 </span><span class="hs-char">'/'</span></span><span>
-</span><span id="line-330"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
+</span><span id="line-357"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.char</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679206520"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
+</span><a href="#local-6989586621679206618"><span class="hs-identifier hs-var">c0</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><span class="hs-identifier hs-var">Text.Builder.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679206519"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-331"></span></pre></body></html>
+</span><a href="#local-6989586621679206617"><span class="hs-identifier hs-var">c1</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-358"></span></pre></body></html>

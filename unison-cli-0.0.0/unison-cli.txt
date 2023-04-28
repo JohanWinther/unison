@@ -290,12 +290,13 @@ GistI :: GistInput -> Input
 AuthLoginI :: Input
 VersionI :: Input
 DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
-ProjectCloneI :: These ProjectName ProjectBranchName -> Input
+ProjectCloneI :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -> Input
 ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
 ProjectsI :: Input
-BranchesI :: Input
+BranchCloneI :: These ProjectName ProjectBranchName -> Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
+BranchesI :: Input
 
 -- | The source of a <a>$sel:branch:WriteGitRepo</a> command: what to make
 --   the new branch from.
@@ -1556,6 +1557,7 @@ projectCreate :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
+branchClone :: InputPattern
 branchInputPattern :: InputPattern
 branchEmptyInputPattern :: InputPattern
 validInputs :: [InputPattern]
@@ -2588,11 +2590,14 @@ propagatePatch :: Text -> Patch -> Absolute -> Cli Bool
 withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO a
 
 
--- | <tt>project.clone</tt> input handler
+-- | <tt>clone</tt>-related input handlers
 module Unison.Codebase.Editor.HandleInput.ProjectClone
 
 -- | Clone a remote project or remote project branch.
-projectClone :: These ProjectName ProjectBranchName -> Cli ()
+branchClone :: These ProjectName ProjectBranchName -> Cli ()
+
+-- | Clone a remote project or remote project branch.
+projectClone :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -> Cli ()
 
 
 -- | Helpers<i>utils that have to do with term</i>type metadata.
