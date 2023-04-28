@@ -238,6 +238,12 @@ ProjectAndBranch :: a -> b -> ProjectAndBranch a b
 [project] :: ProjectAndBranch a b -> a
 [branch] :: ProjectAndBranch a b -> b
 projectAndBranchNamesParser :: Parsec Void Text (These ProjectName ProjectBranchName)
+data Semver
+Semver :: !Int -> !Int -> !Int -> Semver
+instance GHC.Show.Show Unison.Project.Semver
+instance GHC.Classes.Eq Unison.Project.Semver
+instance Witch.From.From Unison.Project.Semver Data.Text.Internal.Text
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Project.Semver
 instance Witch.From.From Unison.Core.Project.ProjectName Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectName
 instance Witch.From.From Unison.Core.Project.ProjectBranchName Data.Text.Internal.Text

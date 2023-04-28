@@ -297,6 +297,7 @@ ProjectsI :: Input
 BranchCloneI :: These ProjectName ProjectBranchName -> Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
 BranchesI :: Input
+ReleaseDraftI :: Semver -> Input
 
 -- | The source of a <a>$sel:branch:WriteGitRepo</a> command: what to make
 --   the new branch from.
@@ -1305,6 +1306,8 @@ MarkdownOut :: Text -> Output
 DownloadedEntities :: Int -> Output
 UploadedEntities :: Int -> Output
 NotImplementedYet :: Text -> Output
+DraftingRelease :: ProjectBranchName -> Semver -> Output
+CannotCreateReleaseBranchWithBranchCommand :: ProjectBranchName -> Semver -> Output
 
 -- | What did we create a project branch from?
 --   
@@ -1560,6 +1563,7 @@ branches :: InputPattern
 branchClone :: InputPattern
 branchInputPattern :: InputPattern
 branchEmptyInputPattern :: InputPattern
+releaseDraft :: InputPattern
 validInputs :: [InputPattern]
 
 -- | A map of all command patterns by pattern name or alias.
@@ -1873,6 +1877,7 @@ prettyHash :: IsString s => Hash -> Pretty s
 prettyHash32 :: IsString s => Hash32 -> Pretty s
 prettyProjectName :: ProjectName -> Pretty
 prettyProjectBranchName :: ProjectBranchName -> Pretty
+prettySemver :: Semver -> Pretty
 
 -- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
 --   This is used in some outputs to encourage/advertise an unambiguous
@@ -2560,6 +2565,34 @@ module Unison.Codebase.Editor.HandleInput.Branch
 -- | Create a new project branch from an existing project branch or
 --   namespace.
 handleBranch :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
+data CreateFrom
+CreateFrom'Branch :: ProjectAndBranch Project ProjectBranch -> CreateFrom
+CreateFrom'LooseCode :: Absolute -> CreateFrom
+CreateFrom'Nothingness :: CreateFrom
+
+-- | <tt>doCreateBranch createFrom project branch description</tt>:
+--   
+--   <ol>
+--   <li>Creates a new branch row for <tt>branch</tt> in project
+--   <tt>project</tt> (failing if <tt>branch</tt> already exists in
+--   <tt>project</tt>)</li>
+--   <li>Puts the branch contents from <tt>createFrom</tt> in the root
+--   namespace., using <tt>description</tt> for the reflog.</li>
+--   <li>cds to the new branch in the root namespace.</li>
+--   </ol>
+--   
+--   This bit of functionality is factored out from the main
+--   <a>handleBranch</a> handler because it is also called by the
+--   <tt>release.draft</tt> command, which essentially just creates a
+--   branch, but with some different output for the user.
+doCreateBranch :: CreateFrom -> Project -> ProjectBranchName -> Text -> Cli ()
+
+
+-- | <tt>release.draft</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ReleaseDraft
+
+-- | Handle a <tt>release.draft</tt> command.
+handleReleaseDraft :: Semver -> Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
