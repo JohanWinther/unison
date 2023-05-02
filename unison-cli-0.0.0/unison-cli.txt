@@ -405,7 +405,7 @@ DeleteTarget'Term :: DeleteOutput -> [HQSplit'] -> DeleteTarget
 DeleteTarget'Type :: DeleteOutput -> [HQSplit'] -> DeleteTarget
 DeleteTarget'Namespace :: Insistence -> Maybe Split' -> DeleteTarget
 DeleteTarget'Patch :: Split' -> DeleteTarget
-DeleteTarget'ProjectBranch :: These ProjectName ProjectBranchName -> DeleteTarget
+DeleteTarget'ProjectBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> DeleteTarget
 instance GHC.Show.Show Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Ord Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.OptionalPatch
@@ -2551,7 +2551,7 @@ module Unison.Codebase.Editor.HandleInput.DeleteBranch
 --   <tt>project_branch</tt> row, then deleting its contents from the
 --   namespace. Its children branches, if any, are reparented to their
 --   grandparent, if any. You may delete the only branch in a project.
-handleDeleteBranch :: These ProjectName ProjectBranchName -> Cli ()
+handleDeleteBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
 
 
 -- | <tt>branches</tt> input handler
