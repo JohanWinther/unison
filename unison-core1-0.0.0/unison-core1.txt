@@ -238,16 +238,33 @@ ProjectAndBranch :: a -> b -> ProjectAndBranch a b
 [project] :: ProjectAndBranch a b -> a
 [branch] :: ProjectAndBranch a b -> b
 projectAndBranchNamesParser :: Parsec Void Text (These ProjectName ProjectBranchName)
+
+-- | Sometimes, it's convenient (to users) if we defer interpreting certain
+--   names (like "foo") as a project name or branch name, instead leaving
+--   it up to a command handler to handle the ambiguity.
+--   
+--   For example, we might want "switch foo" to switch to either the
+--   project "foo", or the branch "foo", or complain if both exist.
+--   
+--   This type is useful for those situtations.
+data ProjectAndBranchNames
+ProjectAndBranchNames'Ambiguous :: ProjectName -> ProjectBranchName -> ProjectAndBranchNames
+ProjectAndBranchNames'Unambiguous :: These ProjectName ProjectBranchName -> ProjectAndBranchNames
+projectAndBranchNamesParser2 :: Parsec Void Text ProjectAndBranchNames
 data Semver
 Semver :: !Int -> !Int -> !Int -> Semver
 instance GHC.Show.Show Unison.Project.Semver
 instance GHC.Classes.Eq Unison.Project.Semver
+instance GHC.Show.Show Unison.Project.ProjectAndBranchNames
+instance GHC.Classes.Eq Unison.Project.ProjectAndBranchNames
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Project.ProjectAndBranchNames
 instance Witch.From.From Unison.Project.Semver Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Project.Semver
 instance Witch.From.From Unison.Core.Project.ProjectName Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectName
 instance Witch.From.From Unison.Core.Project.ProjectBranchName Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectBranchName
+instance Witch.From.From (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
 instance Witch.From.From (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName)
 instance Witch.From.From (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName (GHC.Maybe.Maybe Unison.Core.Project.ProjectBranchName)) Data.Text.Internal.Text

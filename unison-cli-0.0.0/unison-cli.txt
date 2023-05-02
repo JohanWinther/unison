@@ -292,7 +292,7 @@ VersionI :: Input
 DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
 ProjectCloneI :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -> Input
 ProjectCreateI :: ProjectName -> Input
-ProjectSwitchI :: These ProjectName ProjectBranchName -> Input
+ProjectSwitchI :: ProjectAndBranchNames -> Input
 ProjectsI :: Input
 BranchCloneI :: These ProjectName ProjectBranchName -> Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
@@ -1295,6 +1295,7 @@ NotOnProjectBranch :: Output
 NoAssociatedRemoteProject :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 NoAssociatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 LocalProjectBranchDoesntExist :: ProjectAndBranch ProjectName ProjectBranchName -> Output
+LocalProjectNorProjectBranchExist :: ProjectName -> ProjectBranchName -> Output
 RemoteProjectDoesntExist :: URI -> ProjectName -> Output
 RemoteProjectBranchDoesntExist :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RemoteProjectReleaseIsDeprecated :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
@@ -1364,6 +1365,7 @@ History :: Maybe Int -> HashLength -> [(CausalHash, Diff)] -> HistoryTail -> Num
 ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
 ListProjects :: [Project] -> NumberedOutput
 ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
+BothLocalProjectAndProjectBranchExist :: ProjectName -> ProjectBranchName -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -2496,8 +2498,23 @@ handlePushRemoteBranch :: PushRemoteBranchInput -> Cli ()
 -- | <tt>project.switch</tt> input handler
 module Unison.Codebase.Editor.HandleInput.ProjectSwitch
 
--- | Switch to an existing project or project branch.
-projectSwitch :: These ProjectName ProjectBranchName -> Cli ()
+-- | Switch to an existing project or project branch, with a flexible
+--   syntax that does not require prefixing branch names with forward
+--   slashes (though doing so makes the command unambiguous).
+--   
+--   When the argument is ambiguous, when outside of a project, "switch
+--   foo" means switch to project "foo", not branch "foo" (since there is
+--   no current project). And when inside a project, "switch foo" means one
+--   of:
+--   
+--   <ol>
+--   <li>Switch to project "foo", since there isn't a branch "foo" in the
+--   current project</li>
+--   <li>Switch to branch "foo", since there isn't a project "foo"</li>
+--   <li>Complain, because there's both a project "foo" and a branch "foo"
+--   in the current project</li>
+--   </ol>
+projectSwitch :: ProjectAndBranchNames -> Cli ()
 
 
 -- | <tt>project.create</tt> input handler
