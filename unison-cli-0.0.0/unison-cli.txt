@@ -1365,7 +1365,7 @@ History :: Maybe Int -> HashLength -> [(CausalHash, Diff)] -> HistoryTail -> Num
 ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
 ListProjects :: [Project] -> NumberedOutput
 ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
-BothLocalProjectAndProjectBranchExist :: ProjectName -> ProjectBranchName -> NumberedOutput
+BothLocalProjectAndProjectBranchExist :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -1878,6 +1878,9 @@ prettyBase32Hex# :: IsString s => Base32Hex -> Pretty s
 prettyHash :: IsString s => Hash -> Pretty s
 prettyHash32 :: IsString s => Hash32 -> Pretty s
 prettyProjectName :: ProjectName -> Pretty
+
+-- | <a>prettyProjectName</a> with a trailing slash.
+prettyProjectNameSlash :: ProjectName -> Pretty
 prettyProjectBranchName :: ProjectBranchName -> Pretty
 prettySemver :: Semver -> Pretty
 
