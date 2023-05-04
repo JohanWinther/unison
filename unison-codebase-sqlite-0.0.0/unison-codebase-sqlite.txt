@@ -1084,6 +1084,9 @@ expectProject :: ProjectId -> Transaction Project
 -- | Load all projects.
 loadAllProjects :: Transaction [Project]
 
+-- | Load all projects whose name matches a prefix.
+loadAllProjectsBeginningWith :: Text -> Transaction [Project]
+
 -- | Insert a <tt>project</tt> row.
 insertProject :: ProjectId -> ProjectName -> Transaction ()
 
@@ -1092,6 +1095,10 @@ projectBranchExistsByName :: ProjectId -> ProjectBranchName -> Transaction Bool
 loadProjectBranchByName :: ProjectId -> ProjectBranchName -> Transaction (Maybe ProjectBranch)
 loadProjectBranchByNames :: ProjectName -> ProjectBranchName -> Transaction (Maybe ProjectBranch)
 expectProjectBranch :: ProjectId -> ProjectBranchId -> Transaction ProjectBranch
+
+-- | Load all branch id/name pairs in a project whose name matches a
+--   prefix.
+loadAllProjectBranchesBeginningWith :: ProjectId -> Text -> Transaction [(ProjectBranchId, ProjectBranchName)]
 
 -- | Load info about all branches in a project, for display by the
 --   <tt>branches</tt> command.

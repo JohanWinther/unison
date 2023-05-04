@@ -28,52 +28,52 @@
 </span><span id="line-28"></span><span class="hs-keyword">type</span><span> </span><span id="LocalReferentH"><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#LocalReferentH"><span class="hs-identifier hs-var">LocalReferentH</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Referent'</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReferenceH"><span class="hs-identifier hs-type">Sqlite.LocalReferenceH</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReferenceH"><span class="hs-identifier hs-type">Sqlite.LocalReferenceH</span></a></span><span>
 </span><span id="line-29"></span><span>
 </span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#Id"><span class="hs-identifier hs-type">Id</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-31"></span><span>  </span><span id="local-6989586621679490564"><span class="annot"><span class="annottext">toRow :: Id -&gt; [SQLData]
+</span><span id="line-31"></span><span>  </span><span id="local-6989586621679491173"><span class="annot"><span class="annottext">toRow :: Id -&gt; [SQLData]
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-32"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.RefId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Id</span></span><span> </span><span id="local-6989586621679490560"><span class="annot"><span class="annottext">ObjectId
-</span><a href="#local-6989586621679490560"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679490559"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490559"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Only ObjectId -&gt; [SQLData]
+</span><span id="line-32"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.RefId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Id</span></span><span> </span><span id="local-6989586621679491169"><span class="annot"><span class="annottext">ObjectId
+</span><a href="#local-6989586621679491169"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679491168"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491168"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Only ObjectId -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectId -&gt; Only ObjectId
 forall a. a -&gt; Only a
 </span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="annot"><span class="annottext">ObjectId
-</span><a href="#local-6989586621679490560"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491169"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Only Pos -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pos -&gt; Only Pos
 forall a. a -&gt; Only a
 </span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490559"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491168"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">SQLData
 </span><span class="hs-identifier hs-var">SQLNull</span></span><span class="hs-special">]</span><span>
-</span><span id="line-33"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.ConId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Id</span></span><span> </span><span id="local-6989586621679490555"><span class="annot"><span class="annottext">ObjectId
-</span><a href="#local-6989586621679490555"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679490554"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490554"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679490553"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490553"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Only ObjectId -&gt; [SQLData]
+</span><span id="line-33"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.ConId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Id</span></span><span> </span><span id="local-6989586621679491164"><span class="annot"><span class="annottext">ObjectId
+</span><a href="#local-6989586621679491164"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679491163"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491163"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679491162"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491162"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Only ObjectId -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ObjectId -&gt; Only ObjectId
 forall a. a -&gt; Only a
 </span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="annot"><span class="annottext">ObjectId
-</span><a href="#local-6989586621679490555"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491164"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Only Pos -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pos -&gt; Only Pos
 forall a. a -&gt; Only a
 </span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490554"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491163"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Only Pos -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pos -&gt; Only Pos
 forall a. a -&gt; Only a
 </span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490553"><span class="hs-identifier hs-var">cid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679491162"><span class="hs-identifier hs-var">cid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-34"></span><span>
 </span><span id="line-35"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#Id"><span class="hs-identifier hs-type">Id</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-36"></span><span>  </span><span id="local-6989586621679490550"><span class="annot"><span class="annottext">fromRow :: RowParser Id
+</span><span id="line-36"></span><span>  </span><span id="local-6989586621679491159"><span class="annot"><span class="annottext">fromRow :: RowParser Id
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ObjectId -&gt; Pos -&gt; Maybe Pos -&gt; Id)
 -&gt; RowParser ObjectId
 -&gt; RowParser Pos
@@ -84,7 +84,7 @@ Applicative f =&gt;
 (a -&gt; b -&gt; c -&gt; d) -&gt; f a -&gt; f b -&gt; f c -&gt; f d
 </span><span class="hs-identifier hs-var">liftA3</span></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; Pos -&gt; Maybe Pos -&gt; Id
 forall hTp. hTp -&gt; Pos -&gt; Maybe Pos -&gt; Id' hTp hTp
-</span><a href="#local-6989586621679490548"><span class="hs-identifier hs-var">mkId</span></a></span><span> </span><span class="annot"><span class="annottext">RowParser ObjectId
+</span><a href="#local-6989586621679491157"><span class="hs-identifier hs-var">mkId</span></a></span><span> </span><span class="annot"><span class="annottext">RowParser ObjectId
 forall a. FromField a =&gt; RowParser a
 </span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser Pos
 forall a. FromField a =&gt; RowParser a
@@ -92,66 +92,66 @@ forall a. FromField a =&gt; RowParser a
 forall a. FromField a =&gt; RowParser a
 </span><span class="hs-identifier hs-var">field</span></span><span>
 </span><span id="line-37"></span><span>    </span><span class="hs-keyword">where</span><span>
-</span><span id="line-38"></span><span>      </span><span id="local-6989586621679490548"><span class="annot"><span class="annottext">mkId :: hTp -&gt; Pos -&gt; Maybe Pos -&gt; Id' hTp hTp
-</span><a href="#local-6989586621679490548"><span class="hs-identifier hs-var hs-var">mkId</span></a></span></span><span> </span><span id="local-6989586621679490547"><span class="annot"><span class="annottext">hTp
-</span><a href="#local-6989586621679490547"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679490546"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490546"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621679490545"><span class="annot"><span class="annottext">Maybe Pos
-</span><a href="#local-6989586621679490545"><span class="hs-identifier hs-var">mayCid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe Pos
-</span><a href="#local-6989586621679490545"><span class="hs-identifier hs-var">mayCid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-38"></span><span>      </span><span id="local-6989586621679491157"><span class="annot"><span class="annottext">mkId :: hTp -&gt; Pos -&gt; Maybe Pos -&gt; Id' hTp hTp
+</span><a href="#local-6989586621679491157"><span class="hs-identifier hs-var hs-var">mkId</span></a></span></span><span> </span><span id="local-6989586621679491156"><span class="annot"><span class="annottext">hTp
+</span><a href="#local-6989586621679491156"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span id="local-6989586621679491155"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491155"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621679491154"><span class="annot"><span class="annottext">Maybe Pos
+</span><a href="#local-6989586621679491154"><span class="hs-identifier hs-var">mayCid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe Pos
+</span><a href="#local-6989586621679491154"><span class="hs-identifier hs-var">mayCid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-39"></span><span>        </span><span class="annot"><span class="annottext">Maybe Pos
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Id' hTp -&gt; Id' hTp hTp
 forall hTm hTp. Id' hTm -&gt; Id' hTm hTp
 </span><span class="hs-identifier hs-var">Referent.RefId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">hTp -&gt; Pos -&gt; Id' hTp
 forall h. h -&gt; Pos -&gt; Id' h
 </span><span class="hs-identifier hs-var">Reference.Id</span></span><span> </span><span class="annot"><span class="annottext">hTp
-</span><a href="#local-6989586621679490547"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490546"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-40"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679490544"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490544"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Id' hTp -&gt; Pos -&gt; Id' hTp hTp
+</span><a href="#local-6989586621679491156"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491155"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679491153"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491153"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Id' hTp -&gt; Pos -&gt; Id' hTp hTp
 forall hTm hTp. Id' hTp -&gt; Pos -&gt; Id' hTm hTp
 </span><span class="hs-identifier hs-var">Referent.ConId</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">hTp -&gt; Pos -&gt; Id' hTp
 forall h. h -&gt; Pos -&gt; Id' h
 </span><span class="hs-identifier hs-var">Reference.Id</span></span><span> </span><span class="annot"><span class="annottext">hTp
-</span><a href="#local-6989586621679490547"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490546"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490544"><span class="hs-identifier hs-var">cid</span></a></span><span>
+</span><a href="#local-6989586621679491156"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491155"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491153"><span class="hs-identifier hs-var">cid</span></a></span><span>
 </span><span id="line-41"></span><span>
-</span><span id="line-42"></span><span id="local-6989586621679490542"><span id="local-6989586621679490543"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490543"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490542"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Referent'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490543"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490542"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490543"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490542"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-43"></span><span>  </span><span id="local-6989586621679490540"><span class="annot"><span class="annottext">toRow :: Referent' (Reference' t h) (Reference' t h) -&gt; [SQLData]
-</span><a href="#local-6989586621679490540"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-44"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.Ref</span></span><span> </span><span id="local-6989586621679490538"><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490538"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference' t h -&gt; [SQLData]
+</span><span id="line-42"></span><span id="local-6989586621679491151"><span id="local-6989586621679491152"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491152"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491151"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Referent'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491152"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491151"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491152"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491151"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621679491149"><span class="annot"><span class="annottext">toRow :: Referent' (Reference' t h) (Reference' t h) -&gt; [SQLData]
+</span><a href="#local-6989586621679491149"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.Ref</span></span><span> </span><span id="local-6989586621679491147"><span class="annot"><span class="annottext">Reference' t h
+</span><a href="#local-6989586621679491147"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference' t h -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490538"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491147"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">SQLData
 </span><span class="hs-identifier hs-var">SQLNull</span></span><span class="hs-special">]</span><span>
-</span><span id="line-45"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.Con</span></span><span> </span><span id="local-6989586621679490536"><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490536"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span id="local-6989586621679490535"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490535"><span class="hs-identifier hs-var">conId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference' t h -&gt; [SQLData]
+</span><span id="line-45"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Referent.Con</span></span><span> </span><span id="local-6989586621679491145"><span class="annot"><span class="annottext">Reference' t h
+</span><a href="#local-6989586621679491145"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span id="local-6989586621679491144"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491144"><span class="hs-identifier hs-var">conId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference' t h -&gt; [SQLData]
 forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490536"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
+</span><a href="#local-6989586621679491145"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">[SQLData] -&gt; [SQLData] -&gt; [SQLData]
 forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Pos -&gt; SQLData
 forall a. ToField a =&gt; a -&gt; SQLData
 </span><span class="hs-identifier hs-var">toField</span></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490535"><span class="hs-identifier hs-var">conId</span></a></span><span class="hs-special">]</span></span></span><span>
+</span><a href="#local-6989586621679491144"><span class="hs-identifier hs-var">conId</span></a></span><span class="hs-special">]</span></span></span><span>
 </span><span id="line-46"></span><span>
-</span><span id="line-47"></span><span id="local-6989586621679490533"><span id="local-6989586621679490534"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490534"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490533"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Referent'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490534"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490533"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679490534"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679490533"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-48"></span><span>  </span><span id="local-6989586621679490531"><span class="annot"><span class="annottext">fromRow :: RowParser (Referent' (Reference' t h) (Reference' t h))
-</span><a href="#local-6989586621679490531"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-49"></span><span>    </span><span id="local-6989586621679490530"><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490530"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">RowParser (Reference' t h)
+</span><span id="line-47"></span><span id="local-6989586621679491142"><span id="local-6989586621679491143"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491143"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491142"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Referent'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491143"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491142"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Reference'</span></span><span> </span><span class="annot"><a href="#local-6989586621679491143"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679491142"><span class="hs-identifier hs-type">h</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621679491140"><span class="annot"><span class="annottext">fromRow :: RowParser (Referent' (Reference' t h) (Reference' t h))
+</span><a href="#local-6989586621679491140"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-49"></span><span>    </span><span id="local-6989586621679491139"><span class="annot"><span class="annottext">Reference' t h
+</span><a href="#local-6989586621679491139"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">RowParser (Reference' t h)
 forall a. FromRow a =&gt; RowParser a
 </span><span class="hs-identifier hs-var">fromRow</span></span><span>
-</span><span id="line-50"></span><span>    </span><span id="local-6989586621679490529"><span class="annot"><span class="annottext">Maybe Pos
-</span><a href="#local-6989586621679490529"><span class="hs-identifier hs-var">mayCid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Pos)
+</span><span id="line-50"></span><span>    </span><span id="local-6989586621679491138"><span class="annot"><span class="annottext">Maybe Pos
+</span><a href="#local-6989586621679491138"><span class="hs-identifier hs-var">mayCid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Pos)
 forall a. FromField a =&gt; RowParser a
 </span><span class="hs-identifier hs-var">field</span></span><span>
 </span><span id="line-51"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe Pos
-</span><a href="#local-6989586621679490529"><span class="hs-identifier hs-var">mayCid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679491138"><span class="hs-identifier hs-var">mayCid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-52"></span><span>      </span><span class="annot"><span class="annottext">Maybe Pos
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Referent' (Reference' t h) (Reference' t h)
 -&gt; RowParser (Referent' (Reference' t h) (Reference' t h))
@@ -164,9 +164,9 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Reference' t h -&gt; Referent' (Reference' t h) (Reference' t h)
 forall termRef typeRef. termRef -&gt; Referent' termRef typeRef
 </span><span class="hs-identifier hs-var">Referent.Ref</span></span><span> </span><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490530"><span class="hs-identifier hs-var">ref</span></a></span><span>
-</span><span id="line-53"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679490528"><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490528"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Referent' (Reference' t h) (Reference' t h)
+</span><a href="#local-6989586621679491139"><span class="hs-identifier hs-var">ref</span></a></span><span>
+</span><span id="line-53"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679491137"><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491137"><span class="hs-identifier hs-var">cid</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Referent' (Reference' t h) (Reference' t h)
 -&gt; RowParser (Referent' (Reference' t h) (Reference' t h))
 forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Referent' (Reference' t h) (Reference' t h)
@@ -178,6 +178,6 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; Pos -&gt; Referent' (Reference' t h) (Reference' t h)
 forall termRef typeRef. typeRef -&gt; Pos -&gt; Referent' termRef typeRef
 </span><span class="hs-identifier hs-var">Referent.Con</span></span><span> </span><span class="annot"><span class="annottext">Reference' t h
-</span><a href="#local-6989586621679490530"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
-</span><a href="#local-6989586621679490528"><span class="hs-identifier hs-var">cid</span></a></span></span></span><span>
+</span><a href="#local-6989586621679491139"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="annot"><span class="annottext">Pos
+</span><a href="#local-6989586621679491137"><span class="hs-identifier hs-var">cid</span></a></span></span></span><span>
 </span><span id="line-54"></span></pre></body></html>
