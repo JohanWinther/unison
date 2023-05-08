@@ -1092,10 +1092,46 @@ BaseUrl :: String -> ByteString -> Port -> BaseUrl
 [$sel:urlHost:BaseUrl] :: BaseUrl -> String
 [$sel:urlToken:BaseUrl] :: BaseUrl -> ByteString
 [$sel:urlPort:BaseUrl] :: BaseUrl -> Port
-data BaseUrlPath
-UI :: BaseUrlPath
-Api :: BaseUrlPath
-urlFor :: BaseUrlPath -> BaseUrl -> String
+data DefinitionReference
+TermReference :: HashQualified Name -> DefinitionReference
+TypeReference :: HashQualified Name -> DefinitionReference
+AbilityConstructorReference :: HashQualified Name -> DefinitionReference
+DataConstructorReference :: HashQualified Name -> DefinitionReference
+data Service
+UI :: Absolute -> Maybe DefinitionReference -> Service
+Api :: Service
+
+-- | Create a Service URL, either for the UI or the API
+--   
+--   Examples:
+--   
+--   <pre>
+--   &gt;&gt;&gt; urlFor Api (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
+--   "https://localhost:1234/asdf/api"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; import qualified Unison.Syntax.Name as Name
+--   
+--   &gt;&gt;&gt; let service = UI (Path.absoluteEmpty) (Just (TermReference (NameOnly (Name.unsafeFromText "base.data.List.map"))))
+--   
+--   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
+--   
+--   &gt;&gt;&gt; urlFor service baseUrl
+--   "https://localhost:1234/asdf/ui/latest/;/terms/base/data/List/map"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; import qualified Unison.Syntax.Name as Name
+--   
+--   &gt;&gt;&gt; let service = UI (Path.Absolute (Path.fromText "base.data")) (Just (TermReference (NameOnly (Name.unsafeFromText "List.map"))))
+--   
+--   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
+--   
+--   &gt;&gt;&gt; urlFor service baseUrl
+--   "https://localhost:1234/asdf/ui/latest/namespaces/base/data/;/terms/List/map"
+--   </pre>
+urlFor :: Service -> BaseUrl -> String
 handleAuth :: ByteString -> Text -> Handler ()
 openAPI :: OpenApi
 infoObject :: Info
