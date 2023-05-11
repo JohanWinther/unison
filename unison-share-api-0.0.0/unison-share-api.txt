@@ -749,7 +749,7 @@ definitionsBySuffixes :: Codebase m Symbol Ann -> NameSearch Transaction -> Incl
 displayType :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject () (Decl Symbol Ann))
 docsInBranchToHtmlFiles :: Runtime Symbol -> Codebase IO Symbol Ann -> Branch IO -> Path -> FilePath -> IO ()
 expandShortCausalHash :: ShortCausalHash -> Backend Transaction CausalHash
-findShallowReadmeInBranchAndRender :: Width -> Runtime Symbol -> Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Branch m -> Backend IO (Maybe Doc)
+findDocInBranchAndRender :: Set NameSegment -> Width -> Runtime Symbol -> Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Branch m -> Backend IO (Maybe Doc)
 formatSuffixedType :: Var v => PrettyPrintEnvDecl -> Width -> Type v Ann -> SyntaxText
 getCurrentParseNames :: NameScoping -> Branch m -> NamesWithHistory
 getCurrentPrettyNames :: Int -> NameScoping -> Branch m -> PrettyPrintEnvDecl
@@ -875,6 +875,11 @@ instance GHC.Classes.Ord Unison.Server.Backend.FoundRef
 instance GHC.Classes.Eq Unison.Server.Backend.FoundRef
 instance GHC.Show.Show Unison.Server.Backend.DefinitionResults
 instance Control.Monad.Trans.Class.MonadTrans Unison.Server.Backend.Backend
+
+
+-- | Helper for rendering docs within a given namespace
+module Unison.Server.Share.RenderDoc
+renderDoc :: Set NameSegment -> Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Width -> Backend IO (Maybe Doc)
 
 
 -- | This module contains implementations of Backend methods which are
