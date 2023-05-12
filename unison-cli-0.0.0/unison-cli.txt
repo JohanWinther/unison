@@ -1222,7 +1222,7 @@ CantUndo :: UndoFailureReason -> Output
 BustedBuiltins :: Set Reference -> Set Reference -> Output
 GitError :: GitError -> Output
 ShareError :: ShareError -> Output
-ViewOnShare :: WriteShareRemoteNamespace -> Output
+ViewOnShare :: Either WriteShareRemoteNamespace (URI, ProjectName, ProjectBranchName) -> Output
 ConfiguredMetadataParseError :: Path' -> String -> Pretty ColorText -> Output
 NoConfiguredRemoteMapping :: PushPull -> Absolute -> Output
 ConfiguredRemoteMappingParseError :: PushPull -> Absolute -> Text -> String -> Output
@@ -2477,6 +2477,7 @@ endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet 
 --   #abcdef
 displayBranchHash :: CausalHash -> String
 prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
+prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
 
 module Unison.CommandLine.DisplayValues
 type Pretty = Pretty ColorText
