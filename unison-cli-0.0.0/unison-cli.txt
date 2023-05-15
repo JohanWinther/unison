@@ -2098,20 +2098,12 @@ getCurrentProject :: Cli (Maybe Project)
 --   not on a project branch.
 expectCurrentProject :: Cli Project
 
--- | Get the current project+branch that a user is on.
---   
---   Note that if a user has (somehow) cd'd into a namespace *within* a
---   branch, this function will return Nothing; that is, it only returns
---   Just if the user's current namespace is the root of a branch, and no
---   deeper.
---   
---   This should be fine: we don't want users to be able to cd around
---   willy-nilly within projects (right?...)
-getCurrentProjectBranch :: Cli (Maybe (ProjectAndBranch Project ProjectBranch))
+-- | Get the current project+branch+branch path that a user is on.
+getCurrentProjectBranch :: Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
 
 -- | Like <a>getCurrentProjectBranch</a>, but fails with a message if the
 --   user is not on a project branch.
-expectCurrentProjectBranch :: Cli (ProjectAndBranch Project ProjectBranch)
+expectCurrentProjectBranch :: Cli (ProjectAndBranch Project ProjectBranch, Path)
 
 -- | Get the path that a project is stored at. Users aren't supposed to go
 --   here.
@@ -2151,15 +2143,15 @@ projectBranchSegment :: ProjectBranchId -> NameSegment
 -- | The prism between paths like
 --   
 --   <pre>
---   .__projects._XX_XX.branches._YY_YY
+--   .__projects._XX_XX.branches._YY_YY.foo.bar
 --   </pre>
 --   
---   and the <tt>(project id, branch id)</tt> pair
+--   and the <tt>(project id, branch id, path)</tt> triple
 --   
 --   <pre>
---   (XX-XX, YY-YY)
+--   (XX-XX, YY-YY, foo.bar)
 --   </pre>
-projectBranchPathPrism :: Prism' Absolute (ProjectAndBranch ProjectId ProjectBranchId)
+projectBranchPathPrism :: Prism' Absolute (ProjectAndBranch ProjectId ProjectBranchId, Path)
 hydrateNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch ProjectName ProjectBranchName)
 expectProjectAndBranchByIds :: ProjectAndBranch ProjectId ProjectBranchId -> Transaction (ProjectAndBranch Project ProjectBranch)
 expectProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch Project ProjectBranch)
@@ -2478,6 +2470,8 @@ endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet 
 displayBranchHash :: CausalHash -> String
 prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
 prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
+stripProjectBranchInfo :: Absolute -> Maybe Path
+prettyAbsoluteStripProject :: Absolute -> Pretty
 
 module Unison.CommandLine.DisplayValues
 type Pretty = Pretty ColorText
