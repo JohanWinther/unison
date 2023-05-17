@@ -290,13 +290,12 @@ GistI :: GistInput -> Input
 AuthLoginI :: Input
 VersionI :: Input
 DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
-ProjectCloneI :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -> Input
 ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: ProjectAndBranchNames -> Input
 ProjectsI :: Input
-BranchCloneI :: ProjectBranchName -> Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
 BranchesI :: Input
+CloneI :: ProjectAndBranchNames -> Maybe ProjectAndBranchNames -> Input
 ReleaseDraftI :: Semver -> Input
 
 -- | The source of a <a>$sel:branch:WriteGitRepo</a> command: what to make
@@ -1312,6 +1311,13 @@ NotImplementedYet :: Text -> Output
 DraftingRelease :: ProjectBranchName -> Semver -> Output
 CannotCreateReleaseBranchWithBranchCommand :: ProjectBranchName -> Semver -> Output
 
+-- | The <tt>local</tt> in a `clone remote local` is ambiguous
+AmbiguousCloneLocal :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+
+-- | The <tt>remote</tt> in a `clone remote local` is ambiguous
+AmbiguousCloneRemote :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+ClonedProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+
 -- | What did we create a project branch from?
 --   
 --   <ul>
@@ -1367,7 +1373,7 @@ History :: Maybe Int -> HashLength -> [(CausalHash, Diff)] -> HistoryTail -> Num
 ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
 ListProjects :: [Project] -> NumberedOutput
 ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
-BothLocalProjectAndProjectBranchExist :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
+AmbiguousSwitch :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -2159,7 +2165,9 @@ expectProjectAndBranchByIds :: ProjectAndBranch ProjectId ProjectBranchId -> Tra
 expectProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch Project ProjectBranch)
 expectRemoteProjectByName :: ProjectName -> Cli RemoteProject
 expectRemoteProjectBranchById :: ProjectAndBranch (RemoteProjectId, ProjectName) (RemoteProjectBranchId, ProjectBranchName) -> Cli RemoteProjectBranch
+loadRemoteProjectBranchByName :: ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
 expectRemoteProjectBranchByName :: ProjectAndBranch (RemoteProjectId, ProjectName) ProjectBranchName -> Cli RemoteProjectBranch
+loadRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
 expectRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 expectRemoteProjectBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 
@@ -2291,14 +2299,13 @@ gist :: InputPattern
 authLogin :: InputPattern
 printVersion :: InputPattern
 diffNamespaceToPatch :: InputPattern
-projectClone :: InputPattern
 projectCreate :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
-branchClone :: InputPattern
 branchInputPattern :: InputPattern
 branchEmptyInputPattern :: InputPattern
+clone :: InputPattern
 releaseDraft :: InputPattern
 validInputs :: [InputPattern]
 
@@ -2652,18 +2659,9 @@ withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO
 -- | <tt>clone</tt>-related input handlers
 module Unison.Codebase.Editor.HandleInput.ProjectClone
 
--- | Clone a remote branch from the remote project associated with the
---   current branch.
---   
---   If there is no associated remote branch, fall back on its nearest
---   ancestor with an associated remote branch, and if there are none,
---   finally fall back on a name comparison (e.g. trying to clone branch
---   "foo" while in local project named "<tt>bar/baz" will look for branch
---   "</tt>bar<i>baz</i>foo" on the server)
-branchClone :: ProjectBranchName -> Cli ()
-
--- | Clone a remote project or remote project branch.
-projectClone :: ProjectAndBranch ProjectName (Maybe ProjectBranchName) -> Cli ()
+-- | Clone a remote branch.
+handleClone :: ProjectAndBranchNames -> Maybe ProjectAndBranchNames -> Cli ()
+instance GHC.Generics.Generic Unison.Codebase.Editor.HandleInput.ProjectClone.ResolvedRemoteNames
 
 
 -- | Helpers<i>utils that have to do with term</i>type metadata.
