@@ -406,6 +406,7 @@ DeleteTarget'Type :: DeleteOutput -> [HQSplit'] -> DeleteTarget
 DeleteTarget'Namespace :: Insistence -> Maybe Split' -> DeleteTarget
 DeleteTarget'Patch :: Split' -> DeleteTarget
 DeleteTarget'ProjectBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> DeleteTarget
+DeleteTarget'Project :: ProjectName -> DeleteTarget
 instance GHC.Show.Show Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Ord Unison.Codebase.Editor.Input.OptionalPatch
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.OptionalPatch
@@ -1294,6 +1295,7 @@ ProjectAndBranchNameAlreadyExists :: ProjectAndBranch ProjectName ProjectBranchN
 NotOnProjectBranch :: Output
 NoAssociatedRemoteProject :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 NoAssociatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+LocalProjectDoesntExist :: ProjectName -> Output
 LocalProjectBranchDoesntExist :: ProjectAndBranch ProjectName ProjectBranchName -> Output
 LocalProjectNorProjectBranchExist :: ProjectName -> ProjectBranchName -> Output
 RemoteProjectDoesntExist :: URI -> ProjectName -> Output
@@ -2210,6 +2212,7 @@ deleteTypeVerbose :: InputPattern
 deleteTermReplacementCommand :: String
 deleteTypeReplacementCommand :: String
 deleteReplacement :: Bool -> InputPattern
+deleteProject :: InputPattern
 deleteBranch :: InputPattern
 deleteTermReplacement :: InputPattern
 deleteTypeReplacement :: InputPattern
@@ -2556,6 +2559,13 @@ module Unison.Codebase.Editor.HandleInput.ProjectCreate
 --   do (3) eventually, and we'd rather not waste too much time getting
 --   everything perfectly correct before we get there.
 projectCreate :: ProjectName -> Cli ()
+
+
+-- | <tt>delete.project</tt> input handler
+module Unison.Codebase.Editor.HandleInput.DeleteProject
+
+-- | Delete a project
+handleDeleteProject :: ProjectName -> Cli ()
 
 
 -- | <tt>delete.branch</tt> input handler
