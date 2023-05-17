@@ -1229,6 +1229,7 @@ ConfiguredRemoteMappingParseError :: PushPull -> Absolute -> Text -> String -> O
 MetadataMissingType :: PrettyPrintEnv -> Referent -> Output
 TermMissingType :: Reference -> Output
 MetadataAmbiguous :: HashQualified Name -> PrettyPrintEnv -> [Referent] -> Output
+AboutToPropagatePatch :: Output
 NothingToPatch :: PatchPath -> Path' -> Output
 PatchNeedsToBeConflictFree :: Output
 PatchInvolvesExternalDependents :: PrettyPrintEnv -> Set Reference -> Output
@@ -1237,6 +1238,7 @@ StartOfCurrentPathHistory :: Output
 ShowReflog :: [(Maybe UTCTime, ShortCausalHash, Text)] -> Output
 PullAlreadyUpToDate :: ReadRemoteNamespace RemoteProjectBranch -> PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
 PullSuccessful :: ReadRemoteNamespace RemoteProjectBranch -> PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
+AboutToMerge :: Output
 
 -- | Indicates a trivial merge where the destination was empty and was just
 --   replaced.
@@ -1310,6 +1312,7 @@ UploadedEntities :: Int -> Output
 NotImplementedYet :: Text -> Output
 DraftingRelease :: ProjectBranchName -> Semver -> Output
 CannotCreateReleaseBranchWithBranchCommand :: ProjectBranchName -> Semver -> Output
+CalculatingDiff :: Output
 
 -- | The <tt>local</tt> in a `clone remote local` is ambiguous
 AmbiguousCloneLocal :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
