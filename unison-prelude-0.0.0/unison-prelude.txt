@@ -781,6 +781,112 @@ mapM_ :: (Foldable t, Monad m) => (a -> m b) -> t a -> m ()
 -- | Uninhabited data type
 data Void
 
+-- | A bifunctor is a type constructor that takes two type arguments and is
+--   a functor in <i>both</i> arguments. That is, unlike with
+--   <a>Functor</a>, a type constructor such as <a>Either</a> does not need
+--   to be partially applied for a <a>Bifunctor</a> instance, and the
+--   methods in this class permit mapping functions over the <a>Left</a>
+--   value or the <a>Right</a> value, or both at the same time.
+--   
+--   Formally, the class <a>Bifunctor</a> represents a bifunctor from
+--   <tt>Hask</tt> -&gt; <tt>Hask</tt>.
+--   
+--   Intuitively it is a bifunctor where both the first and second
+--   arguments are covariant.
+--   
+--   You can define a <a>Bifunctor</a> by either defining <a>bimap</a> or
+--   by defining both <a>first</a> and <a>second</a>.
+--   
+--   If you supply <a>bimap</a>, you should ensure that:
+--   
+--   <pre>
+--   <a>bimap</a> <a>id</a> <a>id</a> ≡ <a>id</a>
+--   </pre>
+--   
+--   If you supply <a>first</a> and <a>second</a>, ensure:
+--   
+--   <pre>
+--   <a>first</a> <a>id</a> ≡ <a>id</a>
+--   <a>second</a> <a>id</a> ≡ <a>id</a>
+--   </pre>
+--   
+--   If you supply both, you should also ensure:
+--   
+--   <pre>
+--   <a>bimap</a> f g ≡ <a>first</a> f <a>.</a> <a>second</a> g
+--   </pre>
+--   
+--   These ensure by parametricity:
+--   
+--   <pre>
+--   <a>bimap</a>  (f <a>.</a> g) (h <a>.</a> i) ≡ <a>bimap</a> f h <a>.</a> <a>bimap</a> g i
+--   <a>first</a>  (f <a>.</a> g) ≡ <a>first</a>  f <a>.</a> <a>first</a>  g
+--   <a>second</a> (f <a>.</a> g) ≡ <a>second</a> f <a>.</a> <a>second</a> g
+--   </pre>
+class Bifunctor (p :: Type -> Type -> Type)
+
+-- | Map over both arguments at the same time.
+--   
+--   <pre>
+--   <a>bimap</a> f g ≡ <a>first</a> f <a>.</a> <a>second</a> g
+--   </pre>
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; bimap toUpper (+1) ('j', 3)
+--   ('J',4)
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; bimap toUpper (+1) (Left 'j')
+--   Left 'J'
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; bimap toUpper (+1) (Right 3)
+--   Right 4
+--   </pre>
+bimap :: Bifunctor p => (a -> b) -> (c -> d) -> p a c -> p b d
+
+-- | Map covariantly over the first argument.
+--   
+--   <pre>
+--   <a>first</a> f ≡ <a>bimap</a> f <a>id</a>
+--   </pre>
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; first toUpper ('j', 3)
+--   ('J',3)
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; first toUpper (Left 'j')
+--   Left 'J'
+--   </pre>
+first :: Bifunctor p => (a -> b) -> p a c -> p b c
+
+-- | Map covariantly over the second argument.
+--   
+--   <pre>
+--   <a>second</a> ≡ <a>bimap</a> <a>id</a>
+--   </pre>
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; second (+1) ('j', 3)
+--   ('j',4)
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; second (+1) (Right 3)
+--   Right 4
+--   </pre>
+second :: Bifunctor p => (b -> c) -> p a b -> p a c
+
 -- | Monads in which <a>IO</a> computations may be embedded. Any monad
 --   built by applying a sequence of monad transformers to the <a>IO</a>
 --   monad will be an instance of this class.
