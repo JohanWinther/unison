@@ -20,20 +20,20 @@
 </span><span id="line-20"></span><span class="hs-comment">-- | Delete a project</span><span>
 </span><span id="line-21"></span><span class="annot"><a href="Unison.Codebase.Editor.HandleInput.DeleteProject.html#handleDeleteProject"><span class="hs-identifier hs-type">handleDeleteProject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-22"></span><span id="handleDeleteProject"><span class="annot"><span class="annottext">handleDeleteProject :: ProjectName -&gt; Cli ()
-</span><a href="Unison.Codebase.Editor.HandleInput.DeleteProject.html#handleDeleteProject"><span class="hs-identifier hs-var hs-var">handleDeleteProject</span></a></span></span><span> </span><span id="local-6989586621679695270"><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679695270"><span class="hs-identifier hs-var">projectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-23"></span><span>  </span><span id="local-6989586621679695269"><span class="annot"><span class="annottext">Maybe (ProjectAndBranch Project ProjectBranch, Path)
-</span><a href="#local-6989586621679695269"><span class="hs-identifier hs-var">maybeCurrentBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
+</span><a href="Unison.Codebase.Editor.HandleInput.DeleteProject.html#handleDeleteProject"><span class="hs-identifier hs-var hs-var">handleDeleteProject</span></a></span></span><span> </span><span id="local-6989586621679695538"><span class="annot"><span class="annottext">ProjectName
+</span><a href="#local-6989586621679695538"><span class="hs-identifier hs-var">projectName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-23"></span><span>  </span><span id="local-6989586621679695537"><span class="annot"><span class="annottext">Maybe (ProjectAndBranch Project ProjectBranch, Path)
+</span><a href="#local-6989586621679695537"><span class="hs-identifier hs-var">maybeCurrentBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
 </span><a href="Unison.Cli.ProjectUtils.html#getCurrentProjectBranch"><span class="hs-identifier hs-var">ProjectUtils.getCurrentProjectBranch</span></a></span><span>
 </span><span id="line-24"></span><span>
-</span><span id="line-25"></span><span>  </span><span id="local-6989586621679695267"><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695267"><span class="hs-identifier hs-var">deletedProject</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-25"></span><span>  </span><span id="local-6989586621679695535"><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695535"><span class="hs-identifier hs-var">deletedProject</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-26"></span><span>    </span><span class="annot"><span class="annottext">Transaction (Either Output Project) -&gt; Cli Project
 forall a. Transaction (Either Output a) -&gt; Cli a
 </span><a href="Unison.Cli.Monad.html#runEitherTransaction"><span class="hs-identifier hs-var">Cli.runEitherTransaction</span></a></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-27"></span><span>      </span><span class="annot"><span class="annottext">ProjectName -&gt; Transaction (Maybe Project)
 </span><span class="hs-identifier hs-var">Queries.loadProjectByName</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679695270"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction (Maybe Project)
+</span><a href="#local-6989586621679695538"><span class="hs-identifier hs-var">projectName</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction (Maybe Project)
 -&gt; (Maybe Project -&gt; Transaction (Either Output Project))
 -&gt; Transaction (Either Output Project)
 forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
@@ -45,28 +45,28 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectName -&gt; Output
 </span><a href="Unison.Codebase.Editor.Output.html#LocalProjectDoesntExist"><span class="hs-identifier hs-var">Output.LocalProjectDoesntExist</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679695270"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-29"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679695263"><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695263"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621679695538"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679695531"><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695531"><span class="hs-identifier hs-var">project</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-30"></span><span>          </span><span class="annot"><span class="annottext">ProjectId -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Queries.deleteProject</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695263"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
+</span><a href="#local-6989586621679695531"><span class="hs-identifier hs-var">project</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
 forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">IsLabel &quot;projectId&quot; (Getting ProjectId Project ProjectId)
 Getting ProjectId Project ProjectId
-</span><a href="#local-6989586621679695261"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679695529"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-31"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Project -&gt; Either Output Project
 forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695263"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679695531"><span class="hs-identifier hs-var">project</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-32"></span><span>
-</span><span id="line-33"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679695260"><span class="annot"><span class="annottext">projectId :: ProjectId
-</span><a href="#local-6989586621679695260"><span class="hs-identifier hs-var hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695267"><span class="hs-identifier hs-var">deletedProject</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
+</span><span id="line-33"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679695528"><span class="annot"><span class="annottext">projectId :: ProjectId
+</span><a href="#local-6989586621679695528"><span class="hs-identifier hs-var hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695535"><span class="hs-identifier hs-var">deletedProject</span></a></span><span> </span><span class="annot"><span class="annottext">Project -&gt; Getting ProjectId Project ProjectId -&gt; ProjectId
 forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">IsLabel &quot;projectId&quot; (Getting ProjectId Project ProjectId)
 Getting ProjectId Project ProjectId
-</span><a href="#local-6989586621679695259"><span class="hs-var">#projectId</span></a></span><span>
+</span><a href="#local-6989586621679695527"><span class="hs-var">#projectId</span></a></span><span>
 </span><span id="line-34"></span><span>
 </span><span id="line-35"></span><span>  </span><span class="annot"><span class="annottext">Text -&gt; Absolute -&gt; (Branch IO -&gt; Branch IO) -&gt; Cli Bool
 </span><a href="Unison.Cli.MonadUtils.html#updateAt"><span class="hs-identifier hs-var">Cli.updateAt</span></a></span><span>
@@ -76,10 +76,10 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">ProjectName -&gt; Text
 forall target source. From source target =&gt; source -&gt; target
 </span><span class="hs-identifier hs-var">into</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="annot"><span class="annottext">ProjectName
-</span><a href="#local-6989586621679695270"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679695538"><span class="hs-identifier hs-var">projectName</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-37"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProjectId -&gt; Absolute
 </span><a href="Unison.Cli.ProjectUtils.html#projectPath"><span class="hs-identifier hs-var">ProjectUtils.projectPath</span></a></span><span> </span><span class="annot"><span class="annottext">ProjectId
-</span><a href="#local-6989586621679695260"><span class="hs-identifier hs-var">projectId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679695528"><span class="hs-identifier hs-var">projectId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-38"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Branch IO -&gt; Branch IO -&gt; Branch IO
 forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
@@ -94,10 +94,10 @@ forall (m :: * -&gt; *) a.
 Applicative m =&gt;
 Maybe a -&gt; (a -&gt; m ()) -&gt; m ()
 </span><span class="hs-identifier hs-var">whenJust</span></span><span> </span><span class="annot"><span class="annottext">Maybe (ProjectAndBranch Project ProjectBranch, Path)
-</span><a href="#local-6989586621679695269"><span class="hs-identifier hs-var">maybeCurrentBranch</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span id="local-6989586621679695251"><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695251"><span class="hs-identifier hs-var">currentProject</span></a></span></span><span> </span><span id="local-6989586621679695250"><span class="annot"><span class="annottext">ProjectBranch
-</span><a href="#local-6989586621679695250"><span class="hs-identifier hs-var">_currentBranch</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679695249"><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679695249"><span class="hs-identifier hs-var">_restPath</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679695537"><span class="hs-identifier hs-var">maybeCurrentBranch</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ProjectAndBranch</span></span><span> </span><span id="local-6989586621679695519"><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695519"><span class="hs-identifier hs-var">currentProject</span></a></span></span><span> </span><span id="local-6989586621679695518"><span class="annot"><span class="annottext">ProjectBranch
+</span><a href="#local-6989586621679695518"><span class="hs-identifier hs-var">_currentBranch</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679695517"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679695517"><span class="hs-identifier hs-var">_restPath</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-42"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; Cli () -&gt; Cli ()
 forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ProjectId -&gt; ProjectId -&gt; Bool)
@@ -109,9 +109,9 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 forall s (m :: * -&gt; *) a. MonadReader s m =&gt; Getting a s a -&gt; m a
 </span><span class="hs-identifier hs-var">view</span></span><span> </span><span class="annot"><span class="annottext">IsLabel &quot;projectId&quot; (Getting ProjectId Project ProjectId)
 Getting ProjectId Project ProjectId
-</span><a href="#local-6989586621679695247"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695267"><span class="hs-identifier hs-var">deletedProject</span></a></span><span> </span><span class="annot"><span class="annottext">Project
-</span><a href="#local-6989586621679695251"><span class="hs-identifier hs-var">currentProject</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621679695515"><span class="hs-var">#projectId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695535"><span class="hs-identifier hs-var">deletedProject</span></a></span><span> </span><span class="annot"><span class="annottext">Project
+</span><a href="#local-6989586621679695519"><span class="hs-identifier hs-var">currentProject</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-43"></span><span>      </span><span class="annot"><span class="annottext">Absolute -&gt; Cli ()
 </span><a href="Unison.Cli.Monad.html#cd"><span class="hs-identifier hs-var">Cli.cd</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; Absolute
 </span><span class="hs-identifier hs-var">Path.Absolute</span></span><span> </span><span class="annot"><span class="annottext">Path

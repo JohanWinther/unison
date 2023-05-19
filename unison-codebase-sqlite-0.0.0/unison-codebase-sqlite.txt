@@ -1125,6 +1125,8 @@ loadProjectBranch :: ProjectId -> ProjectBranchId -> Transaction (Maybe ProjectB
 --   
 --   main &lt;- topic2
 deleteProjectBranch :: ProjectId -> ProjectBranchId -> Transaction ()
+setMostRecentBranch :: ProjectId -> ProjectBranchId -> Transaction ()
+loadMostRecentBranch :: ProjectId -> Transaction (Maybe ProjectBranchId)
 loadRemoteProject :: RemoteProjectId -> URI -> Transaction (Maybe RemoteProject)
 ensureRemoteProject :: RemoteProjectId -> URI -> ProjectName -> Transaction ()
 expectRemoteProjectName :: RemoteProjectId -> URI -> Transaction ProjectName
@@ -1383,6 +1385,7 @@ addTempEntityTables :: Transaction ()
 addReflogTable :: Transaction ()
 addNamespaceStatsTables :: Transaction ()
 addProjectTables :: Transaction ()
+addMostRecentBranchTable :: Transaction ()
 fixScopedNameLookupTables :: Transaction ()
 currentSchemaVersion :: SchemaVersion
 
