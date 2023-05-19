@@ -1250,10 +1250,10 @@ PreviewMergeAlreadyUpToDate :: Either Path' (ProjectAndBranch ProjectName Projec
 NoConflictsOrEdits :: Output
 NotImplemented :: Output
 NoBranchWithHash :: ShortCausalHash -> Output
-ListDependencies :: Int -> LabeledDependency -> [(Name, Reference)] -> Set Reference -> Output
+ListDependencies :: PrettyPrintEnv -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Output
 
 -- | List dependents of a type or term.
-ListDependents :: Int -> LabeledDependency -> [(Reference, Maybe Name)] -> Output
+ListDependents :: PrettyPrintEnv -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Output
 
 -- | List all direct dependencies which don't have any names in the current
 --   branch
@@ -2485,6 +2485,8 @@ prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
 prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
 stripProjectBranchInfo :: Absolute -> Maybe Path
 prettyAbsoluteStripProject :: Absolute -> Pretty
+prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
+listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty ColorText
 
 module Unison.CommandLine.DisplayValues
 type Pretty = Pretty ColorText
