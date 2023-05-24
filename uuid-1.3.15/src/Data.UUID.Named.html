@@ -44,71 +44,54 @@
 </span><span id="line-44"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">]</span><span> </span><span class="hs-comment">-- ^Object</span><span>
 </span><span id="line-45"></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">UUID</span></span><span>
 </span><span id="line-46"></span><span id="generateNamed"><span class="annot"><span class="annottext">generateNamed :: (ByteString -&gt; ByteString) -&gt; Word8 -&gt; UUID -&gt; [Word8] -&gt; UUID
-</span><a href="Data.UUID.Named.html#generateNamed"><span class="hs-identifier hs-var hs-var">generateNamed</span></a></span></span><span> </span><span id="local-6989586621679056046"><span class="annot"><span class="annottext">ByteString -&gt; ByteString
-</span><a href="#local-6989586621679056046"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679056045"><span class="annot"><span class="annottext">Word8
-</span><a href="#local-6989586621679056045"><span class="hs-identifier hs-var">version</span></a></span></span><span> </span><span id="local-6989586621679056044"><span class="annot"><span class="annottext">UUID
-</span><a href="#local-6989586621679056044"><span class="hs-identifier hs-var">namespace</span></a></span></span><span> </span><span id="local-6989586621679056043"><span class="annot"><span class="annottext">[Word8]
-</span><a href="#local-6989586621679056043"><span class="hs-identifier hs-var">object</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-47"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679056042"><span class="annot"><span class="annottext">chunk :: ByteString
-</span><a href="#local-6989586621679056042"><span class="hs-identifier hs-var hs-var">chunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Word8] -&gt; ByteString
-</span><span class="hs-identifier hs-var">B.pack</span></span><span> </span><span class="annot"><span class="annottext">([Word8] -&gt; ByteString) -&gt; [Word8] -&gt; ByteString
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.UUID.Named.html#generateNamed"><span class="hs-identifier hs-var hs-var">generateNamed</span></a></span></span><span> </span><span id="local-6989586621679056834"><span class="annot"><span class="annottext">ByteString -&gt; ByteString
+</span><a href="#local-6989586621679056834"><span class="hs-identifier hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679056833"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621679056833"><span class="hs-identifier hs-var">version</span></a></span></span><span> </span><span id="local-6989586621679056832"><span class="annot"><span class="annottext">UUID
+</span><a href="#local-6989586621679056832"><span class="hs-identifier hs-var">namespace</span></a></span></span><span> </span><span id="local-6989586621679056831"><span class="annot"><span class="annottext">[Word8]
+</span><a href="#local-6989586621679056831"><span class="hs-identifier hs-var">object</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-47"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679056830"><span class="annot"><span class="annottext">chunk :: ByteString
+</span><a href="#local-6989586621679056830"><span class="hs-identifier hs-var hs-var">chunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Word8] -&gt; ByteString
+</span><span class="hs-identifier hs-var">B.pack</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">UUID -&gt; [Word8]
 </span><span class="hs-identifier hs-var">toList</span></span><span> </span><span class="annot"><span class="annottext">UUID
-</span><a href="#local-6989586621679056044"><span class="hs-identifier hs-var">namespace</span></a></span><span> </span><span class="annot"><span class="annottext">[Word8] -&gt; [Word8] -&gt; [Word8]
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679056832"><span class="hs-identifier hs-var">namespace</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[Word8]
-</span><a href="#local-6989586621679056043"><span class="hs-identifier hs-var">object</span></a></span><span>
-</span><span id="line-48"></span><span>        </span><span id="local-6989586621679056039"><span class="annot"><span class="annottext">bytes :: ByteString
-</span><a href="#local-6989586621679056039"><span class="hs-identifier hs-var hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
-</span><span class="hs-identifier hs-var">BL.fromChunks</span></span><span> </span><span class="annot"><span class="annottext">([ByteString] -&gt; ByteString)
--&gt; (ByteString -&gt; [ByteString]) -&gt; ByteString -&gt; ByteString
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; [ByteString] -&gt; [ByteString]
-forall a. a -&gt; [a] -&gt; [a]
-</span><span class="hs-glyph hs-var">:</span></span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; ByteString) -&gt; ByteString -&gt; ByteString
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679056831"><span class="hs-identifier hs-var">object</span></a></span><span>
+</span><span id="line-48"></span><span>        </span><span id="local-6989586621679056827"><span class="annot"><span class="annottext">bytes :: ByteString
+</span><a href="#local-6989586621679056827"><span class="hs-identifier hs-var hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
+</span><span class="hs-identifier hs-var">BL.fromChunks</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString
-</span><a href="#local-6989586621679056046"><span class="hs-identifier hs-var">hash</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679056042"><span class="hs-identifier hs-var">chunk</span></a></span><span>
-</span><span id="line-49"></span><span>        </span><span id="local-6989586621679056036"><span class="annot"><span class="annottext">w :: Get Word32
-</span><a href="#local-6989586621679056036"><span class="hs-identifier hs-var hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Get Word32
+</span><a href="#local-6989586621679056834"><span class="hs-identifier hs-var">hash</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679056830"><span class="hs-identifier hs-var">chunk</span></a></span><span>
+</span><span id="line-49"></span><span>        </span><span id="local-6989586621679056824"><span class="annot"><span class="annottext">w :: Get Word32
+</span><a href="#local-6989586621679056824"><span class="hs-identifier hs-var hs-var">w</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Get Word32
 </span><span class="hs-identifier hs-var">getWord32be</span></span><span>
-</span><span id="line-50"></span><span>        </span><span id="local-6989586621679056035"><span class="annot"><span class="annottext">unpackBytes :: ByteString -&gt; UUID
-</span><a href="#local-6989586621679056035"><span class="hs-identifier hs-var hs-var">unpackBytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Get UUID -&gt; ByteString -&gt; UUID
-forall a. Get a -&gt; ByteString -&gt; a
-</span><span class="hs-identifier hs-var">runGet</span></span><span> </span><span class="annot"><span class="annottext">(Get UUID -&gt; ByteString -&gt; UUID) -&gt; Get UUID -&gt; ByteString -&gt; UUID
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-50"></span><span>        </span><span id="local-6989586621679056817"><span class="annot"><span class="annottext">unpackBytes :: ByteString -&gt; UUID
+</span><a href="#local-6989586621679056817"><span class="hs-identifier hs-var hs-var">unpackBytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Get a -&gt; ByteString -&gt; a
+</span><span class="hs-identifier hs-var">runGet</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-51"></span><span>         </span><span class="annot"><span class="annottext">Word8 -&gt; Word32 -&gt; Word32 -&gt; Word32 -&gt; Word32 -&gt; UUID
 </span><span class="hs-identifier hs-var">buildFromWords</span></span><span> </span><span class="annot"><span class="annottext">Word8
-</span><a href="#local-6989586621679056045"><span class="hs-identifier hs-var">version</span></a></span><span> </span><span class="annot"><span class="annottext">(Word32 -&gt; Word32 -&gt; Word32 -&gt; Word32 -&gt; UUID)
--&gt; Get Word32 -&gt; Get (Word32 -&gt; Word32 -&gt; Word32 -&gt; UUID)
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679056833"><span class="hs-identifier hs-var">version</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Get Word32
-</span><a href="#local-6989586621679056036"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">Get (Word32 -&gt; Word32 -&gt; Word32 -&gt; UUID)
--&gt; Get Word32 -&gt; Get (Word32 -&gt; Word32 -&gt; UUID)
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679056824"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Get Word32
-</span><a href="#local-6989586621679056036"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">Get (Word32 -&gt; Word32 -&gt; UUID)
--&gt; Get Word32 -&gt; Get (Word32 -&gt; UUID)
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679056824"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Get Word32
-</span><a href="#local-6989586621679056036"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">Get (Word32 -&gt; UUID) -&gt; Get Word32 -&gt; Get UUID
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679056824"><span class="hs-identifier hs-var">w</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Get Word32
-</span><a href="#local-6989586621679056036"><span class="hs-identifier hs-var">w</span></a></span><span>
+</span><a href="#local-6989586621679056824"><span class="hs-identifier hs-var">w</span></a></span><span>
 </span><span id="line-52"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; UUID
-</span><a href="#local-6989586621679056035"><span class="hs-identifier hs-var">unpackBytes</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679056039"><span class="hs-identifier hs-var">bytes</span></a></span><span>
+</span><a href="#local-6989586621679056817"><span class="hs-identifier hs-var">unpackBytes</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679056827"><span class="hs-identifier hs-var">bytes</span></a></span><span>
 </span><span id="line-53"></span><span>
 </span><span id="line-54"></span><span>
 </span><span id="line-55"></span><span class="annot"><a href="Data.UUID.Named.html#unsafeFromString"><span class="hs-identifier hs-type">unsafeFromString</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">UUID</span></span><span>
 </span><span id="line-56"></span><span id="unsafeFromString"><span class="annot"><span class="annottext">unsafeFromString :: String -&gt; UUID
-</span><a href="Data.UUID.Named.html#unsafeFromString"><span class="hs-identifier hs-var hs-var">unsafeFromString</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe UUID -&gt; UUID
-forall a. HasCallStack =&gt; Maybe a -&gt; a
-</span><span class="hs-identifier hs-var">fromJust</span></span><span> </span><span class="annot"><span class="annottext">(Maybe UUID -&gt; UUID) -&gt; (String -&gt; Maybe UUID) -&gt; String -&gt; UUID
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.UUID.Named.html#unsafeFromString"><span class="hs-identifier hs-var hs-var">unsafeFromString</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. HasCallStack =&gt; Maybe a -&gt; a
+</span><span class="hs-identifier hs-var">fromJust</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Maybe UUID
 </span><span class="hs-identifier hs-var">fromString</span></span><span>
 </span><span id="line-57"></span><span>

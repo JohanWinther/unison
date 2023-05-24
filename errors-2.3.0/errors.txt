@@ -476,9 +476,6 @@ module Control.Error
 newtype ExceptT e (m :: Type -> Type) a
 ExceptT :: m (Either e a) -> ExceptT e (m :: Type -> Type) a
 
--- | The inverse of <a>ExceptT</a>.
-runExceptT :: ExceptT e m a -> m (Either e a)
-
 -- | Map the unwrapped computation using the given function.
 --   
 --   <ul>
@@ -487,17 +484,12 @@ runExceptT :: ExceptT e m a -> m (Either e a)
 --   </ul>
 mapExceptT :: (m (Either e a) -> n (Either e' b)) -> ExceptT e m a -> ExceptT e' n b
 
+-- | The inverse of <a>ExceptT</a>.
+runExceptT :: ExceptT e m a -> m (Either e a)
+
 -- | Transform any exceptions thrown by the computation using the given
 --   function.
 withExceptT :: forall (m :: Type -> Type) e e' a. Functor m => (e -> e') -> ExceptT e m a -> ExceptT e' m a
-
--- | Handle an exception.
---   
---   <ul>
---   <li><pre><a>catchE</a> (<a>lift</a> m) h = <a>lift</a> m</pre></li>
---   <li><pre><a>catchE</a> (<a>throwE</a> e) h = h e</pre></li>
---   </ul>
-catchE :: forall (m :: Type -> Type) e a e'. Monad m => ExceptT e m a -> (e -> ExceptT e' m a) -> ExceptT e' m a
 
 -- | Signal an exception value <tt>e</tt>.
 --   
@@ -507,6 +499,14 @@ catchE :: forall (m :: Type -> Type) e a e'. Monad m => ExceptT e m a -> (e -> E
 --   <li><pre><a>throwE</a> e &gt;&gt;= m = <a>throwE</a> e</pre></li>
 --   </ul>
 throwE :: forall (m :: Type -> Type) e a. Monad m => e -> ExceptT e m a
+
+-- | Handle an exception.
+--   
+--   <ul>
+--   <li><pre><a>catchE</a> (<a>lift</a> m) h = <a>lift</a> m</pre></li>
+--   <li><pre><a>catchE</a> (<a>throwE</a> e) h = h e</pre></li>
+--   </ul>
+catchE :: forall (m :: Type -> Type) e a e'. Monad m => ExceptT e m a -> (e -> ExceptT e' m a) -> ExceptT e' m a
 
 -- | The parameterizable maybe monad, obtained by composing an arbitrary
 --   monad with the <a>Maybe</a> monad.
@@ -520,6 +520,14 @@ newtype MaybeT (m :: Type -> Type) a
 MaybeT :: m (Maybe a) -> MaybeT (m :: Type -> Type) a
 [runMaybeT] :: MaybeT (m :: Type -> Type) a -> m (Maybe a)
 
+-- | Transform the computation inside a <tt>MaybeT</tt>.
+--   
+--   <ul>
+--   <li><pre><a>runMaybeT</a> (<a>mapMaybeT</a> f m) = f (<a>runMaybeT</a>
+--   m)</pre></li>
+--   </ul>
+mapMaybeT :: (m (Maybe a) -> n (Maybe b)) -> MaybeT m a -> MaybeT n b
+
 -- | Lift a <tt>pass</tt> operation to the new monad.
 liftPass :: Monad m => Pass w m (Maybe a) -> Pass w (MaybeT m) a
 
@@ -532,13 +540,20 @@ liftCatch :: Catch e m (Maybe a) -> Catch e (MaybeT m) a
 -- | Lift a <tt>callCC</tt> operation to the new monad.
 liftCallCC :: CallCC m (Maybe a) (Maybe b) -> CallCC (MaybeT m) a b
 
--- | Transform the computation inside a <tt>MaybeT</tt>.
+-- | Extracts from a list of <a>Either</a> all the <a>Right</a> elements.
+--   All the <a>Right</a> elements are extracted in order.
 --   
---   <ul>
---   <li><pre><a>runMaybeT</a> (<a>mapMaybeT</a> f m) = f (<a>runMaybeT</a>
---   m)</pre></li>
---   </ul>
-mapMaybeT :: (m (Maybe a) -> n (Maybe b)) -> MaybeT m a -> MaybeT n b
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
+--   
+--   &gt;&gt;&gt; rights list
+--   [3,7]
+--   </pre>
+rights :: [Either a b] -> [b]
 
 -- | Partitions a list of <a>Either</a> into two lists. All the <a>Left</a>
 --   elements are extracted, in order, to the first component of the
@@ -566,21 +581,6 @@ mapMaybeT :: (m (Maybe a) -> n (Maybe b)) -> MaybeT m a -> MaybeT n b
 --   True
 --   </pre>
 partitionEithers :: [Either a b] -> ([a], [b])
-
--- | Extracts from a list of <a>Either</a> all the <a>Right</a> elements.
---   All the <a>Right</a> elements are extracted in order.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
---   
---   &gt;&gt;&gt; rights list
---   [3,7]
---   </pre>
-rights :: [Either a b] -> [b]
 
 -- | Extracts from a list of <a>Either</a> all the <a>Left</a> elements.
 --   All the <a>Left</a> elements are extracted in order.
@@ -622,6 +622,84 @@ lefts :: [Either a b] -> [a]
 --   </pre>
 either :: (a -> c) -> (b -> c) -> Either a b -> c
 
+-- | The <a>maybeToList</a> function returns an empty list when given
+--   <a>Nothing</a> or a singleton list when given <a>Just</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; maybeToList (Just 7)
+--   [7]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; maybeToList Nothing
+--   []
+--   </pre>
+--   
+--   One can use <a>maybeToList</a> to avoid pattern matching when combined
+--   with a function that (safely) works on lists:
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Text.Read ( readMaybe )
+--   
+--   &gt;&gt;&gt; sum $ maybeToList (readMaybe "3")
+--   3
+--   
+--   &gt;&gt;&gt; sum $ maybeToList (readMaybe "")
+--   0
+--   </pre>
+maybeToList :: Maybe a -> [a]
+
+-- | The <a>maybe</a> function takes a default value, a function, and a
+--   <a>Maybe</a> value. If the <a>Maybe</a> value is <a>Nothing</a>, the
+--   function returns the default value. Otherwise, it applies the function
+--   to the value inside the <a>Just</a> and returns the result.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; maybe False odd (Just 3)
+--   True
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; maybe False odd Nothing
+--   False
+--   </pre>
+--   
+--   Read an integer from a string using <a>readMaybe</a>. If we succeed,
+--   return twice the integer; that is, apply <tt>(*2)</tt> to it. If
+--   instead we fail to parse an integer, return <tt>0</tt> by default:
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Text.Read ( readMaybe )
+--   
+--   &gt;&gt;&gt; maybe 0 (*2) (readMaybe "5")
+--   10
+--   
+--   &gt;&gt;&gt; maybe 0 (*2) (readMaybe "")
+--   0
+--   </pre>
+--   
+--   Apply <a>show</a> to a <tt>Maybe Int</tt>. If we have <tt>Just n</tt>,
+--   we want to show the underlying <a>Int</a> <tt>n</tt>. But if we have
+--   <a>Nothing</a>, we return the empty string instead of (for example)
+--   "Nothing":
+--   
+--   <pre>
+--   &gt;&gt;&gt; maybe "" show (Just 5)
+--   "5"
+--   
+--   &gt;&gt;&gt; maybe "" show Nothing
+--   ""
+--   </pre>
+maybe :: b -> (a -> b) -> Maybe a -> b
+
 -- | The <a>mapMaybe</a> function is a version of <a>map</a> which can
 --   throw out elements. In particular, the functional argument returns
 --   something of type <tt><a>Maybe</a> b</tt>. If this is <a>Nothing</a>,
@@ -653,34 +731,6 @@ either :: (a -> c) -> (b -> c) -> Either a b -> c
 --   [1,2,3]
 --   </pre>
 mapMaybe :: (a -> Maybe b) -> [a] -> [b]
-
--- | The <a>catMaybes</a> function takes a list of <a>Maybe</a>s and
---   returns a list of all the <a>Just</a> values.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; catMaybes [Just 1, Nothing, Just 3]
---   [1,3]
---   </pre>
---   
---   When constructing a list of <a>Maybe</a> values, <a>catMaybes</a> can
---   be used to return all of the "success" results (if the list is the
---   result of a <a>map</a>, then <a>mapMaybe</a> would be more
---   appropriate):
---   
---   <pre>
---   &gt;&gt;&gt; import Text.Read ( readMaybe )
---   
---   &gt;&gt;&gt; [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
---   [Just 1,Nothing,Just 3]
---   
---   &gt;&gt;&gt; catMaybes $ [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
---   [1,3]
---   </pre>
-catMaybes :: [Maybe a] -> [a]
 
 -- | The <a>listToMaybe</a> function returns <a>Nothing</a> on an empty
 --   list or <tt><a>Just</a> a</tt> where <tt>a</tt> is the first element
@@ -723,70 +773,6 @@ catMaybes :: [Maybe a] -> [a]
 --   [1]
 --   </pre>
 listToMaybe :: [a] -> Maybe a
-
--- | The <a>maybeToList</a> function returns an empty list when given
---   <a>Nothing</a> or a singleton list when given <a>Just</a>.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; maybeToList (Just 7)
---   [7]
---   </pre>
---   
---   <pre>
---   &gt;&gt;&gt; maybeToList Nothing
---   []
---   </pre>
---   
---   One can use <a>maybeToList</a> to avoid pattern matching when combined
---   with a function that (safely) works on lists:
---   
---   <pre>
---   &gt;&gt;&gt; import Text.Read ( readMaybe )
---   
---   &gt;&gt;&gt; sum $ maybeToList (readMaybe "3")
---   3
---   
---   &gt;&gt;&gt; sum $ maybeToList (readMaybe "")
---   0
---   </pre>
-maybeToList :: Maybe a -> [a]
-
--- | The <a>fromMaybe</a> function takes a default value and and
---   <a>Maybe</a> value. If the <a>Maybe</a> is <a>Nothing</a>, it returns
---   the default values; otherwise, it returns the value contained in the
---   <a>Maybe</a>.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; fromMaybe "" (Just "Hello, World!")
---   "Hello, World!"
---   </pre>
---   
---   <pre>
---   &gt;&gt;&gt; fromMaybe "" Nothing
---   ""
---   </pre>
---   
---   Read an integer from a string using <a>readMaybe</a>. If we fail to
---   parse an integer, we want to return <tt>0</tt> by default:
---   
---   <pre>
---   &gt;&gt;&gt; import Text.Read ( readMaybe )
---   
---   &gt;&gt;&gt; fromMaybe 0 (readMaybe "5")
---   5
---   
---   &gt;&gt;&gt; fromMaybe 0 (readMaybe "")
---   0
---   </pre>
-fromMaybe :: a -> Maybe a -> a
 
 -- | The <a>isNothing</a> function returns <a>True</a> iff its argument is
 --   <a>Nothing</a>.
@@ -848,52 +834,65 @@ isNothing :: Maybe a -> Bool
 --   </pre>
 isJust :: Maybe a -> Bool
 
--- | The <a>maybe</a> function takes a default value, a function, and a
---   <a>Maybe</a> value. If the <a>Maybe</a> value is <a>Nothing</a>, the
---   function returns the default value. Otherwise, it applies the function
---   to the value inside the <a>Just</a> and returns the result.
+-- | The <a>fromMaybe</a> function takes a default value and a <a>Maybe</a>
+--   value. If the <a>Maybe</a> is <a>Nothing</a>, it returns the default
+--   value; otherwise, it returns the value contained in the <a>Maybe</a>.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; maybe False odd (Just 3)
---   True
+--   &gt;&gt;&gt; fromMaybe "" (Just "Hello, World!")
+--   "Hello, World!"
 --   </pre>
 --   
 --   <pre>
---   &gt;&gt;&gt; maybe False odd Nothing
---   False
+--   &gt;&gt;&gt; fromMaybe "" Nothing
+--   ""
 --   </pre>
 --   
---   Read an integer from a string using <a>readMaybe</a>. If we succeed,
---   return twice the integer; that is, apply <tt>(*2)</tt> to it. If
---   instead we fail to parse an integer, return <tt>0</tt> by default:
+--   Read an integer from a string using <a>readMaybe</a>. If we fail to
+--   parse an integer, we want to return <tt>0</tt> by default:
 --   
 --   <pre>
 --   &gt;&gt;&gt; import Text.Read ( readMaybe )
 --   
---   &gt;&gt;&gt; maybe 0 (*2) (readMaybe "5")
---   10
+--   &gt;&gt;&gt; fromMaybe 0 (readMaybe "5")
+--   5
 --   
---   &gt;&gt;&gt; maybe 0 (*2) (readMaybe "")
+--   &gt;&gt;&gt; fromMaybe 0 (readMaybe "")
 --   0
 --   </pre>
+fromMaybe :: a -> Maybe a -> a
+
+-- | The <a>catMaybes</a> function takes a list of <a>Maybe</a>s and
+--   returns a list of all the <a>Just</a> values.
 --   
---   Apply <a>show</a> to a <tt>Maybe Int</tt>. If we have <tt>Just n</tt>,
---   we want to show the underlying <a>Int</a> <tt>n</tt>. But if we have
---   <a>Nothing</a>, we return the empty string instead of (for example)
---   "Nothing":
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; maybe "" show (Just 5)
---   "5"
---   
---   &gt;&gt;&gt; maybe "" show Nothing
---   ""
+--   &gt;&gt;&gt; catMaybes [Just 1, Nothing, Just 3]
+--   [1,3]
 --   </pre>
-maybe :: b -> (a -> b) -> Maybe a -> b
+--   
+--   When constructing a list of <a>Maybe</a> values, <a>catMaybes</a> can
+--   be used to return all of the "success" results (if the list is the
+--   result of a <a>map</a>, then <a>mapMaybe</a> would be more
+--   appropriate):
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Text.Read ( readMaybe )
+--   
+--   &gt;&gt;&gt; [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
+--   [Just 1,Nothing,Just 3]
+--   
+--   &gt;&gt;&gt; catMaybes $ [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
+--   [1,3]
+--   </pre>
+catMaybes :: [Maybe a] -> [a]
 foldl1Def' :: a -> (a -> a -> a) -> [a] -> a
 foldr1Def :: a -> (a -> a -> a) -> [a] -> a
 

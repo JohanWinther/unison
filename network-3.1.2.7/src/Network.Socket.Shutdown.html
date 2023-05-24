@@ -41,32 +41,25 @@
 </span><span id="line-34"></span><span class="hs-comment">-- 'ShutdownBoth', further sends and receives are disallowed.</span><span>
 </span><span id="line-35"></span><span class="annot"><a href="Network.Socket.Shutdown.html#shutdown"><span class="hs-identifier hs-type">shutdown</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.Socket.Types.html#Socket"><span class="hs-identifier hs-type">Socket</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.Socket.Shutdown.html#ShutdownCmd"><span class="hs-identifier hs-type">ShutdownCmd</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-36"></span><span id="shutdown"><span class="annot"><span class="annottext">shutdown :: Socket -&gt; ShutdownCmd -&gt; IO ()
-</span><a href="Network.Socket.Shutdown.html#shutdown"><span class="hs-identifier hs-var hs-var">shutdown</span></a></span></span><span> </span><span id="local-6989586621679068406"><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068406"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679068405"><span class="annot"><span class="annottext">ShutdownCmd
-</span><a href="#local-6989586621679068405"><span class="hs-identifier hs-var">stype</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
-forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
-</span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Socket -&gt; (CInt -&gt; IO ()) -&gt; IO ()
-forall r. Socket -&gt; (CInt -&gt; IO r) -&gt; IO r
+</span><a href="Network.Socket.Shutdown.html#shutdown"><span class="hs-identifier hs-var hs-var">shutdown</span></a></span></span><span> </span><span id="local-6989586621679075668"><span class="annot"><span class="annottext">Socket
+</span><a href="#local-6989586621679075668"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679075667"><span class="annot"><span class="annottext">ShutdownCmd
+</span><a href="#local-6989586621679075667"><span class="hs-identifier hs-var">stype</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
+</span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall r. Socket -&gt; (CInt -&gt; IO r) -&gt; IO r
 </span><a href="Network.Socket.Types.html#withFdSocket"><span class="hs-identifier hs-var">withFdSocket</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068406"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">((CInt -&gt; IO ()) -&gt; IO ()) -&gt; (CInt -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068402"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068402"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-37"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679075668"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679075664"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679075664"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-37"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="Network.Socket.Internal.html#throwSocketErrorIfMinus1Retry_"><span class="hs-identifier hs-var">throwSocketErrorIfMinus1Retry_</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;Network.Socket.shutdown&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO ()) -&gt; IO CInt -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;Network.Socket.shutdown&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-38"></span><span>    </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; IO CInt
 </span><a href="Network.Socket.Shutdown.html#c_shutdown"><span class="hs-identifier hs-var">c_shutdown</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068402"><span class="hs-identifier hs-var">fd</span></a></span><span> </span><span class="annot"><span class="annottext">(CInt -&gt; IO CInt) -&gt; CInt -&gt; IO CInt
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679075664"><span class="hs-identifier hs-var">fd</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ShutdownCmd -&gt; CInt
 </span><a href="Network.Socket.Shutdown.html#sdownCmdToInt"><span class="hs-identifier hs-var">sdownCmdToInt</span></a></span><span> </span><span class="annot"><span class="annottext">ShutdownCmd
-</span><a href="#local-6989586621679068405"><span class="hs-identifier hs-var">stype</span></a></span><span>
+</span><a href="#local-6989586621679075667"><span class="hs-identifier hs-var">stype</span></a></span><span>
 </span><span id="line-39"></span><span>
 </span><span id="line-40"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">CALLCONV</span><span> </span><span class="hs-keyword">unsafe</span><span> </span><span class="hs-string">&quot;shutdown&quot;</span><span>
 </span><span id="line-41"></span><span>  </span><span id="c_shutdown"><span class="annot"><a href="Network.Socket.Shutdown.html#c_shutdown"><span class="hs-identifier hs-var">c_shutdown</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">CInt</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">CInt</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CInt</span></span><span>
@@ -79,94 +72,82 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-48"></span><span class="hs-comment">--   Since: 3.1.1.0</span><span>
 </span><span id="line-49"></span><span class="annot"><a href="Network.Socket.Shutdown.html#gracefulClose"><span class="hs-identifier hs-type">gracefulClose</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.Socket.Types.html#Socket"><span class="hs-identifier hs-type">Socket</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-50"></span><span id="gracefulClose"><span class="annot"><span class="annottext">gracefulClose :: Socket -&gt; Int -&gt; IO ()
-</span><a href="Network.Socket.Shutdown.html#gracefulClose"><span class="hs-identifier hs-var hs-var">gracefulClose</span></a></span></span><span> </span><span id="local-6989586621679068399"><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068399"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679068398"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068398"><span class="hs-identifier hs-var">tmout</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679068397"><span class="hs-identifier hs-var">sendRecvFIN</span></a></span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO () -&gt; IO ()
-forall a b. IO a -&gt; IO b -&gt; IO a
+</span><a href="Network.Socket.Shutdown.html#gracefulClose"><span class="hs-identifier hs-var hs-var">gracefulClose</span></a></span></span><span> </span><span id="local-6989586621679075661"><span class="annot"><span class="annottext">Socket
+</span><a href="#local-6989586621679075661"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679075660"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075660"><span class="hs-identifier hs-var">tmout</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO ()
+</span><a href="#local-6989586621679075659"><span class="hs-identifier hs-var">sendRecvFIN</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. IO a -&gt; IO b -&gt; IO a
 </span><span class="hs-operator hs-var">`E.finally`</span></span><span> </span><span class="annot"><span class="annottext">Socket -&gt; IO ()
 </span><a href="Network.Socket.Types.html#close"><span class="hs-identifier hs-var">close</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068399"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><a href="#local-6989586621679075661"><span class="hs-identifier hs-var">s</span></a></span><span>
 </span><span id="line-51"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-52"></span><span>    </span><span id="local-6989586621679068397"><span class="annot"><span class="annottext">sendRecvFIN :: IO ()
-</span><a href="#local-6989586621679068397"><span class="hs-identifier hs-var hs-var">sendRecvFIN</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-52"></span><span>    </span><span id="local-6989586621679075659"><span class="annot"><span class="annottext">sendRecvFIN :: IO ()
+</span><a href="#local-6989586621679075659"><span class="hs-identifier hs-var hs-var">sendRecvFIN</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-53"></span><span>        </span><span class="hs-comment">-- Sending TCP FIN.</span><span>
 </span><span id="line-54"></span><span>        </span><span class="annot"><span class="annottext">Socket -&gt; ShutdownCmd -&gt; IO ()
 </span><a href="Network.Socket.Shutdown.html#shutdown"><span class="hs-identifier hs-var">shutdown</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068399"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">ShutdownCmd
+</span><a href="#local-6989586621679075661"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">ShutdownCmd
 </span><a href="Network.Socket.Shutdown.html#ShutdownSend"><span class="hs-identifier hs-var">ShutdownSend</span></a></span><span>
 </span><span id="line-55"></span><span>        </span><span class="hs-comment">-- Waiting TCP FIN.</span><span>
-</span><span id="line-56"></span><span>        </span><span class="annot"><span class="annottext">IO (Ptr Word8)
--&gt; (Ptr Word8 -&gt; IO ()) -&gt; (Ptr Word8 -&gt; IO ()) -&gt; IO ()
-forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
-</span><span class="hs-identifier hs-var">E.bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (Ptr Word8)
-forall a. Int -&gt; IO (Ptr a)
+</span><span id="line-56"></span><span>        </span><span class="annot"><span class="annottext">forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">E.bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Int -&gt; IO (Ptr a)
 </span><span class="hs-identifier hs-var">mallocBytes</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068393"><span class="hs-identifier hs-var">bufSize</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO ()
-forall a. Ptr a -&gt; IO ()
-</span><span class="hs-identifier hs-var">free</span></span><span> </span><span class="annot"><span class="annottext">((Ptr Word8 -&gt; IO ()) -&gt; IO ()) -&gt; (Ptr Word8 -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068392"><span class="annot"><span class="annottext">Ptr Word8
-</span><a href="#local-6989586621679068392"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621679075653"><span class="hs-identifier hs-var">bufSize</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679075652"><span class="annot"><span class="annottext">Ptr Word8
+</span><a href="#local-6989586621679075652"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-57"></span><span>            </span><span class="hs-pragma">{-# SCC</span><span> </span><span class="hs-pragma">&quot;&quot;</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO ()
-</span><a href="#local-6989586621679068391"><span class="hs-identifier hs-var">recvEOFloop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Word8
-</span><a href="#local-6989586621679068392"><span class="hs-identifier hs-var">buf</span></a></span><span>
+</span><a href="#local-6989586621679075651"><span class="hs-identifier hs-var">recvEOFloop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Word8
+</span><a href="#local-6989586621679075652"><span class="hs-identifier hs-var">buf</span></a></span><span>
 </span><span id="line-58"></span><span>    </span><span class="hs-comment">-- milliseconds. Taken from BSD fast clock value.</span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679068390"><span class="annot"><span class="annottext">clock :: Int
-</span><a href="#local-6989586621679068390"><span class="hs-identifier hs-var hs-var">clock</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679075648"><span class="annot"><span class="annottext">clock :: Int
+</span><a href="#local-6989586621679075648"><span class="hs-identifier hs-var hs-var">clock</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">200</span></span><span>
-</span><span id="line-60"></span><span>    </span><span id="local-6989586621679068391"><span class="annot"><span class="annottext">recvEOFloop :: Ptr Word8 -&gt; IO ()
-</span><a href="#local-6989586621679068391"><span class="hs-identifier hs-var hs-var">recvEOFloop</span></a></span></span><span> </span><span id="local-6989586621679068389"><span class="annot"><span class="annottext">Ptr Word8
-</span><a href="#local-6989586621679068389"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; IO ()
-</span><a href="#local-6989586621679068388"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-60"></span><span>    </span><span id="local-6989586621679075651"><span class="annot"><span class="annottext">recvEOFloop :: Ptr Word8 -&gt; IO ()
+</span><a href="#local-6989586621679075651"><span class="hs-identifier hs-var hs-var">recvEOFloop</span></a></span></span><span> </span><span id="local-6989586621679075647"><span class="annot"><span class="annottext">Ptr Word8
+</span><a href="#local-6989586621679075647"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; IO ()
+</span><a href="#local-6989586621679075646"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-61"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-62"></span><span>        </span><span id="local-6989586621679068388"><span class="annot"><span class="annottext">loop :: Int -&gt; IO ()
-</span><a href="#local-6989586621679068388"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679068387"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068387"><span class="hs-identifier hs-var">delay</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-62"></span><span>        </span><span id="local-6989586621679075646"><span class="annot"><span class="annottext">loop :: Int -&gt; IO ()
+</span><a href="#local-6989586621679075646"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679075633"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075633"><span class="hs-identifier hs-var">delay</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-63"></span><span>            </span><span class="hs-comment">-- We don't check the (positive) length.</span><span>
 </span><span id="line-64"></span><span>            </span><span class="hs-comment">-- In normal case, it's 0. That is, only FIN is received.</span><span>
 </span><span id="line-65"></span><span>            </span><span class="hs-comment">-- In error cases, data is available. But there is no</span><span>
 </span><span id="line-66"></span><span>            </span><span class="hs-comment">-- application which can read it. So, let's stop receiving</span><span>
 </span><span id="line-67"></span><span>            </span><span class="hs-comment">-- to prevent attacks.</span><span>
-</span><span id="line-68"></span><span>            </span><span id="local-6989586621679068386"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068386"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Socket -&gt; Ptr Word8 -&gt; Int -&gt; IO Int
+</span><span id="line-68"></span><span>            </span><span id="local-6989586621679075632"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075632"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Socket -&gt; Ptr Word8 -&gt; Int -&gt; IO Int
 </span><a href="Network.Socket.Buffer.html#recvBufNoWait"><span class="hs-identifier hs-var">recvBufNoWait</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068399"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Word8
-</span><a href="#local-6989586621679068389"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068393"><span class="hs-identifier hs-var">bufSize</span></a></span><span>
-</span><span id="line-69"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068384"><span class="annot"><span class="annottext">delay' :: Int
-</span><a href="#local-6989586621679068384"><span class="hs-identifier hs-var hs-var">delay'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068387"><span class="hs-identifier hs-var">delay</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679075661"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Word8
+</span><a href="#local-6989586621679075647"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075653"><span class="hs-identifier hs-var">bufSize</span></a></span><span>
+</span><span id="line-69"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679075629"><span class="annot"><span class="annottext">delay' :: Int
+</span><a href="#local-6989586621679075629"><span class="hs-identifier hs-var hs-var">delay'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075633"><span class="hs-identifier hs-var">delay</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068390"><span class="hs-identifier hs-var">clock</span></a></span><span>
-</span><span id="line-70"></span><span>            </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
-forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><a href="#local-6989586621679075648"><span class="hs-identifier hs-var">clock</span></a></span><span>
+</span><span id="line-70"></span><span>            </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068386"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679075632"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068384"><span class="hs-identifier hs-var">delay'</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679075629"><span class="hs-identifier hs-var">delay'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068398"><span class="hs-identifier hs-var">tmout</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679075660"><span class="hs-identifier hs-var">tmout</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-71"></span><span>                </span><span class="annot"><span class="annottext">Int -&gt; IO ()
 </span><span class="hs-identifier hs-var">threadDelay</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068390"><span class="hs-identifier hs-var">clock</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679075648"><span class="hs-identifier hs-var">clock</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1000</span></span><span class="hs-special">)</span><span>
 </span><span id="line-72"></span><span>                </span><span class="annot"><span class="annottext">Int -&gt; IO ()
-</span><a href="#local-6989586621679068388"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068384"><span class="hs-identifier hs-var">delay'</span></a></span><span>
+</span><a href="#local-6989586621679075646"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679075629"><span class="hs-identifier hs-var">delay'</span></a></span><span>
 </span><span id="line-73"></span><span>    </span><span class="hs-comment">-- Don't use 4092 here. The GHC runtime takes the global lock</span><span>
 </span><span id="line-74"></span><span>    </span><span class="hs-comment">-- if the length is over 3276 bytes in 32bit or 3272 bytes in 64bit.</span><span>
-</span><span id="line-75"></span><span>    </span><span id="local-6989586621679068393"><span class="annot"><span class="annottext">bufSize :: Int
-</span><a href="#local-6989586621679068393"><span class="hs-identifier hs-var hs-var">bufSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-75"></span><span>    </span><span id="local-6989586621679075653"><span class="annot"><span class="annottext">bufSize :: Int
+</span><a href="#local-6989586621679075653"><span class="hs-identifier hs-var hs-var">bufSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1024</span></span><span>
 </span><span id="line-76"></span></pre></body></html>

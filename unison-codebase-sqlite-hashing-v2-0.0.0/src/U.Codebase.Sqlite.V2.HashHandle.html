@@ -12,93 +12,48 @@
 </span><span id="line-12"></span><span class="annot"><a href="U.Codebase.Sqlite.V2.HashHandle.html#v2HashHandle"><span class="hs-identifier hs-type">v2HashHandle</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">HashHandle</span></span><span>
 </span><span id="line-13"></span><span id="v2HashHandle"><span class="annot"><span class="annottext">v2HashHandle :: HashHandle
 </span><a href="U.Codebase.Sqlite.V2.HashHandle.html#v2HashHandle"><span class="hs-identifier hs-var hs-var">v2HashHandle</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">HashHandle :: (Type Symbol -&gt; Reference)
--&gt; (Type Symbol -&gt; Set Reference)
--&gt; (Hash -&gt; TypeD Symbol -&gt; Reference)
--&gt; (Hash -&gt; TypeD Symbol -&gt; Set Reference)
--&gt; HashHandle
-</span><span class="hs-identifier hs-type">HashHandle</span></span><span>
+</span><span id="line-14"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">HashHandle</span></span><span>
 </span><span id="line-15"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:toReference:HashHandle :: Type Symbol -&gt; Reference
 </span><span class="hs-identifier hs-var">toReference</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Reference
-</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">(Reference -&gt; Reference)
--&gt; (Type Symbol -&gt; Reference) -&gt; Type Symbol -&gt; Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol () -&gt; Reference
-forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Reference
-</span><span class="hs-identifier hs-var">H2.typeToReference</span></span><span> </span><span class="annot"><span class="annottext">(Type Symbol () -&gt; Reference)
--&gt; (Type Symbol -&gt; Type Symbol ()) -&gt; Type Symbol -&gt; Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol -&gt; Type Symbol ()
-forall v. Ord v =&gt; TypeR Reference v -&gt; Type v ()
-</span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2Type"><span class="hs-identifier hs-var">v2ToH2Type</span></a></span><span> </span><span class="annot"><span class="annottext">(Type Symbol -&gt; Type Symbol ())
--&gt; (Type Symbol -&gt; Type Symbol) -&gt; Type Symbol -&gt; Type Symbol ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol -&gt; Type Symbol
-forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
+</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Reference
+</span><span class="hs-identifier hs-var">H2.typeToReference</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v. Ord v =&gt; TypeR Reference v -&gt; Type v ()
+</span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2Type"><span class="hs-identifier hs-var">v2ToH2Type</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
 </span><span class="hs-identifier hs-var">removeAllEffectVars</span></span><span class="hs-special">,</span><span>
 </span><span id="line-16"></span><span>      </span><span class="annot"><span class="annottext">$sel:toReferenceMentions:HashHandle :: Type Symbol -&gt; Set Reference
-</span><span class="hs-identifier hs-var">toReferenceMentions</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Reference -&gt; Reference) -&gt; Set Reference -&gt; Set Reference
-forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
+</span><span class="hs-identifier hs-var">toReferenceMentions</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
 </span><span class="hs-identifier hs-var">Set.map</span></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Reference
-</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">(Set Reference -&gt; Set Reference)
--&gt; (Type Symbol -&gt; Set Reference) -&gt; Type Symbol -&gt; Set Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol () -&gt; Set Reference
-forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Set Reference
-</span><span class="hs-identifier hs-var">H2.typeToReferenceMentions</span></span><span> </span><span class="annot"><span class="annottext">(Type Symbol () -&gt; Set Reference)
--&gt; (Type Symbol -&gt; Type Symbol ()) -&gt; Type Symbol -&gt; Set Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol -&gt; Type Symbol ()
-forall v. Ord v =&gt; TypeR Reference v -&gt; Type v ()
-</span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2Type"><span class="hs-identifier hs-var">v2ToH2Type</span></a></span><span> </span><span class="annot"><span class="annottext">(Type Symbol -&gt; Type Symbol ())
--&gt; (Type Symbol -&gt; Type Symbol) -&gt; Type Symbol -&gt; Type Symbol ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol -&gt; Type Symbol
-forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
+</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Set Reference
+</span><span class="hs-identifier hs-var">H2.typeToReferenceMentions</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v. Ord v =&gt; TypeR Reference v -&gt; Type v ()
+</span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2Type"><span class="hs-identifier hs-var">v2ToH2Type</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
 </span><span class="hs-identifier hs-var">removeAllEffectVars</span></span><span class="hs-special">,</span><span>
 </span><span id="line-17"></span><span>      </span><span class="annot"><span class="annottext">$sel:toReferenceDecl:HashHandle :: Hash -&gt; TypeD Symbol -&gt; Reference
-</span><span class="hs-identifier hs-var">toReferenceDecl</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679081461"><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679081461"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Reference
-</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">(Reference -&gt; Reference)
--&gt; (TypeD Symbol -&gt; Reference) -&gt; TypeD Symbol -&gt; Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol () -&gt; Reference
-forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Reference
-</span><span class="hs-identifier hs-var">H2.typeToReference</span></span><span> </span><span class="annot"><span class="annottext">(Type Symbol () -&gt; Reference)
--&gt; (TypeD Symbol -&gt; Type Symbol ()) -&gt; TypeD Symbol -&gt; Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Hash -&gt; TypeD Symbol -&gt; Type Symbol ()
-forall v. Ord v =&gt; Hash -&gt; TypeD v -&gt; Type v ()
+</span><span class="hs-identifier hs-var">toReferenceDecl</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679082769"><span class="annot"><span class="annottext">Hash
+</span><a href="#local-6989586621679082769"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Reference
+</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Reference
+</span><span class="hs-identifier hs-var">H2.typeToReference</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v. Ord v =&gt; Hash -&gt; TypeD v -&gt; Type v ()
 </span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2TypeD"><span class="hs-identifier hs-var">v2ToH2TypeD</span></a></span><span> </span><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679081461"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">(TypeD Symbol -&gt; Type Symbol ())
--&gt; (TypeD Symbol -&gt; TypeD Symbol) -&gt; TypeD Symbol -&gt; Type Symbol ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">TypeD Symbol -&gt; TypeD Symbol
-forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
+</span><a href="#local-6989586621679082769"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
 </span><span class="hs-identifier hs-var">removeAllEffectVars</span></span><span class="hs-special">,</span><span>
 </span><span id="line-18"></span><span>      </span><span class="annot"><span class="annottext">$sel:toReferenceDeclMentions:HashHandle :: Hash -&gt; TypeD Symbol -&gt; Set Reference
-</span><span class="hs-identifier hs-var">toReferenceDeclMentions</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679081459"><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679081459"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Reference -&gt; Reference) -&gt; Set Reference -&gt; Set Reference
-forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
+</span><span class="hs-identifier hs-var">toReferenceDeclMentions</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679082767"><span class="annot"><span class="annottext">Hash
+</span><a href="#local-6989586621679082767"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
 </span><span class="hs-identifier hs-var">Set.map</span></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Reference
-</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">(Set Reference -&gt; Set Reference)
--&gt; (TypeD Symbol -&gt; Set Reference) -&gt; TypeD Symbol -&gt; Set Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Type Symbol () -&gt; Set Reference
-forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Set Reference
-</span><span class="hs-identifier hs-var">H2.typeToReferenceMentions</span></span><span> </span><span class="annot"><span class="annottext">(Type Symbol () -&gt; Set Reference)
--&gt; (TypeD Symbol -&gt; Type Symbol ())
--&gt; TypeD Symbol
--&gt; Set Reference
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Hash -&gt; TypeD Symbol -&gt; Type Symbol ()
-forall v. Ord v =&gt; Hash -&gt; TypeD v -&gt; Type v ()
+</span><a href="Unison.Hashing.V2.Convert2.html#h2ToV2Reference"><span class="hs-identifier hs-var">h2ToV2Reference</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a. (Ord v, Show v) =&gt; Type v a -&gt; Set Reference
+</span><span class="hs-identifier hs-var">H2.typeToReferenceMentions</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v. Ord v =&gt; Hash -&gt; TypeD v -&gt; Type v ()
 </span><a href="Unison.Hashing.V2.Convert2.html#v2ToH2TypeD"><span class="hs-identifier hs-var">v2ToH2TypeD</span></a></span><span> </span><span class="annot"><span class="annottext">Hash
-</span><a href="#local-6989586621679081459"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">(TypeD Symbol -&gt; Type Symbol ())
--&gt; (TypeD Symbol -&gt; TypeD Symbol) -&gt; TypeD Symbol -&gt; Type Symbol ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">TypeD Symbol -&gt; TypeD Symbol
-forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
+</span><a href="#local-6989586621679082767"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v r. Var v =&gt; TypeR r v -&gt; TypeR r v
 </span><span class="hs-identifier hs-var">removeAllEffectVars</span></span><span>
 </span><span id="line-19"></span><span>    </span><span class="hs-special">}</span><span>
 </span><span id="line-20"></span></pre></body></html>

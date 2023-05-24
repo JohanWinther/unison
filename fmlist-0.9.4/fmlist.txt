@@ -83,7 +83,40 @@ last :: FMList a -> a
 init :: FMList a -> FMList a
 reverse :: FMList a -> FMList a
 
--- | List of elements of a structure, from left to right.
+-- | List of elements of a structure, from left to right. If the entire
+--   list is intended to be reduced via a fold, just fold the structure
+--   directly bypassing the list.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList Nothing
+--   []
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Just 42)
+--   [42]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Left "foo")
+--   []
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Node (Leaf 5) 17 (Node Empty 12 (Leaf 8)))
+--   [5,17,12,8]
+--   </pre>
+--   
+--   For lists, <a>toList</a> is the identity:
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList [1, 2, 3]
+--   [1,2,3]
+--   </pre>
 toList :: Foldable t => t a -> [a]
 flatten :: Foldable t => FMList (t a) -> FMList a
 

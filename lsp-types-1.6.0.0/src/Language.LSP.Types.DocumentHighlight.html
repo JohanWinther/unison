@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE DuplicateRecordFields #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE TemplateHaskell       #-}</span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Types.DocumentHighlight</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson.TH</span></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Language.LSP.Types.Location.html"><span class="hs-identifier">Language.LSP.Types.Location</span></a></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Language.LSP.Types.Progress.html"><span class="hs-identifier">Language.LSP.Types.Progress</span></a></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Language.LSP.Types.TextDocument.html"><span class="hs-identifier">Language.LSP.Types.TextDocument</span></a></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Language.LSP.Types.Utils.html"><span class="hs-identifier">Language.LSP.Types.Utils</span></a></span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- -------------------------------------</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">data</span><span> </span><span id="DocumentHighlightClientCapabilities"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightClientCapabilities"><span class="hs-identifier hs-var">DocumentHighlightClientCapabilities</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-15"></span><span>  </span><span id="DocumentHighlightClientCapabilities"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightClientCapabilities"><span class="hs-identifier hs-var">DocumentHighlightClientCapabilities</span></a></span></span><span>
+</span><span id="line-16"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | Whether document highlight supports dynamic registration.</span><span>
+</span><span id="line-17"></span><span>      </span><span id="%24sel%3A_dynamicRegistration%3ADocumentHighlightClientCapabilities"><span class="annot"><span class="annottext">DocumentHighlightClientCapabilities -&gt; Maybe Bool
+</span><a href="Language.LSP.Types.DocumentHighlight.html#%24sel%3A_dynamicRegistration%3ADocumentHighlightClientCapabilities"><span class="hs-identifier hs-var hs-var">_dynamicRegistration</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-18"></span><span>    </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621681225533"><span id="local-6989586621681225535"><span id="local-6989586621681225542"><span class="annot"><span class="annottext">Int -&gt; DocumentHighlightClientCapabilities -&gt; ShowS
+[DocumentHighlightClientCapabilities] -&gt; ShowS
+DocumentHighlightClientCapabilities -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DocumentHighlightClientCapabilities] -&gt; ShowS
+$cshowList :: [DocumentHighlightClientCapabilities] -&gt; ShowS
+show :: DocumentHighlightClientCapabilities -&gt; String
+$cshow :: DocumentHighlightClientCapabilities -&gt; String
+showsPrec :: Int -&gt; DocumentHighlightClientCapabilities -&gt; ShowS
+$cshowsPrec :: Int -&gt; DocumentHighlightClientCapabilities -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621681225513"><span id="local-6989586621681225524"><span id="local-6989586621681225527"><span id="local-6989586621681225529"><span class="annot"><span class="annottext">ReadPrec [DocumentHighlightClientCapabilities]
+ReadPrec DocumentHighlightClientCapabilities
+Int -&gt; ReadS DocumentHighlightClientCapabilities
+ReadS [DocumentHighlightClientCapabilities]
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [DocumentHighlightClientCapabilities]
+$creadListPrec :: ReadPrec [DocumentHighlightClientCapabilities]
+readPrec :: ReadPrec DocumentHighlightClientCapabilities
+$creadPrec :: ReadPrec DocumentHighlightClientCapabilities
+readList :: ReadS [DocumentHighlightClientCapabilities]
+$creadList :: ReadS [DocumentHighlightClientCapabilities]
+readsPrec :: Int -&gt; ReadS DocumentHighlightClientCapabilities
+$creadsPrec :: Int -&gt; ReadS DocumentHighlightClientCapabilities
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621681225503"><span id="local-6989586621681225508"><span class="annot"><span class="annottext">DocumentHighlightClientCapabilities
+-&gt; DocumentHighlightClientCapabilities -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DocumentHighlightClientCapabilities
+-&gt; DocumentHighlightClientCapabilities -&gt; Bool
+$c/= :: DocumentHighlightClientCapabilities
+-&gt; DocumentHighlightClientCapabilities -&gt; Bool
+== :: DocumentHighlightClientCapabilities
+-&gt; DocumentHighlightClientCapabilities -&gt; Bool
+$c== :: DocumentHighlightClientCapabilities
+-&gt; DocumentHighlightClientCapabilities -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span id="local-6989586621681225461"><span id="local-6989586621681225463"><span id="local-6989586621681225474"><span id="local-6989586621681225488"><span id="local-6989586621681225490"><span id="local-6989586621681225499"><span class="hs-identifier">deriveJSON</span><span> </span><span class="hs-identifier">lspOptions</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlightClientCapabilities</span></span></span></span></span></span></span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span id="%24sel%3A_workDoneProgress%3ADocumentHighlightOptions"><span id="DocumentHighlightOptions"><span id="local-6989586621681225402"><span id="local-6989586621681225406"><span id="local-6989586621681225408"><span id="local-6989586621681225410"><span id="local-6989586621681225415"><span id="local-6989586621681225418"><span id="local-6989586621681225427"><span id="local-6989586621681225430"><span id="local-6989586621681225432"><span id="DocumentHighlightOptions"><span class="hs-identifier">makeExtendingDatatype</span><span> </span><span class="hs-string">&quot;DocumentHighlightOptions&quot;</span><span> </span><span class="hs-special">[</span><span class="hs-special">''</span><span class="hs-identifier">WorkDoneProgressOptions</span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span></span></span></span></span></span></span></span></span></span></span></span></span><span>
+</span><span id="line-23"></span><span id="local-6989586621681225371"><span id="local-6989586621681225373"><span id="local-6989586621681225381"><span id="local-6989586621681225390"><span id="local-6989586621681225392"><span id="local-6989586621681225398"><span class="hs-identifier">deriveJSON</span><span> </span><span class="hs-identifier">lspOptions</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlightOptions</span></span></span></span></span></span></span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span id="%24sel%3A_workDoneProgress%3ADocumentHighlightRegistrationOptions"><span id="%24sel%3A_documentSelector%3ADocumentHighlightRegistrationOptions"><span id="DocumentHighlightRegistrationOptions"><span id="local-6989586621681225321"><span id="local-6989586621681225327"><span id="local-6989586621681225329"><span id="local-6989586621681225331"><span id="local-6989586621681225338"><span id="local-6989586621681225341"><span id="local-6989586621681225354"><span id="local-6989586621681225357"><span id="local-6989586621681225359"><span id="DocumentHighlightRegistrationOptions"><span class="hs-identifier">makeExtendingDatatype</span><span> </span><span class="hs-string">&quot;DocumentHighlightRegistrationOptions&quot;</span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">TextDocumentRegistrationOptions</span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlightOptions</span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>
+</span><span id="line-29"></span><span id="local-6989586621681225265"><span id="local-6989586621681225267"><span id="local-6989586621681225279"><span id="local-6989586621681225294"><span id="local-6989586621681225296"><span id="local-6989586621681225307"><span class="hs-identifier">deriveJSON</span><span> </span><span class="hs-identifier">lspOptions</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlightRegistrationOptions</span></span></span></span></span></span></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span id="%24sel%3A_partialResultToken%3ADocumentHighlightParams"><span id="%24sel%3A_workDoneToken%3ADocumentHighlightParams"><span id="%24sel%3A_position%3ADocumentHighlightParams"><span id="%24sel%3A_textDocument%3ADocumentHighlightParams"><span id="DocumentHighlightParams"><span id="local-6989586621681225193"><span id="local-6989586621681225202"><span id="local-6989586621681225204"><span id="local-6989586621681225206"><span id="local-6989586621681225216"><span id="local-6989586621681225219"><span id="local-6989586621681225239"><span id="local-6989586621681225242"><span id="local-6989586621681225244"><span id="DocumentHighlightParams"><span class="hs-identifier">makeExtendingDatatype</span><span> </span><span class="hs-string">&quot;DocumentHighlightParams&quot;</span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">TextDocumentPositionParams</span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">WorkDoneProgressParams</span><span>
+</span><span id="line-34"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">PartialResultParams</span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>
+</span><span id="line-36"></span><span id="local-6989586621681225128"><span id="local-6989586621681225130"><span id="local-6989586621681225143"><span id="local-6989586621681225163"><span id="local-6989586621681225165"><span id="local-6989586621681225183"><span class="hs-identifier">deriveJSON</span><span> </span><span class="hs-identifier">lspOptions</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlightParams</span></span></span></span></span></span></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">data</span><span> </span><span id="DocumentHighlightKind"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightKind"><span class="hs-identifier hs-var">DocumentHighlightKind</span></a></span></span><span>
+</span><span id="line-39"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="hs-comment">-- | A textual occurrence.</span><span>
+</span><span id="line-40"></span><span>    </span><span id="HkText"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#HkText"><span class="hs-identifier hs-var">HkText</span></a></span></span><span>
+</span><span id="line-41"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">-- | Read-access of a symbol, like reading a variable.</span><span>
+</span><span id="line-42"></span><span>    </span><span id="HkRead"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#HkRead"><span class="hs-identifier hs-var">HkRead</span></a></span></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">-- | Write-access of a symbol, like writing to a variable.</span><span>
+</span><span id="line-44"></span><span>    </span><span id="HkWrite"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#HkWrite"><span class="hs-identifier hs-var">HkWrite</span></a></span></span><span>
+</span><span id="line-45"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621681225091"><span id="local-6989586621681225096"><span id="local-6989586621681225099"><span id="local-6989586621681225101"><span class="annot"><span class="annottext">ReadPrec [DocumentHighlightKind]
+ReadPrec DocumentHighlightKind
+Int -&gt; ReadS DocumentHighlightKind
+ReadS [DocumentHighlightKind]
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [DocumentHighlightKind]
+$creadListPrec :: ReadPrec [DocumentHighlightKind]
+readPrec :: ReadPrec DocumentHighlightKind
+$creadPrec :: ReadPrec DocumentHighlightKind
+readList :: ReadS [DocumentHighlightKind]
+$creadList :: ReadS [DocumentHighlightKind]
+readsPrec :: Int -&gt; ReadS DocumentHighlightKind
+$creadsPrec :: Int -&gt; ReadS DocumentHighlightKind
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621681225084"><span id="local-6989586621681225086"><span id="local-6989586621681225088"><span class="annot"><span class="annottext">Int -&gt; DocumentHighlightKind -&gt; ShowS
+[DocumentHighlightKind] -&gt; ShowS
+DocumentHighlightKind -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DocumentHighlightKind] -&gt; ShowS
+$cshowList :: [DocumentHighlightKind] -&gt; ShowS
+show :: DocumentHighlightKind -&gt; String
+$cshow :: DocumentHighlightKind -&gt; String
+showsPrec :: Int -&gt; DocumentHighlightKind -&gt; ShowS
+$cshowsPrec :: Int -&gt; DocumentHighlightKind -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621681225080"><span id="local-6989586621681225082"><span class="annot"><span class="annottext">DocumentHighlightKind -&gt; DocumentHighlightKind -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DocumentHighlightKind -&gt; DocumentHighlightKind -&gt; Bool
+$c/= :: DocumentHighlightKind -&gt; DocumentHighlightKind -&gt; Bool
+== :: DocumentHighlightKind -&gt; DocumentHighlightKind -&gt; Bool
+$c== :: DocumentHighlightKind -&gt; DocumentHighlightKind -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681225073"><span id="local-6989586621681225075"><span id="local-6989586621681225077"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightKind"><span class="hs-identifier hs-type">DocumentHighlightKind</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621681225068"><span class="annot"><span class="annottext">toJSON :: DocumentHighlightKind -&gt; Value
+</span><a href="#local-6989586621681225068"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkText"><span class="hs-identifier hs-var">HkText</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Scientific -&gt; Value
+</span><span class="hs-identifier hs-var">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">1</span></span><span>
+</span><span id="line-49"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkRead"><span class="hs-identifier hs-var">HkRead</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Scientific -&gt; Value
+</span><span class="hs-identifier hs-var">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">2</span></span><span>
+</span><span id="line-50"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkWrite"><span class="hs-identifier hs-var">HkWrite</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Scientific -&gt; Value
+</span><span class="hs-identifier hs-var">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">3</span></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681225064"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightKind"><span class="hs-identifier hs-type">DocumentHighlightKind</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-53"></span><span>  </span><span id="local-6989586621681225049"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser DocumentHighlightKind
+</span><a href="#local-6989586621681225049"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkText"><span class="hs-identifier hs-var">HkText</span></a></span><span>
+</span><span id="line-54"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">parseJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkRead"><span class="hs-identifier hs-var">HkRead</span></a></span><span>
+</span><span id="line-55"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">parseJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-number">3</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#HkWrite"><span class="hs-identifier hs-var">HkWrite</span></a></span><span>
+</span><span id="line-56"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">parseJSON</span></span><span> </span><span class="annot"><span class="annottext">Value
+</span><span class="hs-identifier">_</span></span><span>          </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;DocumentHighlightKind&quot;</span></span><span>
+</span><span id="line-57"></span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- -------------------------------------</span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- | A document highlight is a range inside a text document which deserves</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- special attention. Usually a document highlight is visualized by changing the</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- background color of its range.</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">data</span><span> </span><span id="DocumentHighlight"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlight"><span class="hs-identifier hs-var">DocumentHighlight</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-64"></span><span>  </span><span id="DocumentHighlight"><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlight"><span class="hs-identifier hs-var">DocumentHighlight</span></a></span></span><span>
+</span><span id="line-65"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | The range this highlight applies to.</span><span>
+</span><span id="line-66"></span><span>      </span><span id="%24sel%3A_range%3ADocumentHighlight"><span class="annot"><span class="annottext">DocumentHighlight -&gt; Range
+</span><a href="Language.LSP.Types.DocumentHighlight.html#%24sel%3A_range%3ADocumentHighlight"><span class="hs-identifier hs-var hs-var">_range</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Types.Location.html#Range"><span class="hs-identifier hs-type">Range</span></a></span><span>
+</span><span id="line-67"></span><span>      </span><span class="hs-comment">-- | The highlight kind, default is 'HkText'.</span><span>
+</span><span id="line-68"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="%24sel%3A_kind%3ADocumentHighlight"><span class="annot"><span class="annottext">DocumentHighlight -&gt; Maybe DocumentHighlightKind
+</span><a href="Language.LSP.Types.DocumentHighlight.html#%24sel%3A_kind%3ADocumentHighlight"><span class="hs-identifier hs-var hs-var">_kind</span></a></span></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.DocumentHighlight.html#DocumentHighlightKind"><span class="hs-identifier hs-type">DocumentHighlightKind</span></a></span><span>
+</span><span id="line-69"></span><span>    </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621681225026"><span id="local-6989586621681225039"><span id="local-6989586621681225042"><span id="local-6989586621681225044"><span class="annot"><span class="annottext">ReadPrec [DocumentHighlight]
+ReadPrec DocumentHighlight
+Int -&gt; ReadS DocumentHighlight
+ReadS [DocumentHighlight]
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [DocumentHighlight]
+$creadListPrec :: ReadPrec [DocumentHighlight]
+readPrec :: ReadPrec DocumentHighlight
+$creadPrec :: ReadPrec DocumentHighlight
+readList :: ReadS [DocumentHighlight]
+$creadList :: ReadS [DocumentHighlight]
+readsPrec :: Int -&gt; ReadS DocumentHighlight
+$creadsPrec :: Int -&gt; ReadS DocumentHighlight
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621681225014"><span id="local-6989586621681225016"><span id="local-6989586621681225023"><span class="annot"><span class="annottext">Int -&gt; DocumentHighlight -&gt; ShowS
+[DocumentHighlight] -&gt; ShowS
+DocumentHighlight -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DocumentHighlight] -&gt; ShowS
+$cshowList :: [DocumentHighlight] -&gt; ShowS
+show :: DocumentHighlight -&gt; String
+$cshow :: DocumentHighlight -&gt; String
+showsPrec :: Int -&gt; DocumentHighlight -&gt; ShowS
+$cshowsPrec :: Int -&gt; DocumentHighlight -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621681225006"><span id="local-6989586621681225012"><span class="annot"><span class="annottext">DocumentHighlight -&gt; DocumentHighlight -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DocumentHighlight -&gt; DocumentHighlight -&gt; Bool
+$c/= :: DocumentHighlight -&gt; DocumentHighlight -&gt; Bool
+== :: DocumentHighlight -&gt; DocumentHighlight -&gt; Bool
+$c== :: DocumentHighlight -&gt; DocumentHighlight -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span id="local-6989586621681224971"><span id="local-6989586621681224973"><span id="local-6989586621681224981"><span id="local-6989586621681224992"><span id="local-6989586621681224994"><span id="local-6989586621681225004"><span class="hs-identifier">deriveJSON</span><span> </span><span class="hs-identifier">lspOptions</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">DocumentHighlight</span></span></span></span></span></span></span><span>
+</span><span id="line-72"></span></pre></body></html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE DataKinds                  #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE StandaloneDeriving         #-}</span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE GADTs                      #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# LANGUAGE TypeFamilies               #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# LANGUAGE TypeInType                 #-}</span><span>
+</span><span id="line-6"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unticked-promoted-constructors #-}</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Types.LspId</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>                                 </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">A</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Data.IxMap.html"><span class="hs-identifier">Data.IxMap</span></a></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>                                  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Text</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Types.Method.html"><span class="hs-identifier">Language.LSP.Types.Method</span></a></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- | Id used for a request, Can be either a String or an Int</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="LspId"><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-var">LspId</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621681207429"><span id="local-6989586621681207428"><span class="annot"><a href="#local-6989586621681207428"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Types.Method.html#Method"><span class="hs-identifier hs-type">Method</span></a></span><span> </span><span class="annot"><a href="#local-6989586621681207429"><span class="hs-identifier hs-type">f</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Types.Method.html#Request"><span class="hs-identifier hs-type">Request</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span id="IdInt"><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-var">IdInt</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="IdString"><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-var">IdString</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621681207327"><span id="local-6989586621681207329"><span id="local-6989586621681207337"><span class="annot"><span class="annottext">Int -&gt; LspId m -&gt; ShowS
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+forall (f :: From) (m :: Method f 'Request).
+Int -&gt; LspId m -&gt; ShowS
+forall (f :: From) (m :: Method f 'Request). [LspId m] -&gt; ShowS
+forall (f :: From) (m :: Method f 'Request). LspId m -&gt; String
+showList :: [LspId m] -&gt; ShowS
+$cshowList :: forall (f :: From) (m :: Method f 'Request). [LspId m] -&gt; ShowS
+show :: LspId m -&gt; String
+$cshow :: forall (f :: From) (m :: Method f 'Request). LspId m -&gt; String
+showsPrec :: Int -&gt; LspId m -&gt; ShowS
+$cshowsPrec :: forall (f :: From) (m :: Method f 'Request).
+Int -&gt; LspId m -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621681207306"><span id="local-6989586621681207319"><span id="local-6989586621681207322"><span id="local-6989586621681207324"><span class="annot"><span class="annottext">ReadPrec [LspId m]
+ReadPrec (LspId m)
+ReadS [LspId m]
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+forall (f :: From) (m :: Method f 'Request). ReadPrec [LspId m]
+forall (f :: From) (m :: Method f 'Request). ReadPrec (LspId m)
+forall (f :: From) (m :: Method f 'Request). Int -&gt; ReadS (LspId m)
+forall (f :: From) (m :: Method f 'Request). ReadS [LspId m]
+readListPrec :: ReadPrec [LspId m]
+$creadListPrec :: forall (f :: From) (m :: Method f 'Request). ReadPrec [LspId m]
+readPrec :: ReadPrec (LspId m)
+$creadPrec :: forall (f :: From) (m :: Method f 'Request). ReadPrec (LspId m)
+readList :: ReadS [LspId m]
+$creadList :: forall (f :: From) (m :: Method f 'Request). ReadS [LspId m]
+readsPrec :: Int -&gt; ReadS (LspId m)
+$creadsPrec :: forall (f :: From) (m :: Method f 'Request). Int -&gt; ReadS (LspId m)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621681207296"><span id="local-6989586621681207302"><span class="annot"><span class="annottext">LspId m -&gt; LspId m -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+/= :: LspId m -&gt; LspId m -&gt; Bool
+$c/= :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+== :: LspId m -&gt; LspId m -&gt; Bool
+$c== :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621681207270"><span id="local-6989586621681207272"><span id="local-6989586621681207275"><span id="local-6989586621681207278"><span id="local-6989586621681207281"><span id="local-6989586621681207285"><span id="local-6989586621681207291"><span class="annot"><span class="annottext">LspId m -&gt; LspId m -&gt; Bool
+LspId m -&gt; LspId m -&gt; Ordering
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+forall (f :: From) (m :: Method f 'Request). Eq (LspId m)
+forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Ordering
+forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; LspId m
+min :: LspId m -&gt; LspId m -&gt; LspId m
+$cmin :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; LspId m
+max :: LspId m -&gt; LspId m -&gt; LspId m
+$cmax :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; LspId m
+&gt;= :: LspId m -&gt; LspId m -&gt; Bool
+$c&gt;= :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+&gt; :: LspId m -&gt; LspId m -&gt; Bool
+$c&gt; :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+&lt;= :: LspId m -&gt; LspId m -&gt; Bool
+$c&lt;= :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+&lt; :: LspId m -&gt; LspId m -&gt; Bool
+$c&lt; :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Bool
+compare :: LspId m -&gt; LspId m -&gt; Ordering
+$ccompare :: forall (f :: From) (m :: Method f 'Request).
+LspId m -&gt; LspId m -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207262"><span id="local-6989586621681207264"><span id="local-6989586621681207266"><span id="local-6989586621681207418"><span class="annot"><span class="hs-identifier hs-type">A.ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621681207418"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-22"></span><span>  </span><span id="local-6989586621681207256"><span class="annot"><span class="annottext">toJSON :: LspId m -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span> </span><span id="local-6989586621681207254"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207254"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">A.toJSON</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207254"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-23"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207253"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207253"><span class="hs-identifier hs-var">s</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">A.toJSON</span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207253"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207250"><span id="local-6989586621681207414"><span class="annot"><span class="hs-identifier hs-type">A.FromJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621681207414"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-26"></span><span>  </span><span id="local-6989586621681207240"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser (LspId m)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span id="local-6989586621681207238"><span class="annot"><span class="annottext">v :: Value
+</span><a href="#local-6989586621681207238"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">A.Number</span></span><span> </span><span class="annot"><span class="annottext">Scientific
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: From) (m :: Method f 'Request). Int32 -&gt; LspId m
+</span><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-var">IdInt</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">A.parseJSON</span></span><span> </span><span class="annot"><span class="annottext">Value
+</span><a href="#local-6989586621681207238"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">parseJSON</span></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">A.String</span></span><span>  </span><span id="local-6989586621681207234"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207234"><span class="hs-identifier hs-var">s</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: From) (m :: Method f 'Request). Text -&gt; LspId m
+</span><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-var">IdString</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207234"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">parseJSON</span></span><span> </span><span class="annot"><span class="annottext">Value
+</span><span class="hs-identifier">_</span></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;LspId&quot;</span></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Data.IxMap.html#IxOrd"><span class="hs-identifier hs-type">IxOrd</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-keyword">type</span><span> </span><span id="Base"><span class="annot"><a href="Data.IxMap.html#Base"><span class="hs-identifier hs-var">Base</span></a></span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span>
+</span><span id="line-32"></span><span>  </span><span id="local-6989586621681207227"><span class="annot"><span class="annottext">toBase :: forall (a :: Method f 'Request). LspId a -&gt; Base LspId
+</span><a href="Data.IxMap.html#toBase"><span class="hs-identifier hs-var hs-var hs-var hs-var">toBase</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {f :: From} (m :: Method f 'Request). LspId m -&gt; SomeLspId
+</span><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-var">SomeLspId</span></a></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207220"><span id="local-6989586621681207394"><span class="annot"><span class="hs-identifier hs-type">Hashable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621681207394"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621681207214"><span class="annot"><span class="annottext">hashWithSalt :: Int -&gt; LspId m -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">hashWithSalt</span></span></span><span> </span><span id="local-6989586621681207212"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207212"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span> </span><span id="local-6989586621681207211"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207211"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Hashable a =&gt; Int -&gt; a -&gt; Int
+</span><span class="hs-identifier hs-var">hashWithSalt</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207212"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207211"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-36"></span><span>  </span><span class="annot"><span class="hs-identifier hs-var">hashWithSalt</span></span><span> </span><span id="local-6989586621681207210"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207210"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207209"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207209"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Hashable a =&gt; Int -&gt; a -&gt; Int
+</span><span class="hs-identifier hs-var">hashWithSalt</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207210"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207209"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">data</span><span> </span><span id="SomeLspId"><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-var">SomeLspId</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621681207208"><span id="SomeLspId"><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-var">SomeLspId</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#LspId"><span class="hs-identifier hs-type">LspId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621681207208"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span id="local-6989586621681207202"><span id="local-6989586621681207204"><span id="local-6989586621681207206"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span></span></span></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207199"><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span> </span><span id="local-6989586621681207198"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207198"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621681207197"><span class="annot"><span class="annottext">== :: SomeLspId -&gt; SomeLspId -&gt; Bool
+</span><span class="hs-operator hs-var hs-var hs-var hs-var">==</span></span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span> </span><span id="local-6989586621681207195"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207195"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207198"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207195"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-44"></span><span>  </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207194"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207194"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207192"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207192"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207194"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207192"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-45"></span><span>  </span><span class="annot"><span class="annottext">SomeLspId
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">SomeLspId
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207177"><span id="local-6989586621681207179"><span id="local-6989586621681207181"><span id="local-6989586621681207183"><span id="local-6989586621681207185"><span id="local-6989586621681207187"><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span></span></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621681207176"><span class="annot"><span class="annottext">compare :: SomeLspId -&gt; SomeLspId -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">compare</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span id="local-6989586621681207174"><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207174"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span id="local-6989586621681207173"><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207173"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {f :: From} {f :: From} {m :: Method f 'Request}
+       {m :: Method f 'Request}.
+LspId m -&gt; LspId m -&gt; Ordering
+</span><a href="#local-6989586621681207172"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207174"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207173"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-48"></span><span>    </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>      </span><span id="local-6989586621681207172"><span class="annot"><span class="annottext">go :: LspId m -&gt; LspId m -&gt; Ordering
+</span><a href="#local-6989586621681207172"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span>    </span><span id="local-6989586621681207169"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207169"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span>    </span><span id="local-6989586621681207168"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207168"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207169"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
+</span><span class="hs-operator hs-var">`compare`</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621681207168"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-50"></span><span>      </span><span class="annot"><a href="#local-6989586621681207172"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207167"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207167"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span id="local-6989586621681207166"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207166"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207167"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
+</span><span class="hs-operator hs-var">`compare`</span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621681207166"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-51"></span><span>      </span><span class="annot"><a href="#local-6989586621681207172"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span>    </span><span class="annot"><span class="annottext">Int32
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ordering
+</span><span class="hs-identifier hs-var">LT</span></span><span>
+</span><span id="line-52"></span><span>      </span><span class="annot"><a href="#local-6989586621681207172"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdString"><span class="hs-identifier hs-type">IdString</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#IdInt"><span class="hs-identifier hs-type">IdInt</span></a></span><span>    </span><span class="annot"><span class="annottext">Int32
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ordering
+</span><span class="hs-identifier hs-var">GT</span></span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621681207161"><span class="annot"><span class="hs-identifier hs-type">Hashable</span></span><span> </span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-55"></span><span>  </span><span id="local-6989586621681207160"><span class="annot"><span class="annottext">hashWithSalt :: Int -&gt; SomeLspId -&gt; Int
+</span><a href="#local-6989586621681207160"><span class="hs-identifier hs-var hs-var hs-var hs-var">hashWithSalt</span></a></span></span><span> </span><span id="local-6989586621681207159"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207159"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Types.LspId.html#SomeLspId"><span class="hs-identifier hs-type">SomeLspId</span></a></span><span> </span><span id="local-6989586621681207157"><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207157"><span class="hs-identifier hs-var">lspId</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Hashable a =&gt; Int -&gt; a -&gt; Int
+</span><span class="hs-identifier hs-var">hashWithSalt</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621681207159"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">LspId m
+</span><a href="#local-6989586621681207157"><span class="hs-identifier hs-var">lspId</span></a></span><span>
+</span><span id="line-56"></span></pre></body></html>

@@ -18,20 +18,15 @@
 </span><span id="line-18"></span><span>
 </span><span id="line-19"></span><span class="annot"><a href="System.Console.Haskeline.Backend.html#defaultRunTerm"><span class="hs-identifier hs-type">defaultRunTerm</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Console.Haskeline.Term.html#RunTerm"><span class="hs-identifier hs-type">RunTerm</span></a></span><span>
 </span><span id="line-20"></span><span id="defaultRunTerm"><span class="annot"><span class="annottext">defaultRunTerm :: IO RunTerm
-</span><a href="System.Console.Haskeline.Backend.html#defaultRunTerm"><span class="hs-identifier hs-var hs-var">defaultRunTerm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO Bool -&gt; MaybeT IO Bool
-forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><a href="System.Console.Haskeline.Backend.html#defaultRunTerm"><span class="hs-identifier hs-var hs-var">defaultRunTerm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Handle -&gt; IO Bool
 </span><span class="hs-identifier hs-var">hGetEcho</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><span class="hs-identifier hs-var">stdin</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">MaybeT IO Bool -&gt; (Bool -&gt; MaybeT IO ()) -&gt; MaybeT IO ()
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
-</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; MaybeT IO ()
-forall (f :: * -&gt; *). Alternative f =&gt; Bool -&gt; f ()
-</span><span class="hs-identifier hs-var">guard</span></span><span> </span><span class="annot"><span class="annottext">MaybeT IO () -&gt; MaybeT IO RunTerm -&gt; MaybeT IO RunTerm
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; m b -&gt; m b
+</span><span class="hs-identifier hs-var">stdin</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Alternative f =&gt; Bool -&gt; f ()
+</span><span class="hs-identifier hs-var">guard</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; m b -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MaybeT IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#stdinTTY"><span class="hs-identifier hs-var">stdinTTY</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-21"></span><span>                    </span><span class="annot"><span class="annottext">MaybeT IO RunTerm -&gt; IO RunTerm -&gt; IO RunTerm
-forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
+</span><span id="line-21"></span><span>                    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
 </span><a href="System.Console.Haskeline.Monads.html#orElse"><span class="hs-operator hs-var">`orElse`</span></a></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#fileHandleRunTerm"><span class="hs-identifier hs-var">fileHandleRunTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span>
@@ -39,8 +34,7 @@ forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
 </span><span id="line-23"></span><span class="annot"><a href="System.Console.Haskeline.Backend.html#terminalRunTerm"><span class="hs-identifier hs-type">terminalRunTerm</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Console.Haskeline.Term.html#RunTerm"><span class="hs-identifier hs-type">RunTerm</span></a></span><span>
 </span><span id="line-24"></span><span id="terminalRunTerm"><span class="annot"><span class="annottext">terminalRunTerm :: IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#terminalRunTerm"><span class="hs-identifier hs-var hs-var">terminalRunTerm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MaybeT IO RunTerm
-</span><a href="System.Console.Haskeline.Backend.html#directTTY"><span class="hs-identifier hs-var">directTTY</span></a></span><span> </span><span class="annot"><span class="annottext">MaybeT IO RunTerm -&gt; IO RunTerm -&gt; IO RunTerm
-forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
+</span><a href="System.Console.Haskeline.Backend.html#directTTY"><span class="hs-identifier hs-var">directTTY</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
 </span><a href="System.Console.Haskeline.Monads.html#orElse"><span class="hs-operator hs-var">`orElse`</span></a></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#fileHandleRunTerm"><span class="hs-identifier hs-var">fileHandleRunTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span>
@@ -51,9 +45,7 @@ forall (m :: * -&gt; *) a. Monad m =&gt; MaybeT m a -&gt; m a -&gt; m a
 #else
 </span><span id="stdinTTY"><span class="annot"><span class="annottext">stdinTTY :: MaybeT IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#stdinTTY"><span class="hs-identifier hs-var hs-var">stdinTTY</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MaybeT IO Handles
-</span><a href="System.Console.Haskeline.Backend.Posix.html#stdinTTYHandles"><span class="hs-identifier hs-var">stdinTTYHandles</span></a></span><span> </span><span class="annot"><span class="annottext">MaybeT IO Handles
--&gt; (Handles -&gt; MaybeT IO RunTerm) -&gt; MaybeT IO RunTerm
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="System.Console.Haskeline.Backend.Posix.html#stdinTTYHandles"><span class="hs-identifier hs-var">stdinTTYHandles</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Handles -&gt; MaybeT IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#runDraw"><span class="hs-identifier hs-var">runDraw</span></a></span><span class="hs-cpp">
 #endif
@@ -64,9 +56,7 @@ forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 #else
 </span><span id="directTTY"><span class="annot"><span class="annottext">directTTY :: MaybeT IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#directTTY"><span class="hs-identifier hs-var hs-var">directTTY</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MaybeT IO Handles
-</span><a href="System.Console.Haskeline.Backend.Posix.html#ttyHandles"><span class="hs-identifier hs-var">ttyHandles</span></a></span><span> </span><span class="annot"><span class="annottext">MaybeT IO Handles
--&gt; (Handles -&gt; MaybeT IO RunTerm) -&gt; MaybeT IO RunTerm
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="System.Console.Haskeline.Backend.Posix.html#ttyHandles"><span class="hs-identifier hs-var">ttyHandles</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Handles -&gt; MaybeT IO RunTerm
 </span><a href="System.Console.Haskeline.Backend.html#runDraw"><span class="hs-identifier hs-var">runDraw</span></a></span><span class="hs-cpp">
 #endif

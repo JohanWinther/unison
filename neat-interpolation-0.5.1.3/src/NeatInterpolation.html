@@ -88,26 +88,22 @@
 </span><span id="line-88"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="NeatInterpolation.Parsing.html"><span class="hs-identifier">NeatInterpolation.Parsing</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Parsing</span></span><span>
 </span><span id="line-89"></span><span>
 </span><span id="line-90"></span><span>
-</span><span id="line-91"></span><span id="expQQ"><span class="annot"><span class="annottext">expQQ :: (String -&gt; Q Exp) -&gt; QuasiQuoter
-</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var hs-var">expQQ</span></a></span></span><span> </span><span id="local-6989586621679070646"><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><a href="#local-6989586621679070646"><span class="hs-identifier hs-var">quoteExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp)
--&gt; (String -&gt; Q Pat)
--&gt; (String -&gt; Q Type)
--&gt; (String -&gt; Q [Dec])
+</span><span id="line-91"></span><span id="expQQ"><span class="annot"><span class="annottext">expQQ :: ([Char] -&gt; Q Exp) -&gt; QuasiQuoter
+</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var hs-var">expQQ</span></a></span></span><span> </span><span id="local-6989586621679071242"><span class="annot"><span class="annottext">[Char] -&gt; Q Exp
+</span><a href="#local-6989586621679071242"><span class="hs-identifier hs-var">quoteExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Q Exp)
+-&gt; ([Char] -&gt; Q Pat)
+-&gt; ([Char] -&gt; Q Type)
+-&gt; ([Char] -&gt; Q [Dec])
 -&gt; QuasiQuoter
-</span><span class="hs-identifier hs-var">QuasiQuoter</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><a href="#local-6989586621679070646"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Pat
-forall (m :: * -&gt; *) p a. MonadFail m =&gt; p -&gt; m a
-</span><a href="#local-6989586621679070644"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Type
-forall (m :: * -&gt; *) p a. MonadFail m =&gt; p -&gt; m a
-</span><a href="#local-6989586621679070644"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q [Dec]
-forall (m :: * -&gt; *) p a. MonadFail m =&gt; p -&gt; m a
-</span><a href="#local-6989586621679070644"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-92"></span><span>  </span><span id="local-6989586621679070644"><span class="annot"><span class="annottext">notSupported :: p -&gt; m a
-</span><a href="#local-6989586621679070644"><span class="hs-identifier hs-var hs-var">notSupported</span></a></span></span><span> </span><span class="annot"><span class="annottext">p
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; m a
-forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
-</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier hs-var">QuasiQuoter</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Q Exp
+</span><a href="#local-6989586621679071242"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">forall {m :: * -&gt; *} {p} {a}. MonadFail m =&gt; p -&gt; m a
+</span><a href="#local-6989586621679071240"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="annot"><span class="annottext">forall {m :: * -&gt; *} {p} {a}. MonadFail m =&gt; p -&gt; m a
+</span><a href="#local-6989586621679071240"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="annot"><span class="annottext">forall {m :: * -&gt; *} {p} {a}. MonadFail m =&gt; p -&gt; m a
+</span><a href="#local-6989586621679071240"><span class="hs-identifier hs-var">notSupported</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-92"></span><span>  </span><span id="local-6989586621679071240"><span class="annot"><span class="annottext">notSupported :: p -&gt; m a
+</span><a href="#local-6989586621679071240"><span class="hs-identifier hs-var hs-var">notSupported</span></a></span></span><span> </span><span class="annot"><span class="annottext">p
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadFail m =&gt; [Char] -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;Quotation in this context is not supported&quot;</span></span><span>
 </span><span id="line-93"></span><span>
 </span><span id="line-94"></span><span class="hs-comment">{-|
@@ -125,23 +121,20 @@ removes the leading and trailing whitespace.
 -}</span><span>
 </span><span id="line-105"></span><span class="annot"><a href="NeatInterpolation.html#trimming"><span class="hs-identifier hs-type">trimming</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
 </span><span id="line-106"></span><span id="trimming"><span class="annot"><span class="annottext">trimming :: QuasiQuoter
-</span><a href="NeatInterpolation.html#trimming"><span class="hs-identifier hs-var hs-var">trimming</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; QuasiQuoter
-</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var">expQQ</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; (String -&gt; String) -&gt; String -&gt; Q Exp
-forall k (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+</span><a href="NeatInterpolation.html#trimming"><span class="hs-identifier hs-var hs-var">trimming</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Q Exp) -&gt; QuasiQuoter
+</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var">expQQ</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; Q Exp
+</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">forall {k} (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
 Category cat =&gt;
 cat b c -&gt; cat a b -&gt; cat a c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="NeatInterpolation.String.html#trim"><span class="hs-identifier hs-var">String.trim</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
-forall k (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="NeatInterpolation.String.html#trim"><span class="hs-identifier hs-var">String.trim</span></a></span><span> </span><span class="annot"><span class="annottext">forall {k} (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
 Category cat =&gt;
 cat b c -&gt; cat a b -&gt; cat a c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="NeatInterpolation.String.html#unindent"><span class="hs-identifier hs-var">String.unindent</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
-forall k (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="NeatInterpolation.String.html#unindent"><span class="hs-identifier hs-var">String.unindent</span></a></span><span> </span><span class="annot"><span class="annottext">forall {k} (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
 Category cat =&gt;
 cat b c -&gt; cat a b -&gt; cat a c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
 </span><a href="NeatInterpolation.String.html#tabsToSpaces"><span class="hs-identifier hs-var">String.tabsToSpaces</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-107"></span><span>
 </span><span id="line-108"></span><span class="hs-comment">{-|
@@ -150,159 +143,136 @@ Unindents the quoted template and converts tabs to spaces.
 -}</span><span>
 </span><span id="line-112"></span><span class="annot"><a href="NeatInterpolation.html#untrimming"><span class="hs-identifier hs-type">untrimming</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
 </span><span id="line-113"></span><span id="untrimming"><span class="annot"><span class="annottext">untrimming :: QuasiQuoter
-</span><a href="NeatInterpolation.html#untrimming"><span class="hs-identifier hs-var hs-var">untrimming</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; QuasiQuoter
-</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var">expQQ</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; (String -&gt; String) -&gt; String -&gt; Q Exp
-forall k (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+</span><a href="NeatInterpolation.html#untrimming"><span class="hs-identifier hs-var hs-var">untrimming</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">([Char] -&gt; Q Exp) -&gt; QuasiQuoter
+</span><a href="NeatInterpolation.html#expQQ"><span class="hs-identifier hs-var">expQQ</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; Q Exp
+</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var">quoteExp</span></a></span><span> </span><span class="annot"><span class="annottext">forall {k} (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
 Category cat =&gt;
 cat b c -&gt; cat a b -&gt; cat a c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
-</span><a href="NeatInterpolation.String.html#unindent"><span class="hs-identifier hs-var">String.unindent</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; String) -&gt; (String -&gt; String) -&gt; String -&gt; String
-forall k (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
+</span><a href="NeatInterpolation.String.html#unindent"><span class="hs-identifier hs-var">String.unindent</span></a></span><span> </span><span class="annot"><span class="annottext">forall {k} (cat :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
 Category cat =&gt;
 cat b c -&gt; cat a b -&gt; cat a c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char]
 </span><a href="NeatInterpolation.String.html#tabsToSpaces"><span class="hs-identifier hs-var">String.tabsToSpaces</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-114"></span><span>
 </span><span id="line-115"></span><span class="annot"><a href="NeatInterpolation.html#indentQQPlaceholder"><span class="hs-identifier hs-type">indentQQPlaceholder</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-116"></span><span id="indentQQPlaceholder"><span class="annot"><span class="annottext">indentQQPlaceholder :: Int -&gt; Text -&gt; Text
-</span><a href="NeatInterpolation.html#indentQQPlaceholder"><span class="hs-identifier hs-var hs-var">indentQQPlaceholder</span></a></span></span><span> </span><span id="local-6989586621679070637"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679070637"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679070636"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679070636"><span class="hs-identifier hs-var">text</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text]
+</span><a href="NeatInterpolation.html#indentQQPlaceholder"><span class="hs-identifier hs-var hs-var">indentQQPlaceholder</span></a></span></span><span> </span><span id="local-6989586621679071231"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679071231"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679071230"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679071230"><span class="hs-identifier hs-var">text</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text]
 </span><span class="hs-identifier hs-var">Text.lines</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679070636"><span class="hs-identifier hs-var">text</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-117"></span><span>  </span><span id="local-6989586621679070634"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679070634"><span class="hs-identifier hs-var">head</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679070633"><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679070633"><span class="hs-identifier hs-var">tail</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
+</span><a href="#local-6989586621679071230"><span class="hs-identifier hs-var">text</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621679071228"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679071228"><span class="hs-identifier hs-var">head</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679071227"><span class="annot"><span class="annottext">[Text]
+</span><a href="#local-6989586621679071227"><span class="hs-identifier hs-var">tail</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.intercalate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Text
 </span><span class="hs-identifier hs-var">Text.singleton</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'\n'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([Text] -&gt; Text) -&gt; [Text] -&gt; Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-char">'\n'</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-118"></span><span>               </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679070634"><span class="hs-identifier hs-var">head</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; [Text]
-forall a. a -&gt; [a] -&gt; [a]
-</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text) -&gt; [Text] -&gt; [Text]
-forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><a href="#local-6989586621679071228"><span class="hs-identifier hs-var">head</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; Text
 </span><span class="hs-identifier hs-var">Text.replicate</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679070637"><span class="hs-identifier hs-var">indent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Text
+</span><a href="#local-6989586621679071231"><span class="hs-identifier hs-var">indent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Text
 </span><span class="hs-identifier hs-var">Text.singleton</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">' '</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-char">' '</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679070633"><span class="hs-identifier hs-var">tail</span></a></span><span>
+</span><a href="#local-6989586621679071227"><span class="hs-identifier hs-var">tail</span></a></span><span>
 </span><span id="line-119"></span><span>  </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679070636"><span class="hs-identifier hs-var">text</span></a></span><span>
+</span><a href="#local-6989586621679071230"><span class="hs-identifier hs-var">text</span></a></span><span>
 </span><span id="line-120"></span><span>
 </span><span id="line-121"></span><span class="annot"><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-type">quoteExp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
-</span><span id="line-122"></span><span id="quoteExp"><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
-</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var hs-var">quoteExp</span></a></span></span><span> </span><span id="local-6989586621679070629"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070629"><span class="hs-identifier hs-var">input</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-123"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either ParseException [Line]
-</span><a href="NeatInterpolation.Parsing.html#parseLines"><span class="hs-identifier hs-var">Parsing.parseLines</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070629"><span class="hs-identifier hs-var">input</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-124"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679070627"><span class="annot"><span class="annottext">ParseException
-</span><a href="#local-6989586621679070627"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
-forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
-</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; String -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ParseException -&gt; String
-forall a. Show a =&gt; a -&gt; String
+</span><span id="line-122"></span><span id="quoteExp"><span class="annot"><span class="annottext">quoteExp :: [Char] -&gt; Q Exp
+</span><a href="NeatInterpolation.html#quoteExp"><span class="hs-identifier hs-var hs-var">quoteExp</span></a></span></span><span> </span><span id="local-6989586621679071223"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071223"><span class="hs-identifier hs-var">input</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-123"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Either ParseException [Line]
+</span><a href="NeatInterpolation.Parsing.html#parseLines"><span class="hs-identifier hs-var">Parsing.parseLines</span></a></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071223"><span class="hs-identifier hs-var">input</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-124"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679071221"><span class="annot"><span class="annottext">ParseException
+</span><a href="#local-6989586621679071221"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadFail m =&gt; [Char] -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; [Char]
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">ParseException
-</span><a href="#local-6989586621679070627"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-125"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679070625"><span class="annot"><span class="annottext">[Line]
-</span><a href="#local-6989586621679070625"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Q Exp -&gt; Q Type -&gt; Q Exp
-</span><span class="hs-identifier hs-var">sigE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; Q Exp -&gt; Q Exp
-</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.intercalate</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Text.singleton</span><span> </span><span class="hs-char">'\n'</span><span class="hs-special">)</span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Q Exp) -&gt; Q Exp -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[Q Exp] -&gt; Q Exp
-</span><span class="hs-identifier hs-var">listE</span></span><span> </span><span class="annot"><span class="annottext">([Q Exp] -&gt; Q Exp) -&gt; [Q Exp] -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(Line -&gt; Q Exp) -&gt; [Line] -&gt; [Q Exp]
-forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><a href="#local-6989586621679071221"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-125"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679071219"><span class="annot"><span class="annottext">[Line]
+</span><a href="#local-6989586621679071219"><span class="hs-identifier hs-var">lines</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Type -&gt; m Exp
+</span><span class="hs-identifier hs-var">sigE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Exp -&gt; m Exp
+</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.intercalate</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">Text.singleton</span><span> </span><span class="hs-char">'\n'</span><span class="hs-special">)</span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; [m Exp] -&gt; m Exp
+</span><span class="hs-identifier hs-var">listE</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">Line -&gt; Q Exp
 </span><a href="NeatInterpolation.html#lineExp"><span class="hs-identifier hs-var">lineExp</span></a></span><span> </span><span class="annot"><span class="annottext">[Line]
-</span><a href="#local-6989586621679070625"><span class="hs-identifier hs-var">lines</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071219"><span class="hs-identifier hs-var">lines</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-126"></span><span>                        </span><span class="hs-special">[t|</span><span class="hs-identifier">Text</span><span class="hs-special">|]</span><span>
 </span><span id="line-127"></span><span>
 </span><span id="line-128"></span><span class="annot"><a href="NeatInterpolation.html#lineExp"><span class="hs-identifier hs-type">lineExp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="NeatInterpolation.Parsing.html#Line"><span class="hs-identifier hs-type">Parsing.Line</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
 </span><span id="line-129"></span><span id="lineExp"><span class="annot"><span class="annottext">lineExp :: Line -&gt; Q Exp
-</span><a href="NeatInterpolation.html#lineExp"><span class="hs-identifier hs-var hs-var">lineExp</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#Line"><span class="hs-identifier hs-type">Parsing.Line</span></a></span><span> </span><span id="local-6989586621679070622"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679070622"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679070621"><span class="annot"><span class="annottext">[LineContent]
-</span><a href="#local-6989586621679070621"><span class="hs-identifier hs-var">contents</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="NeatInterpolation.html#lineExp"><span class="hs-identifier hs-var hs-var">lineExp</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#Line"><span class="hs-identifier hs-type">Parsing.Line</span></a></span><span> </span><span id="local-6989586621679071216"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679071216"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span id="local-6989586621679071215"><span class="annot"><span class="annottext">[LineContent]
+</span><a href="#local-6989586621679071215"><span class="hs-identifier hs-var">contents</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-130"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">[LineContent]
-</span><a href="#local-6989586621679070621"><span class="hs-identifier hs-var">contents</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679071215"><span class="hs-identifier hs-var">contents</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-131"></span><span>    </span><span class="hs-special">[</span><span class="hs-special">]</span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">Text.empty</span><span> </span><span class="hs-special">|]</span><span>
-</span><span id="line-132"></span><span>    </span><span class="hs-special">[</span><span id="local-6989586621679070620"><span class="annot"><span class="annottext">Item [LineContent]
-</span><a href="#local-6989586621679070620"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">LineContent -&gt; Q Exp
-</span><a href="#local-6989586621679070619"><span class="hs-identifier hs-var">toExp</span></a></span><span> </span><span class="annot"><span class="annottext">Item [LineContent]
-LineContent
-</span><a href="#local-6989586621679070620"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-133"></span><span>    </span><span id="local-6989586621679070618"><span class="annot"><span class="annottext">[LineContent]
-</span><a href="#local-6989586621679070618"><span class="hs-identifier hs-var">xs</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Q Exp -&gt; Q Exp -&gt; Q Exp
-</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.concat</span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Q Exp) -&gt; Q Exp -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[Q Exp] -&gt; Q Exp
-</span><span class="hs-identifier hs-var">listE</span></span><span> </span><span class="annot"><span class="annottext">([Q Exp] -&gt; Q Exp) -&gt; [Q Exp] -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(LineContent -&gt; Q Exp) -&gt; [LineContent] -&gt; [Q Exp]
-forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span id="line-132"></span><span>    </span><span class="hs-special">[</span><span id="local-6989586621679071214"><span class="annot"><span class="annottext">Item [LineContent]
+</span><a href="#local-6989586621679071214"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">LineContent -&gt; Q Exp
+</span><a href="#local-6989586621679071213"><span class="hs-identifier hs-var">toExp</span></a></span><span> </span><span class="annot"><span class="annottext">Item [LineContent]
+</span><a href="#local-6989586621679071214"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-133"></span><span>    </span><span id="local-6989586621679071212"><span class="annot"><span class="annottext">[LineContent]
+</span><a href="#local-6989586621679071212"><span class="hs-identifier hs-var">xs</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Exp -&gt; m Exp
+</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.concat</span><span class="hs-special">|]</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; [m Exp] -&gt; m Exp
+</span><span class="hs-identifier hs-var">listE</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">LineContent -&gt; Q Exp
-</span><a href="#local-6989586621679070619"><span class="hs-identifier hs-var">toExp</span></a></span><span> </span><span class="annot"><span class="annottext">[LineContent]
-</span><a href="#local-6989586621679070618"><span class="hs-identifier hs-var">xs</span></a></span><span>
-</span><span id="line-134"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679070619"><span class="annot"><span class="annottext">toExp :: LineContent -&gt; Q Exp
-</span><a href="#local-6989586621679070619"><span class="hs-identifier hs-var hs-var">toExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; LineContent -&gt; Q Exp
-</span><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-var">contentExp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Integer
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679071213"><span class="hs-identifier hs-var">toExp</span></a></span><span> </span><span class="annot"><span class="annottext">[LineContent]
+</span><a href="#local-6989586621679071212"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-134"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679071213"><span class="annot"><span class="annottext">toExp :: LineContent -&gt; Q Exp
+</span><a href="#local-6989586621679071213"><span class="hs-identifier hs-var hs-var">toExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; LineContent -&gt; Q Exp
+</span><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-var">contentExp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679070622"><span class="hs-identifier hs-var">indent</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071216"><span class="hs-identifier hs-var">indent</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-135"></span><span>
 </span><span id="line-136"></span><span class="annot"><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-type">contentExp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="NeatInterpolation.Parsing.html#LineContent"><span class="hs-identifier hs-type">Parsing.LineContent</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Q</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Exp</span></span><span>
 </span><span id="line-137"></span><span id="contentExp"><span class="annot"><span class="annottext">contentExp :: Integer -&gt; LineContent -&gt; Q Exp
 </span><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-var hs-var">contentExp</span></a></span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#LineContentText"><span class="hs-identifier hs-type">Parsing.LineContentText</span></a></span><span> </span><span id="local-6989586621679070615"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070615"><span class="hs-identifier hs-var">text</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q Exp -&gt; Q Exp -&gt; Q Exp
-</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.pack</span><span class="hs-special">|]</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><span class="hs-identifier hs-var">stringE</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070615"><span class="hs-identifier hs-var">text</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-138"></span><span class="annot"><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-var">contentExp</span></a></span><span> </span><span id="local-6989586621679070613"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679070613"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#LineContentIdentifier"><span class="hs-identifier hs-type">Parsing.LineContentIdentifier</span></a></span><span> </span><span id="local-6989586621679070611"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070611"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-139"></span><span>  </span><span id="local-6989586621679070610"><span class="annot"><span class="annottext">Maybe Name
-</span><a href="#local-6989586621679070610"><span class="hs-identifier hs-var">valueName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q (Maybe Name)
-</span><span class="hs-identifier hs-var">lookupValueName</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070611"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#LineContentText"><span class="hs-identifier hs-type">Parsing.LineContentText</span></a></span><span> </span><span id="local-6989586621679071209"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071209"><span class="hs-identifier hs-var">text</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Exp -&gt; m Exp
+</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">[|</span><span class="hs-identifier">Text.pack</span><span class="hs-special">|]</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; [Char] -&gt; m Exp
+</span><span class="hs-identifier hs-var">stringE</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071209"><span class="hs-identifier hs-var">text</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span class="annot"><a href="NeatInterpolation.html#contentExp"><span class="hs-identifier hs-var">contentExp</span></a></span><span> </span><span id="local-6989586621679071207"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679071207"><span class="hs-identifier hs-var">indent</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="NeatInterpolation.Parsing.html#LineContentIdentifier"><span class="hs-identifier hs-type">Parsing.LineContentIdentifier</span></a></span><span> </span><span id="local-6989586621679071205"><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071205"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-139"></span><span>  </span><span id="local-6989586621679071204"><span class="annot"><span class="annottext">Maybe Name
+</span><a href="#local-6989586621679071204"><span class="hs-identifier hs-var">valueName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; Q (Maybe Name)
+</span><span class="hs-identifier hs-var">lookupValueName</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071205"><span class="hs-identifier hs-var">name</span></a></span><span>
 </span><span id="line-140"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe Name
-</span><a href="#local-6989586621679070610"><span class="hs-identifier hs-var">valueName</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-141"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679070608"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679070608"><span class="hs-identifier hs-var">valueName</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-142"></span><span>      </span><span class="annot"><span class="annottext">Q Exp -&gt; Q Exp -&gt; Q Exp
+</span><a href="#local-6989586621679071204"><span class="hs-identifier hs-var">valueName</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679071202"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679071202"><span class="hs-identifier hs-var">valueName</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-142"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Exp -&gt; m Exp
 </span><span class="hs-identifier hs-var">appE</span></span><span>
-</span><span id="line-143"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Q Exp -&gt; Q Exp -&gt; Q Exp
-</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
-</span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="hs-special">'</span><span class="hs-identifier">indentQQPlaceholder</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Q Exp -&gt; Q Exp) -&gt; Q Exp -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Lit -&gt; Q Exp
-</span><span class="hs-identifier hs-var">litE</span></span><span> </span><span class="annot"><span class="annottext">(Lit -&gt; Q Exp) -&gt; Lit -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-143"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; m Exp -&gt; m Exp -&gt; m Exp
+</span><span class="hs-identifier hs-var">appE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
+</span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="hs-special">'</span><span class="hs-identifier">indentQQPlaceholder</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; Lit -&gt; m Exp
+</span><span class="hs-identifier hs-var">litE</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Lit
 </span><span class="hs-identifier hs-var">integerL</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679070613"><span class="hs-identifier hs-var">indent</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-144"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Q Exp
+</span><a href="#local-6989586621679071207"><span class="hs-identifier hs-var">indent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; Name -&gt; m Exp
 </span><span class="hs-identifier hs-var">varE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679070608"><span class="hs-identifier hs-var">valueName</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679071202"><span class="hs-identifier hs-var">valueName</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-145"></span><span>    </span><span class="annot"><span class="annottext">Maybe Name
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
-forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
-</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; String -&gt; Q Exp
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;Value `&quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679070611"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
-forall a. [a] -&gt; [a] -&gt; [a]
-</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadFail m =&gt; [Char] -&gt; m a
+</span><span class="hs-identifier hs-var">fail</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><span class="hs-string">&quot;Value `&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[Char]
+</span><a href="#local-6989586621679071205"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;` is not in scope&quot;</span></span><span>
 </span><span id="line-146"></span></pre></body></html>

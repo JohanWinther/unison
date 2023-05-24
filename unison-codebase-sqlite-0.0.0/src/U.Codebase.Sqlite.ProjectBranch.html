@@ -10,7 +10,7 @@
 </span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Sqlite</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FromRow</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ToRow</span></span><span class="hs-special">)</span><span>
 </span><span id="line-11"></span><span>
 </span><span id="line-12"></span><span class="hs-comment">-- | A project branch.</span><span>
-</span><span id="line-13"></span><span id="local-6989586621679505025"><span id="local-6989586621679505026"></span></span><span class="hs-keyword">data</span><span> </span><span id="ProjectBranch"><span class="annot"><a href="U.Codebase.Sqlite.ProjectBranch.html#ProjectBranch"><span class="hs-identifier hs-var">ProjectBranch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ProjectBranch"><span class="annot"><a href="U.Codebase.Sqlite.ProjectBranch.html#ProjectBranch"><span class="hs-identifier hs-var">ProjectBranch</span></a></span></span><span>
+</span><span id="line-13"></span><span id="local-6989586621679522459"><span id="local-6989586621679522460"></span></span><span class="hs-keyword">data</span><span> </span><span id="ProjectBranch"><span class="annot"><a href="U.Codebase.Sqlite.ProjectBranch.html#ProjectBranch"><span class="hs-identifier hs-var">ProjectBranch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ProjectBranch"><span class="annot"><a href="U.Codebase.Sqlite.ProjectBranch.html#ProjectBranch"><span class="hs-identifier hs-var">ProjectBranch</span></a></span></span><span>
 </span><span id="line-14"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AprojectId%3AProjectBranch"><span class="annot"><span class="annottext">ProjectBranch -&gt; ProjectId
 </span><a href="U.Codebase.Sqlite.ProjectBranch.html#%24sel%3AprojectId%3AProjectBranch"><span class="hs-identifier hs-var hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span class="hs-special">,</span><span>
 </span><span id="line-15"></span><span>    </span><span id="%24sel%3AbranchId%3AProjectBranch"><span class="annot"><span class="annottext">ProjectBranch -&gt; ProjectBranchId
@@ -20,30 +20,21 @@
 </span><span id="line-17"></span><span>    </span><span id="%24sel%3AparentBranchId%3AProjectBranch"><span class="annot"><span class="annottext">ProjectBranch -&gt; Maybe ProjectBranchId
 </span><a href="U.Codebase.Sqlite.ProjectBranch.html#%24sel%3AparentBranchId%3AProjectBranch"><span class="hs-identifier hs-var hs-var">parentBranchId</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span>
 </span><span id="line-18"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679505016"><span id="local-6989586621679505018"><span class="annot"><span class="annottext">ProjectBranch -&gt; ProjectBranch -&gt; Bool
-(ProjectBranch -&gt; ProjectBranch -&gt; Bool)
--&gt; (ProjectBranch -&gt; ProjectBranch -&gt; Bool) -&gt; Eq ProjectBranch
+</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679522442"><span id="local-6989586621679522452"><span class="annot"><span class="annottext">ProjectBranch -&gt; ProjectBranch -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: ProjectBranch -&gt; ProjectBranch -&gt; Bool
 $c/= :: ProjectBranch -&gt; ProjectBranch -&gt; Bool
 == :: ProjectBranch -&gt; ProjectBranch -&gt; Bool
 $c== :: ProjectBranch -&gt; ProjectBranch -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(forall x. ProjectBranch -&gt; Rep ProjectBranch x)
--&gt; (forall x. Rep ProjectBranch x -&gt; ProjectBranch)
--&gt; Generic ProjectBranch
-forall x. Rep ProjectBranch x -&gt; ProjectBranch
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep ProjectBranch x -&gt; ProjectBranch
 forall x. ProjectBranch -&gt; Rep ProjectBranch x
 forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
 $cto :: forall x. Rep ProjectBranch x -&gt; ProjectBranch
 $cfrom :: forall x. ProjectBranch -&gt; Rep ProjectBranch x
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505006"><span id="local-6989586621679505008"><span id="local-6989586621679505010"><span class="annot"><span class="annottext">Int -&gt; ProjectBranch -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679522422"><span id="local-6989586621679522424"><span id="local-6989586621679522436"><span class="annot"><span class="annottext">Int -&gt; ProjectBranch -&gt; ShowS
 [ProjectBranch] -&gt; ShowS
 ProjectBranch -&gt; String
-(Int -&gt; ProjectBranch -&gt; ShowS)
--&gt; (ProjectBranch -&gt; String)
--&gt; ([ProjectBranch] -&gt; ShowS)
--&gt; Show ProjectBranch
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [ProjectBranch] -&gt; ShowS
@@ -53,13 +44,11 @@ $cshow :: ProjectBranch -&gt; String
 showsPrec :: Int -&gt; ProjectBranch -&gt; ShowS
 $cshowsPrec :: Int -&gt; ProjectBranch -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679505003"><span class="annot"><span class="annottext">ProjectBranch -&gt; [SQLData]
-(ProjectBranch -&gt; [SQLData]) -&gt; ToRow ProjectBranch
+</span><span id="line-20"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679522419"><span class="annot"><span class="annottext">ProjectBranch -&gt; [SQLData]
 forall a. (a -&gt; [SQLData]) -&gt; ToRow a
 toRow :: ProjectBranch -&gt; [SQLData]
 $ctoRow :: ProjectBranch -&gt; [SQLData]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">ToRow</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505000"><span class="annot"><span class="annottext">RowParser ProjectBranch
-RowParser ProjectBranch -&gt; FromRow ProjectBranch
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">ToRow</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679522416"><span class="annot"><span class="annottext">RowParser ProjectBranch
 forall a. RowParser a -&gt; FromRow a
 fromRow :: RowParser ProjectBranch
 $cfromRow :: RowParser ProjectBranch

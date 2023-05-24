@@ -53,7 +53,7 @@ instance Unison.Hashable.Hashable ()
 instance Unison.Hashable.Hashable GHC.Types.Double
 instance Unison.Hashable.Hashable Data.Text.Internal.Text
 instance Unison.Hashable.Hashable GHC.Types.Char
-instance Unison.Hashable.Hashable Data.ByteString.Internal.ByteString
+instance Unison.Hashable.Hashable Data.ByteString.Internal.Type.ByteString
 instance Unison.Hashable.Hashable GHC.Word.Word64
 instance Unison.Hashable.Hashable GHC.Int.Int64
 instance Unison.Hashable.Hashable GHC.Types.Bool
@@ -599,7 +599,7 @@ amap :: (Functor f, Foldable f, Ord v) => (a -> a2) -> Term f v a -> Term f v a2
 
 -- | renames <tt>old</tt> to <tt>new</tt> in the given term, ignoring
 --   subtrees that bind <tt>old</tt>
-rename :: forall (f :: Type -> Type) v a. (Foldable f, Functor f, Var v) => v -> v -> Term f v a -> Term f v a
+rename :: forall (f :: TYPE LiftedRep -> Type) v a. (Foldable f, Functor f, Var v) => v -> v -> Term f v a -> Term f v a
 renames :: (Foldable f, Functor f, Var v) => Map v v -> Term f v a -> Term f v a
 
 -- | `subst v e body` substitutes <tt>e</tt> for <tt>v</tt> in
@@ -610,8 +610,8 @@ subst :: (Foldable f, Functor f, Var v) => v -> Term f v a -> Term f v a -> Term
 -- | `substs [(t1,v1), (t2,v2), ...] body` performs multiple simultaneous
 --   substitutions, avoiding capture
 substs :: (Foldable f, Functor f, Var v) => [(v, Term f v a)] -> Term f v a -> Term f v a
-substInheritAnnotation :: forall (f :: Type -> Type) v b a. (Foldable f, Functor f, Var v) => v -> Term f v b -> Term f v a -> Term f v a
-substsInheritAnnotation :: forall (f :: Type -> Type) v b a. (Foldable f, Functor f, Var v) => [(v, Term f v b)] -> Term f v a -> Term f v a
+substInheritAnnotation :: forall (f :: TYPE LiftedRep -> Type) v b a. (Foldable f, Functor f, Var v) => v -> Term f v b -> Term f v a -> Term f v a
+substsInheritAnnotation :: forall (f :: TYPE LiftedRep -> Type) v b a. (Foldable f, Functor f, Var v) => [(v, Term f v b)] -> Term f v a -> Term f v a
 find :: (Ord v, Foldable f, Functor f) => (Term f v a -> FindAction x) -> Term f v a -> [x]
 find' :: (Ord v, Foldable f, Functor f) => (Term f v a -> Bool) -> Term f v a -> [Term f v a]
 data FindAction x

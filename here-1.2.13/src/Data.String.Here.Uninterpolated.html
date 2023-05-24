@@ -11,28 +11,17 @@
 </span><span id="line-11"></span><span class="hs-comment">-- | Quote a here doc, stripping leading and trailing whitespace</span><span>
 </span><span id="line-12"></span><span class="annot"><a href="Data.String.Here.Uninterpolated.html#here"><span class="hs-identifier hs-type">here</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
 </span><span id="line-13"></span><span id="here"><span class="annot"><span class="annottext">here :: QuasiQuoter
-</span><a href="Data.String.Here.Uninterpolated.html#here"><span class="hs-identifier hs-var hs-var">here</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">QuasiQuoter :: (String -&gt; Q Exp)
--&gt; (String -&gt; Q Pat)
--&gt; (String -&gt; Q Type)
--&gt; (String -&gt; Q [Dec])
--&gt; QuasiQuoter
-</span><span class="hs-identifier hs-type">QuasiQuoter</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
-</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><span class="hs-identifier hs-var">stringE</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp) -&gt; (String -&gt; String) -&gt; String -&gt; Q Exp
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.String.Here.Uninterpolated.html#here"><span class="hs-identifier hs-var hs-var">here</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
+</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Exp
+</span><span class="hs-identifier hs-var">stringE</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String
 </span><a href="Data.String.Here.Internal.html#trim"><span class="hs-identifier hs-var">trim</span></a></span><span class="hs-special">}</span><span>
 </span><span id="line-14"></span><span>
 </span><span id="line-15"></span><span class="hs-comment">-- | Quote a here doc literally, with no whitespace stripping</span><span>
 </span><span id="line-16"></span><span class="annot"><a href="Data.String.Here.Uninterpolated.html#hereLit"><span class="hs-identifier hs-type">hereLit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span>
 </span><span id="line-17"></span><span id="hereLit"><span class="annot"><span class="annottext">hereLit :: QuasiQuoter
-</span><a href="Data.String.Here.Uninterpolated.html#hereLit"><span class="hs-identifier hs-var hs-var">hereLit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">QuasiQuoter :: (String -&gt; Q Exp)
--&gt; (String -&gt; Q Pat)
--&gt; (String -&gt; Q Type)
--&gt; (String -&gt; Q [Dec])
--&gt; QuasiQuoter
-</span><span class="hs-identifier hs-type">QuasiQuoter</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
-</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+</span><a href="Data.String.Here.Uninterpolated.html#hereLit"><span class="hs-identifier hs-var hs-var">hereLit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">QuasiQuoter</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">quoteExp :: String -&gt; Q Exp
+</span><span class="hs-identifier hs-var">quoteExp</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Exp
 </span><span class="hs-identifier hs-var">stringE</span></span><span class="hs-special">}</span><span>
 </span><span id="line-18"></span><span>
 </span><span id="line-19"></span><span class="hs-comment">-- | Splice a file's contents as a here doc</span><span>

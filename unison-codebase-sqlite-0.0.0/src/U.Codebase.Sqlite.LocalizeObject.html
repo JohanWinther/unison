@@ -63,534 +63,201 @@
 </span><span id="line-63"></span><span class="hs-comment">-- | Localize a branch object.</span><span>
 </span><span id="line-64"></span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranch"><span class="hs-identifier hs-type">localizeBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#DbBranch"><span class="hs-identifier hs-type">DbBranch</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#BranchLocalIds"><span class="hs-identifier hs-type">BranchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#LocalBranch"><span class="hs-identifier hs-type">LocalBranch</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-65"></span><span id="localizeBranch"><span class="annot"><span class="annottext">localizeBranch :: DbBranch -&gt; (BranchLocalIds, LocalBranch)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranch"><span class="hs-identifier hs-var hs-var">localizeBranch</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#Branch"><span class="hs-identifier hs-type">Branch</span></a></span><span> </span><span id="local-6989586621679505319"><span class="annot"><span class="annottext">Map
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranch"><span class="hs-identifier hs-var hs-var">localizeBranch</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#Branch"><span class="hs-identifier hs-type">Branch</span></a></span><span> </span><span id="local-6989586621679523152"><span class="annot"><span class="annottext">Map
   TextId
   (Map
      (Referent'' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
-</span><a href="#local-6989586621679505319"><span class="hs-identifier hs-var">terms</span></a></span></span><span> </span><span id="local-6989586621679505318"><span class="annot"><span class="annottext">Map
+</span><a href="#local-6989586621679523152"><span class="hs-identifier hs-var">terms</span></a></span></span><span> </span><span id="local-6989586621679523151"><span class="annot"><span class="annottext">Map
   TextId
   (Map
      (Reference' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
-</span><a href="#local-6989586621679505318"><span class="hs-identifier hs-var">types</span></a></span></span><span> </span><span id="local-6989586621679505317"><span class="annot"><span class="annottext">Map TextId PatchObjectId
-</span><a href="#local-6989586621679505317"><span class="hs-identifier hs-var">patches</span></a></span></span><span> </span><span id="local-6989586621679505316"><span class="annot"><span class="annottext">Map TextId (BranchObjectId, CausalHashId)
-</span><a href="#local-6989586621679505316"><span class="hs-identifier hs-var">children</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-66"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Identity (BranchLocalIds, LocalBranch)
--&gt; (BranchLocalIds, LocalBranch)
-forall a. Identity a -&gt; a
-</span><span class="hs-identifier hs-var hs-var">runIdentity</span></span><span> </span><span class="annot"><span class="annottext">(Identity (BranchLocalIds, LocalBranch)
- -&gt; (BranchLocalIds, LocalBranch))
--&gt; (StateT LocalizeBranchState Identity LocalBranch
-    -&gt; Identity (BranchLocalIds, LocalBranch))
--&gt; StateT LocalizeBranchState Identity LocalBranch
--&gt; (BranchLocalIds, LocalBranch)
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizeBranchState Identity LocalBranch
--&gt; Identity (BranchLocalIds, LocalBranch)
-forall (m :: * -&gt; *) a.
+</span><a href="#local-6989586621679523151"><span class="hs-identifier hs-var">types</span></a></span></span><span> </span><span id="local-6989586621679523150"><span class="annot"><span class="annottext">Map TextId PatchObjectId
+</span><a href="#local-6989586621679523150"><span class="hs-identifier hs-var">patches</span></a></span></span><span> </span><span id="local-6989586621679523149"><span class="annot"><span class="annottext">Map TextId (BranchObjectId, CausalHashId)
+</span><a href="#local-6989586621679523149"><span class="hs-identifier hs-var">children</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-66"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Identity a -&gt; a
+</span><span class="hs-identifier hs-var">runIdentity</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 Monad m =&gt;
 StateT LocalizeBranchState m a -&gt; m (BranchLocalIds, a)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizeBranch"><span class="hs-identifier hs-var">runLocalizeBranch</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-67"></span><span>    </span><span class="annot"><span class="annottext">Map
-  LocalTextId
-  (Map
-     (Referent'' LocalTextId LocalDefnId)
-     (MetadataSetFormat' LocalTextId LocalDefnId))
--&gt; Map
-     LocalTextId
-     (Map
-        (Reference' LocalTextId LocalDefnId)
-        (MetadataSetFormat' LocalTextId LocalDefnId))
--&gt; Map LocalTextId LocalPatchObjectId
--&gt; Map LocalTextId LocalBranchChildId
--&gt; LocalBranch
-forall t h p c.
+</span><span id="line-67"></span><span>    </span><span class="annot"><span class="annottext">forall t h p c.
 Map t (Map (Referent'' t h) (MetadataSetFormat' t h))
 -&gt; Map t (Map (Reference' t h) (MetadataSetFormat' t h))
 -&gt; Map t p
 -&gt; Map t c
 -&gt; Branch' t h p c
 </span><a href="U.Codebase.Sqlite.Branch.Full.html#Branch"><span class="hs-identifier hs-var">Branch</span></a></span><span>
-</span><span id="line-68"></span><span>      </span><span class="annot"><span class="annottext">(Map
-   LocalTextId
-   (Map
-      (Referent'' LocalTextId LocalDefnId)
-      (MetadataSetFormat' LocalTextId LocalDefnId))
- -&gt; Map
-      LocalTextId
-      (Map
-         (Reference' LocalTextId LocalDefnId)
-         (MetadataSetFormat' LocalTextId LocalDefnId))
- -&gt; Map LocalTextId LocalPatchObjectId
- -&gt; Map LocalTextId LocalBranchChildId
- -&gt; LocalBranch)
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        LocalTextId
-        (Map
-           (Referent'' LocalTextId LocalDefnId)
-           (MetadataSetFormat' LocalTextId LocalDefnId)))
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        LocalTextId
-        (Map
-           (Reference' LocalTextId LocalDefnId)
-           (MetadataSetFormat' LocalTextId LocalDefnId))
-      -&gt; Map LocalTextId LocalPatchObjectId
-      -&gt; Map LocalTextId LocalBranchChildId
-      -&gt; LocalBranch)
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TextId -&gt; StateT LocalizeBranchState Identity LocalTextId)
--&gt; (Map
-      (Referent'' TextId ObjectId) (MetadataSetFormat' TextId ObjectId)
-    -&gt; StateT
-         LocalizeBranchState
-         Identity
-         (Map
-            (Referent'' LocalTextId LocalDefnId)
-            (MetadataSetFormat' LocalTextId LocalDefnId)))
--&gt; Map
-     TextId
-     (Map
-        (Referent'' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        LocalTextId
-        (Map
-           (Referent'' LocalTextId LocalDefnId)
-           (MetadataSetFormat' LocalTextId LocalDefnId)))
-forall (f :: * -&gt; *) a' a b b'.
+</span><span id="line-68"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT LocalizeBranchState Identity LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Referent'' TextId ObjectId
- -&gt; StateT
-      LocalizeBranchState Identity (Referent'' LocalTextId LocalDefnId))
--&gt; (MetadataSetFormat' TextId ObjectId
-    -&gt; StateT
-         LocalizeBranchState
-         Identity
-         (MetadataSetFormat' LocalTextId LocalDefnId))
--&gt; Map
-     (Referent'' TextId ObjectId) (MetadataSetFormat' TextId ObjectId)
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        (Referent'' LocalTextId LocalDefnId)
-        (MetadataSetFormat' LocalTextId LocalDefnId))
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Referent'' TextId ObjectId
--&gt; StateT
-     LocalizeBranchState Identity (Referent'' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 Referent'' TextId ObjectId
 -&gt; StateT s m (Referent'' LocalTextId LocalDefnId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferent"><span class="hs-identifier hs-var">localizeReferent</span></a></span><span> </span><span class="annot"><span class="annottext">MetadataSetFormat' TextId ObjectId
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (MetadataSetFormat' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferent"><span class="hs-identifier hs-var">localizeReferent</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 MetadataSetFormat' TextId ObjectId
 -&gt; StateT s m (MetadataSetFormat' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505308"><span class="hs-identifier hs-var">localizeBranchMetadata</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map
+</span><a href="#local-6989586621679523141"><span class="hs-identifier hs-var">localizeBranchMetadata</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map
   TextId
   (Map
      (Referent'' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
-</span><a href="#local-6989586621679505319"><span class="hs-identifier hs-var">terms</span></a></span><span>
-</span><span id="line-69"></span><span>      </span><span class="annot"><span class="annottext">StateT
-  LocalizeBranchState
-  Identity
-  (Map
-     LocalTextId
-     (Map
-        (Reference' LocalTextId LocalDefnId)
-        (MetadataSetFormat' LocalTextId LocalDefnId))
-   -&gt; Map LocalTextId LocalPatchObjectId
-   -&gt; Map LocalTextId LocalBranchChildId
-   -&gt; LocalBranch)
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        LocalTextId
-        (Map
-           (Reference' LocalTextId LocalDefnId)
-           (MetadataSetFormat' LocalTextId LocalDefnId)))
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map LocalTextId LocalPatchObjectId
-      -&gt; Map LocalTextId LocalBranchChildId -&gt; LocalBranch)
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TextId -&gt; StateT LocalizeBranchState Identity LocalTextId)
--&gt; (Map
-      (Reference' TextId ObjectId) (MetadataSetFormat' TextId ObjectId)
-    -&gt; StateT
-         LocalizeBranchState
-         Identity
-         (Map
-            (Reference' LocalTextId LocalDefnId)
-            (MetadataSetFormat' LocalTextId LocalDefnId)))
--&gt; Map
-     TextId
-     (Map
-        (Reference' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        LocalTextId
-        (Map
-           (Reference' LocalTextId LocalDefnId)
-           (MetadataSetFormat' LocalTextId LocalDefnId)))
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="#local-6989586621679523152"><span class="hs-identifier hs-var">terms</span></a></span><span>
+</span><span id="line-69"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT LocalizeBranchState Identity LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Reference' TextId ObjectId
- -&gt; StateT
-      LocalizeBranchState Identity (Reference' LocalTextId LocalDefnId))
--&gt; (MetadataSetFormat' TextId ObjectId
-    -&gt; StateT
-         LocalizeBranchState
-         Identity
-         (MetadataSetFormat' LocalTextId LocalDefnId))
--&gt; Map
-     (Reference' TextId ObjectId) (MetadataSetFormat' TextId ObjectId)
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map
-        (Reference' LocalTextId LocalDefnId)
-        (MetadataSetFormat' LocalTextId LocalDefnId))
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Reference' TextId ObjectId
--&gt; StateT
-     LocalizeBranchState Identity (Reference' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 Reference' TextId ObjectId
 -&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var">localizeReference</span></a></span><span> </span><span class="annot"><span class="annottext">MetadataSetFormat' TextId ObjectId
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (MetadataSetFormat' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var">localizeReference</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 MetadataSetFormat' TextId ObjectId
 -&gt; StateT s m (MetadataSetFormat' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505308"><span class="hs-identifier hs-var">localizeBranchMetadata</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map
+</span><a href="#local-6989586621679523141"><span class="hs-identifier hs-var">localizeBranchMetadata</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map
   TextId
   (Map
      (Reference' TextId ObjectId) (MetadataSetFormat' TextId ObjectId))
-</span><a href="#local-6989586621679505318"><span class="hs-identifier hs-var">types</span></a></span><span>
-</span><span id="line-70"></span><span>      </span><span class="annot"><span class="annottext">StateT
-  LocalizeBranchState
-  Identity
-  (Map LocalTextId LocalPatchObjectId
-   -&gt; Map LocalTextId LocalBranchChildId -&gt; LocalBranch)
--&gt; StateT
-     LocalizeBranchState Identity (Map LocalTextId LocalPatchObjectId)
--&gt; StateT
-     LocalizeBranchState
-     Identity
-     (Map LocalTextId LocalBranchChildId -&gt; LocalBranch)
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TextId -&gt; StateT LocalizeBranchState Identity LocalTextId)
--&gt; (PatchObjectId
-    -&gt; StateT LocalizeBranchState Identity LocalPatchObjectId)
--&gt; Map TextId PatchObjectId
--&gt; StateT
-     LocalizeBranchState Identity (Map LocalTextId LocalPatchObjectId)
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="#local-6989586621679523151"><span class="hs-identifier hs-var">types</span></a></span><span>
+</span><span id="line-70"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT LocalizeBranchState Identity LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">PatchObjectId
--&gt; StateT LocalizeBranchState Identity LocalPatchObjectId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsPatches s, Monad m) =&gt;
 PatchObjectId -&gt; StateT s m LocalPatchObjectId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatchReference"><span class="hs-identifier hs-var">localizePatchReference</span></a></span><span> </span><span class="annot"><span class="annottext">Map TextId PatchObjectId
-</span><a href="#local-6989586621679505317"><span class="hs-identifier hs-var">patches</span></a></span><span>
-</span><span id="line-71"></span><span>      </span><span class="annot"><span class="annottext">StateT
-  LocalizeBranchState
-  Identity
-  (Map LocalTextId LocalBranchChildId -&gt; LocalBranch)
--&gt; StateT
-     LocalizeBranchState Identity (Map LocalTextId LocalBranchChildId)
--&gt; StateT LocalizeBranchState Identity LocalBranch
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">(TextId -&gt; StateT LocalizeBranchState Identity LocalTextId)
--&gt; ((BranchObjectId, CausalHashId)
-    -&gt; StateT LocalizeBranchState Identity LocalBranchChildId)
--&gt; Map TextId (BranchObjectId, CausalHashId)
--&gt; StateT
-     LocalizeBranchState Identity (Map LocalTextId LocalBranchChildId)
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="#local-6989586621679523150"><span class="hs-identifier hs-var">patches</span></a></span><span>
+</span><span id="line-71"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT LocalizeBranchState Identity LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">(BranchObjectId, CausalHashId)
--&gt; StateT LocalizeBranchState Identity LocalBranchChildId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsBranches s, Monad m) =&gt;
 (BranchObjectId, CausalHashId) -&gt; StateT s m LocalBranchChildId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranchReference"><span class="hs-identifier hs-var">localizeBranchReference</span></a></span><span> </span><span class="annot"><span class="annottext">Map TextId (BranchObjectId, CausalHashId)
-</span><a href="#local-6989586621679505316"><span class="hs-identifier hs-var">children</span></a></span><span>
+</span><a href="#local-6989586621679523149"><span class="hs-identifier hs-var">children</span></a></span><span>
 </span><span id="line-72"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-73"></span><span>    </span><span id="local-6989586621679505472"><span id="local-6989586621679505473"><span class="annot"><a href="#local-6989586621679505308"><span class="hs-identifier hs-type">localizeBranchMetadata</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505473"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505473"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505472"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#DbMetadataSet"><span class="hs-identifier hs-type">Branch.DbMetadataSet</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505473"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505472"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#LocalMetadataSet"><span class="hs-identifier hs-type">Branch.LocalMetadataSet</span></a></span></span></span><span>
-</span><span id="line-74"></span><span>    </span><span id="local-6989586621679505308"><span class="annot"><span class="annottext">localizeBranchMetadata :: MetadataSetFormat' TextId ObjectId
+</span><span id="line-73"></span><span>    </span><span id="local-6989586621679523478"><span id="local-6989586621679523479"><span class="annot"><a href="#local-6989586621679523141"><span class="hs-identifier hs-type">localizeBranchMetadata</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523479"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523479"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523478"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#DbMetadataSet"><span class="hs-identifier hs-type">Branch.DbMetadataSet</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523479"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523478"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#LocalMetadataSet"><span class="hs-identifier hs-type">Branch.LocalMetadataSet</span></a></span></span></span><span>
+</span><span id="line-74"></span><span>    </span><span id="local-6989586621679523141"><span class="annot"><span class="annottext">localizeBranchMetadata :: forall s (m :: * -&gt; *).
+(ContainsDefns s, ContainsText s, Monad m) =&gt;
+MetadataSetFormat' TextId ObjectId
 -&gt; StateT s m (MetadataSetFormat' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505308"><span class="hs-identifier hs-var hs-var">localizeBranchMetadata</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#Inline"><span class="hs-identifier hs-type">Branch.Inline</span></a></span><span> </span><span id="local-6989586621679505301"><span class="annot"><span class="annottext">Set (Reference' TextId ObjectId)
-</span><a href="#local-6989586621679505301"><span class="hs-identifier hs-var">refs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-75"></span><span>      </span><span class="annot"><span class="annottext">Set (Reference' LocalTextId LocalDefnId)
--&gt; MetadataSetFormat' LocalTextId LocalDefnId
-forall t h. Set (Reference' t h) -&gt; MetadataSetFormat' t h
-</span><a href="U.Codebase.Sqlite.Branch.Full.html#Inline"><span class="hs-identifier hs-var">Branch.Inline</span></a></span><span> </span><span class="annot"><span class="annottext">(Set (Reference' LocalTextId LocalDefnId)
- -&gt; MetadataSetFormat' LocalTextId LocalDefnId)
--&gt; StateT s m (Set (Reference' LocalTextId LocalDefnId))
--&gt; StateT s m (MetadataSetFormat' LocalTextId LocalDefnId)
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Reference' TextId ObjectId
- -&gt; StateT s m (Reference' LocalTextId LocalDefnId))
--&gt; Set (Reference' TextId ObjectId)
--&gt; StateT s m (Set (Reference' LocalTextId LocalDefnId))
-forall (f :: * -&gt; *) b a.
+</span><a href="#local-6989586621679523141"><span class="hs-identifier hs-var hs-var">localizeBranchMetadata</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Full.html#Inline"><span class="hs-identifier hs-type">Branch.Inline</span></a></span><span> </span><span id="local-6989586621679523121"><span class="annot"><span class="annottext">Set (Reference' TextId ObjectId)
+</span><a href="#local-6989586621679523121"><span class="hs-identifier hs-var">refs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-75"></span><span>      </span><span class="annot"><span class="annottext">forall t h. Set (Reference' t h) -&gt; MetadataSetFormat' t h
+</span><a href="U.Codebase.Sqlite.Branch.Full.html#Inline"><span class="hs-identifier hs-var">Branch.Inline</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) b a.
 (Applicative f, Ord b) =&gt;
 (a -&gt; f b) -&gt; Set a -&gt; f (Set b)
-</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">Reference' TextId ObjectId
--&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 Reference' TextId ObjectId
 -&gt; StateT s m (Reference' LocalTextId LocalDefnId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var">localizeReference</span></a></span><span> </span><span class="annot"><span class="annottext">Set (Reference' TextId ObjectId)
-</span><a href="#local-6989586621679505301"><span class="hs-identifier hs-var">refs</span></a></span><span>
+</span><a href="#local-6989586621679523121"><span class="hs-identifier hs-var">refs</span></a></span><span>
 </span><span id="line-76"></span><span>
 </span><span id="line-77"></span><span class="hs-comment">-- | Localize a patch object.</span><span>
 </span><span id="line-78"></span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatch"><span class="hs-identifier hs-type">localizePatch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Full.html#Patch"><span class="hs-identifier hs-type">Patch</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#PatchLocalIds"><span class="hs-identifier hs-type">PatchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Full.html#LocalPatch"><span class="hs-identifier hs-type">LocalPatch</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-79"></span><span id="localizePatch"><span class="annot"><span class="annottext">localizePatch :: Patch -&gt; (PatchLocalIds, LocalPatch)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatch"><span class="hs-identifier hs-var hs-var">localizePatch</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Full.html#Patch"><span class="hs-identifier hs-type">Patch</span></a></span><span> </span><span id="local-6989586621679505298"><span class="annot"><span class="annottext">Map (Referent'' TextId HashId) (Set (TermEdit' TextId ObjectId))
-</span><a href="#local-6989586621679505298"><span class="hs-identifier hs-var">termEdits</span></a></span></span><span> </span><span id="local-6989586621679505297"><span class="annot"><span class="annottext">Map (Reference' TextId HashId) (Set (TypeEdit' TextId ObjectId))
-</span><a href="#local-6989586621679505297"><span class="hs-identifier hs-var">typeEdits</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-80"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Identity (PatchLocalIds, LocalPatch) -&gt; (PatchLocalIds, LocalPatch)
-forall a. Identity a -&gt; a
-</span><span class="hs-identifier hs-var hs-var">runIdentity</span></span><span> </span><span class="annot"><span class="annottext">(Identity (PatchLocalIds, LocalPatch)
- -&gt; (PatchLocalIds, LocalPatch))
--&gt; (StateT LocalizePatchState Identity LocalPatch
-    -&gt; Identity (PatchLocalIds, LocalPatch))
--&gt; StateT LocalizePatchState Identity LocalPatch
--&gt; (PatchLocalIds, LocalPatch)
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizePatchState Identity LocalPatch
--&gt; Identity (PatchLocalIds, LocalPatch)
-forall (m :: * -&gt; *) a.
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatch"><span class="hs-identifier hs-var hs-var">localizePatch</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Full.html#Patch"><span class="hs-identifier hs-type">Patch</span></a></span><span> </span><span id="local-6989586621679523118"><span class="annot"><span class="annottext">Map (Referent'' TextId HashId) (Set (TermEdit' TextId ObjectId))
+</span><a href="#local-6989586621679523118"><span class="hs-identifier hs-var">termEdits</span></a></span></span><span> </span><span id="local-6989586621679523117"><span class="annot"><span class="annottext">Map (Reference' TextId HashId) (Set (TypeEdit' TextId ObjectId))
+</span><a href="#local-6989586621679523117"><span class="hs-identifier hs-var">typeEdits</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-80"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Identity a -&gt; a
+</span><span class="hs-identifier hs-var">runIdentity</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 Monad m =&gt;
 StateT LocalizePatchState m a -&gt; m (PatchLocalIds, a)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizePatch"><span class="hs-identifier hs-var">runLocalizePatch</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">Map
-  (Referent'' LocalTextId LocalHashId)
-  (Set (TermEdit' LocalTextId LocalDefnId))
--&gt; Map
-     (Reference' LocalTextId LocalHashId)
-     (Set (TypeEdit' LocalTextId LocalDefnId))
--&gt; LocalPatch
-forall t h o.
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">forall t h o.
 Map (Referent'' t h) (Set (TermEdit' t o))
 -&gt; Map (Reference' t h) (Set (TypeEdit' t o)) -&gt; Patch' t h o
 </span><a href="U.Codebase.Sqlite.Patch.Full.html#Patch"><span class="hs-identifier hs-var">Patch</span></a></span><span>
-</span><span id="line-82"></span><span>      </span><span class="annot"><span class="annottext">(Map
-   (Referent'' LocalTextId LocalHashId)
-   (Set (TermEdit' LocalTextId LocalDefnId))
- -&gt; Map
-      (Reference' LocalTextId LocalHashId)
-      (Set (TypeEdit' LocalTextId LocalDefnId))
- -&gt; LocalPatch)
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Map
-        (Referent'' LocalTextId LocalHashId)
-        (Set (TermEdit' LocalTextId LocalDefnId)))
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Map
-        (Reference' LocalTextId LocalHashId)
-        (Set (TypeEdit' LocalTextId LocalDefnId))
-      -&gt; LocalPatch)
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Referent'' TextId HashId
- -&gt; StateT
-      LocalizePatchState Identity (Referent'' LocalTextId LocalHashId))
--&gt; (Set (TermEdit' TextId ObjectId)
-    -&gt; StateT
-         LocalizePatchState
-         Identity
-         (Set (TermEdit' LocalTextId LocalDefnId)))
--&gt; Map (Referent'' TextId HashId) (Set (TermEdit' TextId ObjectId))
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Map
-        (Referent'' LocalTextId LocalHashId)
-        (Set (TermEdit' LocalTextId LocalDefnId)))
-forall (f :: * -&gt; *) a' a b b'.
+</span><span id="line-82"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Referent'' TextId HashId
--&gt; StateT
-     LocalizePatchState Identity (Referent'' LocalTextId LocalHashId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsHashes s, ContainsText s, Monad m) =&gt;
 Referent'' TextId HashId
 -&gt; StateT s m (Referent'' LocalTextId LocalHashId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferentH"><span class="hs-identifier hs-var">localizeReferentH</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(TermEdit' TextId ObjectId
- -&gt; StateT
-      LocalizePatchState Identity (TermEdit' LocalTextId LocalDefnId))
--&gt; Set (TermEdit' TextId ObjectId)
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Set (TermEdit' LocalTextId LocalDefnId))
-forall (f :: * -&gt; *) b a.
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferentH"><span class="hs-identifier hs-var">localizeReferentH</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) b a.
 (Applicative f, Ord b) =&gt;
 (a -&gt; f b) -&gt; Set a -&gt; f (Set b)
-</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">TermEdit' TextId ObjectId
--&gt; StateT
-     LocalizePatchState Identity (TermEdit' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, ContainsDefns s, Monad m) =&gt;
 TermEdit' TextId ObjectId
 -&gt; StateT s m (TermEdit' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505294"><span class="hs-identifier hs-var">localizeTermEdit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map (Referent'' TextId HashId) (Set (TermEdit' TextId ObjectId))
-</span><a href="#local-6989586621679505298"><span class="hs-identifier hs-var">termEdits</span></a></span><span>
-</span><span id="line-83"></span><span>      </span><span class="annot"><span class="annottext">StateT
-  LocalizePatchState
-  Identity
-  (Map
-     (Reference' LocalTextId LocalHashId)
-     (Set (TypeEdit' LocalTextId LocalDefnId))
-   -&gt; LocalPatch)
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Map
-        (Reference' LocalTextId LocalHashId)
-        (Set (TypeEdit' LocalTextId LocalDefnId)))
--&gt; StateT LocalizePatchState Identity LocalPatch
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Reference' TextId HashId
- -&gt; StateT
-      LocalizePatchState Identity (Reference' LocalTextId LocalHashId))
--&gt; (Set (TypeEdit' TextId ObjectId)
-    -&gt; StateT
-         LocalizePatchState
-         Identity
-         (Set (TypeEdit' LocalTextId LocalDefnId)))
--&gt; Map (Reference' TextId HashId) (Set (TypeEdit' TextId ObjectId))
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Map
-        (Reference' LocalTextId LocalHashId)
-        (Set (TypeEdit' LocalTextId LocalDefnId)))
-forall (f :: * -&gt; *) a' a b b'.
+</span><a href="#local-6989586621679523114"><span class="hs-identifier hs-var">localizeTermEdit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map (Referent'' TextId HashId) (Set (TermEdit' TextId ObjectId))
+</span><a href="#local-6989586621679523118"><span class="hs-identifier hs-var">termEdits</span></a></span><span>
+</span><span id="line-83"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a' a b b'.
 (Applicative f, Ord a') =&gt;
 (a -&gt; f a') -&gt; (b -&gt; f b') -&gt; Map a b -&gt; f (Map a' b')
-</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Reference' TextId HashId
--&gt; StateT
-     LocalizePatchState Identity (Reference' LocalTextId LocalHashId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Map.bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsHashes s, ContainsText s, Monad m) =&gt;
 Reference' TextId HashId
 -&gt; StateT s m (Reference' LocalTextId LocalHashId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var">localizeReferenceH</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(TypeEdit' TextId ObjectId
- -&gt; StateT
-      LocalizePatchState Identity (TypeEdit' LocalTextId LocalDefnId))
--&gt; Set (TypeEdit' TextId ObjectId)
--&gt; StateT
-     LocalizePatchState
-     Identity
-     (Set (TypeEdit' LocalTextId LocalDefnId))
-forall (f :: * -&gt; *) b a.
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var">localizeReferenceH</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) b a.
 (Applicative f, Ord b) =&gt;
 (a -&gt; f b) -&gt; Set a -&gt; f (Set b)
-</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">TypeEdit' TextId ObjectId
--&gt; StateT
-     LocalizePatchState Identity (TypeEdit' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">Set.traverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, ContainsDefns s, Monad m) =&gt;
 TypeEdit' TextId ObjectId
 -&gt; StateT s m (TypeEdit' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505292"><span class="hs-identifier hs-var">localizeTypeEdit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map (Reference' TextId HashId) (Set (TypeEdit' TextId ObjectId))
-</span><a href="#local-6989586621679505297"><span class="hs-identifier hs-var">typeEdits</span></a></span><span>
+</span><a href="#local-6989586621679523112"><span class="hs-identifier hs-var">localizeTypeEdit</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map (Reference' TextId HashId) (Set (TypeEdit' TextId ObjectId))
+</span><a href="#local-6989586621679523117"><span class="hs-identifier hs-var">typeEdits</span></a></span><span>
 </span><span id="line-84"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-85"></span><span>    </span><span id="local-6989586621679505433"><span id="local-6989586621679505434"><span class="annot"><a href="#local-6989586621679505294"><span class="hs-identifier hs-type">localizeTermEdit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505434"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505434"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505433"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TermEdit.html#TermEdit"><span class="hs-identifier hs-type">TermEdit</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505434"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505433"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TermEdit.html#LocalTermEdit"><span class="hs-identifier hs-type">LocalTermEdit</span></a></span></span></span><span>
-</span><span id="line-86"></span><span>    </span><span id="local-6989586621679505294"><span class="annot"><span class="annottext">localizeTermEdit :: TermEdit' TextId ObjectId
+</span><span id="line-85"></span><span>    </span><span id="local-6989586621679523447"><span id="local-6989586621679523448"><span class="annot"><a href="#local-6989586621679523114"><span class="hs-identifier hs-type">localizeTermEdit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523448"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523448"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523447"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TermEdit.html#TermEdit"><span class="hs-identifier hs-type">TermEdit</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523448"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523447"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TermEdit.html#LocalTermEdit"><span class="hs-identifier hs-type">LocalTermEdit</span></a></span></span></span><span>
+</span><span id="line-86"></span><span>    </span><span id="local-6989586621679523114"><span class="annot"><span class="annottext">localizeTermEdit :: forall s (m :: * -&gt; *).
+(ContainsText s, ContainsDefns s, Monad m) =&gt;
+TermEdit' TextId ObjectId
 -&gt; StateT s m (TermEdit' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505294"><span class="hs-identifier hs-var hs-var">localizeTermEdit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-87"></span><span>      </span><span class="annot"><span class="annottext">(TextId -&gt; StateT s m LocalTextId)
--&gt; (ObjectId -&gt; StateT s m LocalDefnId)
--&gt; TermEdit' TextId ObjectId
--&gt; StateT s m (TermEdit' LocalTextId LocalDefnId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><a href="#local-6989586621679523114"><span class="hs-identifier hs-var hs-var">localizeTermEdit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-87"></span><span>      </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT s m LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; StateT s m LocalDefnId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, Monad m) =&gt;
 ObjectId -&gt; StateT s m LocalDefnId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-var">localizeDefn</span></a></span><span>
 </span><span id="line-88"></span><span>
-</span><span id="line-89"></span><span>    </span><span id="local-6989586621679505429"><span id="local-6989586621679505430"><span class="annot"><a href="#local-6989586621679505292"><span class="hs-identifier hs-type">localizeTypeEdit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505430"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505430"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505429"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TypeEdit.html#TypeEdit"><span class="hs-identifier hs-type">TypeEdit</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505430"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505429"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TypeEdit.html#LocalTypeEdit"><span class="hs-identifier hs-type">LocalTypeEdit</span></a></span></span></span><span>
-</span><span id="line-90"></span><span>    </span><span id="local-6989586621679505292"><span class="annot"><span class="annottext">localizeTypeEdit :: TypeEdit' TextId ObjectId
+</span><span id="line-89"></span><span>    </span><span id="local-6989586621679523443"><span id="local-6989586621679523444"><span class="annot"><a href="#local-6989586621679523112"><span class="hs-identifier hs-type">localizeTypeEdit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523444"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523444"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523443"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TypeEdit.html#TypeEdit"><span class="hs-identifier hs-type">TypeEdit</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523444"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523443"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.TypeEdit.html#LocalTypeEdit"><span class="hs-identifier hs-type">LocalTypeEdit</span></a></span></span></span><span>
+</span><span id="line-90"></span><span>    </span><span id="local-6989586621679523112"><span class="annot"><span class="annottext">localizeTypeEdit :: forall s (m :: * -&gt; *).
+(ContainsText s, ContainsDefns s, Monad m) =&gt;
+TypeEdit' TextId ObjectId
 -&gt; StateT s m (TypeEdit' LocalTextId LocalDefnId)
-</span><a href="#local-6989586621679505292"><span class="hs-identifier hs-var hs-var">localizeTypeEdit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-91"></span><span>      </span><span class="annot"><span class="annottext">(TextId -&gt; StateT s m LocalTextId)
--&gt; (ObjectId -&gt; StateT s m LocalDefnId)
--&gt; TypeEdit' TextId ObjectId
--&gt; StateT s m (TypeEdit' LocalTextId LocalDefnId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><a href="#local-6989586621679523112"><span class="hs-identifier hs-var hs-var">localizeTypeEdit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-91"></span><span>      </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT s m LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; StateT s m LocalDefnId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, Monad m) =&gt;
 ObjectId -&gt; StateT s m LocalDefnId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-var">localizeDefn</span></a></span><span>
@@ -599,12 +266,12 @@ ObjectId -&gt; StateT s m LocalDefnId
 </span><span id="line-94"></span><span class="hs-comment">-- General-purpose localization</span><span>
 </span><span id="line-95"></span><span>
 </span><span id="line-96"></span><span class="hs-comment">-- Contains references to branch objects.</span><span>
-</span><span id="line-97"></span><span class="hs-keyword">type</span><span> </span><span id="ContainsBranches"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsBranches"><span class="hs-identifier hs-var">ContainsBranches</span></a></span></span><span> </span><span id="local-6989586621679505290"><span class="annot"><a href="#local-6989586621679505290"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-98"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">HasType</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#BranchObjectId"><span class="hs-identifier hs-type">BranchObjectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#CausalHashId"><span class="hs-identifier hs-type">CausalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalBranchChildId"><span class="hs-identifier hs-type">LocalBranchChildId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679505290"><span class="hs-identifier hs-type">s</span></a></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">type</span><span> </span><span id="ContainsBranches"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsBranches"><span class="hs-identifier hs-var">ContainsBranches</span></a></span></span><span> </span><span id="local-6989586621679523086"><span class="annot"><a href="#local-6989586621679523086"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-98"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">HasType</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#BranchObjectId"><span class="hs-identifier hs-type">BranchObjectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#CausalHashId"><span class="hs-identifier hs-type">CausalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalBranchChildId"><span class="hs-identifier hs-type">LocalBranchChildId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679523086"><span class="hs-identifier hs-type">s</span></a></span><span>
 </span><span id="line-99"></span><span>
 </span><span id="line-100"></span><span class="hs-comment">-- Contains references to definition objects i.e. term/decl component objects.</span><span>
-</span><span id="line-101"></span><span class="hs-keyword">type</span><span> </span><span id="ContainsDefns"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-var">ContainsDefns</span></a></span></span><span> </span><span id="local-6989586621679505289"><span class="annot"><a href="#local-6989586621679505289"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-102"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">HasType</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ObjectId"><span class="hs-identifier hs-type">ObjectId</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalDefnId"><span class="hs-identifier hs-type">LocalDefnId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679505289"><span class="hs-identifier hs-type">s</span></a></span><span>
+</span><span id="line-101"></span><span class="hs-keyword">type</span><span> </span><span id="ContainsDefns"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-var">ContainsDefns</span></a></span></span><span> </span><span id="local-6989586621679523085"><span class="annot"><a href="#local-6989586621679523085"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-102"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">HasType</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ObjectId"><span class="hs-identifier hs-type">ObjectId</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalDefnId"><span class="hs-identifier hs-type">LocalDefnId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679523085"><span class="hs-identifier hs-type">s</span></a></span><span>
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="hs-comment">-- Contains references to objects by their hash.</span><span>
 </span><span id="line-105"></span><span class="hs-keyword">type</span><span> </span><span id="ContainsHashes"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-var">ContainsHashes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
@@ -627,66 +294,50 @@ ObjectId -&gt; StateT s m LocalDefnId
 </span><span id="line-122"></span><span>  </span><span class="hs-special">)</span><span>
 </span><span id="line-123"></span><span>
 </span><span id="line-124"></span><span class="hs-comment">-- Run a computation that localizes a branch object, returning the local ids recorded within.</span><span>
-</span><span id="line-125"></span><span id="local-6989586621679505497"><span id="local-6989586621679505498"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizeBranch"><span class="hs-identifier hs-type">runLocalizeBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505498"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizeBranchState"><span class="hs-identifier hs-type">LocalizeBranchState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505498"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505497"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679505498"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#BranchLocalIds"><span class="hs-identifier hs-type">BranchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679505497"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span>
-</span><span id="line-126"></span><span id="runLocalizeBranch"><span class="annot"><span class="annottext">runLocalizeBranch :: StateT LocalizeBranchState m a -&gt; m (BranchLocalIds, a)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizeBranch"><span class="hs-identifier hs-var hs-var">runLocalizeBranch</span></a></span></span><span> </span><span id="local-6989586621679505288"><span class="annot"><span class="annottext">StateT LocalizeBranchState m a
-</span><a href="#local-6989586621679505288"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-127"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679505287"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679505287"><span class="hs-identifier hs-var">result</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679505286"><span class="annot"><span class="annottext">Map TextId LocalTextId
-</span><a href="#local-6989586621679505286"><span class="hs-identifier hs-var">localTexts</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505285"><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
-</span><a href="#local-6989586621679505285"><span class="hs-identifier hs-var">localDefns</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505284"><span class="annot"><span class="annottext">Map PatchObjectId LocalPatchObjectId
-</span><a href="#local-6989586621679505284"><span class="hs-identifier hs-var">localPatches</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505283"><span class="annot"><span class="annottext">Map (BranchObjectId, CausalHashId) LocalBranchChildId
-</span><a href="#local-6989586621679505283"><span class="hs-identifier hs-var">localChildren</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">StateT LocalizeBranchState m a
--&gt; LocalizeBranchState -&gt; m (a, LocalizeBranchState)
-forall s (m :: * -&gt; *) a. StateT s m a -&gt; s -&gt; m (a, s)
-</span><span class="hs-identifier hs-var hs-var">State.runStateT</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizeBranchState m a
-</span><a href="#local-6989586621679505288"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Monoid LocalizeBranchState =&gt; LocalizeBranchState
-forall a. Monoid a =&gt; a
+</span><span id="line-125"></span><span id="local-6989586621679523497"><span id="local-6989586621679523498"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizeBranch"><span class="hs-identifier hs-type">runLocalizeBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523498"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizeBranchState"><span class="hs-identifier hs-type">LocalizeBranchState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523498"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523497"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679523498"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#BranchLocalIds"><span class="hs-identifier hs-type">BranchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679523497"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-126"></span><span id="runLocalizeBranch"><span class="annot"><span class="annottext">runLocalizeBranch :: forall (m :: * -&gt; *) a.
+Monad m =&gt;
+StateT LocalizeBranchState m a -&gt; m (BranchLocalIds, a)
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizeBranch"><span class="hs-identifier hs-var hs-var">runLocalizeBranch</span></a></span></span><span> </span><span id="local-6989586621679523055"><span class="annot"><span class="annottext">StateT LocalizeBranchState m a
+</span><a href="#local-6989586621679523055"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-127"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679523054"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679523054"><span class="hs-identifier hs-var">result</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679523053"><span class="annot"><span class="annottext">Map TextId LocalTextId
+</span><a href="#local-6989586621679523053"><span class="hs-identifier hs-var">localTexts</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679523052"><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
+</span><a href="#local-6989586621679523052"><span class="hs-identifier hs-var">localDefns</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679523051"><span class="annot"><span class="annottext">Map PatchObjectId LocalPatchObjectId
+</span><a href="#local-6989586621679523051"><span class="hs-identifier hs-var">localPatches</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679523050"><span class="annot"><span class="annottext">Map (BranchObjectId, CausalHashId) LocalBranchChildId
+</span><a href="#local-6989586621679523050"><span class="hs-identifier hs-var">localChildren</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a. StateT s m a -&gt; s -&gt; m (a, s)
+</span><span class="hs-identifier hs-var">State.runStateT</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizeBranchState m a
+</span><a href="#local-6989586621679523055"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizeBranchState"><span class="hs-identifier hs-type">LocalizeBranchState</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-128"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679505281"><span class="hs-identifier hs-type">branchLocalIds</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#BranchLocalIds"><span class="hs-identifier hs-type">BranchLocalIds</span></a></span><span>
-</span><span id="line-129"></span><span>      </span><span id="local-6989586621679505281"><span class="annot"><span class="annottext">branchLocalIds :: BranchLocalIds
-</span><a href="#local-6989586621679505281"><span class="hs-identifier hs-var hs-var">branchLocalIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-130"></span><span>        </span><span class="annot"><span class="annottext">LocalIds :: forall t d p c.
-Vector t
--&gt; Vector d -&gt; Vector p -&gt; Vector c -&gt; BranchLocalIds' t d p c
-</span><a href="U.Codebase.Sqlite.Branch.Format.html#LocalIds"><span class="hs-identifier hs-type">Branch.LocalIds</span></a></span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679523048"><span class="hs-identifier hs-type">branchLocalIds</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#BranchLocalIds"><span class="hs-identifier hs-type">BranchLocalIds</span></a></span><span>
+</span><span id="line-129"></span><span>      </span><span id="local-6989586621679523048"><span class="annot"><span class="annottext">branchLocalIds :: BranchLocalIds
+</span><a href="#local-6989586621679523048"><span class="hs-identifier hs-var hs-var">branchLocalIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-130"></span><span>        </span><span class="annot"><a href="U.Codebase.Sqlite.Branch.Format.html#LocalIds"><span class="hs-identifier hs-type">Branch.LocalIds</span></a></span><span>
 </span><span id="line-131"></span><span>          </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:branchTextLookup:LocalIds :: Vector TextId
-</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchTextLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchTextLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalTextId TextId -&gt; Vector TextId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map TextId LocalTextId -&gt; Map LocalTextId TextId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchTextLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchTextLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map TextId LocalTextId
-</span><a href="#local-6989586621679505286"><span class="hs-identifier hs-var">localTexts</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679523053"><span class="hs-identifier hs-var">localTexts</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-132"></span><span>            </span><span class="annot"><span class="annottext">$sel:branchDefnLookup:LocalIds :: Vector ObjectId
-</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchDefnLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchDefnLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalDefnId ObjectId -&gt; Vector ObjectId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map ObjectId LocalDefnId -&gt; Map LocalDefnId ObjectId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchDefnLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchDefnLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
-</span><a href="#local-6989586621679505285"><span class="hs-identifier hs-var">localDefns</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679523052"><span class="hs-identifier hs-var">localDefns</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-133"></span><span>            </span><span class="annot"><span class="annottext">$sel:branchPatchLookup:LocalIds :: Vector PatchObjectId
-</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchPatchLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchPatchLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalPatchObjectId PatchObjectId -&gt; Vector PatchObjectId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map PatchObjectId LocalPatchObjectId
--&gt; Map LocalPatchObjectId PatchObjectId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchPatchLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchPatchLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map PatchObjectId LocalPatchObjectId
-</span><a href="#local-6989586621679505284"><span class="hs-identifier hs-var">localPatches</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679523051"><span class="hs-identifier hs-var">localPatches</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-134"></span><span>            </span><span class="annot"><span class="annottext">$sel:branchChildLookup:LocalIds :: Vector (BranchObjectId, CausalHashId)
-</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchChildLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchChildLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalBranchChildId (BranchObjectId, CausalHashId)
--&gt; Vector (BranchObjectId, CausalHashId)
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map (BranchObjectId, CausalHashId) LocalBranchChildId
--&gt; Map LocalBranchChildId (BranchObjectId, CausalHashId)
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Branch.Format.html#%24sel%3AbranchChildLookup%3ALocalIds"><span class="hs-identifier hs-var">Branch.branchChildLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map (BranchObjectId, CausalHashId) LocalBranchChildId
-</span><a href="#local-6989586621679505283"><span class="hs-identifier hs-var">localChildren</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679523050"><span class="hs-identifier hs-var">localChildren</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-135"></span><span>          </span><span class="hs-special">}</span><span>
-</span><span id="line-136"></span><span>  </span><span class="annot"><span class="annottext">(BranchLocalIds, a) -&gt; m (BranchLocalIds, a)
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-136"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchLocalIds
-</span><a href="#local-6989586621679505281"><span class="hs-identifier hs-var">branchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679505287"><span class="hs-identifier hs-var">result</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679523048"><span class="hs-identifier hs-var">branchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679523054"><span class="hs-identifier hs-var">result</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-137"></span><span>
 </span><span id="line-138"></span><span class="hs-comment">-- The inner state of the localization of a patch object.</span><span>
 </span><span id="line-139"></span><span class="hs-keyword">type</span><span> </span><span id="LocalizePatchState"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizePatchState"><span class="hs-identifier hs-var">LocalizePatchState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
@@ -696,271 +347,162 @@ forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span id="line-143"></span><span>  </span><span class="hs-special">)</span><span>
 </span><span id="line-144"></span><span>
 </span><span id="line-145"></span><span class="hs-comment">-- Run a computation that localizes a patch object, returning the local ids recorded within.</span><span>
-</span><span id="line-146"></span><span id="local-6989586621679505443"><span id="local-6989586621679505444"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizePatch"><span class="hs-identifier hs-type">runLocalizePatch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505444"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizePatchState"><span class="hs-identifier hs-type">LocalizePatchState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505444"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505443"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679505444"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#PatchLocalIds"><span class="hs-identifier hs-type">PatchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679505443"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span>
-</span><span id="line-147"></span><span id="runLocalizePatch"><span class="annot"><span class="annottext">runLocalizePatch :: StateT LocalizePatchState m a -&gt; m (PatchLocalIds, a)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizePatch"><span class="hs-identifier hs-var hs-var">runLocalizePatch</span></a></span></span><span> </span><span id="local-6989586621679505273"><span class="annot"><span class="annottext">StateT LocalizePatchState m a
-</span><a href="#local-6989586621679505273"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-148"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679505272"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679505272"><span class="hs-identifier hs-var">result</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679505271"><span class="annot"><span class="annottext">Map TextId LocalTextId
-</span><a href="#local-6989586621679505271"><span class="hs-identifier hs-var">localTexts</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505270"><span class="annot"><span class="annottext">Map HashId LocalHashId
-</span><a href="#local-6989586621679505270"><span class="hs-identifier hs-var">localHashes</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679505269"><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
-</span><a href="#local-6989586621679505269"><span class="hs-identifier hs-var">localDefns</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">StateT LocalizePatchState m a
--&gt; LocalizePatchState -&gt; m (a, LocalizePatchState)
-forall s (m :: * -&gt; *) a. StateT s m a -&gt; s -&gt; m (a, s)
-</span><span class="hs-identifier hs-var hs-var">State.runStateT</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizePatchState m a
-</span><a href="#local-6989586621679505273"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Monoid LocalizePatchState =&gt; LocalizePatchState
-forall a. Monoid a =&gt; a
+</span><span id="line-146"></span><span id="local-6989586621679523455"><span id="local-6989586621679523456"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizePatch"><span class="hs-identifier hs-type">runLocalizePatch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523456"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizePatchState"><span class="hs-identifier hs-type">LocalizePatchState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523456"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523455"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679523456"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#PatchLocalIds"><span class="hs-identifier hs-type">PatchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679523455"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-147"></span><span id="runLocalizePatch"><span class="annot"><span class="annottext">runLocalizePatch :: forall (m :: * -&gt; *) a.
+Monad m =&gt;
+StateT LocalizePatchState m a -&gt; m (PatchLocalIds, a)
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#runLocalizePatch"><span class="hs-identifier hs-var hs-var">runLocalizePatch</span></a></span></span><span> </span><span id="local-6989586621679523024"><span class="annot"><span class="annottext">StateT LocalizePatchState m a
+</span><a href="#local-6989586621679523024"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-148"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679523023"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679523023"><span class="hs-identifier hs-var">result</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679523022"><span class="annot"><span class="annottext">Map TextId LocalTextId
+</span><a href="#local-6989586621679523022"><span class="hs-identifier hs-var">localTexts</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679523021"><span class="annot"><span class="annottext">Map HashId LocalHashId
+</span><a href="#local-6989586621679523021"><span class="hs-identifier hs-var">localHashes</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679523020"><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
+</span><a href="#local-6989586621679523020"><span class="hs-identifier hs-var">localDefns</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a. StateT s m a -&gt; s -&gt; m (a, s)
+</span><span class="hs-identifier hs-var">State.runStateT</span></span><span> </span><span class="annot"><span class="annottext">StateT LocalizePatchState m a
+</span><a href="#local-6989586621679523024"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#LocalizePatchState"><span class="hs-identifier hs-type">LocalizePatchState</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-149"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679505268"><span class="hs-identifier hs-type">patchLocalIds</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#PatchLocalIds"><span class="hs-identifier hs-type">PatchLocalIds</span></a></span><span>
-</span><span id="line-150"></span><span>      </span><span id="local-6989586621679505268"><span class="annot"><span class="annottext">patchLocalIds :: PatchLocalIds
-</span><a href="#local-6989586621679505268"><span class="hs-identifier hs-var hs-var">patchLocalIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-151"></span><span>        </span><span class="annot"><span class="annottext">LocalIds :: forall t h d.
-Vector t -&gt; Vector h -&gt; Vector d -&gt; PatchLocalIds' t h d
-</span><a href="U.Codebase.Sqlite.Patch.Format.html#LocalIds"><span class="hs-identifier hs-type">Patch.LocalIds</span></a></span><span>
+</span><span id="line-149"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679523019"><span class="hs-identifier hs-type">patchLocalIds</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#PatchLocalIds"><span class="hs-identifier hs-type">PatchLocalIds</span></a></span><span>
+</span><span id="line-150"></span><span>      </span><span id="local-6989586621679523019"><span class="annot"><span class="annottext">patchLocalIds :: PatchLocalIds
+</span><a href="#local-6989586621679523019"><span class="hs-identifier hs-var hs-var">patchLocalIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-151"></span><span>        </span><span class="annot"><a href="U.Codebase.Sqlite.Patch.Format.html#LocalIds"><span class="hs-identifier hs-type">Patch.LocalIds</span></a></span><span>
 </span><span id="line-152"></span><span>          </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:patchTextLookup:LocalIds :: Vector TextId
-</span><a href="#local-6989586621679505266"><span class="hs-identifier hs-var">Patch.patchTextLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalTextId TextId -&gt; Vector TextId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map TextId LocalTextId -&gt; Map LocalTextId TextId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Patch.Format.html#%24sel%3ApatchTextLookup%3ALocalIds"><span class="hs-identifier hs-var">Patch.patchTextLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map TextId LocalTextId
-</span><a href="#local-6989586621679505271"><span class="hs-identifier hs-var">localTexts</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679523022"><span class="hs-identifier hs-var">localTexts</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-153"></span><span>            </span><span class="annot"><span class="annottext">$sel:patchHashLookup:LocalIds :: Vector HashId
-</span><a href="#local-6989586621679505265"><span class="hs-identifier hs-var">Patch.patchHashLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalHashId HashId -&gt; Vector HashId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map HashId LocalHashId -&gt; Map LocalHashId HashId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Patch.Format.html#%24sel%3ApatchHashLookup%3ALocalIds"><span class="hs-identifier hs-var">Patch.patchHashLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map HashId LocalHashId
-</span><a href="#local-6989586621679505270"><span class="hs-identifier hs-var">localHashes</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679523021"><span class="hs-identifier hs-var">localHashes</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-154"></span><span>            </span><span class="annot"><span class="annottext">$sel:patchDefnLookup:LocalIds :: Vector ObjectId
-</span><a href="#local-6989586621679505264"><span class="hs-identifier hs-var">Patch.patchDefnLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map LocalDefnId ObjectId -&gt; Vector ObjectId
-forall k v. Map k v -&gt; Vector v
-</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map ObjectId LocalDefnId -&gt; Map LocalDefnId ObjectId
-forall b a. Ord b =&gt; Map a b -&gt; Map b a
+</span><a href="U.Codebase.Sqlite.Patch.Format.html#%24sel%3ApatchDefnLookup%3ALocalIds"><span class="hs-identifier hs-var">Patch.patchDefnLookup</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k v. Map k v -&gt; Vector v
+</span><span class="hs-identifier hs-var">Map.valuesVector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; Map a b -&gt; Map b a
 </span><span class="hs-identifier hs-var">Map.swap</span></span><span> </span><span class="annot"><span class="annottext">Map ObjectId LocalDefnId
-</span><a href="#local-6989586621679505269"><span class="hs-identifier hs-var">localDefns</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679523020"><span class="hs-identifier hs-var">localDefns</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-155"></span><span>          </span><span class="hs-special">}</span><span>
-</span><span id="line-156"></span><span>  </span><span class="annot"><span class="annottext">(PatchLocalIds, a) -&gt; m (PatchLocalIds, a)
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-156"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PatchLocalIds
-</span><a href="#local-6989586621679505268"><span class="hs-identifier hs-var">patchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679505272"><span class="hs-identifier hs-var">result</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679523019"><span class="hs-identifier hs-var">patchLocalIds</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679523023"><span class="hs-identifier hs-var">result</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-157"></span><span>
 </span><span id="line-158"></span><span class="hs-comment">-- Localize a branch object reference in any monad that encapsulates the stateful localization of an object that contains branch references.</span><span>
-</span><span id="line-159"></span><span id="local-6989586621679505461"><span id="local-6989586621679505463"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranchReference"><span class="hs-identifier hs-type">localizeBranchReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsBranches"><span class="hs-identifier hs-type">ContainsBranches</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505463"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505461"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#BranchObjectId"><span class="hs-identifier hs-type">BranchObjectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#CausalHashId"><span class="hs-identifier hs-type">CausalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505463"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505461"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalBranchChildId"><span class="hs-identifier hs-type">LocalBranchChildId</span></a></span></span></span><span>
-</span><span id="line-160"></span><span id="localizeBranchReference"><span class="annot"><span class="annottext">localizeBranchReference :: (BranchObjectId, CausalHashId) -&gt; StateT s m LocalBranchChildId
+</span><span id="line-159"></span><span id="local-6989586621679523469"><span id="local-6989586621679523470"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranchReference"><span class="hs-identifier hs-type">localizeBranchReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsBranches"><span class="hs-identifier hs-type">ContainsBranches</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523470"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523469"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#BranchObjectId"><span class="hs-identifier hs-type">BranchObjectId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#CausalHashId"><span class="hs-identifier hs-type">CausalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523470"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523469"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalBranchChildId"><span class="hs-identifier hs-type">LocalBranchChildId</span></a></span></span></span><span>
+</span><span id="line-160"></span><span id="localizeBranchReference"><span class="annot"><span class="annottext">localizeBranchReference :: forall s (m :: * -&gt; *).
+(ContainsBranches s, Monad m) =&gt;
+(BranchObjectId, CausalHashId) -&gt; StateT s m LocalBranchChildId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeBranchReference"><span class="hs-identifier hs-var hs-var">localizeBranchReference</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-161"></span><span>  </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed
-     (StateT (Map (BranchObjectId, CausalHashId) LocalBranchChildId) m)
-     LocalBranchChildId)
-  s
-  (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
--&gt; StateT
-     (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
-     m
-     LocalBranchChildId
--&gt; StateT s m LocalBranchChildId
-forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
+</span><span id="line-161"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
 Zoom m n s t =&gt;
 LensLike' (Zoomed m c) t s -&gt; m c -&gt; n c
-</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed
-     (StateT (Map (BranchObjectId, CausalHashId) LocalBranchChildId) m)
-     LocalBranchChildId)
-  s
-  (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
-forall a s. HasType a s =&gt; Lens s s a a
-</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">(StateT
-   (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
-   m
-   LocalBranchChildId
- -&gt; StateT s m LocalBranchChildId)
--&gt; ((BranchObjectId, CausalHashId)
-    -&gt; StateT
-         (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
-         m
-         LocalBranchChildId)
--&gt; (BranchObjectId, CausalHashId)
--&gt; StateT s m LocalBranchChildId
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(BranchObjectId, CausalHashId)
--&gt; StateT
-     (Map (BranchObjectId, CausalHashId) LocalBranchChildId)
-     m
-     LocalBranchChildId
-forall localId (m :: * -&gt; *) realId.
+</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">forall a s. HasType a s =&gt; Lens s s a a
+</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall localId (m :: * -&gt; *) realId.
 (Coercible localId Word64, Monad m, Ord realId) =&gt;
 realId -&gt; StateT (Map realId localId) m localId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var">localize</span></a></span><span>
 </span><span id="line-162"></span><span>
 </span><span id="line-163"></span><span class="hs-comment">-- Localize a definition object reference in any monad that encapsulates the stateful localization of an object that contains definition</span><span>
 </span><span id="line-164"></span><span class="hs-comment">-- references.</span><span>
-</span><span id="line-165"></span><span id="local-6989586621679505418"><span id="local-6989586621679505419"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-type">localizeDefn</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505419"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505418"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ObjectId"><span class="hs-identifier hs-type">ObjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505419"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505418"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalDefnId"><span class="hs-identifier hs-type">LocalDefnId</span></a></span></span></span><span>
-</span><span id="line-166"></span><span id="localizeDefn"><span class="annot"><span class="annottext">localizeDefn :: ObjectId -&gt; StateT s m LocalDefnId
+</span><span id="line-165"></span><span id="local-6989586621679523432"><span id="local-6989586621679523433"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-type">localizeDefn</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523433"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523432"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ObjectId"><span class="hs-identifier hs-type">ObjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523433"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523432"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalDefnId"><span class="hs-identifier hs-type">LocalDefnId</span></a></span></span></span><span>
+</span><span id="line-166"></span><span id="localizeDefn"><span class="annot"><span class="annottext">localizeDefn :: forall s (m :: * -&gt; *).
+(ContainsDefns s, Monad m) =&gt;
+ObjectId -&gt; StateT s m LocalDefnId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-var hs-var">localizeDefn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-167"></span><span>  </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map ObjectId LocalDefnId) m) LocalDefnId)
-  s
-  (Map ObjectId LocalDefnId)
--&gt; StateT (Map ObjectId LocalDefnId) m LocalDefnId
--&gt; StateT s m LocalDefnId
-forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
+</span><span id="line-167"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
 Zoom m n s t =&gt;
 LensLike' (Zoomed m c) t s -&gt; m c -&gt; n c
-</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map ObjectId LocalDefnId) m) LocalDefnId)
-  s
-  (Map ObjectId LocalDefnId)
-forall a s. HasType a s =&gt; Lens s s a a
-</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">(StateT (Map ObjectId LocalDefnId) m LocalDefnId
- -&gt; StateT s m LocalDefnId)
--&gt; (ObjectId -&gt; StateT (Map ObjectId LocalDefnId) m LocalDefnId)
--&gt; ObjectId
--&gt; StateT s m LocalDefnId
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; StateT (Map ObjectId LocalDefnId) m LocalDefnId
-forall localId (m :: * -&gt; *) realId.
+</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">forall a s. HasType a s =&gt; Lens s s a a
+</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall localId (m :: * -&gt; *) realId.
 (Coercible localId Word64, Monad m, Ord realId) =&gt;
 realId -&gt; StateT (Map realId localId) m localId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var">localize</span></a></span><span>
 </span><span id="line-168"></span><span>
 </span><span id="line-169"></span><span class="hs-comment">-- Localize a hash reference in any monad that encapsulates the stateful localization of an object that contains hash references.</span><span>
-</span><span id="line-170"></span><span id="local-6989586621679505364"><span id="local-6989586621679505365"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeHash"><span class="hs-identifier hs-type">localizeHash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505365"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505364"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#HashId"><span class="hs-identifier hs-type">HashId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505365"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505364"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalHashId"><span class="hs-identifier hs-type">LocalHashId</span></a></span></span></span><span>
-</span><span id="line-171"></span><span id="localizeHash"><span class="annot"><span class="annottext">localizeHash :: HashId -&gt; StateT s m LocalHashId
+</span><span id="line-170"></span><span id="local-6989586621679523379"><span id="local-6989586621679523380"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeHash"><span class="hs-identifier hs-type">localizeHash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523380"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523379"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#HashId"><span class="hs-identifier hs-type">HashId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523380"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523379"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalHashId"><span class="hs-identifier hs-type">LocalHashId</span></a></span></span></span><span>
+</span><span id="line-171"></span><span id="localizeHash"><span class="annot"><span class="annottext">localizeHash :: forall s (m :: * -&gt; *).
+(ContainsHashes s, Monad m) =&gt;
+HashId -&gt; StateT s m LocalHashId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeHash"><span class="hs-identifier hs-var hs-var">localizeHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-172"></span><span>  </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map HashId LocalHashId) m) LocalHashId)
-  s
-  (Map HashId LocalHashId)
--&gt; StateT (Map HashId LocalHashId) m LocalHashId
--&gt; StateT s m LocalHashId
-forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
+</span><span id="line-172"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
 Zoom m n s t =&gt;
 LensLike' (Zoomed m c) t s -&gt; m c -&gt; n c
-</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map HashId LocalHashId) m) LocalHashId)
-  s
-  (Map HashId LocalHashId)
-forall a s. HasType a s =&gt; Lens s s a a
-</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">(StateT (Map HashId LocalHashId) m LocalHashId
- -&gt; StateT s m LocalHashId)
--&gt; (HashId -&gt; StateT (Map HashId LocalHashId) m LocalHashId)
--&gt; HashId
--&gt; StateT s m LocalHashId
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">HashId -&gt; StateT (Map HashId LocalHashId) m LocalHashId
-forall localId (m :: * -&gt; *) realId.
+</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">forall a s. HasType a s =&gt; Lens s s a a
+</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall localId (m :: * -&gt; *) realId.
 (Coercible localId Word64, Monad m, Ord realId) =&gt;
 realId -&gt; StateT (Map realId localId) m localId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var">localize</span></a></span><span>
 </span><span id="line-173"></span><span>
 </span><span id="line-174"></span><span class="hs-comment">-- Localize a patch object reference in any monad that encapsulates the stateful localization of an object that contains patch references.</span><span>
-</span><span id="line-175"></span><span id="local-6989586621679505464"><span id="local-6989586621679505466"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatchReference"><span class="hs-identifier hs-type">localizePatchReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsPatches"><span class="hs-identifier hs-type">ContainsPatches</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505466"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505464"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#PatchObjectId"><span class="hs-identifier hs-type">PatchObjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505466"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505464"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalPatchObjectId"><span class="hs-identifier hs-type">LocalPatchObjectId</span></a></span></span></span><span>
-</span><span id="line-176"></span><span id="localizePatchReference"><span class="annot"><span class="annottext">localizePatchReference :: PatchObjectId -&gt; StateT s m LocalPatchObjectId
+</span><span id="line-175"></span><span id="local-6989586621679523471"><span id="local-6989586621679523472"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatchReference"><span class="hs-identifier hs-type">localizePatchReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsPatches"><span class="hs-identifier hs-type">ContainsPatches</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523472"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523471"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#PatchObjectId"><span class="hs-identifier hs-type">PatchObjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523472"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523471"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalPatchObjectId"><span class="hs-identifier hs-type">LocalPatchObjectId</span></a></span></span></span><span>
+</span><span id="line-176"></span><span id="localizePatchReference"><span class="annot"><span class="annottext">localizePatchReference :: forall s (m :: * -&gt; *).
+(ContainsPatches s, Monad m) =&gt;
+PatchObjectId -&gt; StateT s m LocalPatchObjectId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizePatchReference"><span class="hs-identifier hs-var hs-var">localizePatchReference</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-177"></span><span>  </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed
-     (StateT (Map PatchObjectId LocalPatchObjectId) m)
-     LocalPatchObjectId)
-  s
-  (Map PatchObjectId LocalPatchObjectId)
--&gt; StateT
-     (Map PatchObjectId LocalPatchObjectId) m LocalPatchObjectId
--&gt; StateT s m LocalPatchObjectId
-forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
+</span><span id="line-177"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
 Zoom m n s t =&gt;
 LensLike' (Zoomed m c) t s -&gt; m c -&gt; n c
-</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed
-     (StateT (Map PatchObjectId LocalPatchObjectId) m)
-     LocalPatchObjectId)
-  s
-  (Map PatchObjectId LocalPatchObjectId)
-forall a s. HasType a s =&gt; Lens s s a a
-</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">(StateT (Map PatchObjectId LocalPatchObjectId) m LocalPatchObjectId
- -&gt; StateT s m LocalPatchObjectId)
--&gt; (PatchObjectId
-    -&gt; StateT
-         (Map PatchObjectId LocalPatchObjectId) m LocalPatchObjectId)
--&gt; PatchObjectId
--&gt; StateT s m LocalPatchObjectId
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">PatchObjectId
--&gt; StateT
-     (Map PatchObjectId LocalPatchObjectId) m LocalPatchObjectId
-forall localId (m :: * -&gt; *) realId.
+</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">forall a s. HasType a s =&gt; Lens s s a a
+</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall localId (m :: * -&gt; *) realId.
 (Coercible localId Word64, Monad m, Ord realId) =&gt;
 realId -&gt; StateT (Map realId localId) m localId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var">localize</span></a></span><span>
 </span><span id="line-178"></span><span>
 </span><span id="line-179"></span><span class="hs-comment">-- Localize a reference in any monad that encapsulates the stateful localization of an object that contains references.</span><span>
-</span><span id="line-180"></span><span id="local-6989586621679505467"><span id="local-6989586621679505468"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-type">localizeReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505468"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505468"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505467"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#Reference"><span class="hs-identifier hs-type">Reference</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505468"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505467"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReference"><span class="hs-identifier hs-type">LocalReference</span></a></span></span></span><span>
-</span><span id="line-181"></span><span id="localizeReference"><span class="annot"><span class="annottext">localizeReference :: Reference' TextId ObjectId
+</span><span id="line-180"></span><span id="local-6989586621679523473"><span id="local-6989586621679523474"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-type">localizeReference</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523474"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523474"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523473"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#Reference"><span class="hs-identifier hs-type">Reference</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523474"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523473"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReference"><span class="hs-identifier hs-type">LocalReference</span></a></span></span></span><span>
+</span><span id="line-181"></span><span id="localizeReference"><span class="annot"><span class="annottext">localizeReference :: forall s (m :: * -&gt; *).
+(ContainsDefns s, ContainsText s, Monad m) =&gt;
+Reference' TextId ObjectId
 -&gt; StateT s m (Reference' LocalTextId LocalDefnId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var hs-var">localizeReference</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-182"></span><span>  </span><span class="annot"><span class="annottext">(TextId -&gt; StateT s m LocalTextId)
--&gt; (ObjectId -&gt; StateT s m LocalDefnId)
--&gt; Reference' TextId ObjectId
--&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><span id="line-182"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT s m LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; StateT s m LocalDefnId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, Monad m) =&gt;
 ObjectId -&gt; StateT s m LocalDefnId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeDefn"><span class="hs-identifier hs-var">localizeDefn</span></a></span><span>
 </span><span id="line-183"></span><span>
 </span><span id="line-184"></span><span class="hs-comment">-- Localize a possibly-missing reference in any monad that encapsulates the stateful localization of an object that contains</span><span>
 </span><span id="line-185"></span><span class="hs-comment">-- possibly-missing references.</span><span>
-</span><span id="line-186"></span><span id="local-6989586621679505431"><span id="local-6989586621679505432"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-type">localizeReferenceH</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505432"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505432"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505431"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#ReferenceH"><span class="hs-identifier hs-type">ReferenceH</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505432"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505431"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReferenceH"><span class="hs-identifier hs-type">LocalReferenceH</span></a></span></span></span><span>
-</span><span id="line-187"></span><span id="localizeReferenceH"><span class="annot"><span class="annottext">localizeReferenceH :: Reference' TextId HashId
+</span><span id="line-186"></span><span id="local-6989586621679523445"><span id="local-6989586621679523446"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-type">localizeReferenceH</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523446"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523446"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523445"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#ReferenceH"><span class="hs-identifier hs-type">ReferenceH</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523446"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523445"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Reference.html#LocalReferenceH"><span class="hs-identifier hs-type">LocalReferenceH</span></a></span></span></span><span>
+</span><span id="line-187"></span><span id="localizeReferenceH"><span class="annot"><span class="annottext">localizeReferenceH :: forall s (m :: * -&gt; *).
+(ContainsHashes s, ContainsText s, Monad m) =&gt;
+Reference' TextId HashId
 -&gt; StateT s m (Reference' LocalTextId LocalHashId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var hs-var">localizeReferenceH</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-188"></span><span>  </span><span class="annot"><span class="annottext">(TextId -&gt; StateT s m LocalTextId)
--&gt; (HashId -&gt; StateT s m LocalHashId)
--&gt; Reference' TextId HashId
--&gt; StateT s m (Reference' LocalTextId LocalHashId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><span id="line-188"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT s m LocalTextId
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsText s, Monad m) =&gt;
 TextId -&gt; StateT s m LocalTextId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">HashId -&gt; StateT s m LocalHashId
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var">localizeText</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsHashes s, Monad m) =&gt;
 HashId -&gt; StateT s m LocalHashId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeHash"><span class="hs-identifier hs-var">localizeHash</span></a></span><span>
 </span><span id="line-189"></span><span>
 </span><span id="line-190"></span><span class="hs-comment">-- Localize a referent in any monad that encapsulates the stateful localization of an object that contains referents.</span><span>
-</span><span id="line-191"></span><span id="local-6989586621679505474"><span id="local-6989586621679505476"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferent"><span class="hs-identifier hs-type">localizeReferent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505476"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505476"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505474"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#Referent"><span class="hs-identifier hs-type">Referent</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505476"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505474"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#LocalReferent"><span class="hs-identifier hs-type">LocalReferent</span></a></span></span></span><span>
-</span><span id="line-192"></span><span id="localizeReferent"><span class="annot"><span class="annottext">localizeReferent :: Referent'' TextId ObjectId
+</span><span id="line-191"></span><span id="local-6989586621679523480"><span id="local-6989586621679523481"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferent"><span class="hs-identifier hs-type">localizeReferent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsDefns"><span class="hs-identifier hs-type">ContainsDefns</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523481"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523481"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523480"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#Referent"><span class="hs-identifier hs-type">Referent</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523481"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523480"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#LocalReferent"><span class="hs-identifier hs-type">LocalReferent</span></a></span></span></span><span>
+</span><span id="line-192"></span><span id="localizeReferent"><span class="annot"><span class="annottext">localizeReferent :: forall s (m :: * -&gt; *).
+(ContainsDefns s, ContainsText s, Monad m) =&gt;
+Referent'' TextId ObjectId
 -&gt; StateT s m (Referent'' LocalTextId LocalDefnId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferent"><span class="hs-identifier hs-var hs-var">localizeReferent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-193"></span><span>  </span><span class="annot"><span class="annottext">(Reference' TextId ObjectId
- -&gt; StateT s m (Reference' LocalTextId LocalDefnId))
--&gt; (Reference' TextId ObjectId
-    -&gt; StateT s m (Reference' LocalTextId LocalDefnId))
--&gt; Referent'' TextId ObjectId
--&gt; StateT s m (Referent'' LocalTextId LocalDefnId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><span id="line-193"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Reference' TextId ObjectId
--&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 Reference' TextId ObjectId
 -&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var">localizeReference</span></a></span><span> </span><span class="annot"><span class="annottext">Reference' TextId ObjectId
--&gt; StateT s m (Reference' LocalTextId LocalDefnId)
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReference"><span class="hs-identifier hs-var">localizeReference</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsDefns s, ContainsText s, Monad m) =&gt;
 Reference' TextId ObjectId
 -&gt; StateT s m (Reference' LocalTextId LocalDefnId)
@@ -968,104 +510,75 @@ Reference' TextId ObjectId
 </span><span id="line-194"></span><span>
 </span><span id="line-195"></span><span class="hs-comment">-- Localize a possibly-missing referent in any monad that encapsulates the stateful localization of an object that contains possibly-missing</span><span>
 </span><span id="line-196"></span><span class="hs-comment">-- referents.</span><span>
-</span><span id="line-197"></span><span id="local-6989586621679505435"><span id="local-6989586621679505437"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferentH"><span class="hs-identifier hs-type">localizeReferentH</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505437"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505437"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505435"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#ReferentH"><span class="hs-identifier hs-type">ReferentH</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505437"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505435"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#LocalReferentH"><span class="hs-identifier hs-type">LocalReferentH</span></a></span></span></span><span>
-</span><span id="line-198"></span><span id="localizeReferentH"><span class="annot"><span class="annottext">localizeReferentH :: Referent'' TextId HashId
+</span><span id="line-197"></span><span id="local-6989586621679523449"><span id="local-6989586621679523450"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferentH"><span class="hs-identifier hs-type">localizeReferentH</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsHashes"><span class="hs-identifier hs-type">ContainsHashes</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523450"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523450"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523449"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#ReferentH"><span class="hs-identifier hs-type">ReferentH</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523450"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523449"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Referent.html#LocalReferentH"><span class="hs-identifier hs-type">LocalReferentH</span></a></span></span></span><span>
+</span><span id="line-198"></span><span id="localizeReferentH"><span class="annot"><span class="annottext">localizeReferentH :: forall s (m :: * -&gt; *).
+(ContainsHashes s, ContainsText s, Monad m) =&gt;
+Referent'' TextId HashId
 -&gt; StateT s m (Referent'' LocalTextId LocalHashId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferentH"><span class="hs-identifier hs-var hs-var">localizeReferentH</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-199"></span><span>  </span><span class="annot"><span class="annottext">(Reference' TextId HashId
- -&gt; StateT s m (Reference' LocalTextId LocalHashId))
--&gt; (Reference' TextId HashId
-    -&gt; StateT s m (Reference' LocalTextId LocalHashId))
--&gt; Referent'' TextId HashId
--&gt; StateT s m (Referent'' LocalTextId LocalHashId)
-forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
+</span><span id="line-199"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; * -&gt; *) (f :: * -&gt; *) a c b d.
 (Bitraversable t, Applicative f) =&gt;
 (a -&gt; f c) -&gt; (b -&gt; f d) -&gt; t a b -&gt; f (t c d)
-</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">Reference' TextId HashId
--&gt; StateT s m (Reference' LocalTextId LocalHashId)
-forall s (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">bitraverse</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsHashes s, ContainsText s, Monad m) =&gt;
 Reference' TextId HashId
 -&gt; StateT s m (Reference' LocalTextId LocalHashId)
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var">localizeReferenceH</span></a></span><span> </span><span class="annot"><span class="annottext">Reference' TextId HashId
--&gt; StateT s m (Reference' LocalTextId LocalHashId)
-forall s (m :: * -&gt; *).
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var">localizeReferenceH</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *).
 (ContainsHashes s, ContainsText s, Monad m) =&gt;
 Reference' TextId HashId
 -&gt; StateT s m (Reference' LocalTextId LocalHashId)
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeReferenceH"><span class="hs-identifier hs-var">localizeReferenceH</span></a></span><span>
 </span><span id="line-200"></span><span>
 </span><span id="line-201"></span><span class="hs-comment">-- Localize a text reference in any monad that encapsulates the stateful localization of an object that contains text.</span><span>
-</span><span id="line-202"></span><span id="local-6989586621679505477"><span id="local-6989586621679505479"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-type">localizeText</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505479"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505477"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#TextId"><span class="hs-identifier hs-type">TextId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679505479"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505477"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalTextId"><span class="hs-identifier hs-type">LocalTextId</span></a></span></span></span><span>
-</span><span id="line-203"></span><span id="localizeText"><span class="annot"><span class="annottext">localizeText :: TextId -&gt; StateT s m LocalTextId
+</span><span id="line-202"></span><span id="local-6989586621679523482"><span id="local-6989586621679523483"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-type">localizeText</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#ContainsText"><span class="hs-identifier hs-type">ContainsText</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523483"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523482"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#TextId"><span class="hs-identifier hs-type">TextId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="#local-6989586621679523483"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523482"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.LocalIds.html#LocalTextId"><span class="hs-identifier hs-type">LocalTextId</span></a></span></span></span><span>
+</span><span id="line-203"></span><span id="localizeText"><span class="annot"><span class="annottext">localizeText :: forall s (m :: * -&gt; *).
+(ContainsText s, Monad m) =&gt;
+TextId -&gt; StateT s m LocalTextId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localizeText"><span class="hs-identifier hs-var hs-var">localizeText</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-204"></span><span>  </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map TextId LocalTextId) m) LocalTextId)
-  s
-  (Map TextId LocalTextId)
--&gt; StateT (Map TextId LocalTextId) m LocalTextId
--&gt; StateT s m LocalTextId
-forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
+</span><span id="line-204"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) s t c.
 Zoom m n s t =&gt;
 LensLike' (Zoomed m c) t s -&gt; m c -&gt; n c
-</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">LensLike'
-  (Zoomed (StateT (Map TextId LocalTextId) m) LocalTextId)
-  s
-  (Map TextId LocalTextId)
-forall a s. HasType a s =&gt; Lens s s a a
-</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">(StateT (Map TextId LocalTextId) m LocalTextId
- -&gt; StateT s m LocalTextId)
--&gt; (TextId -&gt; StateT (Map TextId LocalTextId) m LocalTextId)
--&gt; TextId
--&gt; StateT s m LocalTextId
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">TextId -&gt; StateT (Map TextId LocalTextId) m LocalTextId
-forall localId (m :: * -&gt; *) realId.
+</span><span class="hs-identifier hs-var">zoom</span></span><span> </span><span class="annot"><span class="annottext">forall a s. HasType a s =&gt; Lens s s a a
+</span><span class="hs-identifier hs-var">typed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall localId (m :: * -&gt; *) realId.
 (Coercible localId Word64, Monad m, Ord realId) =&gt;
 realId -&gt; StateT (Map realId localId) m localId
 </span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var">localize</span></a></span><span>
 </span><span id="line-205"></span><span>
 </span><span id="line-206"></span><span class="hs-comment">-- Resolve a real id to its corresponding local id, either by looking it up in a map, or else using the next available local id, which is</span><span>
 </span><span id="line-207"></span><span class="hs-comment">-- recorded for next time.</span><span>
-</span><span id="line-208"></span><span id="local-6989586621679505376"><span id="local-6989586621679505377"><span id="local-6989586621679505378"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-type">localize</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Coercible</span></span><span> </span><span class="annot"><a href="#local-6989586621679505378"><span class="hs-identifier hs-type">localId</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679505377"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679505376"><span class="hs-identifier hs-type">realId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679505376"><span class="hs-identifier hs-type">realId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679505376"><span class="hs-identifier hs-type">realId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505378"><span class="hs-identifier hs-type">localId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679505377"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679505378"><span class="hs-identifier hs-type">localId</span></a></span></span></span></span><span>
-</span><span id="line-209"></span><span id="localize"><span class="annot"><span class="annottext">localize :: realId -&gt; StateT (Map realId localId) m localId
-</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var hs-var">localize</span></a></span></span><span> </span><span id="local-6989586621679505260"><span class="annot"><span class="annottext">realId
-</span><a href="#local-6989586621679505260"><span class="hs-identifier hs-var">realId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-210"></span><span>  </span><span id="local-6989586621679505259"><span class="annot"><span class="annottext">Map realId localId
-</span><a href="#local-6989586621679505259"><span class="hs-identifier hs-var">mapping</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">StateT (Map realId localId) m (Map realId localId)
-forall (m :: * -&gt; *) s. Monad m =&gt; StateT s m s
+</span><span id="line-208"></span><span id="local-6989586621679523383"><span id="local-6989586621679523384"><span id="local-6989586621679523385"><span class="annot"><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-type">localize</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Coercible</span></span><span> </span><span class="annot"><a href="#local-6989586621679523385"><span class="hs-identifier hs-type">localId</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monad</span></span><span> </span><span class="annot"><a href="#local-6989586621679523384"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679523383"><span class="hs-identifier hs-type">realId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679523383"><span class="hs-identifier hs-type">realId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679523383"><span class="hs-identifier hs-type">realId</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523385"><span class="hs-identifier hs-type">localId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679523384"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679523385"><span class="hs-identifier hs-type">localId</span></a></span></span></span></span><span>
+</span><span id="line-209"></span><span id="localize"><span class="annot"><span class="annottext">localize :: forall localId (m :: * -&gt; *) realId.
+(Coercible localId Word64, Monad m, Ord realId) =&gt;
+realId -&gt; StateT (Map realId localId) m localId
+</span><a href="U.Codebase.Sqlite.LocalizeObject.html#localize"><span class="hs-identifier hs-var hs-var">localize</span></a></span></span><span> </span><span id="local-6989586621679522898"><span class="annot"><span class="annottext">realId
+</span><a href="#local-6989586621679522898"><span class="hs-identifier hs-var">realId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-210"></span><span>  </span><span id="local-6989586621679522897"><span class="annot"><span class="annottext">Map realId localId
+</span><a href="#local-6989586621679522897"><span class="hs-identifier hs-var">mapping</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s. Monad m =&gt; StateT s m s
 </span><span class="hs-identifier hs-var">State.get</span></span><span>
-</span><span id="line-211"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">realId -&gt; Map realId localId -&gt; Maybe localId
-forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
+</span><span id="line-211"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">realId
-</span><a href="#local-6989586621679505260"><span class="hs-identifier hs-var">realId</span></a></span><span> </span><span class="annot"><span class="annottext">Map realId localId
-</span><a href="#local-6989586621679505259"><span class="hs-identifier hs-var">mapping</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679522898"><span class="hs-identifier hs-var">realId</span></a></span><span> </span><span class="annot"><span class="annottext">Map realId localId
+</span><a href="#local-6989586621679522897"><span class="hs-identifier hs-var">mapping</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-212"></span><span>    </span><span class="annot"><span class="annottext">Maybe localId
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-213"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679505256"><span class="annot"><span class="annottext">nextLocalId :: localId
-</span><a href="#local-6989586621679505256"><span class="hs-identifier hs-var hs-var">nextLocalId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; localId
-</span><span class="hs-identifier hs-var">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Word64
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
-</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map realId localId -&gt; Int
-forall k a. Map k a -&gt; Int
+</span><span id="line-213"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679522894"><span class="annot"><span class="annottext">nextLocalId :: localId
+</span><a href="#local-6989586621679522894"><span class="hs-identifier hs-var hs-var">nextLocalId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">coerce :: forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-type">coerce</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall k a. Map k a -&gt; Int
 </span><span class="hs-identifier hs-var">Map.size</span></span><span> </span><span class="annot"><span class="annottext">Map realId localId
-</span><a href="#local-6989586621679505259"><span class="hs-identifier hs-var">mapping</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-214"></span><span>      </span><span class="annot"><span class="annottext">Map realId localId -&gt; StateT (Map realId localId) m ()
-forall (m :: * -&gt; *) s. Monad m =&gt; s -&gt; StateT s m ()
-</span><span class="hs-identifier hs-var">State.put</span></span><span> </span><span class="annot"><span class="annottext">(Map realId localId -&gt; StateT (Map realId localId) m ())
--&gt; Map realId localId -&gt; StateT (Map realId localId) m ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">realId -&gt; localId -&gt; Map realId localId -&gt; Map realId localId
-forall k a. Ord k =&gt; k -&gt; a -&gt; Map k a -&gt; Map k a
+</span><a href="#local-6989586621679522897"><span class="hs-identifier hs-var">mapping</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-214"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s. Monad m =&gt; s -&gt; StateT s m ()
+</span><span class="hs-identifier hs-var">State.put</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">forall k a. Ord k =&gt; k -&gt; a -&gt; Map k a -&gt; Map k a
 </span><span class="hs-identifier hs-var">Map.insert</span></span><span> </span><span class="annot"><span class="annottext">realId
-</span><a href="#local-6989586621679505260"><span class="hs-identifier hs-var">realId</span></a></span><span> </span><span class="annot"><span class="annottext">localId
-</span><a href="#local-6989586621679505256"><span class="hs-identifier hs-var">nextLocalId</span></a></span><span> </span><span class="annot"><span class="annottext">Map realId localId
-</span><a href="#local-6989586621679505259"><span class="hs-identifier hs-var">mapping</span></a></span><span>
+</span><a href="#local-6989586621679522898"><span class="hs-identifier hs-var">realId</span></a></span><span> </span><span class="annot"><span class="annottext">localId
+</span><a href="#local-6989586621679522894"><span class="hs-identifier hs-var">nextLocalId</span></a></span><span> </span><span class="annot"><span class="annottext">Map realId localId
+</span><a href="#local-6989586621679522897"><span class="hs-identifier hs-var">mapping</span></a></span><span>
 </span><span id="line-215"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">localId
-</span><a href="#local-6989586621679505256"><span class="hs-identifier hs-var">nextLocalId</span></a></span><span>
-</span><span id="line-216"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679505251"><span class="annot"><span class="annottext">localId
-</span><a href="#local-6989586621679505251"><span class="hs-identifier hs-var">localId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">localId -&gt; StateT (Map realId localId) m localId
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><a href="#local-6989586621679522894"><span class="hs-identifier hs-var">nextLocalId</span></a></span><span>
+</span><span id="line-216"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679522889"><span class="annot"><span class="annottext">localId
+</span><a href="#local-6989586621679522889"><span class="hs-identifier hs-var">localId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">localId
-</span><a href="#local-6989586621679505251"><span class="hs-identifier hs-var">localId</span></a></span><span>
+</span><a href="#local-6989586621679522889"><span class="hs-identifier hs-var">localId</span></a></span><span>
 </span><span id="line-217"></span></pre></body></html>

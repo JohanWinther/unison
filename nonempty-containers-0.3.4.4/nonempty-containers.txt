@@ -4960,16 +4960,96 @@ foldl :: (a -> b -> a) -> a -> NESet b -> a
 -- | A variant of <a>foldr</a> that has no base case, and thus may only be
 --   applied to non-empty structures.
 --   
+--   This function is non-total and will raise a runtime exception if the
+--   structure happens to be empty.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
 --   <pre>
---   <a>foldr1</a> f = <a>foldr1</a> f . <a>toList</a>
+--   &gt;&gt;&gt; foldr1 (+) [1..4]
+--   10
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (+) []
+--   Exception: Prelude.foldr1: empty list
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (+) Nothing
+--   *** Exception: foldr1: empty structure
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (-) [1..4]
+--   -2
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (&amp;&amp;) [True, False, True, True]
+--   False
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (||) [False, False, True, True]
+--   True
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldr1 (+) [1..]
+--   * Hangs forever *
 --   </pre>
 foldr1 :: Foldable t => (a -> a -> a) -> t a -> a
 
 -- | A variant of <a>foldl</a> that has no base case, and thus may only be
 --   applied to non-empty structures.
 --   
+--   This function is non-total and will raise a runtime exception if the
+--   structure happens to be empty.
+--   
 --   <pre>
 --   <a>foldl1</a> f = <a>foldl1</a> f . <a>toList</a>
+--   </pre>
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (+) [1..4]
+--   10
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (+) []
+--   *** Exception: Prelude.foldl1: empty list
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (+) Nothing
+--   *** Exception: foldl1: empty structure
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (-) [1..4]
+--   -8
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (&amp;&amp;) [True, False, True, True]
+--   False
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (||) [False, False, True, True]
+--   True
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; foldl1 (+) [1..]
+--   * Hangs forever *
 --   </pre>
 foldl1 :: Foldable t => (a -> a -> a) -> t a -> a
 
@@ -6937,7 +7017,7 @@ module Data.Containers.NonEmpty
 class HasNonEmpty s where {
     
     -- | <tt><a>NE</a> s</tt> is the "non-empty" version of <tt>s</tt>.
-    type family NE s = t | t -> s;
+    type NE s = t | t -> s;
 }
 
 -- | "Smart constructor" for <tt><a>NE</a> s</tt> given a (potentailly

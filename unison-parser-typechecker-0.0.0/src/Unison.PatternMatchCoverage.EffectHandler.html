@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="%24con2tag_6p7vNHatDjQBErquYN6Zdd"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.PatternMatchCoverage.EffectHandler</span><span> </span><span class="hs-keyword">where</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.PatternMatchCoverage.EffectHandler</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.ConstructorReference</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ConstructorReference</span></span><span class="hs-special">)</span><span>
 </span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.PatternMatchCoverage.Pretty.html"><span class="hs-identifier">Unison.PatternMatchCoverage.Pretty</span></a></span><span>
@@ -6,16 +6,12 @@
 </span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.PrettyPrintEnv.html"><span class="hs-identifier">Unison.PrettyPrintEnv</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.PrettyPrintEnv.html#PrettyPrintEnv"><span class="hs-identifier">PrettyPrintEnv</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span>
 </span><span id="line-8"></span><span>
-</span><span id="line-9"></span><span id="local-6989586621680800530"><span id="local-6989586621680800531"></span></span><span class="hs-keyword">data</span><span> </span><span id="EffectHandler"><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#EffectHandler"><span class="hs-identifier hs-var">EffectHandler</span></a></span></span><span>
+</span><span id="line-9"></span><span id="local-6989586621680866169"><span id="local-6989586621680866170"></span></span><span class="hs-keyword">data</span><span> </span><span id="EffectHandler"><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#EffectHandler"><span class="hs-identifier hs-var">EffectHandler</span></a></span></span><span>
 </span><span id="line-10"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NoEffect"><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#NoEffect"><span class="hs-identifier hs-var">NoEffect</span></a></span></span><span>
 </span><span id="line-11"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Effect"><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#Effect"><span class="hs-identifier hs-var">Effect</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ConstructorReference</span></span><span>
-</span><span id="line-12"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680800522"><span id="local-6989586621680800524"><span id="local-6989586621680800526"><span class="annot"><span class="annottext">Int -&gt; EffectHandler -&gt; ShowS
+</span><span id="line-12"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680866156"><span id="local-6989586621680866158"><span id="local-6989586621680866165"><span class="annot"><span class="annottext">Int -&gt; EffectHandler -&gt; ShowS
 [EffectHandler] -&gt; ShowS
 EffectHandler -&gt; String
-(Int -&gt; EffectHandler -&gt; ShowS)
--&gt; (EffectHandler -&gt; String)
--&gt; ([EffectHandler] -&gt; ShowS)
--&gt; Show EffectHandler
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [EffectHandler] -&gt; ShowS
@@ -24,24 +20,13 @@ show :: EffectHandler -&gt; String
 $cshow :: EffectHandler -&gt; String
 showsPrec :: Int -&gt; EffectHandler -&gt; ShowS
 $cshowsPrec :: Int -&gt; EffectHandler -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680800517"><span id="local-6989586621680800519"><span class="annot"><span class="annottext">EffectHandler -&gt; EffectHandler -&gt; Bool
-(EffectHandler -&gt; EffectHandler -&gt; Bool)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Bool) -&gt; Eq EffectHandler
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680866147"><span id="local-6989586621680866152"><span class="annot"><span class="annottext">EffectHandler -&gt; EffectHandler -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: EffectHandler -&gt; EffectHandler -&gt; Bool
 $c/= :: EffectHandler -&gt; EffectHandler -&gt; Bool
 == :: EffectHandler -&gt; EffectHandler -&gt; Bool
 $c== :: EffectHandler -&gt; EffectHandler -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680800501"><span id="local-6989586621680800503"><span id="local-6989586621680800505"><span id="local-6989586621680800507"><span id="local-6989586621680800509"><span id="local-6989586621680800511"><span id="local-6989586621680800513"><span class="annot"><span class="annottext">Eq EffectHandler
-Eq EffectHandler
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Ordering)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Bool)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Bool)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Bool)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; Bool)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; EffectHandler)
--&gt; (EffectHandler -&gt; EffectHandler -&gt; EffectHandler)
--&gt; Ord EffectHandler
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680866121"><span id="local-6989586621680866123"><span id="local-6989586621680866126"><span id="local-6989586621680866129"><span id="local-6989586621680866132"><span id="local-6989586621680866136"><span id="local-6989586621680866141"><span class="annot"><span class="annottext">Eq EffectHandler
 EffectHandler -&gt; EffectHandler -&gt; Bool
 EffectHandler -&gt; EffectHandler -&gt; Ordering
 EffectHandler -&gt; EffectHandler -&gt; EffectHandler
@@ -69,11 +54,7 @@ $c&lt;= :: EffectHandler -&gt; EffectHandler -&gt; Bool
 $c&lt; :: EffectHandler -&gt; EffectHandler -&gt; Bool
 compare :: EffectHandler -&gt; EffectHandler -&gt; Ordering
 $ccompare :: EffectHandler -&gt; EffectHandler -&gt; Ordering
-$cp1Ord :: Eq EffectHandler
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(forall x. EffectHandler -&gt; Rep EffectHandler x)
--&gt; (forall x. Rep EffectHandler x -&gt; EffectHandler)
--&gt; Generic EffectHandler
-forall x. Rep EffectHandler x -&gt; EffectHandler
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep EffectHandler x -&gt; EffectHandler
 forall x. EffectHandler -&gt; Rep EffectHandler x
 forall a.
 (forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
@@ -83,14 +64,14 @@ $cfrom :: forall x. EffectHandler -&gt; Rep EffectHandler x
 </span><span id="line-13"></span><span>
 </span><span id="line-14"></span><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#prettyEffectHandler"><span class="hs-identifier hs-type">prettyEffectHandler</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.PrettyPrintEnv.html#PrettyPrintEnv"><span class="hs-identifier hs-type">PrettyPrintEnv</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#EffectHandler"><span class="hs-identifier hs-type">EffectHandler</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ColorText</span></span><span>
 </span><span id="line-15"></span><span id="prettyEffectHandler"><span class="annot"><span class="annottext">prettyEffectHandler :: PrettyPrintEnv -&gt; EffectHandler -&gt; Pretty ColorText
-</span><a href="Unison.PatternMatchCoverage.EffectHandler.html#prettyEffectHandler"><span class="hs-identifier hs-var hs-var">prettyEffectHandler</span></a></span></span><span> </span><span id="local-6989586621680800495"><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621680800495"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><a href="Unison.PatternMatchCoverage.EffectHandler.html#prettyEffectHandler"><span class="hs-identifier hs-var hs-var">prettyEffectHandler</span></a></span></span><span> </span><span id="local-6989586621680866113"><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621680866113"><span class="hs-identifier hs-var">ppe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-16"></span><span>  </span><span class="annot"><span class="annottext">EffectHandler
 </span><a href="Unison.PatternMatchCoverage.EffectHandler.html#NoEffect"><span class="hs-identifier hs-var">NoEffect</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;pure&quot;</span></span><span>
-</span><span id="line-17"></span><span>  </span><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#Effect"><span class="hs-identifier hs-type">Effect</span></a></span><span> </span><span id="local-6989586621680800494"><span class="annot"><span class="annottext">ConstructorReference
-</span><a href="#local-6989586621680800494"><span class="hs-identifier hs-var">cr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; ConstructorReference -&gt; Pretty ColorText
+</span><span id="line-17"></span><span>  </span><span class="annot"><a href="Unison.PatternMatchCoverage.EffectHandler.html#Effect"><span class="hs-identifier hs-type">Effect</span></a></span><span> </span><span id="local-6989586621680866112"><span class="annot"><span class="annottext">ConstructorReference
+</span><a href="#local-6989586621680866112"><span class="hs-identifier hs-var">cr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; ConstructorReference -&gt; Pretty ColorText
 </span><a href="Unison.PatternMatchCoverage.Pretty.html#prettyConstructorReference"><span class="hs-identifier hs-var">prettyConstructorReference</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621680800495"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">ConstructorReference
-</span><a href="#local-6989586621680800494"><span class="hs-identifier hs-var">cr</span></a></span><span>
+</span><a href="#local-6989586621680866113"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">ConstructorReference
+</span><a href="#local-6989586621680866112"><span class="hs-identifier hs-var">cr</span></a></span><span>
 </span><span id="line-18"></span></pre></body></html>

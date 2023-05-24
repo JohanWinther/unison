@@ -16,18 +16,16 @@ module Data.IP.Builder
 --   addresses.
 ipBuilder :: IP -> Builder
 
--- | <a>BoundedPrim</a> bytestring <a>Builder</a> for <a>IPv4</a>
---   addresses.
+-- | <a>BoundedPrim</a> bytestring <a>Builder</a> for <a>IP</a> addresses.
 ipv4Builder :: IPv4 -> Builder
 
--- | <a>BoundedPrim</a> bytestring <a>Builder</a> for <a>IPv6</a>
---   addresses.
+-- | <a>BoundedPrim</a> bytestring <a>Builder</a> for <a>IP</a> addresses.
 ipv6Builder :: IPv6 -> Builder
 
 module Data.IP.Internal
 
 -- | The abstract data type to express an IPv4 address. To create this, use
---   <a>toIPv4</a>. Or use <a>read</a> <tt>"192.0.2.1"</tt> :: <a>IPv4</a>,
+--   <a>toIPv4</a>. Or use <a>read</a> <tt>"192.0.2.1"</tt> :: <a>IP</a>,
 --   for example. Also, <tt>"192.0.2.1"</tt> can be used as literal with
 --   OverloadedStrings.
 --   
@@ -39,9 +37,9 @@ newtype IPv4
 IP4 :: IPv4Addr -> IPv4
 
 -- | The abstract data type to express an IPv6 address. To create this, use
---   <a>toIPv6</a>. Or use <a>read</a> <tt>"2001:DB8::1"</tt> ::
---   <a>IPv6</a>, for example. Also, <tt>"2001:DB8::1"</tt> can be used as
---   literal with OverloadedStrings.
+--   <a>toIPv6</a>. Or use <a>read</a> <tt>"2001:DB8::1"</tt> :: <a>IP</a>,
+--   for example. Also, <tt>"2001:DB8::1"</tt> can be used as literal with
+--   OverloadedStrings.
 --   
 --   <pre>
 --   &gt;&gt;&gt; read "2001:db8:00:00:00:00:00:01" :: IPv6
@@ -73,7 +71,7 @@ IP6 :: IPv6Addr -> IPv6
 --   information but contained for pre calculation.
 --   
 --   To create this, use <tt>makeAddrRange</tt> or <a>read</a>
---   <tt>"192.0.2.0/24"</tt> :: <a>AddrRange</a> <a>IPv4</a>. Also,
+--   <tt>"192.0.2.0/24"</tt> :: <a>AddrRange</a> <a>IP</a>. Also,
 --   <tt>"192.0.2.0/24"</tt> can be used as literal with OverloadedStrings.
 --   
 --   <pre>
@@ -102,8 +100,8 @@ type IPv6Addr = (Word32, Word32, Word32, Word32)
 -- | Data structures to express IPv4, IPv6 and IP range.
 module Data.IP
 
--- | A unified IP data for <a>IPv4</a> and <a>IPv6</a>. To create this, use
---   the data constructors. Or use <a>read</a> <tt>"192.0.2.1"</tt> ::
+-- | A unified IP data for <a>IP</a> and <a>IP</a>. To create this, use the
+--   data constructors. Or use <a>read</a> <tt>"192.0.2.1"</tt> ::
 --   <a>IP</a>, for example. Also, <tt>"192.0.2.1"</tt> can be used as
 --   literal with OverloadedStrings.
 --   
@@ -121,7 +119,7 @@ IPv6 :: IPv6 -> IP
 [ipv6] :: IP -> IPv6
 
 -- | The abstract data type to express an IPv4 address. To create this, use
---   <a>toIPv4</a>. Or use <a>read</a> <tt>"192.0.2.1"</tt> :: <a>IPv4</a>,
+--   <a>toIPv4</a>. Or use <a>read</a> <tt>"192.0.2.1"</tt> :: <a>IP</a>,
 --   for example. Also, <tt>"192.0.2.1"</tt> can be used as literal with
 --   OverloadedStrings.
 --   
@@ -131,12 +129,12 @@ IPv6 :: IPv6 -> IP
 --   </pre>
 data IPv4
 
--- | The <a>toIPv4</a> function returns the <a>IPv4</a> address
---   corresponding to the given list of <a>Int</a> octets. The function is
---   strict in the four elements of the list. An error is returned if the
---   list has a differnet length. The input elements are silently truncated
---   to their 8 least-significant bits before they are combined to form the
---   IPv4 address.
+-- | The <a>toIPv4</a> function returns the <a>IP</a> address corresponding
+--   to the given list of <a>Int</a> octets. The function is strict in the
+--   four elements of the list. An error is returned if the list has a
+--   differnet length. The input elements are silently truncated to their 8
+--   least-significant bits before they are combined to form the IPv4
+--   address.
 --   
 --   <pre>
 --   &gt;&gt;&gt; toIPv4 [192,0,2,1]
@@ -144,7 +142,7 @@ data IPv4
 --   </pre>
 toIPv4 :: [Int] -> IPv4
 
--- | The <a>toIPv4w</a> function constructs the <a>IPv4</a> address
+-- | The <a>toIPv4w</a> function constructs the <a>IP</a> address
 --   corresponding to the given <a>Word32</a> value. Unlike the
 --   <a>fromHostAddress</a> function, it is strict in the input value,
 --   which here is in host byte order.
@@ -156,7 +154,7 @@ toIPv4 :: [Int] -> IPv4
 toIPv4w :: Word32 -> IPv4
 
 -- | The <a>fromIPv4</a> function returns the list of four <a>Int</a>
---   octets corresponding to the given <a>IPv4</a> address.
+--   octets corresponding to the given <a>IP</a> address.
 --   
 --   <pre>
 --   &gt;&gt;&gt; fromIPv4 (toIPv4 [192,0,2,1])
@@ -165,7 +163,7 @@ toIPv4w :: Word32 -> IPv4
 fromIPv4 :: IPv4 -> [Int]
 
 -- | The <a>fromIPv4w</a> function returns a single <a>Word32</a> value
---   corresponding to the given the <a>IPv4</a> address. Unlike the
+--   corresponding to the given the <a>IP</a> address. Unlike the
 --   <a>toHostAddress</a> function, the returned value is strictly
 --   evaluated, and is not converted to network byte order.
 --   
@@ -176,17 +174,17 @@ fromIPv4 :: IPv4 -> [Int]
 fromIPv4w :: IPv4 -> Word32
 
 -- | The <a>fromHostAddress</a> function converts <a>HostAddress</a> to
---   <a>IPv4</a>.
+--   <a>IP</a>.
 fromHostAddress :: HostAddress -> IPv4
 
--- | The <a>toHostAddress</a> function converts <a>IPv4</a> to
+-- | The <a>toHostAddress</a> function converts <a>IP</a> to
 --   <a>HostAddress</a>.
 toHostAddress :: IPv4 -> HostAddress
 
 -- | The abstract data type to express an IPv6 address. To create this, use
---   <a>toIPv6</a>. Or use <a>read</a> <tt>"2001:DB8::1"</tt> ::
---   <a>IPv6</a>, for example. Also, <tt>"2001:DB8::1"</tt> can be used as
---   literal with OverloadedStrings.
+--   <a>toIPv6</a>. Or use <a>read</a> <tt>"2001:DB8::1"</tt> :: <a>IP</a>,
+--   for example. Also, <tt>"2001:DB8::1"</tt> can be used as literal with
+--   OverloadedStrings.
 --   
 --   <pre>
 --   &gt;&gt;&gt; read "2001:db8:00:00:00:00:00:01" :: IPv6
@@ -212,12 +210,12 @@ toHostAddress :: IPv4 -> HostAddress
 --   </pre>
 data IPv6
 
--- | The <a>toIPv6</a> function returns the <a>IPv6</a> address
---   corresponding to the given list of eight 16-bit <a>Int</a>s. The
---   function is strict in the eight elements of the list. An error is
---   returned if the list has a differnet length. The input elements are in
---   host byte order and are silently truncated to their 16 least-signicant
---   bits before they are combined to form the IPv6 address.
+-- | The <a>toIPv6</a> function returns the <a>IP</a> address corresponding
+--   to the given list of eight 16-bit <a>Int</a>s. The function is strict
+--   in the eight elements of the list. An error is returned if the list
+--   has a differnet length. The input elements are in host byte order and
+--   are silently truncated to their 16 least-signicant bits before they
+--   are combined to form the IPv6 address.
 --   
 --   <pre>
 --   &gt;&gt;&gt; toIPv6 [0x2001,0xDB8,0,0,0,0,0,1]
@@ -238,7 +236,7 @@ toIPv6 :: [Int] -> IPv6
 --   </pre>
 toIPv6b :: [Int] -> IPv6
 
--- | The <a>toIPv6w</a> function constructs the <a>IPv6</a> address
+-- | The <a>toIPv6w</a> function constructs the <a>IP</a> address
 --   corresponding to the given four-tuple of host byte order <a>Word32</a>
 --   values. This function differs from the <a>fromHostAddress6</a>
 --   function only in the fact that it is strict in the elements of the
@@ -270,7 +268,7 @@ fromIPv6 :: IPv6 -> [Int]
 fromIPv6b :: IPv6 -> [Int]
 
 -- | The <a>fromIPv6w</a> function returns a four-tuple of <a>Word32</a>
---   values in host byte order corresponding to the given <a>IPv6</a>
+--   values in host byte order corresponding to the given <a>IP</a>
 --   address. This is identical to the <a>toHostAddress6</a> function,
 --   except that the elements of four-tuple are first strictly evaluated.
 --   
@@ -281,10 +279,10 @@ fromIPv6b :: IPv6 -> [Int]
 fromIPv6w :: IPv6 -> (Word32, Word32, Word32, Word32)
 
 -- | The <a>fromHostAddress6</a> function converts <a>HostAddress6</a> to
---   <a>IPv6</a>.
+--   <a>IP</a>.
 fromHostAddress6 :: HostAddress6 -> IPv6
 
--- | The <a>toHostAddress6</a> function converts <a>IPv6</a> to
+-- | The <a>toHostAddress6</a> function converts <a>IP</a> to
 --   <a>HostAddress6</a>.
 toHostAddress6 :: IPv6 -> HostAddress6
 
@@ -301,10 +299,10 @@ fromSockAddr :: SockAddr -> Maybe (IP, PortNumber)
 --   Since: 1.7.8.
 toSockAddr :: (IP, PortNumber) -> SockAddr
 
--- | A unified data for <a>AddrRange</a> <a>IPv4</a> and <a>AddrRange</a>
---   <a>IPv6</a>. To create this, use <a>read</a> <tt>"192.0.2.0/24"</tt>
---   :: <a>IPRange</a>. Also, <tt>"192.0.2.0/24"</tt> can be used as
---   literal with OverloadedStrings.
+-- | A unified data for <a>AddrRange</a> <a>IP</a> and <a>AddrRange</a>
+--   <a>IP</a>. To create this, use <a>read</a> <tt>"192.0.2.0/24"</tt> ::
+--   <a>IPRange</a>. Also, <tt>"192.0.2.0/24"</tt> can be used as literal
+--   with OverloadedStrings.
 --   
 --   <pre>
 --   &gt;&gt;&gt; (read "192.0.2.1/24" :: IPRange) == IPv4Range (read "192.0.2.0/24" :: AddrRange IPv4)
@@ -324,7 +322,7 @@ IPv6Range :: AddrRange IPv6 -> IPRange
 --   information but contained for pre calculation.
 --   
 --   To create this, use <tt>makeAddrRange</tt> or <a>read</a>
---   <tt>"192.0.2.0/24"</tt> :: <a>AddrRange</a> <a>IPv4</a>. Also,
+--   <tt>"192.0.2.0/24"</tt> :: <a>AddrRange</a> <a>IP</a>. Also,
 --   <tt>"192.0.2.0/24"</tt> can be used as literal with OverloadedStrings.
 --   
 --   <pre>

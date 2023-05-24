@@ -12,13 +12,9 @@
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Sqlite.Sql.html"><span class="hs-identifier">Unison.Sqlite.Sql</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier">Sql</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-13"></span><span>
 </span><span id="line-14"></span><span class="hs-comment">-- | A @VALUES@ literal.</span><span>
-</span><span id="line-15"></span><span class="hs-keyword">newtype</span><span> </span><span id="Values"><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-var">Values</span></a></span></span><span> </span><span id="local-6989586621679118579"><span class="annot"><a href="#local-6989586621679118579"><span class="hs-identifier hs-type">a</span></a></span></span><span>
-</span><span id="line-16"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Values"><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-var">Values</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">List.NonEmpty</span></span><span> </span><span class="annot"><a href="#local-6989586621679118579"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-17"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679118572"><span id="local-6989586621679118574"><span id="local-6989586621679118576"><span class="annot"><span class="annottext">Int -&gt; Values a -&gt; ShowS
-[Values a] -&gt; ShowS
-Values a -&gt; String
-(Int -&gt; Values a -&gt; ShowS)
--&gt; (Values a -&gt; String) -&gt; ([Values a] -&gt; ShowS) -&gt; Show (Values a)
+</span><span id="line-15"></span><span class="hs-keyword">newtype</span><span> </span><span id="Values"><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-var">Values</span></a></span></span><span> </span><span id="local-6989586621679126637"><span class="annot"><a href="#local-6989586621679126637"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-16"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Values"><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-var">Values</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">List.NonEmpty</span></span><span> </span><span class="annot"><a href="#local-6989586621679126637"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679126597"><span id="local-6989586621679126599"><span id="local-6989586621679126605"><span class="annot"><span class="annottext">Int -&gt; Values a -&gt; ShowS
 forall a. Show a =&gt; Int -&gt; Values a -&gt; ShowS
 forall a. Show a =&gt; [Values a] -&gt; ShowS
 forall a. Show a =&gt; Values a -&gt; String
@@ -32,18 +28,16 @@ showsPrec :: Int -&gt; Values a -&gt; ShowS
 $cshowsPrec :: forall a. Show a =&gt; Int -&gt; Values a -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-18"></span><span>
-</span><span id="line-19"></span><span id="local-6989586621679118570"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="annot"><a href="#local-6989586621679118570"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679118570"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-20"></span><span>  </span><span id="local-6989586621679118567"><span class="annot"><span class="annottext">toRow :: Values a -&gt; [SQLData]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span id="local-6989586621679118565"><span class="annot"><span class="annottext">NonEmpty a
-</span><a href="#local-6989586621679118565"><span class="hs-identifier hs-var">values</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-21"></span><span>    </span><span class="annot"><span class="annottext">(a -&gt; [SQLData]) -&gt; NonEmpty a -&gt; [SQLData]
-forall (t :: * -&gt; *) m a.
+</span><span id="line-19"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679126632"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="annot"><a href="#local-6989586621679126632"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679126632"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621679126586"><span class="annot"><span class="annottext">toRow :: Values a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span id="local-6989586621679126584"><span class="annot"><span class="annottext">NonEmpty a
+</span><a href="#local-6989586621679126584"><span class="hs-identifier hs-var">values</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-21"></span><span>    </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) m a.
 (Foldable t, Monoid m) =&gt;
 (a -&gt; m) -&gt; t a -&gt; m
-</span><span class="hs-identifier hs-var">foldMap</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; [SQLData]
-forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">foldMap</span></span><span> </span><span class="annot"><span class="annottext">forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span class="hs-identifier hs-var">Sqlite.Simple.toRow</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty a
-</span><a href="#local-6989586621679118565"><span class="hs-identifier hs-var">values</span></a></span></span><span>
+</span><a href="#local-6989586621679126584"><span class="hs-identifier hs-var">values</span></a></span><span>
 </span><span id="line-22"></span><span>
 </span><span id="line-23"></span><span class="hs-comment">-- | Example: given a 'Values' of length 3, where each element has a @toRow@ that produces 2 elements, produce the SQL</span><span>
 </span><span id="line-24"></span><span class="hs-comment">-- string:</span><span>
@@ -51,52 +45,43 @@ forall a. ToRow a =&gt; a -&gt; [SQLData]
 </span><span id="line-26"></span><span class="hs-comment">-- @</span><span>
 </span><span id="line-27"></span><span class="hs-comment">-- VALUES (?, ?), (?, ?), (?, ?)</span><span>
 </span><span id="line-28"></span><span class="hs-comment">-- @</span><span>
-</span><span id="line-29"></span><span id="local-6989586621679118563"><span class="annot"><a href="Unison.Sqlite.Values.html#valuesSql"><span class="hs-identifier hs-type">valuesSql</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="annot"><a href="#local-6989586621679118563"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679118563"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier hs-type">Sql</span></a></span></span><span>
-</span><span id="line-30"></span><span id="valuesSql"><span class="annot"><span class="annottext">valuesSql :: Values a -&gt; Sql
-</span><a href="Unison.Sqlite.Values.html#valuesSql"><span class="hs-identifier hs-var hs-var">valuesSql</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span id="local-6989586621679118562"><span class="annot"><span class="annottext">NonEmpty a
-</span><a href="#local-6989586621679118562"><span class="hs-identifier hs-var">values</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-29"></span><span id="local-6989586621679126627"><span class="annot"><a href="Unison.Sqlite.Values.html#valuesSql"><span class="hs-identifier hs-type">valuesSql</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Simple.ToRow</span></span><span> </span><span class="annot"><a href="#local-6989586621679126627"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679126627"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier hs-type">Sql</span></a></span></span><span>
+</span><span id="line-30"></span><span id="valuesSql"><span class="annot"><span class="annottext">valuesSql :: forall a. ToRow a =&gt; Values a -&gt; Sql
+</span><a href="Unison.Sqlite.Values.html#valuesSql"><span class="hs-identifier hs-var hs-var">valuesSql</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Sqlite.Values.html#Values"><span class="hs-identifier hs-type">Values</span></a></span><span> </span><span id="local-6989586621679126574"><span class="annot"><span class="annottext">NonEmpty a
+</span><a href="#local-6989586621679126574"><span class="hs-identifier hs-var">values</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-31"></span><span>  </span><span class="annot"><span class="annottext">Text -&gt; Sql
 </span><a href="Unison.Sqlite.Sql.html#Sql"><span class="hs-identifier hs-var">Sql</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;VALUES &quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-string">&quot;VALUES &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.intercalate</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;,&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; [Text]
-forall a. Int -&gt; a -&gt; [a]
-</span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty a -&gt; Int
-forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-string">&quot;,&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Int -&gt; a -&gt; [a]
+</span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty a
-</span><a href="#local-6989586621679118562"><span class="hs-identifier hs-var">values</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text
+</span><a href="#local-6989586621679126574"><span class="hs-identifier hs-var">values</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text
 </span><a href="Unison.Sqlite.Values.html#valueSql"><span class="hs-identifier hs-var">valueSql</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679118556"><span class="hs-identifier hs-var">columns</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679126568"><span class="hs-identifier hs-var">columns</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-32"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-33"></span><span>    </span><span class="annot"><a href="#local-6989586621679118556"><span class="hs-identifier hs-type">columns</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
-</span><span id="line-34"></span><span>    </span><span id="local-6989586621679118556"><span class="annot"><span class="annottext">columns :: Int
-</span><a href="#local-6989586621679118556"><span class="hs-identifier hs-var hs-var">columns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-35"></span><span>      </span><span class="annot"><span class="annottext">[SQLData] -&gt; Int
-forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
-</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; [SQLData]
-forall a. ToRow a =&gt; a -&gt; [SQLData]
-</span><span class="hs-identifier hs-var">Sqlite.Simple.toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">NonEmpty a -&gt; a
-forall a. NonEmpty a -&gt; a
+</span><span id="line-33"></span><span>    </span><span class="annot"><a href="#local-6989586621679126568"><span class="hs-identifier hs-type">columns</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-34"></span><span>    </span><span id="local-6989586621679126568"><span class="annot"><span class="annottext">columns :: Int
+</span><a href="#local-6989586621679126568"><span class="hs-identifier hs-var hs-var">columns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-35"></span><span>      </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">Sqlite.Simple.toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. NonEmpty a -&gt; a
 </span><span class="hs-identifier hs-var">List.NonEmpty.head</span></span><span> </span><span class="annot"><span class="annottext">NonEmpty a
-</span><a href="#local-6989586621679118562"><span class="hs-identifier hs-var">values</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679126574"><span class="hs-identifier hs-var">values</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-36"></span><span>
 </span><span id="line-37"></span><span class="annot"><a href="Unison.Sqlite.Values.html#valueSql"><span class="hs-identifier hs-type">valueSql</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-38"></span><span id="valueSql"><span class="annot"><span class="annottext">valueSql :: Int -&gt; Text
-</span><a href="Unison.Sqlite.Values.html#valueSql"><span class="hs-identifier hs-var hs-var">valueSql</span></a></span></span><span> </span><span id="local-6989586621679118554"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679118554"><span class="hs-identifier hs-var">columns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Sqlite.Values.html#valueSql"><span class="hs-identifier hs-var hs-var">valueSql</span></a></span></span><span> </span><span id="local-6989586621679126566"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679126566"><span class="hs-identifier hs-var">columns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-39"></span><span>  </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;(&quot;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-string">&quot;(&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.intercalate</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;,&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; [Text]
-forall a. Int -&gt; a -&gt; [a]
+</span><span class="hs-string">&quot;,&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Int -&gt; a -&gt; [a]
 </span><span class="hs-identifier hs-var">replicate</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679118554"><span class="hs-identifier hs-var">columns</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;?&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679126566"><span class="hs-identifier hs-var">columns</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;?&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;)&quot;</span></span><span>
 </span><span id="line-40"></span></pre></body></html>

@@ -23,70 +23,51 @@
 </span><span id="line-23"></span><span class="hs-comment">-- character), but leaves out the byte that the string is broken on.</span><span>
 </span><span id="line-24"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#breakChar"><span class="hs-identifier hs-type">breakChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span class="hs-special">)</span><span>
 </span><span id="line-25"></span><span id="breakChar"><span class="annot"><span class="annottext">breakChar :: Char -&gt; ByteString -&gt; Maybe (ByteString, ByteString)
-</span><a href="Network.HTTP.Media.Utils.html#breakChar"><span class="hs-identifier hs-var hs-var">breakChar</span></a></span></span><span> </span><span id="local-6989586621679042887"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679042887"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ByteString, ByteString) -&gt; Maybe (ByteString, ByteString)
-forall a. (a, ByteString) -&gt; Maybe (a, ByteString)
-</span><a href="#local-6989586621679042886"><span class="hs-identifier hs-var">safeTail</span></a></span><span> </span><span class="annot"><span class="annottext">((ByteString, ByteString) -&gt; Maybe (ByteString, ByteString))
--&gt; (ByteString -&gt; (ByteString, ByteString))
--&gt; ByteString
--&gt; Maybe (ByteString, ByteString)
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Network.HTTP.Media.Utils.html#breakChar"><span class="hs-identifier hs-var hs-var">breakChar</span></a></span></span><span> </span><span id="local-6989586621679046989"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679046989"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {a}. (a, ByteString) -&gt; Maybe (a, ByteString)
+</span><a href="#local-6989586621679046988"><span class="hs-identifier hs-var">safeTail</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ByteString -&gt; (ByteString, ByteString)
-</span><span class="hs-identifier hs-var">BS.break</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-identifier hs-var">BS.break</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679042887"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679046989"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-26"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-27"></span><span>    </span><span id="local-6989586621679042886"><span class="annot"><span class="annottext">safeTail :: (a, ByteString) -&gt; Maybe (a, ByteString)
-</span><a href="#local-6989586621679042886"><span class="hs-identifier hs-var hs-var">safeTail</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679042883"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679042883"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042882"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679042882"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>    </span><span id="local-6989586621679046988"><span class="annot"><span class="annottext">safeTail :: (a, ByteString) -&gt; Maybe (a, ByteString)
+</span><a href="#local-6989586621679046988"><span class="hs-identifier hs-var hs-var">safeTail</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679046983"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679046983"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679046982"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679046982"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-28"></span><span>        </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Bool
 </span><span class="hs-identifier hs-var">BS.null</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679042882"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe (a, ByteString)
-forall a. Maybe a
+</span><a href="#local-6989586621679046982"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
 </span><span id="line-29"></span><span>        </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a, ByteString) -&gt; Maybe (a, ByteString)
-forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679042883"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString
+</span><a href="#local-6989586621679046983"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">HasCallStack =&gt; ByteString -&gt; ByteString
 </span><span class="hs-identifier hs-var">BS.tail</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679042882"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679046982"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span>
 </span><span id="line-32"></span><span class="hs-comment">------------------------------------------------------------------------------</span><span>
 </span><span id="line-33"></span><span class="hs-comment">-- | Trims tab and space characters from both ends of a ByteString.</span><span>
 </span><span id="line-34"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#trimBS"><span class="hs-identifier hs-type">trimBS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span>
 </span><span id="line-35"></span><span id="trimBS"><span class="annot"><span class="annottext">trimBS :: ByteString -&gt; ByteString
-</span><a href="Network.HTTP.Media.Utils.html#trimBS"><span class="hs-identifier hs-var hs-var">trimBS</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ByteString, ByteString) -&gt; ByteString
-forall a b. (a, b) -&gt; a
-</span><span class="hs-identifier hs-var">fst</span></span><span> </span><span class="annot"><span class="annottext">((ByteString, ByteString) -&gt; ByteString)
--&gt; (ByteString -&gt; (ByteString, ByteString))
--&gt; ByteString
--&gt; ByteString
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Network.HTTP.Media.Utils.html#trimBS"><span class="hs-identifier hs-var hs-var">trimBS</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. (a, b) -&gt; a
+</span><span class="hs-identifier hs-var">fst</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ByteString -&gt; (ByteString, ByteString)
 </span><span class="hs-identifier hs-var">BS.spanEnd</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679042878"><span class="hs-identifier hs-var">isLWS</span></a></span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; (ByteString, ByteString))
--&gt; (ByteString -&gt; ByteString)
--&gt; ByteString
--&gt; (ByteString, ByteString)
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679046978"><span class="hs-identifier hs-var">isLWS</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ByteString -&gt; ByteString
 </span><span class="hs-identifier hs-var">BS.dropWhile</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679042878"><span class="hs-identifier hs-var">isLWS</span></a></span><span>
+</span><a href="#local-6989586621679046978"><span class="hs-identifier hs-var">isLWS</span></a></span><span>
 </span><span id="line-36"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-37"></span><span>    </span><span id="local-6989586621679042878"><span class="annot"><span class="annottext">isLWS :: Char -&gt; Bool
-</span><a href="#local-6989586621679042878"><span class="hs-identifier hs-var hs-var">isLWS</span></a></span></span><span> </span><span id="local-6989586621679042876"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679042876"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679042876"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span id="line-37"></span><span>    </span><span id="local-6989586621679046978"><span class="annot"><span class="annottext">isLWS :: Char -&gt; Bool
+</span><a href="#local-6989586621679046978"><span class="hs-identifier hs-var hs-var">isLWS</span></a></span></span><span> </span><span id="local-6989586621679046974"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679046974"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679046974"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">' '</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679042876"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679046974"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'\t'</span></span><span>
 </span><span id="line-38"></span><span>
@@ -97,16 +78,13 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span id="line-43"></span><span id="mediaChars"><span class="annot"><span class="annottext">mediaChars :: [Char]
 </span><a href="Network.HTTP.Media.Utils.html#mediaChars"><span class="hs-identifier hs-var hs-var">mediaChars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'A'</span></span><span class="hs-glyph">..</span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'Z'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-char">'Z'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'a'</span></span><span class="hs-glyph">..</span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'z'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-char">'z'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'0'</span></span><span class="hs-glyph">..</span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'9'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">[Char] -&gt; [Char] -&gt; [Char]
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-char">'9'</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><span class="hs-string">&quot;!#$&amp;.+-^_&quot;</span></span><span>
 </span><span id="line-44"></span><span>
@@ -116,8 +94,7 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span id="line-48"></span><span class="hs-comment">-- as per RFC 4288.</span><span>
 </span><span id="line-49"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#isMediaChar"><span class="hs-identifier hs-type">isMediaChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-50"></span><span id="isMediaChar"><span class="annot"><span class="annottext">isMediaChar :: Char -&gt; Bool
-</span><a href="Network.HTTP.Media.Utils.html#isMediaChar"><span class="hs-identifier hs-var hs-var">isMediaChar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; Bool
-forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
+</span><a href="Network.HTTP.Media.Utils.html#isMediaChar"><span class="hs-identifier hs-var hs-var">isMediaChar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
 </span><span class="hs-operator hs-var">`elem`</span></span><span> </span><span class="annot"><span class="annottext">[Char]
 </span><a href="Network.HTTP.Media.Utils.html#mediaChars"><span class="hs-identifier hs-var">mediaChars</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-51"></span><span>
@@ -128,21 +105,17 @@ forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
 </span><span id="line-56"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#isTokenChar"><span class="hs-identifier hs-type">isTokenChar</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-57"></span><span id="isTokenChar"><span class="annot"><span class="annottext">isTokenChar :: Char -&gt; Bool
 </span><a href="Network.HTTP.Media.Utils.html#isTokenChar"><span class="hs-identifier hs-var hs-var">isTokenChar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
-</span><span class="hs-operator hs-var">(||)</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool -&gt; Bool
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">(||)</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool
-</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><span class="hs-identifier hs-var">isControl</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool -&gt; Bool) -&gt; (Char -&gt; Bool) -&gt; Char -&gt; Bool
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; [Char] -&gt; Bool
-forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
+</span><span class="hs-identifier hs-var">isControl</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
 </span><span class="hs-operator hs-var">`notElem`</span></span><span> </span><span class="annot"><span class="annottext">[Char]
-</span><a href="#local-6989586621679042870"><span class="hs-identifier hs-var">separators</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679046968"><span class="hs-identifier hs-var">separators</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-58"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679042870"><span class="annot"><span class="annottext">separators :: [Char]
-</span><a href="#local-6989586621679042870"><span class="hs-identifier hs-var hs-var">separators</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Char
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679046968"><span class="annot"><span class="annottext">separators :: [Char]
+</span><a href="#local-6989586621679046968"><span class="hs-identifier hs-var hs-var">separators</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'('</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">')'</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'&lt;'</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Char
@@ -169,8 +142,7 @@ forall (t :: * -&gt; *) a. (Foldable t, Eq a) =&gt; a -&gt; t a -&gt; Bool
 </span><span id="line-65"></span><span class="hs-comment">-- | HTTP header token characters as per RFC 2616.</span><span>
 </span><span id="line-66"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#tokenChars"><span class="hs-identifier hs-type">tokenChars</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span class="hs-special">]</span><span>
 </span><span id="line-67"></span><span id="tokenChars"><span class="annot"><span class="annottext">tokenChars :: [Char]
-</span><a href="Network.HTTP.Media.Utils.html#tokenChars"><span class="hs-identifier hs-var hs-var">tokenChars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; [Char] -&gt; [Char]
-forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><a href="Network.HTTP.Media.Utils.html#tokenChars"><span class="hs-identifier hs-var hs-var">tokenChars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><a href="Network.HTTP.Media.Utils.html#isTokenChar"><span class="hs-identifier hs-var">isTokenChar</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'\0'</span></span><span class="hs-glyph">..</span><span class="annot"><span class="annottext">Char
@@ -183,16 +155,11 @@ forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
 </span><span id="line-73"></span><span class="annot"><a href="Network.HTTP.Media.Utils.html#isValidToken"><span class="hs-identifier hs-type">isValidToken</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
 </span><span id="line-74"></span><span id="isValidToken"><span class="annot"><span class="annottext">isValidToken :: ByteString -&gt; Bool
 </span><a href="Network.HTTP.Media.Utils.html#isValidToken"><span class="hs-identifier hs-var hs-var">isValidToken</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
-</span><span class="hs-operator hs-var">(&amp;&amp;)</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool -&gt; Bool)
--&gt; (ByteString -&gt; Bool) -&gt; ByteString -&gt; Bool -&gt; Bool
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">(&amp;&amp;)</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool
-</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; (ByteString -&gt; Bool) -&gt; ByteString -&gt; Bool
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Bool
-</span><span class="hs-identifier hs-var">BS.null</span></span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; Bool -&gt; Bool)
--&gt; (ByteString -&gt; Bool) -&gt; ByteString -&gt; Bool
-forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">BS.null</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; ByteString -&gt; Bool
 </span><span class="hs-identifier hs-var">BS.all</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><a href="Network.HTTP.Media.Utils.html#isTokenChar"><span class="hs-identifier hs-var">isTokenChar</span></a></span><span>

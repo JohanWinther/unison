@@ -57,8 +57,7 @@
 </span><span id="line-57"></span><span class="hs-comment">-- name out of regular file name.</span><span>
 </span><span id="line-58"></span><span class="annot"><a href="System.IO.LockFile.html#withLockExt"><span class="hs-identifier hs-type">withLockExt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>
 </span><span id="line-59"></span><span id="withLockExt"><span class="annot"><span class="annottext">withLockExt :: FilePath -&gt; FilePath
-</span><a href="System.IO.LockFile.html#withLockExt"><span class="hs-identifier hs-var hs-var">withLockExt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FilePath -&gt; FilePath -&gt; FilePath
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><a href="System.IO.LockFile.html#withLockExt"><span class="hs-identifier hs-var hs-var">withLockExt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">FilePath
 </span><span class="hs-string">&quot;.lock&quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-60"></span><span>
@@ -69,86 +68,71 @@ forall a. [a] -&gt; [a] -&gt; [a]
 </span><span id="line-65"></span><span class="hs-comment">-- 'LockingException'. Only 'IOException' that occurred during locking or</span><span>
 </span><span id="line-66"></span><span class="hs-comment">-- unlocking is mapped to 'LockingException'. This doesn't affect the fact</span><span>
 </span><span id="line-67"></span><span class="hs-comment">-- that lock file is removed even if \&quot;action\&quot; fails.</span><span>
-</span><span id="line-68"></span><span id="local-6989586621679051726"><span id="local-6989586621679051727"><span class="annot"><a href="System.IO.LockFile.html#withLockFile"><span class="hs-identifier hs-type">withLockFile</span></a></span><span>
-</span><span id="line-69"></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadMask</span></span><span> </span><span class="annot"><a href="#local-6989586621679051727"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679051727"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span id="local-6989586621679052815"><span id="local-6989586621679052819"><span class="annot"><a href="System.IO.LockFile.html#withLockFile"><span class="hs-identifier hs-type">withLockFile</span></a></span><span>
+</span><span id="line-69"></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadMask</span></span><span> </span><span class="annot"><a href="#local-6989586621679052819"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679052819"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-70"></span><span>    </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="System.IO.LockFile.Internal.html#LockingParameters"><span class="hs-identifier hs-type">LockingParameters</span></a></span><span>
 </span><span id="line-71"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>
 </span><span id="line-72"></span><span>    </span><span class="hs-comment">-- ^ Lock file name.</span><span>
-</span><span id="line-73"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679051727"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679051726"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-74"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679051727"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679051726"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
-</span><span id="line-75"></span><span id="withLockFile"><span class="annot"><span class="annottext">withLockFile :: LockingParameters -&gt; FilePath -&gt; m a -&gt; m a
-</span><a href="System.IO.LockFile.html#withLockFile"><span class="hs-identifier hs-var hs-var">withLockFile</span></a></span></span><span> </span><span id="local-6989586621679051706"><span class="annot"><span class="annottext">LockingParameters
-</span><a href="#local-6989586621679051706"><span class="hs-identifier hs-var">params</span></a></span></span><span> </span><span id="local-6989586621679051705"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679051705"><span class="hs-identifier hs-var">lockFileName</span></a></span></span><span> </span><span id="local-6989586621679051704"><span class="annot"><span class="annottext">m a
-</span><a href="#local-6989586621679051704"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((forall a. m a -&gt; m a) -&gt; m a) -&gt; m a
-forall (m :: * -&gt; *) b.
+</span><span id="line-73"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679052819"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679052815"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-74"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679052819"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679052815"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-75"></span><span id="withLockFile"><span class="annot"><span class="annottext">withLockFile :: forall (m :: * -&gt; *) a.
+(MonadMask m, MonadIO m) =&gt;
+LockingParameters -&gt; FilePath -&gt; m a -&gt; m a
+</span><a href="System.IO.LockFile.html#withLockFile"><span class="hs-identifier hs-var hs-var">withLockFile</span></a></span></span><span> </span><span id="local-6989586621679052751"><span class="annot"><span class="annottext">LockingParameters
+</span><a href="#local-6989586621679052751"><span class="hs-identifier hs-var">params</span></a></span></span><span> </span><span id="local-6989586621679052750"><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679052750"><span class="hs-identifier hs-var">lockFileName</span></a></span></span><span> </span><span id="local-6989586621679052749"><span class="annot"><span class="annottext">m a
+</span><a href="#local-6989586621679052749"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) b.
 MonadMask m =&gt;
 ((forall a. m a -&gt; m a) -&gt; m b) -&gt; m b
-</span><span class="hs-identifier hs-var">mask</span></span><span> </span><span class="annot"><span class="annottext">(((forall a. m a -&gt; m a) -&gt; m a) -&gt; m a)
--&gt; ((forall a. m a -&gt; m a) -&gt; m a) -&gt; m a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679051703"><span class="annot"><span class="annottext">forall a. m a -&gt; m a
-</span><a href="#local-6989586621679051703"><span class="hs-identifier hs-var">restore</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-76"></span><span>    </span><span id="local-6989586621679051702"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679051702"><span class="hs-identifier hs-var">lockFileHandle</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">LockingParameters -&gt; FilePath -&gt; m Handle
-forall (m :: * -&gt; *).
+</span><span class="hs-identifier hs-var">mask</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679052748"><span class="annot"><span class="annottext">forall a. m a -&gt; m a
+</span><a href="#local-6989586621679052748"><span class="hs-identifier hs-var">restore</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-76"></span><span>    </span><span id="local-6989586621679052747"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679052747"><span class="hs-identifier hs-var">lockFileHandle</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 (MonadMask m, MonadIO m) =&gt;
 LockingParameters -&gt; FilePath -&gt; m Handle
 </span><a href="System.IO.LockFile.Internal.html#lock"><span class="hs-identifier hs-var">lock</span></a></span><span> </span><span class="annot"><span class="annottext">LockingParameters
-</span><a href="#local-6989586621679051706"><span class="hs-identifier hs-var">params</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679051705"><span class="hs-identifier hs-var">lockFileName</span></a></span><span>
-</span><span id="line-77"></span><span>    </span><span id="local-6989586621679051701"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679051701"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">m a -&gt; m a
-forall a. m a -&gt; m a
-</span><a href="#local-6989586621679051703"><span class="hs-identifier hs-var">restore</span></a></span><span> </span><span class="annot"><span class="annottext">m a
-</span><a href="#local-6989586621679051704"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">m a -&gt; m () -&gt; m a
-forall (m :: * -&gt; *) a b. MonadCatch m =&gt; m a -&gt; m b -&gt; m a
+</span><a href="#local-6989586621679052751"><span class="hs-identifier hs-var">params</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679052750"><span class="hs-identifier hs-var">lockFileName</span></a></span><span>
+</span><span id="line-77"></span><span>    </span><span id="local-6989586621679052746"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679052746"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. m a -&gt; m a
+</span><a href="#local-6989586621679052748"><span class="hs-identifier hs-var">restore</span></a></span><span> </span><span class="annot"><span class="annottext">m a
+</span><a href="#local-6989586621679052749"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. MonadCatch m =&gt; m a -&gt; m b -&gt; m a
 </span><span class="hs-operator hs-var">`onException`</span></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; m ()
-</span><a href="#local-6989586621679051700"><span class="hs-identifier hs-var">unlock'</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679051702"><span class="hs-identifier hs-var">lockFileHandle</span></a></span><span>
+</span><a href="#local-6989586621679052745"><span class="hs-identifier hs-var">unlock'</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679052747"><span class="hs-identifier hs-var">lockFileHandle</span></a></span><span>
 </span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">()
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; m ()
-</span><a href="#local-6989586621679051700"><span class="hs-identifier hs-var">unlock'</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679051702"><span class="hs-identifier hs-var">lockFileHandle</span></a></span><span>
-</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">a -&gt; m a
-forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><a href="#local-6989586621679052745"><span class="hs-identifier hs-var">unlock'</span></a></span><span> </span><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679052747"><span class="hs-identifier hs-var">lockFileHandle</span></a></span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679051701"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><a href="#local-6989586621679052746"><span class="hs-identifier hs-var">r</span></a></span><span>
 </span><span id="line-80"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-81"></span><span>    </span><span id="local-6989586621679051700"><span class="annot"><span class="annottext">unlock' :: Handle -&gt; m ()
-</span><a href="#local-6989586621679051700"><span class="hs-identifier hs-var hs-var">unlock'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FilePath -&gt; Handle -&gt; m ()
-forall (m :: * -&gt; *).
+</span><span id="line-81"></span><span>    </span><span id="local-6989586621679052745"><span class="annot"><span class="annottext">unlock' :: Handle -&gt; m ()
+</span><a href="#local-6989586621679052745"><span class="hs-identifier hs-var hs-var">unlock'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 (MonadMask m, MonadIO m) =&gt;
 FilePath -&gt; Handle -&gt; m ()
 </span><a href="System.IO.LockFile.Internal.html#unlock"><span class="hs-identifier hs-var">unlock</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679051705"><span class="hs-identifier hs-var">lockFileName</span></a></span><span>
+</span><a href="#local-6989586621679052750"><span class="hs-identifier hs-var">lockFileName</span></a></span><span>
 </span><span id="line-82"></span><span>
 </span><span id="line-83"></span><span class="hs-comment">-- | Type restricted version of 'withLockFile' that discards result of the</span><span>
 </span><span id="line-84"></span><span class="hs-comment">-- action.</span><span>
-</span><span id="line-85"></span><span id="local-6989586621679051698"><span id="local-6989586621679051699"><span class="annot"><a href="System.IO.LockFile.html#withLockFile_"><span class="hs-identifier hs-type">withLockFile_</span></a></span><span>
-</span><span id="line-86"></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadMask</span></span><span> </span><span class="annot"><a href="#local-6989586621679051699"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679051699"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span id="local-6989586621679052794"><span id="local-6989586621679052795"><span class="annot"><a href="System.IO.LockFile.html#withLockFile_"><span class="hs-identifier hs-type">withLockFile_</span></a></span><span>
+</span><span id="line-86"></span><span>    </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadMask</span></span><span> </span><span class="annot"><a href="#local-6989586621679052795"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679052795"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-87"></span><span>    </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="System.IO.LockFile.Internal.html#LockingParameters"><span class="hs-identifier hs-type">LockingParameters</span></a></span><span>
 </span><span id="line-88"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>
 </span><span id="line-89"></span><span>    </span><span class="hs-comment">-- ^ Lock file name.</span><span>
-</span><span id="line-90"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679051699"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679051698"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-91"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679051699"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span></span><span>
-</span><span id="line-92"></span><span id="withLockFile_"><span class="annot"><span class="annottext">withLockFile_ :: LockingParameters -&gt; FilePath -&gt; m a -&gt; m ()
-</span><a href="System.IO.LockFile.html#withLockFile_"><span class="hs-identifier hs-var hs-var">withLockFile_</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">m a -&gt; m ()
-forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
-</span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">(m a -&gt; m ()) -&gt; (m a -&gt; m a) -&gt; m a -&gt; m ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((m a -&gt; m a) -&gt; m a -&gt; m ())
--&gt; (FilePath -&gt; m a -&gt; m a) -&gt; FilePath -&gt; m a -&gt; m ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((FilePath -&gt; m a -&gt; m a) -&gt; FilePath -&gt; m a -&gt; m ())
--&gt; (LockingParameters -&gt; FilePath -&gt; m a -&gt; m a)
--&gt; LockingParameters
--&gt; FilePath
--&gt; m a
--&gt; m ()
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">LockingParameters -&gt; FilePath -&gt; m a -&gt; m a
-forall (m :: * -&gt; *) a.
+</span><span id="line-90"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679052795"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679052794"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-91"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679052795"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-92"></span><span id="withLockFile_"><span class="annot"><span class="annottext">withLockFile_ :: forall (m :: * -&gt; *) a.
+(MonadMask m, MonadIO m) =&gt;
+LockingParameters -&gt; FilePath -&gt; m a -&gt; m ()
+</span><a href="System.IO.LockFile.html#withLockFile_"><span class="hs-identifier hs-var hs-var">withLockFile_</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
+</span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 (MonadMask m, MonadIO m) =&gt;
 LockingParameters -&gt; FilePath -&gt; m a -&gt; m a
 </span><a href="System.IO.LockFile.html#withLockFile"><span class="hs-identifier hs-var">withLockFile</span></a></span><span>

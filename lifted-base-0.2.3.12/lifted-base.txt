@@ -185,14 +185,19 @@ module Control.Exception.Lifted
 --   ignored, and the second argument is returned as the result.
 assert :: Bool -> a -> a
 
--- | This function maps one exception into another as proposed in the paper
---   "A semantics for imprecise exceptions".
-mapException :: (Exception e1, Exception e2) => (e1 -> e2) -> a -> a
+-- | An expression that didn't typecheck during compile time was called.
+--   This is only possible with -fdefer-type-errors. The <tt>String</tt>
+--   gives details about the failed type check.
+newtype TypeError
+TypeError :: String -> TypeError
 
--- | A pattern match failed. The <tt>String</tt> gives information about
---   the source location of the pattern.
-newtype PatternMatchFail
-PatternMatchFail :: String -> PatternMatchFail
+-- | A record update was performed on a constructor without the appropriate
+--   field. This can only happen with a datatype with multiple
+--   constructors, where some fields are in one constructor but not
+--   another. The <tt>String</tt> gives information about the source
+--   location of the record update.
+newtype RecUpdError
+RecUpdError :: String -> RecUpdError
 
 -- | A record selector was applied to a constructor without the appropriate
 --   field. This can only happen with a datatype with multiple
@@ -208,25 +213,10 @@ RecSelError :: String -> RecSelError
 newtype RecConError
 RecConError :: String -> RecConError
 
--- | A record update was performed on a constructor without the appropriate
---   field. This can only happen with a datatype with multiple
---   constructors, where some fields are in one constructor but not
---   another. The <tt>String</tt> gives information about the source
---   location of the record update.
-newtype RecUpdError
-RecUpdError :: String -> RecUpdError
-
--- | A class method without a definition (neither a default definition, nor
---   a definition in the appropriate instance) was called. The
---   <tt>String</tt> gives information about which method it was.
-newtype NoMethodError
-NoMethodError :: String -> NoMethodError
-
--- | An expression that didn't typecheck during compile time was called.
---   This is only possible with -fdefer-type-errors. The <tt>String</tt>
---   gives details about the failed type check.
-newtype TypeError
-TypeError :: String -> TypeError
+-- | A pattern match failed. The <tt>String</tt> gives information about
+--   the source location of the pattern.
+newtype PatternMatchFail
+PatternMatchFail :: String -> PatternMatchFail
 
 -- | Thrown when the runtime system detects that the computation is
 --   guaranteed not to terminate. Note that there is no guarantee that the
@@ -235,35 +225,29 @@ TypeError :: String -> TypeError
 data NonTermination
 NonTermination :: NonTermination
 
+-- | A class method without a definition (neither a default definition, nor
+--   a definition in the appropriate instance) was called. The
+--   <tt>String</tt> gives information about which method it was.
+newtype NoMethodError
+NoMethodError :: String -> NoMethodError
+
 -- | Thrown when the program attempts to call <tt>atomically</tt>, from the
 --   <tt>stm</tt> package, inside another call to <tt>atomically</tt>.
 data NestedAtomically
 NestedAtomically :: NestedAtomically
 
-asyncExceptionFromException :: Exception e => SomeException -> Maybe e
+-- | This function maps one exception into another as proposed in the paper
+--   "A semantics for imprecise exceptions".
+mapException :: (Exception e1, Exception e2) => (e1 -> e2) -> a -> a
 
-asyncExceptionToException :: Exception e => e -> SomeException
-
--- | The thread is blocked on an <tt>MVar</tt>, but there are no other
---   references to the <tt>MVar</tt> so it can't ever continue.
-data BlockedIndefinitelyOnMVar
-BlockedIndefinitelyOnMVar :: BlockedIndefinitelyOnMVar
-
--- | The thread is waiting to retry an STM transaction, but there are no
---   other references to any <tt>TVar</tt>s involved, so it can't ever
---   continue.
-data BlockedIndefinitelyOnSTM
-BlockedIndefinitelyOnSTM :: BlockedIndefinitelyOnSTM
+-- | Superclass for asynchronous exceptions.
+data SomeAsyncException
+SomeAsyncException :: e -> SomeAsyncException
 
 -- | There are no runnable threads, so the program is deadlocked. The
 --   <tt>Deadlock</tt> exception is raised in the main thread only.
 data Deadlock
 Deadlock :: Deadlock
-
--- | This thread has exceeded its allocation limit. See
---   <a>setAllocationCounter</a> and <a>enableAllocationLimit</a>.
-data AllocationLimitExceeded
-AllocationLimitExceeded :: AllocationLimitExceeded
 
 -- | Compaction found an object that cannot be compacted. Functions cannot
 --   be compacted, nor can mutable objects or pinned objects. See
@@ -271,13 +255,16 @@ AllocationLimitExceeded :: AllocationLimitExceeded
 newtype CompactionFailed
 CompactionFailed :: String -> CompactionFailed
 
--- | <a>assert</a> was applied to <a>False</a>.
-newtype AssertionFailed
-AssertionFailed :: String -> AssertionFailed
+-- | The thread is waiting to retry an STM transaction, but there are no
+--   other references to any <tt>TVar</tt>s involved, so it can't ever
+--   continue.
+data BlockedIndefinitelyOnSTM
+BlockedIndefinitelyOnSTM :: BlockedIndefinitelyOnSTM
 
--- | Superclass for asynchronous exceptions.
-data SomeAsyncException
-SomeAsyncException :: e -> SomeAsyncException
+-- | The thread is blocked on an <tt>MVar</tt>, but there are no other
+--   references to the <tt>MVar</tt> so it can't ever continue.
+data BlockedIndefinitelyOnMVar
+BlockedIndefinitelyOnMVar :: BlockedIndefinitelyOnMVar
 
 -- | Asynchronous exceptions.
 data AsyncException
@@ -310,6 +297,10 @@ ThreadKilled :: AsyncException
 --   mechanism(s) (e.g. Control-C in the console).
 UserInterrupt :: AsyncException
 
+-- | <a>assert</a> was applied to <a>False</a>.
+newtype AssertionFailed
+AssertionFailed :: String -> AssertionFailed
+
 -- | Exceptions generated by array operations
 data ArrayException
 
@@ -320,13 +311,14 @@ IndexOutOfBounds :: String -> ArrayException
 --   been initialized.
 UndefinedElement :: String -> ArrayException
 
--- | Allow asynchronous exceptions to be raised even inside <a>mask</a>,
---   making the operation interruptible (see the discussion of
---   "Interruptible operations" in <a>Exception</a>).
---   
---   When called outside <a>mask</a>, or inside <a>uninterruptibleMask</a>,
---   this function has no effect.
-interruptible :: IO a -> IO a
+-- | This thread has exceeded its allocation limit. See
+--   <a>setAllocationCounter</a> and <a>enableAllocationLimit</a>.
+data AllocationLimitExceeded
+AllocationLimitExceeded :: AllocationLimitExceeded
+
+asyncExceptionToException :: Exception e => e -> SomeException
+
+asyncExceptionFromException :: Exception e => SomeException -> Maybe e
 
 -- | Describes the behaviour of a thread when an asynchronous exception is
 --   received.
@@ -343,14 +335,18 @@ MaskedInterruptible :: MaskingState
 --   are masked, and blocking operations may not be interrupted
 MaskedUninterruptible :: MaskingState
 
+-- | Allow asynchronous exceptions to be raised even inside <a>mask</a>,
+--   making the operation interruptible (see the discussion of
+--   "Interruptible operations" in <a>Exception</a>).
+--   
+--   When called outside <a>mask</a>, or inside <a>uninterruptibleMask</a>,
+--   this function has no effect.
+interruptible :: IO a -> IO a
+
 -- | Exceptions that occur in the <tt>IO</tt> monad. An
 --   <tt>IOException</tt> records a more specific error type, a descriptive
 --   string and maybe the handle that was used when the error was flagged.
 data IOException
-
--- | Throw an exception. Exceptions may be thrown from purely functional
---   code, but may only be caught within the <a>IO</a> monad.
-throw :: forall (r :: RuntimeRep) (a :: TYPE r) e. Exception e => e -> a
 
 -- | This is thrown when the user calls <a>error</a>. The first
 --   <tt>String</tt> is the argument given to <a>error</a>, second
@@ -358,6 +354,10 @@ throw :: forall (r :: RuntimeRep) (a :: TYPE r) e. Exception e => e -> a
 data ErrorCall
 ErrorCallWithLocation :: String -> String -> ErrorCall
 pattern ErrorCall :: String -> ErrorCall
+
+-- | Throw an exception. Exceptions may be thrown from purely functional
+--   code, but may only be caught within the <a>IO</a> monad.
+throw :: forall (r :: RuntimeRep) (a :: TYPE r) e. Exception e => e -> a
 
 -- | Any type that you wish to throw or catch as an exception must be an
 --   instance of the <tt>Exception</tt> class. The simplest case is a new

@@ -25,152 +25,123 @@
 </span><span id="line-25"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">L.ByteString</span></span><span> </span><span class="hs-comment">-- ^ Data to send</span><span>
 </span><span id="line-26"></span><span>    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int64</span></span><span> </span><span class="hs-comment">-- ^ Number of bytes sent</span><span>
 </span><span id="line-27"></span><span id="send"><span class="annot"><span class="annottext">send :: Socket -&gt; ByteString -&gt; IO Int64
-</span><a href="Network.Socket.ByteString.Lazy.Posix.html#send"><span class="hs-identifier hs-var hs-var">send</span></a></span></span><span> </span><span id="local-6989586621679068714"><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068714"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679068713"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068713"><span class="hs-identifier hs-var">lbs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-28"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068712"><span class="annot"><span class="annottext">cs :: [ByteString]
-</span><a href="#local-6989586621679068712"><span class="hs-identifier hs-var hs-var">cs</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; [ByteString] -&gt; [ByteString]
-forall a. Int -&gt; [a] -&gt; [a]
+</span><a href="Network.Socket.ByteString.Lazy.Posix.html#send"><span class="hs-identifier hs-var hs-var">send</span></a></span></span><span> </span><span id="local-6989586621679076110"><span class="annot"><span class="annottext">Socket
+</span><a href="#local-6989586621679076110"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679076109"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076109"><span class="hs-identifier hs-var">lbs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-28"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679076108"><span class="annot"><span class="annottext">cs :: [ByteString]
+</span><a href="#local-6989586621679076108"><span class="hs-identifier hs-var hs-var">cs</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Int -&gt; [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">take</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068710"><span class="hs-identifier hs-var">maxNumChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; [ByteString]
+</span><a href="#local-6989586621679076106"><span class="hs-identifier hs-var">maxNumChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; [ByteString]
 </span><span class="hs-identifier hs-var">L.toChunks</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068713"><span class="hs-identifier hs-var">lbs</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-29"></span><span>        </span><span id="local-6989586621679068708"><span class="annot"><span class="annottext">len :: Int
-</span><a href="#local-6989586621679068708"><span class="hs-identifier hs-var hs-var">len</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; Int
-forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><a href="#local-6989586621679076109"><span class="hs-identifier hs-var">lbs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>        </span><span id="local-6989586621679076102"><span class="annot"><span class="annottext">len :: Int
+</span><a href="#local-6989586621679076102"><span class="hs-identifier hs-var hs-var">len</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
 </span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068712"><span class="hs-identifier hs-var">cs</span></a></span><span>
-</span><span id="line-30"></span><span>    </span><span id="local-6989586621679068706"><span class="annot"><span class="annottext">CSsize
-</span><a href="#local-6989586621679068706"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Socket -&gt; (CInt -&gt; IO CSsize) -&gt; IO CSsize
-forall r. Socket -&gt; (CInt -&gt; IO r) -&gt; IO r
+</span><a href="#local-6989586621679076108"><span class="hs-identifier hs-var">cs</span></a></span><span>
+</span><span id="line-30"></span><span>    </span><span id="local-6989586621679076100"><span class="annot"><span class="annottext">CSsize
+</span><a href="#local-6989586621679076100"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall r. Socket -&gt; (CInt -&gt; IO r) -&gt; IO r
 </span><a href="Network.Socket.Types.html#withFdSocket"><span class="hs-identifier hs-var">withFdSocket</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068714"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">((CInt -&gt; IO CSsize) -&gt; IO CSsize)
--&gt; (CInt -&gt; IO CSsize) -&gt; IO CSsize
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068704"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068704"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int -&gt; (Ptr IOVec -&gt; IO CSsize) -&gt; IO CSsize
-forall a b. Storable a =&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621679076110"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679076098"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679076098"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
 </span><span class="hs-identifier hs-var">allocaArray</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068708"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr IOVec -&gt; IO CSsize) -&gt; IO CSsize)
--&gt; (Ptr IOVec -&gt; IO CSsize) -&gt; IO CSsize
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068703"><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-31"></span><span>             </span><span class="annot"><span class="annottext">[ByteString] -&gt; Ptr IOVec -&gt; (CInt -&gt; IO CSsize) -&gt; IO CSsize
-forall t a.
+</span><a href="#local-6989586621679076102"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679076097"><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076097"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-31"></span><span>             </span><span class="annot"><span class="annottext">forall {t} {a}.
 Num t =&gt;
 [ByteString] -&gt; Ptr IOVec -&gt; (t -&gt; IO a) -&gt; IO a
-</span><a href="#local-6989586621679068702"><span class="hs-identifier hs-var">withPokes</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068712"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">((CInt -&gt; IO CSsize) -&gt; IO CSsize)
--&gt; (CInt -&gt; IO CSsize) -&gt; IO CSsize
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068701"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068701"><span class="hs-identifier hs-var">niovs</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-32"></span><span>               </span><span class="annot"><span class="annottext">Socket -&gt; String -&gt; IO CSsize -&gt; IO CSsize
-forall a. (Eq a, Num a) =&gt; Socket -&gt; String -&gt; IO a -&gt; IO a
+</span><a href="#local-6989586621679076096"><span class="hs-identifier hs-var">withPokes</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076108"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076097"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679076095"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679076095"><span class="hs-identifier hs-var">niovs</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-32"></span><span>               </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; Socket -&gt; String -&gt; IO a -&gt; IO a
 </span><a href="Network.Socket.Internal.html#throwSocketErrorWaitWrite"><span class="hs-identifier hs-var">throwSocketErrorWaitWrite</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068714"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;writev&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CSsize -&gt; IO CSsize) -&gt; IO CSsize -&gt; IO CSsize
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679076110"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;writev&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; Ptr IOVec -&gt; CInt -&gt; IO CSsize
 </span><a href="Network.Socket.ByteString.Internal.html#c_writev"><span class="hs-identifier hs-var">c_writev</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068704"><span class="hs-identifier hs-var">fd</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679068701"><span class="hs-identifier hs-var">niovs</span></a></span><span>
-</span><span id="line-33"></span><span>    </span><span class="annot"><span class="annottext">Int64 -&gt; IO Int64
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(Int64 -&gt; IO Int64) -&gt; Int64 -&gt; IO Int64
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">CSsize -&gt; Int64
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679076098"><span class="hs-identifier hs-var">fd</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076097"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679076095"><span class="hs-identifier hs-var">niovs</span></a></span><span>
+</span><span id="line-33"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">CSsize
-</span><a href="#local-6989586621679068706"><span class="hs-identifier hs-var">siz</span></a></span><span>
+</span><a href="#local-6989586621679076100"><span class="hs-identifier hs-var">siz</span></a></span><span>
 </span><span id="line-34"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-35"></span><span>    </span><span id="local-6989586621679068702"><span class="annot"><span class="annottext">withPokes :: [ByteString] -&gt; Ptr IOVec -&gt; (t -&gt; IO a) -&gt; IO a
-</span><a href="#local-6989586621679068702"><span class="hs-identifier hs-var hs-var">withPokes</span></a></span></span><span> </span><span id="local-6989586621679068699"><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068699"><span class="hs-identifier hs-var">ss</span></a></span></span><span> </span><span id="local-6989586621679068698"><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068698"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679068697"><span class="annot"><span class="annottext">t -&gt; IO a
-</span><a href="#local-6989586621679068697"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; Ptr IOVec -&gt; Int -&gt; t -&gt; IO a
-</span><a href="#local-6989586621679068696"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068699"><span class="hs-identifier hs-var">ss</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068698"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-35"></span><span>    </span><span id="local-6989586621679076096"><span class="annot"><span class="annottext">withPokes :: [ByteString] -&gt; Ptr IOVec -&gt; (t -&gt; IO a) -&gt; IO a
+</span><a href="#local-6989586621679076096"><span class="hs-identifier hs-var hs-var">withPokes</span></a></span></span><span> </span><span id="local-6989586621679076091"><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076091"><span class="hs-identifier hs-var">ss</span></a></span></span><span> </span><span id="local-6989586621679076090"><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076090"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679076089"><span class="annot"><span class="annottext">t -&gt; IO a
+</span><a href="#local-6989586621679076089"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; Ptr IOVec -&gt; Int -&gt; t -&gt; IO a
+</span><a href="#local-6989586621679076088"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076091"><span class="hs-identifier hs-var">ss</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076090"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-36"></span><span>      </span><span class="hs-keyword">where</span><span>
-</span><span id="line-37"></span><span>        </span><span id="local-6989586621679068696"><span class="annot"><span class="annottext">loop :: [ByteString] -&gt; Ptr IOVec -&gt; Int -&gt; t -&gt; IO a
-</span><a href="#local-6989586621679068696"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679068695"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068695"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679068694"><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068694"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679068693"><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068693"><span class="hs-identifier hs-var">q</span></a></span></span><span> </span><span id="local-6989586621679068692"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068692"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679068691"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679068691"><span class="hs-identifier hs-var">niovs</span></a></span></span><span>
+</span><span id="line-37"></span><span>        </span><span id="local-6989586621679076088"><span class="annot"><span class="annottext">loop :: [ByteString] -&gt; Ptr IOVec -&gt; Int -&gt; t -&gt; IO a
+</span><a href="#local-6989586621679076088"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679076071"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076071"><span class="hs-identifier hs-var">c</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679076070"><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076070"><span class="hs-identifier hs-var">cs</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679076069"><span class="annot"><span class="annottext">Ptr IOVec
+</span><a href="#local-6989586621679076069"><span class="hs-identifier hs-var">q</span></a></span></span><span> </span><span id="local-6989586621679076068"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679076068"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679076067"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679076067"><span class="hs-identifier hs-var">niovs</span></a></span></span><span>
 </span><span id="line-38"></span><span>            </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068692"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679076068"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068689"><span class="hs-identifier hs-var">maxNumBytes</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; (CStringLen -&gt; IO a) -&gt; IO a
-forall a. ByteString -&gt; (CStringLen -&gt; IO a) -&gt; IO a
+</span><a href="#local-6989586621679076065"><span class="hs-identifier hs-var">maxNumBytes</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ByteString -&gt; (CStringLen -&gt; IO a) -&gt; IO a
 </span><span class="hs-identifier hs-var">unsafeUseAsCStringLen</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068695"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">((CStringLen -&gt; IO a) -&gt; IO a) -&gt; (CStringLen -&gt; IO a) -&gt; IO a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679068688"><span class="annot"><span class="annottext">Ptr CChar
-</span><a href="#local-6989586621679068688"><span class="hs-identifier hs-var">ptr</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679068687"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068687"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-39"></span><span>                </span><span class="annot"><span class="annottext">Ptr IOVec -&gt; IOVec -&gt; IO ()
-forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><a href="#local-6989586621679076071"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679076064"><span class="annot"><span class="annottext">Ptr CChar
+</span><a href="#local-6989586621679076064"><span class="hs-identifier hs-var">ptr</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679076063"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679076063"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-39"></span><span>                </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
 </span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068693"><span class="hs-identifier hs-var">q</span></a></span><span> </span><span class="annot"><span class="annottext">(IOVec -&gt; IO ()) -&gt; IOVec -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679076069"><span class="hs-identifier hs-var">q</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; CSize -&gt; IOVec
-</span><a href="Network.Socket.Posix.IOVec.html#IOVec"><span class="hs-identifier hs-var">IOVec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CChar -&gt; Ptr Word8
-forall a b. Ptr a -&gt; Ptr b
+</span><a href="Network.Socket.Posix.IOVec.html#IOVec"><span class="hs-identifier hs-var">IOVec</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. Ptr a -&gt; Ptr b
 </span><span class="hs-identifier hs-var">castPtr</span></span><span> </span><span class="annot"><span class="annottext">Ptr CChar
-</span><a href="#local-6989586621679068688"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679076064"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068687"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679076063"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-40"></span><span>                </span><span class="annot"><span class="annottext">[ByteString] -&gt; Ptr IOVec -&gt; Int -&gt; t -&gt; IO a
-</span><a href="#local-6989586621679068696"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
-</span><a href="#local-6989586621679068694"><span class="hs-identifier hs-var">cs</span></a></span><span>
+</span><a href="#local-6989586621679076088"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076070"><span class="hs-identifier hs-var">cs</span></a></span><span>
 </span><span id="line-41"></span><span>                     </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr IOVec
-</span><a href="#local-6989586621679068693"><span class="hs-identifier hs-var">q</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec -&gt; Int -&gt; Ptr IOVec
-forall a b. Ptr a -&gt; Int -&gt; Ptr b
-</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="annottext">IOVec -&gt; Int
-forall a. Storable a =&gt; a -&gt; Int
+</span><a href="#local-6989586621679076069"><span class="hs-identifier hs-var">q</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; a -&gt; Int
 </span><span class="hs-identifier hs-var">sizeOf</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr Word8 -&gt; CSize -&gt; IOVec
-</span><a href="Network.Socket.Posix.IOVec.html#IOVec"><span class="hs-identifier hs-var">IOVec</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Word8
-forall a. Ptr a
+</span><a href="Network.Socket.Posix.IOVec.html#IOVec"><span class="hs-identifier hs-var">IOVec</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><span class="hs-identifier hs-var">nullPtr</span></span><span> </span><span class="annot"><span class="annottext">CSize
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-42"></span><span>                     </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068692"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679076068"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679068687"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679076063"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-43"></span><span>                     </span><span class="hs-special">(</span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679068691"><span class="hs-identifier hs-var">niovs</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; t -&gt; t
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679076067"><span class="hs-identifier hs-var">niovs</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">t
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span>
 </span><span id="line-44"></span><span>            </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">t -&gt; IO a
-</span><a href="#local-6989586621679068697"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679068691"><span class="hs-identifier hs-var">niovs</span></a></span><span>
-</span><span id="line-45"></span><span>        </span><span class="annot"><a href="#local-6989586621679068696"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
+</span><a href="#local-6989586621679076089"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679076067"><span class="hs-identifier hs-var">niovs</span></a></span><span>
+</span><span id="line-45"></span><span>        </span><span class="annot"><a href="#local-6989586621679076088"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">[ByteString]
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Ptr IOVec
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679068680"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679068680"><span class="hs-identifier hs-var">niovs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">t -&gt; IO a
-</span><a href="#local-6989586621679068697"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621679068680"><span class="hs-identifier hs-var">niovs</span></a></span><span>
-</span><span id="line-46"></span><span>    </span><span id="local-6989586621679068689"><span class="annot"><span class="annottext">maxNumBytes :: Int
-</span><a href="#local-6989586621679068689"><span class="hs-identifier hs-var hs-var">maxNumBytes</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679076056"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679076056"><span class="hs-identifier hs-var">niovs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">t -&gt; IO a
+</span><a href="#local-6989586621679076089"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621679076056"><span class="hs-identifier hs-var">niovs</span></a></span><span>
+</span><span id="line-46"></span><span>    </span><span id="local-6989586621679076065"><span class="annot"><span class="annottext">maxNumBytes :: Int
+</span><a href="#local-6989586621679076065"><span class="hs-identifier hs-var hs-var">maxNumBytes</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">4194304</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-comment">-- maximum number of bytes to transmit in one system call</span><span>
-</span><span id="line-47"></span><span>    </span><span id="local-6989586621679068710"><span class="annot"><span class="annottext">maxNumChunks :: Int
-</span><a href="#local-6989586621679068710"><span class="hs-identifier hs-var hs-var">maxNumChunks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-47"></span><span>    </span><span id="local-6989586621679076106"><span class="annot"><span class="annottext">maxNumChunks :: Int
+</span><a href="#local-6989586621679076106"><span class="hs-identifier hs-var hs-var">maxNumChunks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1024</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-comment">-- maximum number of chunks to transmit in one system call</span><span>
 </span><span id="line-48"></span><span>
 </span><span id="line-49"></span><span class="annot"><a href="Network.Socket.ByteString.Lazy.Posix.html#sendAll"><span class="hs-identifier hs-type">sendAll</span></a></span><span>
@@ -180,44 +151,38 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-53"></span><span id="sendAll"><span class="annot"><span class="annottext">sendAll :: Socket -&gt; ByteString -&gt; IO ()
 </span><a href="Network.Socket.ByteString.Lazy.Posix.html#sendAll"><span class="hs-identifier hs-var hs-var">sendAll</span></a></span></span><span> </span><span class="annot"><span class="annottext">Socket
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; IO ()
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-54"></span><span class="annot"><a href="Network.Socket.ByteString.Lazy.Posix.html#sendAll"><span class="hs-identifier hs-var">sendAll</span></a></span><span> </span><span id="local-6989586621679068679"><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068679"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679068678"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068678"><span class="hs-identifier hs-var">bs0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; IO ()
-</span><a href="#local-6989586621679068677"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068678"><span class="hs-identifier hs-var">bs0</span></a></span><span>
+</span><span id="line-54"></span><span class="annot"><a href="Network.Socket.ByteString.Lazy.Posix.html#sendAll"><span class="hs-identifier hs-var">sendAll</span></a></span><span> </span><span id="local-6989586621679076055"><span class="annot"><span class="annottext">Socket
+</span><a href="#local-6989586621679076055"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679076054"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076054"><span class="hs-identifier hs-var">bs0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; IO ()
+</span><a href="#local-6989586621679076053"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076054"><span class="hs-identifier hs-var">bs0</span></a></span><span>
 </span><span id="line-55"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-56"></span><span>    </span><span id="local-6989586621679068677"><span class="annot"><span class="annottext">loop :: ByteString -&gt; IO ()
-</span><a href="#local-6989586621679068677"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679068676"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068676"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-56"></span><span>    </span><span id="local-6989586621679076053"><span class="annot"><span class="annottext">loop :: ByteString -&gt; IO ()
+</span><a href="#local-6989586621679076053"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679076043"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076043"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-57"></span><span>        </span><span class="hs-comment">-- &quot;send&quot; throws an exception.</span><span>
-</span><span id="line-58"></span><span>        </span><span id="local-6989586621679068675"><span class="annot"><span class="annottext">Int64
-</span><a href="#local-6989586621679068675"><span class="hs-identifier hs-var">sent</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Socket -&gt; ByteString -&gt; IO Int64
+</span><span id="line-58"></span><span>        </span><span id="local-6989586621679076042"><span class="annot"><span class="annottext">Int64
+</span><a href="#local-6989586621679076042"><span class="hs-identifier hs-var">sent</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Socket -&gt; ByteString -&gt; IO Int64
 </span><a href="Network.Socket.ByteString.Lazy.Posix.html#send"><span class="hs-identifier hs-var">send</span></a></span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068679"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068676"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><a href="#local-6989586621679076055"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076043"><span class="hs-identifier hs-var">bs</span></a></span><span>
 </span><span id="line-59"></span><span>        </span><span class="annot"><span class="annottext">Int -&gt; Socket -&gt; IO ()
-</span><a href="Network.Socket.ByteString.IO.html#waitWhen0"><span class="hs-identifier hs-var">waitWhen0</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64 -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="Network.Socket.ByteString.IO.html#waitWhen0"><span class="hs-identifier hs-var">waitWhen0</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int64
-</span><a href="#local-6989586621679068675"><span class="hs-identifier hs-var">sent</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Socket
-</span><a href="#local-6989586621679068679"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-60"></span><span>        </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
-forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><a href="#local-6989586621679076042"><span class="hs-identifier hs-var">sent</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Socket
+</span><a href="#local-6989586621679076055"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-60"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64
-</span><a href="#local-6989586621679068675"><span class="hs-identifier hs-var">sent</span></a></span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Int64 -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679076042"><span class="hs-identifier hs-var">sent</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Int64
 </span><span class="hs-identifier hs-var">L.length</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068676"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679076043"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; IO ()
-</span><a href="#local-6989586621679068677"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; IO ()) -&gt; ByteString -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679076053"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; ByteString -&gt; ByteString
 </span><span class="hs-identifier hs-var">L.drop</span></span><span> </span><span class="annot"><span class="annottext">Int64
-</span><a href="#local-6989586621679068675"><span class="hs-identifier hs-var">sent</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679068676"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><a href="#local-6989586621679076042"><span class="hs-identifier hs-var">sent</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679076043"><span class="hs-identifier hs-var">bs</span></a></span><span>
 </span><span id="line-61"></span></pre></body></html>

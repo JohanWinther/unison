@@ -232,7 +232,7 @@ instance Database.SQLite.Simple.ToField.ToField GHC.Int.Int16
 instance Database.SQLite.Simple.ToField.ToField GHC.Int.Int32
 instance Database.SQLite.Simple.ToField.ToField GHC.Types.Int
 instance Database.SQLite.Simple.ToField.ToField GHC.Int.Int64
-instance Database.SQLite.Simple.ToField.ToField GHC.Integer.Type.Integer
+instance Database.SQLite.Simple.ToField.ToField GHC.Num.Integer.Integer
 instance Database.SQLite.Simple.ToField.ToField GHC.Word.Word8
 instance Database.SQLite.Simple.ToField.ToField GHC.Word.Word16
 instance Database.SQLite.Simple.ToField.ToField GHC.Word.Word32
@@ -240,7 +240,7 @@ instance Database.SQLite.Simple.ToField.ToField GHC.Types.Word
 instance Database.SQLite.Simple.ToField.ToField GHC.Word.Word64
 instance Database.SQLite.Simple.ToField.ToField GHC.Types.Float
 instance Database.SQLite.Simple.ToField.ToField GHC.Types.Double
-instance Database.SQLite.Simple.ToField.ToField Data.ByteString.Internal.ByteString
+instance Database.SQLite.Simple.ToField.ToField Data.ByteString.Internal.Type.ByteString
 instance Database.SQLite.Simple.ToField.ToField Data.ByteString.Lazy.Internal.ByteString
 instance Database.SQLite.Simple.ToField.ToField Data.Text.Internal.Text
 instance Database.SQLite.Simple.ToField.ToField [GHC.Types.Char]
@@ -392,7 +392,7 @@ instance Database.SQLite.Simple.FromField.FromField GHC.Int.Int16
 instance Database.SQLite.Simple.FromField.FromField GHC.Int.Int32
 instance Database.SQLite.Simple.FromField.FromField GHC.Types.Int
 instance Database.SQLite.Simple.FromField.FromField GHC.Int.Int64
-instance Database.SQLite.Simple.FromField.FromField GHC.Integer.Type.Integer
+instance Database.SQLite.Simple.FromField.FromField GHC.Num.Integer.Integer
 instance Database.SQLite.Simple.FromField.FromField GHC.Word.Word8
 instance Database.SQLite.Simple.FromField.FromField GHC.Word.Word16
 instance Database.SQLite.Simple.FromField.FromField GHC.Word.Word32
@@ -404,7 +404,7 @@ instance Database.SQLite.Simple.FromField.FromField GHC.Types.Bool
 instance Database.SQLite.Simple.FromField.FromField Data.Text.Internal.Text
 instance Database.SQLite.Simple.FromField.FromField Data.Text.Internal.Lazy.Text
 instance Database.SQLite.Simple.FromField.FromField [GHC.Types.Char]
-instance Database.SQLite.Simple.FromField.FromField Data.ByteString.Internal.ByteString
+instance Database.SQLite.Simple.FromField.FromField Data.ByteString.Internal.Type.ByteString
 instance Database.SQLite.Simple.FromField.FromField Data.ByteString.Lazy.Internal.ByteString
 instance Database.SQLite.Simple.FromField.FromField Data.Time.Clock.Internal.UTCTime.UTCTime
 instance Database.SQLite.Simple.FromField.FromField Data.Time.Calendar.Days.Day
@@ -915,6 +915,7 @@ SQLError :: !Error -> Text -> Text -> SQLError
 [sqlErrorContext] :: SQLError -> Text
 
 -- | <a>https://www.sqlite.org/c3ref/c_abort.html</a>
+--   <a>https://www.sqlite.org/c3ref/c_abort_rollback.html</a>
 data Error
 
 -- | Successful result
@@ -1009,6 +1010,80 @@ ErrorRow :: Error
 
 -- | <tt>sqlite3_step()</tt> has finished executing
 ErrorDone :: Error
+ErrorErrorMissingCollatingSquence :: Error
+ErrorErrorRetry :: Error
+ErrorErrorSnapshot :: Error
+ErrorIORead :: Error
+ErrorIOShortRead :: Error
+ErrorIOWrite :: Error
+ErrorIOFsync :: Error
+ErrorIODirectoryFsync :: Error
+ErrorIOTruncate :: Error
+ErrorIOFstat :: Error
+ErrorIOUnlock :: Error
+ErrorIOReadLock :: Error
+ErrorIOBlocked :: Error
+ErrorIODelete :: Error
+ErrorIONoMemory :: Error
+ErrorIOAccess :: Error
+ErrorIOCheckReservedLock :: Error
+ErrorIOLock :: Error
+ErrorIOClose :: Error
+ErrorIODirectoryClose :: Error
+ErrorIOShmOpen :: Error
+ErrorIOShmSize :: Error
+ErrorIOShmLock :: Error
+ErrorIOShmMap :: Error
+ErrorIOSeek :: Error
+ErrorIODeleteNoEntity :: Error
+ErrorIOMmap :: Error
+ErrorIOGetTempPath :: Error
+ErrorIOConvertedPath :: Error
+ErrorIOVNode :: Error
+ErrorIOAuth :: Error
+ErrorIOBeginAtomic :: Error
+ErrorIOCommitAtomic :: Error
+ErrorIORollbackAtomic :: Error
+ErrorIOData :: Error
+ErrorIOCorruptFilesystem :: Error
+ErrorLockedSharedCache :: Error
+ErrorLockedVirtualTable :: Error
+ErrorBusyRecovery :: Error
+ErrorBusySnapshot :: Error
+ErrorBusyTimeout :: Error
+ErrorCan'tOpenNotTempDirectory :: Error
+ErrorCan'tOpenIsDirectory :: Error
+ErrorCan'tOpenFullPath :: Error
+ErrorCan'tOpenConvertedPath :: Error
+ErrorCan'tOpenDirtyWriteAheadLog :: Error
+ErrorCan'tOpenSymlink :: Error
+ErrorCorruptVirtualTable :: Error
+ErrorCorruptSequence :: Error
+ErrorCorruptIndex :: Error
+ErrorReadOnlyRecovery :: Error
+ErrorReadOnlyCan'tLock :: Error
+ErrorReadOnlyRollback :: Error
+ErrorReadOnlyDatabaseMoved :: Error
+ErrorReadOnlyCan'tInit :: Error
+ErrorReadOnlyDirectory :: Error
+ErrorAbortRollback :: Error
+ErrorConstraintCheck :: Error
+ErrorConstraintCommitHook :: Error
+ErrorConstraintForeignKey :: Error
+ErrorConstraintFunction :: Error
+ErrorConstraintNotNull :: Error
+ErrorConstraintPrimaryKey :: Error
+ErrorConstraintTrigger :: Error
+ErrorConstraintUnique :: Error
+ErrorConstraintVirtualTable :: Error
+ErrorConstraintRowId :: Error
+ErrorConstraintPinned :: Error
+ErrorConstraintDataType :: Error
+ErrorNoticeRecoverWriteAheadLog :: Error
+ErrorNoticeRecoverRollback :: Error
+ErrorWarningAutoIndex :: Error
+ErrorAuthUser :: Error
+ErrorOkLoadPermanently :: Error
 instance GHC.Real.Integral Database.SQLite.Simple.ColumnIndex
 instance GHC.Real.Real Database.SQLite.Simple.ColumnIndex
 instance GHC.Num.Num Database.SQLite.Simple.ColumnIndex

@@ -67,15 +67,16 @@ module Unison.Prelude
 -- | The <a>trace</a> function outputs the trace message given as its first
 --   argument, before returning the second argument as its result.
 --   
---   For example, this returns the value of <tt>f x</tt> but first outputs
---   the message.
+--   For example, this returns the value of <tt>f x</tt> and outputs the
+--   message to stderr. Depending on your terminal (settings), they may or
+--   may not be mixed.
 --   
 --   <pre>
 --   &gt;&gt;&gt; let x = 123; f = show
 --   
 --   &gt;&gt;&gt; trace ("calling f with x = " ++ show x) (f x)
---   "calling f with x = 123
---   123"
+--   calling f with x = 123
+--   "123"
 --   </pre>
 --   
 --   The <a>trace</a> function should <i>only</i> be used for debugging, or
@@ -95,7 +96,7 @@ trace :: String -> a -> a
 --   <tt>RuntimeRep</tt> type argument is marked as <tt>Inferred</tt>,
 --   meaning that it is not available for visible type application. This
 --   means the typechecker will accept <tt>coerce @Int @Age 42</tt>.
-coerce :: forall (k :: RuntimeRep) (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
+coerce :: forall {k :: RuntimeRep} (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
 
 -- | Conditional failure of <a>Alternative</a> computations. Defined by
 --   
@@ -118,6 +119,9 @@ coerce :: forall (k :: RuntimeRep) (a :: TYPE k) (b :: TYPE k). Coercible a b =>
 --   <pre>
 --   &gt;&gt;&gt; safeDiv 4 0
 --   Nothing
+--   </pre>
+--   
+--   <pre>
 --   &gt;&gt;&gt; safeDiv 4 2
 --   Just 2
 --   </pre>
@@ -270,30 +274,76 @@ infixl 1 >>
 --   condition holds.
 class Functor (f :: Type -> Type)
 
--- | Using <tt>ApplicativeDo</tt>: '<tt><a>fmap</a> f as</tt>' can be
---   understood as the <tt>do</tt> expression
+-- | <a>fmap</a> is used to apply a function of type <tt>(a -&gt; b)</tt>
+--   to a value of type <tt>f a</tt>, where f is a functor, to produce a
+--   value of type <tt>f b</tt>. Note that for any type constructor with
+--   more than one parameter (e.g., <tt>Either</tt>), only the last type
+--   parameter can be modified with <a>fmap</a> (e.g., <tt>b</tt> in
+--   `Either a b`).
+--   
+--   Some type constructors with two parameters or more have a
+--   <tt><a>Bifunctor</a></tt> instance that allows both the last and the
+--   penultimate parameters to be mapped over.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Convert from a <tt><a>Maybe</a> Int</tt> to a <tt>Maybe String</tt>
+--   using <a>show</a>:
 --   
 --   <pre>
---   do a &lt;- as
---      pure (f a)
+--   &gt;&gt;&gt; fmap show Nothing
+--   Nothing
+--   
+--   &gt;&gt;&gt; fmap show (Just 3)
+--   Just "3"
 --   </pre>
 --   
---   with an inferred <tt>Functor</tt> constraint.
+--   Convert from an <tt><a>Either</a> Int Int</tt> to an <tt>Either Int
+--   String</tt> using <a>show</a>:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fmap show (Left 17)
+--   Left 17
+--   
+--   &gt;&gt;&gt; fmap show (Right 17)
+--   Right "17"
+--   </pre>
+--   
+--   Double each element of a list:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fmap (*2) [1,2,3]
+--   [2,4,6]
+--   </pre>
+--   
+--   Apply <a>even</a> to the second element of a pair:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fmap even (2,2)
+--   (2,True)
+--   </pre>
+--   
+--   It may seem surprising that the function is only applied to the last
+--   element of the tuple compared to the list example above which applies
+--   it to every element in the list. To understand, remember that tuples
+--   are type constructors with multiple type parameters: a tuple of 3
+--   elements <tt>(a,b,c)</tt> can also be written <tt>(,,) a b c</tt> and
+--   its <tt>Functor</tt> instance is defined for <tt>Functor ((,,) a
+--   b)</tt> (i.e., only the third parameter is free to be mapped over with
+--   <tt>fmap</tt>).
+--   
+--   It explains why <tt>fmap</tt> can be used with tuples containing
+--   values of different types as in the following example:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fmap even ("hello", 1.0, 4)
+--   ("hello",1.0,True)
+--   </pre>
 fmap :: Functor f => (a -> b) -> f a -> f b
 
 -- | Replace all locations in the input with the same value. The default
 --   definition is <tt><a>fmap</a> . <a>const</a></tt>, but this may be
 --   overridden with a more efficient version.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>a <a>&lt;$</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do bs
---      pure a
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
 (<$) :: Functor f => a -> f b -> f a
 infixl 4 <$
 
@@ -414,13 +464,29 @@ pure :: Applicative f => a -> f a
 --   A few functors support an implementation of <a>&lt;*&gt;</a> that is
 --   more efficient than the default one.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt>fs <a>&lt;*&gt;</a> as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Example</b></h4>
+--   
+--   Used in combination with <tt>(<tt>&lt;$&gt;</tt>)</tt>,
+--   <tt>(<a>&lt;*&gt;</a>)</tt> can be used to build a record.
 --   
 --   <pre>
---   do f &lt;- fs
---      a &lt;- as
---      pure (f a)
+--   &gt;&gt;&gt; data MyState = MyState {arg1 :: Foo, arg2 :: Bar, arg3 :: Baz}
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceFoo :: Applicative f =&gt; f Foo
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceBar :: Applicative f =&gt; f Bar
+--   
+--   &gt;&gt;&gt; produceBaz :: Applicative f =&gt; f Baz
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; mkState :: Applicative f =&gt; f MyState
+--   
+--   &gt;&gt;&gt; mkState = MyState &lt;$&gt; produceFoo &lt;*&gt; produceBar &lt;*&gt; produceBaz
 --   </pre>
 (<*>) :: Applicative f => f (a -> b) -> f a -> f b
 
@@ -434,65 +500,135 @@ pure :: Applicative f => a -> f a
 --   This became a typeclass method in 4.10.0.0. Prior to that, it was a
 --   function defined in terms of <a>&lt;*&gt;</a> and <a>fmap</a>.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt><a>liftA2</a> f as bs</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Example</b></h4>
 --   
 --   <pre>
---   do a &lt;- as
---      b &lt;- bs
---      pure (f a b)
+--   &gt;&gt;&gt; liftA2 (,) (Just 3) (Just 5)
+--   Just (3,5)
 --   </pre>
 liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
 
 -- | Sequence actions, discarding the value of the first argument.
 --   
---   '<tt>as <a>*&gt;</a> bs</tt>' can be understood as the <tt>do</tt>
---   expression
+--   <h4><b>Examples</b></h4>
+--   
+--   If used in conjunction with the Applicative instance for <a>Maybe</a>,
+--   you can chain Maybe computations, with a possible "early return" in
+--   case of <a>Nothing</a>.
 --   
 --   <pre>
---   do as
---      bs
+--   &gt;&gt;&gt; Just 2 *&gt; Just 3
+--   Just 3
 --   </pre>
 --   
---   This is a tad complicated for our <tt>ApplicativeDo</tt> extension
---   which will give it a <tt>Monad</tt> constraint. For an
---   <tt>Applicative</tt> constraint we write it of the form
+--   <pre>
+--   &gt;&gt;&gt; Nothing *&gt; Just 3
+--   Nothing
+--   </pre>
+--   
+--   Of course a more interesting use case would be to have effectful
+--   computations instead of just returning pure values.
 --   
 --   <pre>
---   do _ &lt;- as
---      b &lt;- bs
---      pure b
+--   &gt;&gt;&gt; import Data.Char
+--   
+--   &gt;&gt;&gt; import Text.ParserCombinators.ReadP
+--   
+--   &gt;&gt;&gt; let p = string "my name is " *&gt; munch1 isAlpha &lt;* eof
+--   
+--   &gt;&gt;&gt; readP_to_S p "my name is Simon"
+--   [("Simon","")]
 --   </pre>
 (*>) :: Applicative f => f a -> f b -> f b
 
 -- | Sequence actions, discarding the value of the second argument.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;*</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      bs
---      pure a
---   </pre>
 (<*) :: Applicative f => f a -> f b -> f a
 infixl 4 <*
 infixl 4 *>
 infixl 4 <*>
 
--- | Combine the elements of a structure using a monoid.
+-- | Given a structure with elements whose type is a <a>Monoid</a>, combine
+--   them via the monoid's <tt>(<a>&lt;&gt;</a>)</tt> operator. This fold
+--   is right-associative and lazy in the accumulator. When you need a
+--   strict left-associative fold, use <a>foldMap'</a> instead, with
+--   <a>id</a> as the map.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fold [[1, 2, 3], [4, 5], [6], []]
+--   [1,2,3,4,5,6]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; fold $ Node (Leaf (Sum 1)) (Sum 3) (Leaf (Sum 5))
+--   Sum {getSum = 9}
+--   </pre>
+--   
+--   Folds of unbounded structures do not terminate when the monoid's
+--   <tt>(<a>&lt;&gt;</a>)</tt> operator is strict:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fold (repeat Nothing)
+--   * Hangs forever *
+--   </pre>
+--   
+--   Lazy corecursive folds of unbounded structures are fine:
+--   
+--   <pre>
+--   &gt;&gt;&gt; take 12 $ fold $ map (\i -&gt; [i..i+2]) [0..]
+--   [0,1,2,1,2,3,2,3,4,3,4,5]
+--   
+--   &gt;&gt;&gt; sum $ take 4000000 $ fold $ map (\i -&gt; [i..i+2]) [0..]
+--   2666668666666
+--   </pre>
 fold :: (Foldable t, Monoid m) => t m -> m
 
--- | List of elements of a structure, from left to right.
+-- | List of elements of a structure, from left to right. If the entire
+--   list is intended to be reduced via a fold, just fold the structure
+--   directly bypassing the list.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList Nothing
+--   []
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Just 42)
+--   [42]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Left "foo")
+--   []
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList (Node (Leaf 5) 17 (Node Empty 12 (Leaf 8)))
+--   [5,17,12,8]
+--   </pre>
+--   
+--   For lists, <a>toList</a> is the identity:
+--   
+--   <pre>
+--   &gt;&gt;&gt; toList [1, 2, 3]
+--   [1,2,3]
+--   </pre>
 toList :: Foldable t => t a -> [a]
 
 -- | Left-associative fold of a structure but with strict application of
 --   the operator.
 --   
---   This ensures that each step of the fold is forced to weak head normal
---   form before being applied, avoiding the collection of thunks that
+--   This ensures that each step of the fold is forced to Weak Head Normal
+--   Form before being applied, avoiding the collection of thunks that
 --   would otherwise occur. This is often what you want to strictly reduce
---   a finite list to a single, monolithic result (e.g. <a>length</a>).
+--   a finite structure to a single strict result (e.g. <a>sum</a>).
 --   
 --   For a general <a>Foldable</a> structure this should be semantically
 --   identical to,
@@ -505,11 +641,47 @@ foldl' :: Foldable t => (b -> a -> b) -> b -> t a -> b
 -- | Map each element of a structure to a monadic action, evaluate these
 --   actions from left to right, and collect the results. For a version
 --   that ignores the results see <a>mapM_</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <a>mapM</a> is literally a <a>traverse</a> with a type signature
+--   restricted to <a>Monad</a>. Its implementation may be more efficient
+--   due to additional power of <a>Monad</a>.
 mapM :: (Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)
 
 -- | Evaluate each monadic action in the structure from left to right, and
 --   collect the results. For a version that ignores the results see
 --   <a>sequence_</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   The first two examples are instances where the input and and output of
+--   <a>sequence</a> are isomorphic.
+--   
+--   <pre>
+--   &gt;&gt;&gt; sequence $ Right [1,2,3,4]
+--   [Right 1,Right 2,Right 3,Right 4]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; sequence $ [Right 1,Right 2,Right 3,Right 4]
+--   Right [1,2,3,4]
+--   </pre>
+--   
+--   The following examples demonstrate short circuit behavior for
+--   <a>sequence</a>.
+--   
+--   <pre>
+--   &gt;&gt;&gt; sequence $ Left [1,2,3,4]
+--   Left [1,2,3,4]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; sequence $ [Left 0, Right 1,Right 2,Right 3,Right 4]
+--   Left 0
+--   </pre>
 sequence :: (Traversable t, Monad m) => t (m a) -> m (t a)
 
 -- | Representable types of kind <tt>*</tt>. This class is derivable in GHC
@@ -763,24 +935,6 @@ liftM :: Monad m => (a1 -> r) -> m a1 -> m r
 --   </pre>
 either :: (a -> c) -> (b -> c) -> Either a b -> c
 
--- | <a>forM_</a> is <a>mapM_</a> with its arguments flipped. For a version
---   that doesn't ignore the results see <a>forM</a>.
---   
---   As of base 4.8.0.0, <a>forM_</a> is just <a>for_</a>, specialized to
---   <a>Monad</a>.
-forM_ :: (Foldable t, Monad m) => t a -> (a -> m b) -> m ()
-
--- | Map each element of a structure to a monadic action, evaluate these
---   actions from left to right, and ignore the results. For a version that
---   doesn't ignore the results see <a>mapM</a>.
---   
---   As of base 4.8.0.0, <a>mapM_</a> is just <a>traverse_</a>, specialized
---   to <a>Monad</a>.
-mapM_ :: (Foldable t, Monad m) => (a -> m b) -> t a -> m ()
-
--- | Uninhabited data type
-data Void
-
 -- | A bifunctor is a type constructor that takes two type arguments and is
 --   a functor in <i>both</i> arguments. That is, unlike with
 --   <a>Functor</a>, a type constructor such as <a>Either</a> does not need
@@ -887,6 +1041,24 @@ first :: Bifunctor p => (a -> b) -> p a c -> p b c
 --   </pre>
 second :: Bifunctor p => (b -> c) -> p a b -> p a c
 
+-- | <a>forM_</a> is <a>mapM_</a> with its arguments flipped. For a version
+--   that doesn't ignore the results see <a>forM</a>.
+--   
+--   <a>forM_</a> is just like <a>for_</a>, but specialised to monadic
+--   actions.
+forM_ :: (Foldable t, Monad m) => t a -> (a -> m b) -> m ()
+
+-- | Map each element of a structure to a monadic action, evaluate these
+--   actions from left to right, and ignore the results. For a version that
+--   doesn't ignore the results see <a>mapM</a>.
+--   
+--   <a>mapM_</a> is just like <a>traverse_</a>, but specialised to monadic
+--   actions.
+mapM_ :: (Foldable t, Monad m) => (a -> m b) -> t a -> m ()
+
+-- | Uninhabited data type
+data Void
+
 -- | Monads in which <a>IO</a> computations may be embedded. Any monad
 --   built by applying a sequence of monad transformers to the <a>IO</a>
 --   monad will be an instance of this class.
@@ -901,8 +1073,81 @@ second :: Bifunctor p => (b -> c) -> p a b -> p a c
 --   </ul>
 class Monad m => MonadIO (m :: Type -> Type)
 
--- | Lift a computation from the <a>IO</a> monad.
+-- | Lift a computation from the <a>IO</a> monad. This allows us to run IO
+--   computations in any monadic stack, so long as it supports these kinds
+--   of operations (i.e. <a>IO</a> is the base monad for the stack).
+--   
+--   <h3><b>Example</b></h3>
+--   
+--   <pre>
+--   import Control.Monad.Trans.State -- from the "transformers" library
+--   
+--   printState :: Show s =&gt; StateT s IO ()
+--   printState = do
+--     state &lt;- get
+--     liftIO $ print state
+--   </pre>
+--   
+--   Had we omitted <tt><a>liftIO</a></tt>, we would have ended up with
+--   this error:
+--   
+--   <pre>
+--   • Couldn't match type ‘IO’ with ‘StateT s IO’
+--    Expected type: StateT s IO ()
+--      Actual type: IO ()
+--   </pre>
+--   
+--   The important part here is the mismatch between <tt>StateT s IO
+--   ()</tt> and <tt><a>IO</a> ()</tt>.
+--   
+--   Luckily, we know of a function that takes an <tt><a>IO</a> a</tt> and
+--   returns an <tt>(m a)</tt>: <tt><a>liftIO</a></tt>, enabling us to run
+--   the program and see the expected results:
+--   
+--   <pre>
+--   &gt; evalStateT printState "hello"
+--   "hello"
+--   
+--   &gt; evalStateT printState 3
+--   3
+--   </pre>
 liftIO :: MonadIO m => IO a -> m a
+
+-- | <a>zipWithM_</a> is the extension of <a>zipWithM</a> which ignores the
+--   final result.
+zipWithM_ :: Applicative m => (a -> b -> m c) -> [a] -> [b] -> m ()
+
+-- | The <a>zipWithM</a> function generalizes <a>zipWith</a> to arbitrary
+--   applicative functors.
+zipWithM :: Applicative m => (a -> b -> m c) -> [a] -> [b] -> m [c]
+
+-- | The reverse of <a>when</a>.
+unless :: Applicative f => Bool -> f () -> f ()
+
+-- | Like <a>replicateM</a>, but discards the result.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; replicateM_ 3 (putStrLn "a")
+--   a
+--   a
+--   a
+--   </pre>
+replicateM_ :: Applicative m => Int -> m a -> m ()
+
+-- | <tt><a>replicateM</a> n act</tt> performs the action <tt>act</tt>
+--   <tt>n</tt> times, and then returns the list of results:
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Control.Monad.State
+--   
+--   &gt;&gt;&gt; runState (replicateM 3 $ state $ \s -&gt; (s, s + 1)) 1
+--   ([1,2,3],4)
+--   </pre>
+replicateM :: Applicative m => Int -> m a -> m [a]
 
 -- | Direct <a>MonadPlus</a> equivalent of <a>filter</a>.
 --   
@@ -920,38 +1165,45 @@ liftIO :: MonadIO m => IO a -> m a
 --   <pre>
 --   &gt;&gt;&gt; mfilter odd (Just 1)
 --   Just 1
+--   
 --   &gt;&gt;&gt; mfilter odd (Just 2)
 --   Nothing
 --   </pre>
 mfilter :: MonadPlus m => (a -> Bool) -> m a -> m a
 
--- | Strict version of <a>&lt;$&gt;</a>.
-(<$!>) :: Monad m => (a -> b) -> m a -> m b
-infixl 4 <$!>
+-- | The <a>mapAndUnzipM</a> function maps its first argument over a list,
+--   returning the result as a pair of lists. This function is mainly used
+--   with complicated data structures or a state monad.
+mapAndUnzipM :: Applicative m => (a -> m (b, c)) -> [a] -> m ([b], [c])
 
--- | The reverse of <a>when</a>.
-unless :: Applicative f => Bool -> f () -> f ()
-
--- | Like <a>replicateM</a>, but discards the result.
-replicateM_ :: Applicative m => Int -> m a -> m ()
-
--- | <tt><a>replicateM</a> n act</tt> performs the action <tt>n</tt> times,
---   gathering the results.
+-- | Repeat an action indefinitely.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt><a>replicateM</a> 5 as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Examples</b></h4>
+--   
+--   A common use of <a>forever</a> is to process input from network
+--   sockets, <a>Handle</a>s, and channels (e.g. <a>MVar</a> and
+--   <a>Chan</a>).
+--   
+--   For example, here is how we might implement an <a>echo server</a>,
+--   using <a>forever</a> both to listen for client connections on a
+--   network socket and to echo client input on client connection handles:
 --   
 --   <pre>
---   do a1 &lt;- as
---      a2 &lt;- as
---      a3 &lt;- as
---      a4 &lt;- as
---      a5 &lt;- as
---      pure [a1,a2,a3,a4,a5]
+--   echoServer :: Socket -&gt; IO ()
+--   echoServer socket = <a>forever</a> $ do
+--     client &lt;- accept socket
+--     <a>forkFinally</a> (echo client) (\_ -&gt; hClose client)
+--     where
+--       echo :: Handle -&gt; IO ()
+--       echo client = <a>forever</a> $
+--         hGetLine client &gt;&gt;= hPutStrLn client
 --   </pre>
 --   
---   Note the <tt>Applicative</tt> constraint.
-replicateM :: Applicative m => Int -> m a -> m [a]
+--   Note that "forever" isn't necessarily non-terminating. If the action
+--   is in a <tt><a>MonadPlus</a></tt> and short-circuits after some number
+--   of iterations. then <tt><a>forever</a></tt> actually returns
+--   <a>mzero</a>, effectively short-circuiting its caller.
+forever :: Applicative f => f a -> f b
 
 -- | Like <a>foldM</a>, but discards the result.
 foldM_ :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m ()
@@ -980,53 +1232,20 @@ foldM_ :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m ()
 --   Note: <a>foldM</a> is the same as <a>foldlM</a>
 foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b
 
--- | <a>zipWithM_</a> is the extension of <a>zipWithM</a> which ignores the
---   final result.
-zipWithM_ :: Applicative m => (a -> b -> m c) -> [a] -> [b] -> m ()
+-- | This generalizes the list-based <a>filter</a> function.
+filterM :: Applicative m => (a -> m Bool) -> [a] -> m [a]
 
--- | The <a>zipWithM</a> function generalizes <a>zipWith</a> to arbitrary
---   applicative functors.
-zipWithM :: Applicative m => (a -> b -> m c) -> [a] -> [b] -> m [c]
-
--- | The <a>mapAndUnzipM</a> function maps its first argument over a list,
---   returning the result as a pair of lists. This function is mainly used
---   with complicated data structures or a state monad.
-mapAndUnzipM :: Applicative m => (a -> m (b, c)) -> [a] -> m ([b], [c])
-
--- | Repeat an action indefinitely.
+-- | Left-to-right composition of Kleisli arrows.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt><a>forever</a> as</tt>' can be
---   understood as the pseudo-<tt>do</tt> expression
+--   '<tt>(bs <a>&gt;=&gt;</a> cs) a</tt>' can be understood as the
+--   <tt>do</tt> expression
 --   
 --   <pre>
---   do as
---      as
---      ..
+--   do b &lt;- bs a
+--      cs b
 --   </pre>
---   
---   with <tt>as</tt> repeating.
---   
---   <h4><b>Examples</b></h4>
---   
---   A common use of <a>forever</a> is to process input from network
---   sockets, <a>Handle</a>s, and channels (e.g. <a>MVar</a> and
---   <a>Chan</a>).
---   
---   For example, here is how we might implement an <a>echo server</a>,
---   using <a>forever</a> both to listen for client connections on a
---   network socket and to echo client input on client connection handles:
---   
---   <pre>
---   echoServer :: Socket -&gt; IO ()
---   echoServer socket = <a>forever</a> $ do
---     client &lt;- accept socket
---     <a>forkFinally</a> (echo client) (\_ -&gt; hClose client)
---     where
---       echo :: Handle -&gt; IO ()
---       echo client = <a>forever</a> $
---         hGetLine client &gt;&gt;= hPutStrLn client
---   </pre>
-forever :: Applicative f => f a -> f b
+(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+infixr 1 >=>
 
 -- | Right-to-left composition of Kleisli arrows.
 --   <tt>(<a>&gt;=&gt;</a>)</tt>, with the arguments flipped.
@@ -1041,59 +1260,9 @@ forever :: Applicative f => f a -> f b
 (<=<) :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
 infixr 1 <=<
 
--- | Left-to-right composition of Kleisli arrows.
---   
---   '<tt>(bs <a>&gt;=&gt;</a> cs) a</tt>' can be understood as the
---   <tt>do</tt> expression
---   
---   <pre>
---   do b &lt;- bs a
---      cs b
---   </pre>
-(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
-infixr 1 >=>
-
--- | This generalizes the list-based <a>filter</a> function.
-filterM :: Applicative m => (a -> m Bool) -> [a] -> m [a]
-
--- | The <a>traceMarkerIO</a> function emits a marker to the eventlog, if
---   eventlog profiling is available and enabled at runtime.
---   
---   Compared to <a>traceMarker</a>, <a>traceMarkerIO</a> sequences the
---   event with respect to other IO actions.
-traceMarkerIO :: String -> IO ()
-
--- | The <a>traceMarker</a> function emits a marker to the eventlog, if
---   eventlog profiling is available and enabled at runtime. The
---   <tt>String</tt> is the name of the marker. The name is just used in
---   the profiling tools to help you keep clear which marker is which.
---   
---   This function is suitable for use in pure code. In an IO context use
---   <a>traceMarkerIO</a> instead.
---   
---   Note that when using GHC's SMP runtime, it is possible (but rare) to
---   get duplicate events emitted if two CPUs simultaneously evaluate the
---   same thunk that uses <a>traceMarker</a>.
-traceMarker :: String -> a -> a
-
--- | The <a>traceEventIO</a> function emits a message to the eventlog, if
---   eventlog profiling is available and enabled at runtime.
---   
---   Compared to <a>traceEvent</a>, <a>traceEventIO</a> sequences the event
---   with respect to other IO actions.
-traceEventIO :: String -> IO ()
-
--- | The <a>traceEvent</a> function behaves like <a>trace</a> with the
---   difference that the message is emitted to the eventlog, if eventlog
---   profiling is available and enabled at runtime.
---   
---   It is suitable for use in pure code. In an IO context use
---   <a>traceEventIO</a> instead.
---   
---   Note that when using GHC's SMP runtime, it is possible (but rare) to
---   get duplicate events emitted if two CPUs simultaneously evaluate the
---   same thunk that uses <a>traceEvent</a>.
-traceEvent :: String -> a -> a
+-- | Strict version of <a>&lt;$&gt;</a>.
+(<$!>) :: Monad m => (a -> b) -> m a -> m b
+infixl 4 <$!>
 
 -- | like <a>trace</a>, but additionally prints a call stack if one is
 --   available.
@@ -1124,6 +1293,50 @@ traceStack :: String -> a -> a
 --   </pre>
 traceShowM :: (Show a, Applicative f) => a -> f ()
 
+-- | Like <a>traceShow</a> but returns the shown value instead of a third
+--   value.
+--   
+--   <pre>
+--   &gt;&gt;&gt; traceShowId (1+2+3, "hello" ++ "world")
+--   (6,"helloworld")
+--   (6,"helloworld")
+--   </pre>
+traceShowId :: Show a => a -> a
+
+-- | Like <a>trace</a>, but uses <a>show</a> on the argument to convert it
+--   to a <a>String</a>.
+--   
+--   This makes it convenient for printing the values of interesting
+--   variables or expressions inside a function. For example here we print
+--   the value of the variables <tt>x</tt> and <tt>y</tt>:
+--   
+--   <pre>
+--   &gt;&gt;&gt; let f x y = traceShow (x,y) (x + y) in f (1+2) 5
+--   (3,5)
+--   8
+--   </pre>
+traceShow :: Show a => a -> b -> b
+
+-- | The <a>traceMarkerIO</a> function emits a marker to the eventlog, if
+--   eventlog profiling is available and enabled at runtime.
+--   
+--   Compared to <a>traceMarker</a>, <a>traceMarkerIO</a> sequences the
+--   event with respect to other IO actions.
+traceMarkerIO :: String -> IO ()
+
+-- | The <a>traceMarker</a> function emits a marker to the eventlog, if
+--   eventlog profiling is available and enabled at runtime. The
+--   <tt>String</tt> is the name of the marker. The name is just used in
+--   the profiling tools to help you keep clear which marker is which.
+--   
+--   This function is suitable for use in pure code. In an IO context use
+--   <a>traceMarkerIO</a> instead.
+--   
+--   Note that when using GHC's SMP runtime, it is possible (but rare) to
+--   get duplicate events emitted if two CPUs simultaneously evaluate the
+--   same thunk that uses <a>traceMarker</a>.
+traceMarker :: String -> a -> a
+
 -- | Like <a>trace</a> but returning unit in an arbitrary
 --   <a>Applicative</a> context. Allows for convenient use in do-notation.
 --   
@@ -1151,44 +1364,42 @@ traceShowM :: (Show a, Applicative f) => a -> f ()
 --   </pre>
 traceM :: Applicative f => String -> f ()
 
--- | Like <a>traceShow</a> but returns the shown value instead of a third
---   value.
---   
---   <pre>
---   &gt;&gt;&gt; traceShowId (1+2+3, "hello" ++ "world")
---   (6,"helloworld")
---   (6,"helloworld")
---   </pre>
-traceShowId :: Show a => a -> a
-
--- | Like <a>trace</a>, but uses <a>show</a> on the argument to convert it
---   to a <a>String</a>.
---   
---   This makes it convenient for printing the values of interesting
---   variables or expressions inside a function. For example here we print
---   the value of the variables <tt>x</tt> and <tt>y</tt>:
---   
---   <pre>
---   &gt;&gt;&gt; let f x y = traceShow (x,y) (x + y) in f (1+2) 5
---   (3,5)
---   8
---   </pre>
-traceShow :: Show a => a -> b -> b
-
 -- | Like <a>trace</a> but returns the message instead of a third value.
 --   
 --   <pre>
 --   &gt;&gt;&gt; traceId "hello"
---   "hello
---   hello"
+--   hello
+--   "hello"
 --   </pre>
 traceId :: String -> String
-
-putTraceMsg :: String -> IO ()
 
 -- | The <a>traceIO</a> function outputs the trace message from the IO
 --   monad. This sequences the output with respect to other IO actions.
 traceIO :: String -> IO ()
+
+-- | The <a>traceEventIO</a> function emits a message to the eventlog, if
+--   eventlog profiling is available and enabled at runtime.
+--   
+--   Compared to <a>traceEvent</a>, <a>traceEventIO</a> sequences the event
+--   with respect to other IO actions.
+traceEventIO :: String -> IO ()
+
+-- | The <a>traceEvent</a> function behaves like <a>trace</a> with the
+--   difference that the message is emitted to the eventlog, if eventlog
+--   profiling is available and enabled at runtime.
+--   
+--   It is suitable for use in pure code. In an IO context use
+--   <a>traceEventIO</a> instead.
+--   
+--   Note that when using GHC's SMP runtime, it is possible (but rare) to
+--   get duplicate events emitted if two CPUs simultaneously evaluate the
+--   same thunk that uses <a>traceEvent</a>.
+traceEvent :: String -> a -> a
+
+putTraceMsg :: String -> IO ()
+
+-- | Immediately flush the event log, if enabled.
+flushEventLog :: IO ()
 
 -- | <a>forM</a> is <a>mapM</a> with its arguments flipped. For a version
 --   that ignores the results see <a>forM_</a>.
@@ -1198,8 +1409,10 @@ forM :: (Traversable t, Monad m) => t a -> (a -> m b) -> m (t b)
 --   version that ignores the results see <a>for_</a>.
 for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
 
--- | One or none.
-optional :: Alternative f => f a -> f (Maybe a)
+-- | Lists, but with an <a>Applicative</a> functor based on zipping.
+newtype ZipList a
+ZipList :: [a] -> ZipList a
+[getZipList] :: ZipList a -> [a]
 newtype WrappedMonad (m :: Type -> Type) a
 WrapMonad :: m a -> WrappedMonad (m :: Type -> Type) a
 [unwrapMonad] :: WrappedMonad (m :: Type -> Type) a -> m a
@@ -1207,10 +1420,35 @@ newtype WrappedArrow (a :: Type -> Type -> Type) b c
 WrapArrow :: a b c -> WrappedArrow (a :: Type -> Type -> Type) b c
 [unwrapArrow] :: WrappedArrow (a :: Type -> Type -> Type) b c -> a b c
 
--- | Lists, but with an <a>Applicative</a> functor based on zipping.
-newtype ZipList a
-ZipList :: [a] -> ZipList a
-[getZipList] :: ZipList a -> [a]
+-- | One or none.
+--   
+--   It is useful for modelling any computation that is allowed to fail.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Using the <a>Alternative</a> instance of <a>Control.Monad.Except</a>,
+--   the following functions:
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Control.Monad.Except
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; canFail = throwError "it failed" :: Except String Int
+--   
+--   &gt;&gt;&gt; final = return 42                :: Except String Int
+--   </pre>
+--   
+--   Can be combined by allowing the first function to fail:
+--   
+--   <pre>
+--   &gt;&gt;&gt; runExcept $ canFail *&gt; final
+--   Left "it failed"
+--   
+--   &gt;&gt;&gt; runExcept $ optional canFail *&gt; final
+--   Right 42
+--   </pre>
+optional :: Alternative f => f a -> f (Maybe a)
 
 -- | Identity functor and monad. (a non-strict monad)
 newtype Identity a
@@ -1317,29 +1555,49 @@ newtype Const a (b :: k)
 Const :: a -> Const a (b :: k)
 [getConst] :: Const a (b :: k) -> a
 
--- | The sum of a collection of actions, generalizing <a>concat</a>. As of
---   base 4.8.0.0, <a>msum</a> is just <a>asum</a>, specialized to
---   <a>MonadPlus</a>.
-msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
-
--- | The sum of a collection of actions, generalizing <a>concat</a>.
+-- | Map each element of a structure to an <a>Applicative</a> action,
+--   evaluate these actions from left to right, and ignore the results. For
+--   a version that doesn't ignore the results see <a>traverse</a>.
+--   
+--   <a>traverse_</a> is just like <a>mapM_</a>, but generalised to
+--   <a>Applicative</a> actions.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; asum [Just "Hello", Nothing, Just "World"]
---   Just "Hello"
+--   &gt;&gt;&gt; traverse_ print ["Hello", "world", "!"]
+--   "Hello"
+--   "world"
+--   "!"
 --   </pre>
-asum :: (Foldable t, Alternative f) => t (f a) -> f a
+traverse_ :: (Foldable t, Applicative f) => (a -> f b) -> t a -> f ()
 
 -- | Evaluate each monadic action in the structure from left to right, and
 --   ignore the results. For a version that doesn't ignore the results see
 --   <a>sequence</a>.
 --   
---   As of base 4.8.0.0, <a>sequence_</a> is just <a>sequenceA_</a>,
---   specialized to <a>Monad</a>.
+--   <a>sequence_</a> is just like <a>sequenceA_</a>, but specialised to
+--   monadic actions.
 sequence_ :: (Foldable t, Monad m) => t (m a) -> m ()
 
+-- | The sum of a collection of actions, generalizing <a>concat</a>.
+--   
+--   <a>msum</a> is just like <a>asum</a>, but specialised to
+--   <a>MonadPlus</a>.
+msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
+
 -- | <a>for_</a> is <a>traverse_</a> with its arguments flipped. For a
---   version that doesn't ignore the results see <a>for</a>.
+--   version that doesn't ignore the results see <a>for</a>. This is
+--   <a>forM_</a> generalised to <a>Applicative</a> actions.
+--   
+--   <a>for_</a> is just like <a>forM_</a>, but generalised to
+--   <a>Applicative</a> actions.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
 --   
 --   <pre>
 --   &gt;&gt;&gt; for_ [1..4] print
@@ -1350,10 +1608,20 @@ sequence_ :: (Foldable t, Monad m) => t (m a) -> m ()
 --   </pre>
 for_ :: (Foldable t, Applicative f) => t a -> (a -> f b) -> f ()
 
--- | Map each element of a structure to an action, evaluate these actions
---   from left to right, and ignore the results. For a version that doesn't
---   ignore the results see <a>traverse</a>.
-traverse_ :: (Foldable t, Applicative f) => (a -> f b) -> t a -> f ()
+-- | The sum of a collection of actions, generalizing <a>concat</a>.
+--   
+--   <a>asum</a> is just like <a>msum</a>, but generalised to
+--   <a>Alternative</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; asum [Just "Hello", Nothing, Just "World"]
+--   Just "Hello"
+--   </pre>
+asum :: (Foldable t, Alternative f) => t (f a) -> f a
 
 -- | Sort a list by comparing the results of a key function applied to each
 --   element. <tt>sortOn f</tt> is equivalent to <tt>sortBy (comparing
@@ -1361,8 +1629,8 @@ traverse_ :: (Foldable t, Applicative f) => (a -> f b) -> t a -> f ()
 --   <tt>f</tt> once for each element in the input list. This is called the
 --   decorate-sort-undecorate paradigm, or Schwartzian transform.
 --   
---   Elements are arranged from from lowest to highest, keeping duplicates
---   in the order they appeared in the input.
+--   Elements are arranged from lowest to highest, keeping duplicates in
+--   the order they appeared in the input.
 --   
 --   <pre>
 --   &gt;&gt;&gt; sortOn fst [(2, "world"), (4, "!"), (1, "Hello")]
@@ -1384,37 +1652,62 @@ sortOn :: Ord b => (a -> b) -> [a] -> [a]
 --   </pre>
 readMaybe :: Read a => String -> Maybe a
 
--- | Return the contents of a <a>Right</a>-value or a default value
---   otherwise.
+-- | Extracts from a list of <a>Either</a> all the <a>Right</a> elements.
+--   All the <a>Right</a> elements are extracted in order.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; fromRight 1 (Right 3)
---   3
+--   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
 --   
---   &gt;&gt;&gt; fromRight 1 (Left "foo")
---   1
+--   &gt;&gt;&gt; rights list
+--   [3,7]
 --   </pre>
-fromRight :: b -> Either a b -> b
+rights :: [Either a b] -> [b]
 
--- | Return the contents of a <a>Left</a>-value or a default value
---   otherwise.
+-- | Partitions a list of <a>Either</a> into two lists. All the <a>Left</a>
+--   elements are extracted, in order, to the first component of the
+--   output. Similarly the <a>Right</a> elements are extracted to the
+--   second component of the output.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; fromLeft 1 (Left 3)
---   3
+--   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
 --   
---   &gt;&gt;&gt; fromLeft 1 (Right "foo")
---   1
+--   &gt;&gt;&gt; partitionEithers list
+--   (["foo","bar","baz"],[3,7])
 --   </pre>
-fromLeft :: a -> Either a b -> a
+--   
+--   The pair returned by <tt><a>partitionEithers</a> x</tt> should be the
+--   same pair as <tt>(<a>lefts</a> x, <a>rights</a> x)</tt>:
+--   
+--   <pre>
+--   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
+--   
+--   &gt;&gt;&gt; partitionEithers list == (lefts list, rights list)
+--   True
+--   </pre>
+partitionEithers :: [Either a b] -> ([a], [b])
+
+-- | Extracts from a list of <a>Either</a> all the <a>Left</a> elements.
+--   All the <a>Left</a> elements are extracted in order.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
+--   
+--   &gt;&gt;&gt; lefts list
+--   ["foo","bar","baz"]
+--   </pre>
+lefts :: [Either a b] -> [a]
 
 -- | Return <a>True</a> if the given value is a <a>Right</a>-value,
 --   <a>False</a> otherwise.
@@ -1487,78 +1780,41 @@ isRight :: Either a b -> Bool
 --   </pre>
 isLeft :: Either a b -> Bool
 
--- | Partitions a list of <a>Either</a> into two lists. All the <a>Left</a>
---   elements are extracted, in order, to the first component of the
---   output. Similarly the <a>Right</a> elements are extracted to the
---   second component of the output.
+-- | Return the contents of a <a>Right</a>-value or a default value
+--   otherwise.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
+--   &gt;&gt;&gt; fromRight 1 (Right 3)
+--   3
 --   
---   &gt;&gt;&gt; partitionEithers list
---   (["foo","bar","baz"],[3,7])
+--   &gt;&gt;&gt; fromRight 1 (Left "foo")
+--   1
 --   </pre>
---   
---   The pair returned by <tt><a>partitionEithers</a> x</tt> should be the
---   same pair as <tt>(<a>lefts</a> x, <a>rights</a> x)</tt>:
---   
---   <pre>
---   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
---   
---   &gt;&gt;&gt; partitionEithers list == (lefts list, rights list)
---   True
---   </pre>
-partitionEithers :: [Either a b] -> ([a], [b])
+fromRight :: b -> Either a b -> b
 
--- | Extracts from a list of <a>Either</a> all the <a>Right</a> elements.
---   All the <a>Right</a> elements are extracted in order.
+-- | Return the contents of a <a>Left</a>-value or a default value
+--   otherwise.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
+--   &gt;&gt;&gt; fromLeft 1 (Left 3)
+--   3
 --   
---   &gt;&gt;&gt; rights list
---   [3,7]
+--   &gt;&gt;&gt; fromLeft 1 (Right "foo")
+--   1
 --   </pre>
-rights :: [Either a b] -> [b]
-
--- | Extracts from a list of <a>Either</a> all the <a>Left</a> elements.
---   All the <a>Left</a> elements are extracted in order.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; let list = [ Left "foo", Right 3, Left "bar", Right 7, Left "baz" ]
---   
---   &gt;&gt;&gt; lefts list
---   ["foo","bar","baz"]
---   </pre>
-lefts :: [Either a b] -> [a]
+fromLeft :: a -> Either a b -> a
 
 -- | Left-to-right composition
-(>>>) :: forall k cat (a :: k) (b :: k) (c :: k). Category cat => cat a b -> cat b c -> cat a c
+(>>>) :: forall {k} cat (a :: k) (b :: k) (c :: k). Category cat => cat a b -> cat b c -> cat a c
 infixr 1 >>>
-
--- | Reverse the order of the bits in a <a>Word64</a>.
-bitReverse64 :: Word64 -> Word64
-
--- | Reverse the order of the bits in a <a>Word32</a>.
-bitReverse32 :: Word32 -> Word32
-
--- | Reverse the order of the bits in a <a>Word16</a>.
-bitReverse16 :: Word16 -> Word16
-
--- | Reverse the order of the bits in a <a>Word8</a>.
-bitReverse8 :: Word8 -> Word8
 
 -- | Reverse order of bytes in <a>Word64</a>.
 byteSwap64 :: Word64 -> Word64
@@ -1569,36 +1825,51 @@ byteSwap32 :: Word32 -> Word32
 -- | Reverse order of bytes in <a>Word16</a>.
 byteSwap16 :: Word16 -> Word16
 
--- | A strict version of <a>foldl1</a>
+-- | Reverse the order of the bits in a <a>Word8</a>.
+bitReverse8 :: Word8 -> Word8
+
+-- | Reverse the order of the bits in a <a>Word64</a>.
+bitReverse64 :: Word64 -> Word64
+
+-- | Reverse the order of the bits in a <a>Word32</a>.
+bitReverse32 :: Word32 -> Word32
+
+-- | Reverse the order of the bits in a <a>Word16</a>.
+bitReverse16 :: Word16 -> Word16
+
+-- | A strict version of <a>foldl1</a>.
 foldl1' :: (a -> a -> a) -> [a] -> a
 
--- | The <a>catMaybes</a> function takes a list of <a>Maybe</a>s and
---   returns a list of all the <a>Just</a> values.
+-- | The <a>maybeToList</a> function returns an empty list when given
+--   <a>Nothing</a> or a singleton list when given <a>Just</a>.
 --   
 --   <h4><b>Examples</b></h4>
 --   
 --   Basic usage:
 --   
 --   <pre>
---   &gt;&gt;&gt; catMaybes [Just 1, Nothing, Just 3]
---   [1,3]
+--   &gt;&gt;&gt; maybeToList (Just 7)
+--   [7]
 --   </pre>
 --   
---   When constructing a list of <a>Maybe</a> values, <a>catMaybes</a> can
---   be used to return all of the "success" results (if the list is the
---   result of a <a>map</a>, then <a>mapMaybe</a> would be more
---   appropriate):
+--   <pre>
+--   &gt;&gt;&gt; maybeToList Nothing
+--   []
+--   </pre>
+--   
+--   One can use <a>maybeToList</a> to avoid pattern matching when combined
+--   with a function that (safely) works on lists:
 --   
 --   <pre>
 --   &gt;&gt;&gt; import Text.Read ( readMaybe )
 --   
---   &gt;&gt;&gt; [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
---   [Just 1,Nothing,Just 3]
+--   &gt;&gt;&gt; sum $ maybeToList (readMaybe "3")
+--   3
 --   
---   &gt;&gt;&gt; catMaybes $ [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
---   [1,3]
+--   &gt;&gt;&gt; sum $ maybeToList (readMaybe "")
+--   0
 --   </pre>
-catMaybes :: [Maybe a] -> [a]
+maybeToList :: Maybe a -> [a]
 
 -- | The <a>listToMaybe</a> function returns <a>Nothing</a> on an empty
 --   list or <tt><a>Just</a> a</tt> where <tt>a</tt> is the first element
@@ -1641,70 +1912,6 @@ catMaybes :: [Maybe a] -> [a]
 --   [1]
 --   </pre>
 listToMaybe :: [a] -> Maybe a
-
--- | The <a>maybeToList</a> function returns an empty list when given
---   <a>Nothing</a> or a singleton list when given <a>Just</a>.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; maybeToList (Just 7)
---   [7]
---   </pre>
---   
---   <pre>
---   &gt;&gt;&gt; maybeToList Nothing
---   []
---   </pre>
---   
---   One can use <a>maybeToList</a> to avoid pattern matching when combined
---   with a function that (safely) works on lists:
---   
---   <pre>
---   &gt;&gt;&gt; import Text.Read ( readMaybe )
---   
---   &gt;&gt;&gt; sum $ maybeToList (readMaybe "3")
---   3
---   
---   &gt;&gt;&gt; sum $ maybeToList (readMaybe "")
---   0
---   </pre>
-maybeToList :: Maybe a -> [a]
-
--- | The <a>fromMaybe</a> function takes a default value and and
---   <a>Maybe</a> value. If the <a>Maybe</a> is <a>Nothing</a>, it returns
---   the default values; otherwise, it returns the value contained in the
---   <a>Maybe</a>.
---   
---   <h4><b>Examples</b></h4>
---   
---   Basic usage:
---   
---   <pre>
---   &gt;&gt;&gt; fromMaybe "" (Just "Hello, World!")
---   "Hello, World!"
---   </pre>
---   
---   <pre>
---   &gt;&gt;&gt; fromMaybe "" Nothing
---   ""
---   </pre>
---   
---   Read an integer from a string using <a>readMaybe</a>. If we fail to
---   parse an integer, we want to return <tt>0</tt> by default:
---   
---   <pre>
---   &gt;&gt;&gt; import Text.Read ( readMaybe )
---   
---   &gt;&gt;&gt; fromMaybe 0 (readMaybe "5")
---   5
---   
---   &gt;&gt;&gt; fromMaybe 0 (readMaybe "")
---   0
---   </pre>
-fromMaybe :: a -> Maybe a -> a
 
 -- | The <a>isNothing</a> function returns <a>True</a> iff its argument is
 --   <a>Nothing</a>.
@@ -1766,6 +1973,66 @@ isNothing :: Maybe a -> Bool
 --   </pre>
 isJust :: Maybe a -> Bool
 
+-- | The <a>fromMaybe</a> function takes a default value and a <a>Maybe</a>
+--   value. If the <a>Maybe</a> is <a>Nothing</a>, it returns the default
+--   value; otherwise, it returns the value contained in the <a>Maybe</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; fromMaybe "" (Just "Hello, World!")
+--   "Hello, World!"
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; fromMaybe "" Nothing
+--   ""
+--   </pre>
+--   
+--   Read an integer from a string using <a>readMaybe</a>. If we fail to
+--   parse an integer, we want to return <tt>0</tt> by default:
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Text.Read ( readMaybe )
+--   
+--   &gt;&gt;&gt; fromMaybe 0 (readMaybe "5")
+--   5
+--   
+--   &gt;&gt;&gt; fromMaybe 0 (readMaybe "")
+--   0
+--   </pre>
+fromMaybe :: a -> Maybe a -> a
+
+-- | The <a>catMaybes</a> function takes a list of <a>Maybe</a>s and
+--   returns a list of all the <a>Just</a> values.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Basic usage:
+--   
+--   <pre>
+--   &gt;&gt;&gt; catMaybes [Just 1, Nothing, Just 3]
+--   [1,3]
+--   </pre>
+--   
+--   When constructing a list of <a>Maybe</a> values, <a>catMaybes</a> can
+--   be used to return all of the "success" results (if the list is the
+--   result of a <a>map</a>, then <a>mapMaybe</a> would be more
+--   appropriate):
+--   
+--   <pre>
+--   &gt;&gt;&gt; import Text.Read ( readMaybe )
+--   
+--   &gt;&gt;&gt; [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
+--   [Just 1,Nothing,Just 3]
+--   
+--   &gt;&gt;&gt; catMaybes $ [readMaybe x :: Maybe Int | x &lt;- ["1", "Foo", "3"] ]
+--   [1,3]
+--   </pre>
+catMaybes :: [Maybe a] -> [a]
+
 -- | <a>&amp;</a> is a reverse application operator. This provides
 --   notational convenience. Its precedence is one higher than that of the
 --   forward application operator <a>$</a>, which allows <a>&amp;</a> to be
@@ -1780,16 +2047,6 @@ infixl 1 &
 
 -- | <tt><a>void</a> value</tt> discards or ignores the result of
 --   evaluation, such as the return value of an <a>IO</a> action.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt><a>void</a> as</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do as
---      pure ()
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
 --   
 --   <h4><b>Examples</b></h4>
 --   
@@ -1842,59 +2099,6 @@ infixl 1 &
 --   2
 --   </pre>
 void :: Functor f => f a -> f ()
-
--- | Flipped version of <a>&lt;$</a>.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>$&gt;</a> b</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do as
---      pure b
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
---   
---   <h4><b>Examples</b></h4>
---   
---   Replace the contents of a <tt><a>Maybe</a> <a>Int</a></tt> with a
---   constant <a>String</a>:
---   
---   <pre>
---   &gt;&gt;&gt; Nothing $&gt; "foo"
---   Nothing
---   
---   &gt;&gt;&gt; Just 90210 $&gt; "foo"
---   Just "foo"
---   </pre>
---   
---   Replace the contents of an <tt><a>Either</a> <a>Int</a>
---   <a>Int</a></tt> with a constant <a>String</a>, resulting in an
---   <tt><a>Either</a> <a>Int</a> <a>String</a></tt>:
---   
---   <pre>
---   &gt;&gt;&gt; Left 8675309 $&gt; "foo"
---   Left 8675309
---   
---   &gt;&gt;&gt; Right 8675309 $&gt; "foo"
---   Right "foo"
---   </pre>
---   
---   Replace each element of a list with a constant <a>String</a>:
---   
---   <pre>
---   &gt;&gt;&gt; [1,2,3] $&gt; "foo"
---   ["foo","foo","foo"]
---   </pre>
---   
---   Replace the second element of a pair with a constant <a>String</a>:
---   
---   <pre>
---   &gt;&gt;&gt; (1,2) $&gt; "foo"
---   (1,"foo")
---   </pre>
-($>) :: Functor f => f a -> b -> f b
-infixl 4 $>
 
 -- | Flipped version of <a>&lt;$&gt;</a>.
 --   
@@ -1976,95 +2180,72 @@ infixl 1 <&>
 (<$>) :: Functor f => (a -> b) -> f a -> f b
 infixl 4 <$>
 
--- | In many situations, the <a>liftM</a> operations can be replaced by
---   uses of <a>ap</a>, which promotes function application.
+-- | Flipped version of <a>&lt;$</a>.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   Replace the contents of a <tt><a>Maybe</a> <a>Int</a></tt> with a
+--   constant <a>String</a>:
 --   
 --   <pre>
---   return f `ap` x1 `ap` ... `ap` xn
+--   &gt;&gt;&gt; Nothing $&gt; "foo"
+--   Nothing
+--   
+--   &gt;&gt;&gt; Just 90210 $&gt; "foo"
+--   Just "foo"
 --   </pre>
 --   
---   is equivalent to
+--   Replace the contents of an <tt><a>Either</a> <a>Int</a>
+--   <a>Int</a></tt> with a constant <a>String</a>, resulting in an
+--   <tt><a>Either</a> <a>Int</a> <a>String</a></tt>:
 --   
 --   <pre>
---   liftMn f x1 x2 ... xn
+--   &gt;&gt;&gt; Left 8675309 $&gt; "foo"
+--   Left 8675309
+--   
+--   &gt;&gt;&gt; Right 8675309 $&gt; "foo"
+--   Right "foo"
 --   </pre>
-ap :: Monad m => m (a -> b) -> m a -> m b
-
--- | Promote a function to a monad, scanning the monadic arguments from
---   left to right (cf. <a>liftM2</a>).
-liftM5 :: Monad m => (a1 -> a2 -> a3 -> a4 -> a5 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m a5 -> m r
-
--- | Promote a function to a monad, scanning the monadic arguments from
---   left to right (cf. <a>liftM2</a>).
-liftM4 :: Monad m => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
-
--- | Promote a function to a monad, scanning the monadic arguments from
---   left to right (cf. <a>liftM2</a>).
-liftM3 :: Monad m => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
-
--- | Promote a function to a monad, scanning the monadic arguments from
---   left to right. For example,
+--   
+--   Replace each element of a list with a constant <a>String</a>:
 --   
 --   <pre>
---   liftM2 (+) [0,1] [0,2] = [0,2,1,3]
---   liftM2 (+) (Just 1) Nothing = Nothing
+--   &gt;&gt;&gt; [1,2,3] $&gt; "foo"
+--   ["foo","foo","foo"]
 --   </pre>
-liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
-
--- | Conditional execution of <a>Applicative</a> expressions. For example,
+--   
+--   Replace the second element of a pair with a constant <a>String</a>:
 --   
 --   <pre>
---   when debug (putStrLn "Debugging")
+--   &gt;&gt;&gt; (1,2) $&gt; "foo"
+--   (1,"foo")
 --   </pre>
---   
---   will output the string <tt>Debugging</tt> if the Boolean value
---   <tt>debug</tt> is <a>True</a>, and otherwise do nothing.
-when :: Applicative f => Bool -> f () -> f ()
+($>) :: Functor f => f a -> b -> f b
+infixl 4 $>
 
--- | Same as <a>&gt;&gt;=</a>, but with the arguments interchanged.
-(=<<) :: Monad m => (a -> m b) -> m a -> m b
-infixr 1 =<<
+-- | Monads that also support choice and failure.
+class (Alternative m, Monad m) => MonadPlus (m :: Type -> Type)
 
--- | Lift a ternary function to actions.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt><a>liftA3</a> f as bs cs</tt>' can
---   be understood as the <tt>do</tt> expression
+-- | The identity of <a>mplus</a>. It should also satisfy the equations
 --   
 --   <pre>
---   do a &lt;- as
---      b &lt;- bs
---      c &lt;- cs
---      pure (f a b c)
+--   mzero &gt;&gt;= f  =  mzero
+--   v &gt;&gt; mzero   =  mzero
 --   </pre>
-liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
-
--- | Lift a function to actions. This function may be used as a value for
---   <a>fmap</a> in a <a>Functor</a> instance.
 --   
---   | Using <tt>ApplicativeDo</tt>: '<tt><a>liftA</a> f as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   The default definition is
 --   
 --   <pre>
---   do a &lt;- as
---      pure (f a)
+--   mzero = <a>empty</a>
 --   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint, weaker than
---   <tt>Applicative</tt>.
-liftA :: Applicative f => (a -> b) -> f a -> f b
+mzero :: MonadPlus m => m a
 
--- | A variant of <a>&lt;*&gt;</a> with the arguments reversed.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;**&gt;</a> fs</tt>' can
---   be understood as the <tt>do</tt> expression
+-- | An associative operation. The default definition is
 --   
 --   <pre>
---   do a &lt;- as
---      f &lt;- fs
---      pure (f a)
+--   mplus = (<a>&lt;|&gt;</a>)
 --   </pre>
-(<**>) :: Applicative f => f a -> f (a -> b) -> f b
-infixl 4 <**>
+mplus :: MonadPlus m => m a -> m a -> m a
 
 -- | A monoid on applicative functors.
 --   
@@ -2092,29 +2273,69 @@ some :: Alternative f => f a -> f [a]
 many :: Alternative f => f a -> f [a]
 infixl 3 <|>
 
--- | Monads that also support choice and failure.
-class (Alternative m, Monad m) => MonadPlus (m :: Type -> Type)
+-- | Conditional execution of <a>Applicative</a> expressions. For example,
+--   
+--   <pre>
+--   when debug (putStrLn "Debugging")
+--   </pre>
+--   
+--   will output the string <tt>Debugging</tt> if the Boolean value
+--   <tt>debug</tt> is <a>True</a>, and otherwise do nothing.
+when :: Applicative f => Bool -> f () -> f ()
 
--- | The identity of <a>mplus</a>. It should also satisfy the equations
---   
---   <pre>
---   mzero &gt;&gt;= f  =  mzero
---   v &gt;&gt; mzero   =  mzero
---   </pre>
---   
---   The default definition is
---   
---   <pre>
---   mzero = <a>empty</a>
---   </pre>
-mzero :: MonadPlus m => m a
+-- | Promote a function to a monad, scanning the monadic arguments from
+--   left to right (cf. <a>liftM2</a>).
+liftM5 :: Monad m => (a1 -> a2 -> a3 -> a4 -> a5 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m a5 -> m r
 
--- | An associative operation. The default definition is
+-- | Promote a function to a monad, scanning the monadic arguments from
+--   left to right (cf. <a>liftM2</a>).
+liftM4 :: Monad m => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
+
+-- | Promote a function to a monad, scanning the monadic arguments from
+--   left to right (cf. <a>liftM2</a>).
+liftM3 :: Monad m => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+
+-- | Promote a function to a monad, scanning the monadic arguments from
+--   left to right. For example,
 --   
 --   <pre>
---   mplus = (<a>&lt;|&gt;</a>)
+--   liftM2 (+) [0,1] [0,2] = [0,2,1,3]
+--   liftM2 (+) (Just 1) Nothing = Nothing
 --   </pre>
-mplus :: MonadPlus m => m a -> m a -> m a
+liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+
+-- | Lift a ternary function to actions.
+liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
+
+-- | Lift a function to actions. Equivalent to Functor's <a>fmap</a> but
+--   implemented using only <a>Applicative</a>'s methods: `liftA f a = pure
+--   f <a>*</a> a`
+--   
+--   As such this function may be used to implement a <a>Functor</a>
+--   instance from an <a>Applicative</a> one.
+liftA :: Applicative f => (a -> b) -> f a -> f b
+
+-- | In many situations, the <a>liftM</a> operations can be replaced by
+--   uses of <a>ap</a>, which promotes function application.
+--   
+--   <pre>
+--   return f `ap` x1 `ap` ... `ap` xn
+--   </pre>
+--   
+--   is equivalent to
+--   
+--   <pre>
+--   liftMn f x1 x2 ... xn
+--   </pre>
+ap :: Monad m => m (a -> b) -> m a -> m b
+
+-- | Same as <a>&gt;&gt;=</a>, but with the arguments interchanged.
+(=<<) :: Monad m => (a -> m b) -> m a -> m b
+infixr 1 =<<
+
+-- | A variant of <a>&lt;*&gt;</a> with the arguments reversed.
+(<**>) :: Applicative f => f a -> f (a -> b) -> f b
+infixl 4 <**>
 
 -- | Request a CallStack.
 --   
@@ -2264,28 +2485,37 @@ decodeUtf8 :: ByteString -> Text
 --   <a>MonadUnliftIO</a> to <a>ReaderT</a> and <a>IdentityT</a>
 --   transformers on top of <a>IO</a>.
 --   
---   Laws. For any value <tt>u</tt> returned by <a>askUnliftIO</a>, it must
---   meet the monad transformer laws as reformulated for
+--   Laws. For any function <tt>run</tt> provided by <a>withRunInIO</a>, it
+--   must meet the monad transformer laws as reformulated for
 --   <tt>MonadUnliftIO</tt>:
 --   
 --   <ul>
---   <li><pre>unliftIO u . return = return</pre></li>
---   <li><pre>unliftIO u (m &gt;&gt;= f) = unliftIO u m &gt;&gt;= unliftIO
---   u . f</pre></li>
+--   <li><pre>run . return = return</pre></li>
+--   <li><pre>run (m &gt;&gt;= f) = run m &gt;&gt;= run . f</pre></li>
 --   </ul>
 --   
---   Instances of <tt>MonadUnliftIO</tt> must also satisfy the idempotency
---   law:
+--   Instances of <tt>MonadUnliftIO</tt> must also satisfy the following
+--   laws:
 --   
 --   <ul>
---   <li><pre>askUnliftIO &gt;&gt;= \u -&gt; (liftIO . unliftIO u) m =
---   m</pre></li>
+--   <li><i>Identity law</i> <tt>withRunInIO (\run -&gt; run m) =
+--   m</tt></li>
+--   <li><i>Inverse law</i> <tt>withRunInIO (\_ -&gt; m) = liftIO
+--   m</tt></li>
 --   </ul>
 --   
---   This law showcases two properties. First, <a>askUnliftIO</a> doesn't
---   change the monadic context, and second, <tt>liftIO . unliftIO u</tt>
---   is equivalent to <tt>id</tt> IF called in the same monadic context as
---   <a>askUnliftIO</a>.
+--   As an example of an invalid instance, a naive implementation of
+--   <tt>MonadUnliftIO (StateT s m)</tt> might be
+--   
+--   <pre>
+--   withRunInIO inner =
+--     StateT $ \s -&gt;
+--       withRunInIO $ \run -&gt;
+--         inner (run . flip evalStateT s)
+--   </pre>
+--   
+--   This breaks the identity law because the inner <tt>run m</tt> would
+--   throw away any state changes in <tt>m</tt>.
 class MonadIO m => MonadUnliftIO (m :: Type -> Type)
 
 -- | Convenience function for capturing the monadic context and running an
@@ -2397,7 +2627,7 @@ class From source target
 --   -- Avoid this:
 --   from (x :: s)
 --   
---   -- Prefer this:
+--   -- Prefer this (using [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html) language extension):
 --   from @s x
 --   </pre>
 --   

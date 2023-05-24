@@ -153,16 +153,6 @@ infixl 4 <$>
 -- | Replace all locations in the input with the same value. The default
 --   definition is <tt><a>fmap</a> . <a>const</a></tt>, but this may be
 --   overridden with a more efficient version.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>a <a>&lt;$</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do bs
---      pure a
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
 (<$) :: Functor f => a -> f b -> f a
 infixl 4 <$
 
@@ -171,62 +161,72 @@ infixl 4 <$
 --   A few functors support an implementation of <a>&lt;*&gt;</a> that is
 --   more efficient than the default one.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt>fs <a>&lt;*&gt;</a> as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Example</b></h4>
+--   
+--   Used in combination with <tt>(<tt>&lt;$&gt;</tt>)</tt>,
+--   <tt>(<a>&lt;*&gt;</a>)</tt> can be used to build a record.
 --   
 --   <pre>
---   do f &lt;- fs
---      a &lt;- as
---      pure (f a)
+--   &gt;&gt;&gt; data MyState = MyState {arg1 :: Foo, arg2 :: Bar, arg3 :: Baz}
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceFoo :: Applicative f =&gt; f Foo
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceBar :: Applicative f =&gt; f Bar
+--   
+--   &gt;&gt;&gt; produceBaz :: Applicative f =&gt; f Baz
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; mkState :: Applicative f =&gt; f MyState
+--   
+--   &gt;&gt;&gt; mkState = MyState &lt;$&gt; produceFoo &lt;*&gt; produceBar &lt;*&gt; produceBaz
 --   </pre>
 (<*>) :: Applicative f => f (a -> b) -> f a -> f b
 infixl 4 <*>
 
 -- | Sequence actions, discarding the value of the first argument.
 --   
---   '<tt>as <a>*&gt;</a> bs</tt>' can be understood as the <tt>do</tt>
---   expression
+--   <h4><b>Examples</b></h4>
+--   
+--   If used in conjunction with the Applicative instance for <a>Maybe</a>,
+--   you can chain Maybe computations, with a possible "early return" in
+--   case of <a>Nothing</a>.
 --   
 --   <pre>
---   do as
---      bs
+--   &gt;&gt;&gt; Just 2 *&gt; Just 3
+--   Just 3
 --   </pre>
 --   
---   This is a tad complicated for our <tt>ApplicativeDo</tt> extension
---   which will give it a <tt>Monad</tt> constraint. For an
---   <tt>Applicative</tt> constraint we write it of the form
+--   <pre>
+--   &gt;&gt;&gt; Nothing *&gt; Just 3
+--   Nothing
+--   </pre>
+--   
+--   Of course a more interesting use case would be to have effectful
+--   computations instead of just returning pure values.
 --   
 --   <pre>
---   do _ &lt;- as
---      b &lt;- bs
---      pure b
+--   &gt;&gt;&gt; import Data.Char
+--   
+--   &gt;&gt;&gt; import Text.ParserCombinators.ReadP
+--   
+--   &gt;&gt;&gt; let p = string "my name is " *&gt; munch1 isAlpha &lt;* eof
+--   
+--   &gt;&gt;&gt; readP_to_S p "my name is Simon"
+--   [("Simon","")]
 --   </pre>
 (*>) :: Applicative f => f a -> f b -> f b
 infixl 4 *>
 
 -- | Sequence actions, discarding the value of the second argument.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;*</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      bs
---      pure a
---   </pre>
 (<*) :: Applicative f => f a -> f b -> f a
 infixl 4 <*
 
 -- | A variant of <a>&lt;*&gt;</a> with the arguments reversed.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;**&gt;</a> fs</tt>' can
---   be understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      f &lt;- fs
---      pure (f a)
---   </pre>
 (<**>) :: Applicative f => f a -> f (a -> b) -> f b
 infixl 4 <**>
 
@@ -413,16 +413,6 @@ infixl 4 <$>
 -- | Replace all locations in the input with the same value. The default
 --   definition is <tt><a>fmap</a> . <a>const</a></tt>, but this may be
 --   overridden with a more efficient version.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>a <a>&lt;$</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do bs
---      pure a
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
 (<$) :: Functor f => a -> f b -> f a
 infixl 4 <$
 
@@ -431,62 +421,72 @@ infixl 4 <$
 --   A few functors support an implementation of <a>&lt;*&gt;</a> that is
 --   more efficient than the default one.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt>fs <a>&lt;*&gt;</a> as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Example</b></h4>
+--   
+--   Used in combination with <tt>(<tt>&lt;$&gt;</tt>)</tt>,
+--   <tt>(<a>&lt;*&gt;</a>)</tt> can be used to build a record.
 --   
 --   <pre>
---   do f &lt;- fs
---      a &lt;- as
---      pure (f a)
+--   &gt;&gt;&gt; data MyState = MyState {arg1 :: Foo, arg2 :: Bar, arg3 :: Baz}
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceFoo :: Applicative f =&gt; f Foo
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceBar :: Applicative f =&gt; f Bar
+--   
+--   &gt;&gt;&gt; produceBaz :: Applicative f =&gt; f Baz
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; mkState :: Applicative f =&gt; f MyState
+--   
+--   &gt;&gt;&gt; mkState = MyState &lt;$&gt; produceFoo &lt;*&gt; produceBar &lt;*&gt; produceBaz
 --   </pre>
 (<*>) :: Applicative f => f (a -> b) -> f a -> f b
 infixl 4 <*>
 
 -- | Sequence actions, discarding the value of the first argument.
 --   
---   '<tt>as <a>*&gt;</a> bs</tt>' can be understood as the <tt>do</tt>
---   expression
+--   <h4><b>Examples</b></h4>
+--   
+--   If used in conjunction with the Applicative instance for <a>Maybe</a>,
+--   you can chain Maybe computations, with a possible "early return" in
+--   case of <a>Nothing</a>.
 --   
 --   <pre>
---   do as
---      bs
+--   &gt;&gt;&gt; Just 2 *&gt; Just 3
+--   Just 3
 --   </pre>
 --   
---   This is a tad complicated for our <tt>ApplicativeDo</tt> extension
---   which will give it a <tt>Monad</tt> constraint. For an
---   <tt>Applicative</tt> constraint we write it of the form
+--   <pre>
+--   &gt;&gt;&gt; Nothing *&gt; Just 3
+--   Nothing
+--   </pre>
+--   
+--   Of course a more interesting use case would be to have effectful
+--   computations instead of just returning pure values.
 --   
 --   <pre>
---   do _ &lt;- as
---      b &lt;- bs
---      pure b
+--   &gt;&gt;&gt; import Data.Char
+--   
+--   &gt;&gt;&gt; import Text.ParserCombinators.ReadP
+--   
+--   &gt;&gt;&gt; let p = string "my name is " *&gt; munch1 isAlpha &lt;* eof
+--   
+--   &gt;&gt;&gt; readP_to_S p "my name is Simon"
+--   [("Simon","")]
 --   </pre>
 (*>) :: Applicative f => f a -> f b -> f b
 infixl 4 *>
 
 -- | Sequence actions, discarding the value of the second argument.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;*</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      bs
---      pure a
---   </pre>
 (<*) :: Applicative f => f a -> f b -> f a
 infixl 4 <*
 
 -- | A variant of <a>&lt;*&gt;</a> with the arguments reversed.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;**&gt;</a> fs</tt>' can
---   be understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      f &lt;- fs
---      pure (f a)
---   </pre>
 (<**>) :: Applicative f => f a -> f (a -> b) -> f b
 infixl 4 <**>
 
@@ -673,16 +673,6 @@ infixl 4 <$>
 -- | Replace all locations in the input with the same value. The default
 --   definition is <tt><a>fmap</a> . <a>const</a></tt>, but this may be
 --   overridden with a more efficient version.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>a <a>&lt;$</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do bs
---      pure a
---   </pre>
---   
---   with an inferred <tt>Functor</tt> constraint.
 (<$) :: Functor f => a -> f b -> f a
 infixl 4 <$
 
@@ -691,62 +681,72 @@ infixl 4 <$
 --   A few functors support an implementation of <a>&lt;*&gt;</a> that is
 --   more efficient than the default one.
 --   
---   Using <tt>ApplicativeDo</tt>: '<tt>fs <a>&lt;*&gt;</a> as</tt>' can be
---   understood as the <tt>do</tt> expression
+--   <h4><b>Example</b></h4>
+--   
+--   Used in combination with <tt>(<tt>&lt;$&gt;</tt>)</tt>,
+--   <tt>(<a>&lt;*&gt;</a>)</tt> can be used to build a record.
 --   
 --   <pre>
---   do f &lt;- fs
---      a &lt;- as
---      pure (f a)
+--   &gt;&gt;&gt; data MyState = MyState {arg1 :: Foo, arg2 :: Bar, arg3 :: Baz}
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceFoo :: Applicative f =&gt; f Foo
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; produceBar :: Applicative f =&gt; f Bar
+--   
+--   &gt;&gt;&gt; produceBaz :: Applicative f =&gt; f Baz
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; mkState :: Applicative f =&gt; f MyState
+--   
+--   &gt;&gt;&gt; mkState = MyState &lt;$&gt; produceFoo &lt;*&gt; produceBar &lt;*&gt; produceBaz
 --   </pre>
 (<*>) :: Applicative f => f (a -> b) -> f a -> f b
 infixl 4 <*>
 
 -- | Sequence actions, discarding the value of the first argument.
 --   
---   '<tt>as <a>*&gt;</a> bs</tt>' can be understood as the <tt>do</tt>
---   expression
+--   <h4><b>Examples</b></h4>
+--   
+--   If used in conjunction with the Applicative instance for <a>Maybe</a>,
+--   you can chain Maybe computations, with a possible "early return" in
+--   case of <a>Nothing</a>.
 --   
 --   <pre>
---   do as
---      bs
+--   &gt;&gt;&gt; Just 2 *&gt; Just 3
+--   Just 3
 --   </pre>
 --   
---   This is a tad complicated for our <tt>ApplicativeDo</tt> extension
---   which will give it a <tt>Monad</tt> constraint. For an
---   <tt>Applicative</tt> constraint we write it of the form
+--   <pre>
+--   &gt;&gt;&gt; Nothing *&gt; Just 3
+--   Nothing
+--   </pre>
+--   
+--   Of course a more interesting use case would be to have effectful
+--   computations instead of just returning pure values.
 --   
 --   <pre>
---   do _ &lt;- as
---      b &lt;- bs
---      pure b
+--   &gt;&gt;&gt; import Data.Char
+--   
+--   &gt;&gt;&gt; import Text.ParserCombinators.ReadP
+--   
+--   &gt;&gt;&gt; let p = string "my name is " *&gt; munch1 isAlpha &lt;* eof
+--   
+--   &gt;&gt;&gt; readP_to_S p "my name is Simon"
+--   [("Simon","")]
 --   </pre>
 (*>) :: Applicative f => f a -> f b -> f b
 infixl 4 *>
 
 -- | Sequence actions, discarding the value of the second argument.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;*</a> bs</tt>' can be
---   understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      bs
---      pure a
---   </pre>
 (<*) :: Applicative f => f a -> f b -> f a
 infixl 4 <*
 
 -- | A variant of <a>&lt;*&gt;</a> with the arguments reversed.
---   
---   Using <tt>ApplicativeDo</tt>: '<tt>as <a>&lt;**&gt;</a> fs</tt>' can
---   be understood as the <tt>do</tt> expression
---   
---   <pre>
---   do a &lt;- as
---      f &lt;- fs
---      pure (f a)
---   </pre>
 (<**>) :: Applicative f => f a -> f (a -> b) -> f b
 infixl 4 <**>
 
