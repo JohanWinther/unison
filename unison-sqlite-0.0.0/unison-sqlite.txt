@@ -12,11 +12,12 @@ data Param
 FieldParam :: !Text -> Param
 RowParam :: !Text -> !Int -> Param
 
--- | Parse a SQL string, and return the prettefied SQL string along with
---   the named parameters it contains.
+-- | Parse a SQL string, and return the list of lumps, where each Left is a
+--   prettefied SQL string along with the named parameters it contains, and
+--   each Right is the name of a query to be interpolated.
 --   
 --   Exported only for testing.
-internalParseSql :: Text -> Either String (Text, [Param])
+internalParseSql :: Text -> Either String [Either (Text, [Param]) Text]
 
 module Unison.Sqlite.Connection
 
@@ -351,13 +352,14 @@ data Sql2
 --   There are three valid syntaxes for interpolating a variable:
 --   
 --   <ul>
---   <li><tt>:colon</tt>, or <tt>$dollar</tt>, which denote a single-field
---   variable</li>
+--   <li><tt>:colon</tt>, which denotes a single-field variable</li>
 --   <li><tt>@at</tt>, followed by 1+ bare <tt>@</tt>, which denotes a
 --   multi-field variable</li>
+--   <li><tt>$dollar</tt>, which denotes an entire <a>Sql2</a>
+--   fragment</li>
 --   </ul>
 --   
---   As an example of the latter, consider a variable <tt>plonk</tt> with a
+--   As an example of the second, consider a variable <tt>plonk</tt> with a
 --   two-field <a>ToRow</a> instance. A query that interpolates
 --   <tt>plonk</tt> might look like:
 --   
@@ -368,6 +370,18 @@ data Sql2
 --     WHERE stuff = @plonk
 --       AND other = @
 --   |]
+--   </pre>
+--   
+--   As an example of the third,
+--   
+--   <pre>
+--   let foo = [sql2| bar |] in [sql2| $foo baz |]
+--   </pre>
+--   
+--   is equivalent to
+--   
+--   <pre>
+--   [sql2| bar baz |]
 --   </pre>
 sql2 :: QuasiQuoter
 
