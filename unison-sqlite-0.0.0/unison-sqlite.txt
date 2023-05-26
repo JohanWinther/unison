@@ -39,6 +39,12 @@ withConnection :: MonadUnliftIO m => String -> FilePath -> (Connection -> m a) -
 execute :: ToRow a => Connection -> Sql -> a -> IO ()
 execute2 :: Connection -> Sql2 -> IO ()
 executeMany :: ToRow a => Connection -> Sql -> [a] -> IO ()
+
+-- | Execute one or more semicolon-delimited statements.
+--   
+--   This function does not support parameters, and is mostly useful for
+--   executing DDL and migrations.
+executeStatements :: Connection -> Text -> IO ()
 execute_ :: Connection -> Sql -> IO ()
 queryStreamRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
 queryStreamCol :: forall a b r. (FromField b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
@@ -195,6 +201,7 @@ unsafeGetConnection :: Transaction Connection
 execute :: ToRow a => Sql -> a -> Transaction ()
 execute2 :: Sql2 -> Transaction ()
 executeMany :: ToRow a => Sql -> [a] -> Transaction ()
+executeStatements :: Text -> Transaction ()
 execute_ :: Sql -> Transaction ()
 queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
@@ -399,6 +406,7 @@ valuesSql :: ToRow a => Values a -> Sql
 execute :: ToRow a => Sql -> a -> Transaction ()
 execute2 :: Sql2 -> Transaction ()
 executeMany :: ToRow a => Sql -> [a] -> Transaction ()
+executeStatements :: Text -> Transaction ()
 execute_ :: Sql -> Transaction ()
 queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
 queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
