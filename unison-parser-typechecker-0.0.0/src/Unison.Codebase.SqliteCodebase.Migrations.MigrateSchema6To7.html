@@ -6,53 +6,52 @@
 </span><span id="line-6"></span><span>
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Except</span></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.State</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String.Here.Uninterpolated</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">here</span></span><span class="hs-special">)</span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.DbId</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">DB</span></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.DbId</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Db</span></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Operations</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Ops</span></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Queries</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Q</span></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sync</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sync</span></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Debug</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Debug</span></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Sqlite</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sqlite</span></span><span>
-</span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-comment">-- | Adds a table for tracking namespace statistics</span><span>
-</span><span id="line-19"></span><span class="hs-comment">-- Adds stats for all existing namespaces, even though missing stats are computed on-demand if missing.</span><span>
-</span><span id="line-20"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrateSchema6To7"><span class="hs-identifier hs-type">migrateSchema6To7</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-21"></span><span id="migrateSchema6To7"><span class="annot"><span class="annottext">migrateSchema6To7 :: Transaction ()
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.DbId</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">DB</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.DbId</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Db</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Operations</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Ops</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Queries</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Q</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sync</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sync</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Debug</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Debug</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Sqlite</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sqlite</span></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- | Adds a table for tracking namespace statistics</span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- Adds stats for all existing namespaces, even though missing stats are computed on-demand if missing.</span><span>
+</span><span id="line-19"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrateSchema6To7"><span class="hs-identifier hs-type">migrateSchema6To7</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span id="migrateSchema6To7"><span class="annot"><span class="annottext">migrateSchema6To7 :: Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrateSchema6To7"><span class="hs-identifier hs-var hs-var">migrateSchema6To7</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-22"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
+</span><span id="line-21"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Q.expectSchemaVersion</span></span><span> </span><span class="annot"><span class="annottext">SchemaVersion
 </span><span class="hs-number">6</span></span><span>
-</span><span id="line-23"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
+</span><span id="line-22"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
 </span><span class="hs-identifier hs-var">Q.addNamespaceStatsTables</span></span><span>
-</span><span id="line-24"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
+</span><span id="line-23"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsToAllNamespaces"><span class="hs-identifier hs-var">addStatsToAllNamespaces</span></a></span><span>
-</span><span id="line-25"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
+</span><span id="line-24"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Q.setSchemaVersion</span></span><span> </span><span class="annot"><span class="annottext">SchemaVersion
 </span><span class="hs-number">7</span></span><span>
-</span><span id="line-26"></span><span>
-</span><span id="line-27"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsToAllNamespaces"><span class="hs-identifier hs-type">addStatsToAllNamespaces</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-28"></span><span id="addStatsToAllNamespaces"><span class="annot"><span class="annottext">addStatsToAllNamespaces :: Transaction ()
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsToAllNamespaces"><span class="hs-identifier hs-type">addStatsToAllNamespaces</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span id="addStatsToAllNamespaces"><span class="annot"><span class="annottext">addStatsToAllNamespaces :: Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsToAllNamespaces"><span class="hs-identifier hs-var hs-var">addStatsToAllNamespaces</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-29"></span><span>  </span><span id="local-6989586621680847666"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847666"><span class="hs-identifier hs-var">totalToMigrate</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-30"></span><span>    </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
-</span><span class="hs-identifier hs-var">Sqlite.queryOneCol_</span></span><span>
-</span><span id="line-31"></span><span>      </span><span class="annot"><span class="">[here|
-    SELECT COUNT(*)
-      FROM object
-      WHERE type_id = 2
-    |]</span></span><span>
-</span><span id="line-36"></span><span>  </span><span id="local-6989586621680847664"><span class="annot"><span class="annottext">[BranchObjectId]
-</span><a href="#local-6989586621680847664"><span class="hs-identifier hs-var">allBranchObjIds</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-37"></span><span>    </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction [a]
-</span><span class="hs-identifier hs-var">Sqlite.queryListCol_</span></span><span>
-</span><span id="line-38"></span><span>      </span><span class="annot"><span class="">[here|
-    SELECT id
-      FROM object
-      WHERE type_id = 2
-    |]</span></span><span>
-</span><span id="line-43"></span><span>  </span><span class="annot"><span class="annottext">((), Int)
+</span><span id="line-28"></span><span>  </span><span id="local-6989586621680851490"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680851490"><span class="hs-identifier hs-var">totalToMigrate</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-29"></span><span>    </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
+</span><span class="hs-identifier hs-var">Sqlite.queryOneCol</span></span><span>
+</span><span id="line-30"></span><span>      </span><span class="annot"><span class="">[Sqlite.sql|
+        SELECT COUNT(*)
+          FROM object
+          WHERE type_id = 2
+      |]</span></span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621680851486"><span class="annot"><span class="annottext">[BranchObjectId]
+</span><a href="#local-6989586621680851486"><span class="hs-identifier hs-var">allBranchObjIds</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction [a]
+</span><span class="hs-identifier hs-var">Sqlite.queryListCol</span></span><span>
+</span><span id="line-37"></span><span>      </span><span class="annot"><span class="">[Sqlite.sql|
+        SELECT id
+          FROM object
+          WHERE type_id = 2
+      |]</span></span><span>
+</span><span id="line-42"></span><span>  </span><span class="annot"><span class="annottext">((), Int)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a. StateT s m a -&gt; s -&gt; m (a, s)
 </span><span class="hs-identifier hs-var">runStateT</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -63,14 +62,14 @@ Sync m h -&gt; Progress m h -&gt; [h] -&gt; m ()
 </span><span class="hs-identifier hs-var">Sync.sync</span></span><span> </span><span class="annot"><span class="annottext">Sync (StateT Int Transaction) BranchObjectId
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationSync"><span class="hs-identifier hs-var">migrationSync</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Progress (StateT Int Transaction) BranchObjectId
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationProgress"><span class="hs-identifier hs-var">migrationProgress</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847666"><span class="hs-identifier hs-var">totalToMigrate</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[BranchObjectId]
-</span><a href="#local-6989586621680847664"><span class="hs-identifier hs-var">allBranchObjIds</span></a></span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-45"></span><span>
-</span><span id="line-46"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationSync"><span class="hs-identifier hs-type">migrationSync</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sync.Sync</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span>
-</span><span id="line-47"></span><span id="migrationSync"><span class="annot"><span class="annottext">migrationSync :: Sync (StateT Int Transaction) BranchObjectId
+</span><a href="#local-6989586621680851490"><span class="hs-identifier hs-var">totalToMigrate</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[BranchObjectId]
+</span><a href="#local-6989586621680851486"><span class="hs-identifier hs-var">allBranchObjIds</span></a></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationSync"><span class="hs-identifier hs-type">migrationSync</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sync.Sync</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span>
+</span><span id="line-46"></span><span id="migrationSync"><span class="annot"><span class="annottext">migrationSync :: Sync (StateT Int Transaction) BranchObjectId
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationSync"><span class="hs-identifier hs-var hs-var">migrationSync</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-48"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) entity.
+</span><span id="line-47"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) entity.
 (entity -&gt; m (TrySyncResult entity)) -&gt; Sync m entity
 </span><span class="hs-identifier hs-var">Sync.Sync</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
@@ -78,27 +77,27 @@ m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId -&gt; Transaction (TrySyncResult BranchObjectId)
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsForBranch"><span class="hs-identifier hs-var">addStatsForBranch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-49"></span><span>
-</span><span id="line-50"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsForBranch"><span class="hs-identifier hs-type">addStatsForBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span class="hs-special">)</span><span>
-</span><span id="line-51"></span><span id="addStatsForBranch"><span class="annot"><span class="annottext">addStatsForBranch :: BranchObjectId -&gt; Transaction (TrySyncResult BranchObjectId)
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsForBranch"><span class="hs-identifier hs-var hs-var">addStatsForBranch</span></a></span></span><span> </span><span id="local-6989586621680847653"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680847653"><span class="hs-identifier hs-var">boId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-52"></span><span>  </span><span id="local-6989586621680847652"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680847652"><span class="hs-identifier hs-var">bhId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">HashId -&gt; BranchHashId
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsForBranch"><span class="hs-identifier hs-type">addStatsForBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span id="addStatsForBranch"><span class="annot"><span class="annottext">addStatsForBranch :: BranchObjectId -&gt; Transaction (TrySyncResult BranchObjectId)
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#addStatsForBranch"><span class="hs-identifier hs-var hs-var">addStatsForBranch</span></a></span></span><span> </span><span id="local-6989586621680851475"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680851475"><span class="hs-identifier hs-var">boId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-51"></span><span>  </span><span id="local-6989586621680851474"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680851474"><span class="hs-identifier hs-var">bhId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">HashId -&gt; BranchHashId
 </span><span class="hs-identifier hs-var">Db.BranchHashId</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">ObjectId -&gt; Transaction HashId
 </span><span class="hs-identifier hs-var">Q.expectPrimaryHashIdForObject</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId -&gt; ObjectId
 </span><span class="hs-identifier hs-var">Db.unBranchObjectId</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680847653"><span class="hs-identifier hs-var">boId</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-comment">-- &quot;expectNamespaceStatsByHashId&quot; computes stats if they are missing.</span><span>
-</span><span id="line-54"></span><span>  </span><span class="annot"><span class="annottext">BranchHashId -&gt; Transaction NamespaceStats
+</span><a href="#local-6989586621680851475"><span class="hs-identifier hs-var">boId</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-comment">-- &quot;expectNamespaceStatsByHashId&quot; computes stats if they are missing.</span><span>
+</span><span id="line-53"></span><span>  </span><span class="annot"><span class="annottext">BranchHashId -&gt; Transaction NamespaceStats
 </span><span class="hs-identifier hs-var">Ops.expectNamespaceStatsByHashId</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680847652"><span class="hs-identifier hs-var">bhId</span></a></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">forall entity. TrySyncResult entity
+</span><a href="#local-6989586621680851474"><span class="hs-identifier hs-var">bhId</span></a></span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">forall entity. TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Done</span></span><span>
-</span><span id="line-56"></span><span>
-</span><span id="line-57"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#debugLog"><span class="hs-identifier hs-type">debugLog</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-58"></span><span id="debugLog"><span class="annot"><span class="annottext">debugLog :: String -&gt; Transaction ()
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#debugLog"><span class="hs-identifier hs-type">debugLog</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span id="debugLog"><span class="annot"><span class="annottext">debugLog :: String -&gt; Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#debugLog"><span class="hs-identifier hs-var hs-var">debugLog</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Monad m =&gt; DebugFlag -&gt; m () -&gt; m ()
 </span><span class="hs-identifier hs-var">Debug.whenDebug</span></span><span> </span><span class="annot"><span class="annottext">DebugFlag
 </span><span class="hs-identifier hs-var">Debug.Migration</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -106,12 +105,12 @@ m a -&gt; t m a
 </span><span class="hs-identifier hs-var">Sqlite.unsafeIO</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO ()
 </span><span class="hs-identifier hs-var">putStrLn</span></span><span>
-</span><span id="line-59"></span><span>
-</span><span id="line-60"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationProgress"><span class="hs-identifier hs-type">migrationProgress</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span>
-</span><span id="line-61"></span><span id="migrationProgress"><span class="annot"><span class="annottext">migrationProgress :: Int -&gt; Progress (StateT Int Transaction) BranchObjectId
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationProgress"><span class="hs-identifier hs-var hs-var">migrationProgress</span></a></span></span><span> </span><span id="local-6989586621680847640"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847640"><span class="hs-identifier hs-var">totalBranches</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-62"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">forall {t :: (* -&gt; *) -&gt; * -&gt; *} {a}.
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationProgress"><span class="hs-identifier hs-type">migrationProgress</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span>
+</span><span id="line-60"></span><span id="migrationProgress"><span class="annot"><span class="annottext">migrationProgress :: Int -&gt; Progress (StateT Int Transaction) BranchObjectId
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7.html#migrationProgress"><span class="hs-identifier hs-var hs-var">migrationProgress</span></a></span></span><span> </span><span id="local-6989586621680851462"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680851462"><span class="hs-identifier hs-var">totalBranches</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-61"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">forall {t :: (* -&gt; *) -&gt; * -&gt; *} {a}.
 (MonadTrans t, Show a) =&gt;
 a -&gt; t Transaction ()
 need :: BranchObjectId -&gt; StateT Int Transaction ()
@@ -132,10 +131,10 @@ a -&gt; t Transaction ()
 allDone :: StateT Int Transaction ()
 allDone :: StateT Int Transaction ()
 </span><span class="hs-identifier hs-var hs-var">Sync.allDone</span></span><span class="hs-special">}</span><span>
-</span><span id="line-63"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-64"></span><span>    </span><span id="local-6989586621680847638"><span class="annot"><span class="annottext">need :: a -&gt; t Transaction ()
-</span><a href="#local-6989586621680847638"><span class="hs-identifier hs-var hs-var">need</span></a></span></span><span> </span><span id="local-6989586621680847622"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680847622"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><span id="line-62"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-63"></span><span>    </span><span id="local-6989586621680851460"><span class="annot"><span class="annottext">need :: a -&gt; t Transaction ()
+</span><a href="#local-6989586621680851460"><span class="hs-identifier hs-var hs-var">need</span></a></span></span><span> </span><span id="local-6989586621680851444"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680851444"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -145,18 +144,18 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;Need &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680847622"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-65"></span><span>    </span><span id="local-6989586621680847636"><span class="annot"><span class="annottext">done :: BranchObjectId -&gt; StateT Int Transaction ()
-</span><a href="#local-6989586621680847636"><span class="hs-identifier hs-var hs-var">done</span></a></span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680851444"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-64"></span><span>    </span><span id="local-6989586621680851458"><span class="annot"><span class="annottext">done :: BranchObjectId -&gt; StateT Int Transaction ()
+</span><a href="#local-6989586621680851458"><span class="hs-identifier hs-var hs-var">done</span></a></span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-66"></span><span>      </span><span class="hs-keyword">do</span><span>
-</span><span id="line-67"></span><span>        </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *). MonadState s m =&gt; (s -&gt; s) -&gt; m ()
+</span><span id="line-65"></span><span>      </span><span class="hs-keyword">do</span><span>
+</span><span id="line-66"></span><span>        </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *). MonadState s m =&gt; (s -&gt; s) -&gt; m ()
 </span><span class="hs-identifier hs-var">modify</span></span><span> </span><span class="annot"><span class="annottext">forall a. Enum a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">succ</span></span><span>
-</span><span id="line-68"></span><span>        </span><span id="local-6989586621680847618"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847618"><span class="hs-identifier hs-var">numDone</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *). MonadState s m =&gt; m s
+</span><span id="line-67"></span><span>        </span><span id="local-6989586621680851440"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680851440"><span class="hs-identifier hs-var">numDone</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *). MonadState s m =&gt; m s
 </span><span class="hs-identifier hs-var">get</span></span><span>
-</span><span id="line-69"></span><span>        </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><span id="line-68"></span><span>        </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -168,17 +167,17 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;\r&#127959;  &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847618"><span class="hs-identifier hs-var">numDone</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680851440"><span class="hs-identifier hs-var">numDone</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; / ~&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847640"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680851462"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; entities migrated. &#128679;&quot;</span></span><span>
-</span><span id="line-70"></span><span>    </span><span id="local-6989586621680847634"><span class="annot"><span class="annottext">error :: a -&gt; t Transaction ()
-</span><a href="#local-6989586621680847634"><span class="hs-identifier hs-var hs-var">error</span></a></span></span><span> </span><span id="local-6989586621680847607"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680847607"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><span id="line-69"></span><span>    </span><span id="local-6989586621680851456"><span class="annot"><span class="annottext">error :: a -&gt; t Transaction ()
+</span><a href="#local-6989586621680851456"><span class="hs-identifier hs-var hs-var">error</span></a></span></span><span> </span><span id="local-6989586621680851429"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680851429"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -190,17 +189,17 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;Error &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680847607"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-71"></span><span>    </span><span id="local-6989586621680847632"><span class="annot"><span class="annottext">allDone :: StateT Int Transaction ()
-</span><a href="#local-6989586621680847632"><span class="hs-identifier hs-var hs-var">allDone</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><a href="#local-6989586621680851429"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-70"></span><span>    </span><span id="local-6989586621680851454"><span class="annot"><span class="annottext">allDone :: StateT Int Transaction ()
+</span><a href="#local-6989586621680851454"><span class="hs-identifier hs-var hs-var">allDone</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-72"></span><span>      </span><span class="hs-comment">-- In some corrupted codebases we don't necessarily process every causal, or there may</span><span>
-</span><span id="line-73"></span><span>      </span><span class="hs-comment">-- be unreachable causals. We'll show the final number here just so everything looks</span><span>
-</span><span id="line-74"></span><span>      </span><span class="hs-comment">-- good to users. It's okay since we'll process the other branches and clean them up in</span><span>
-</span><span id="line-75"></span><span>      </span><span class="hs-comment">-- a batch step.</span><span>
-</span><span id="line-76"></span><span>      </span><span class="annot"><span class="annottext">forall a. IO a -&gt; Transaction a
+</span><span id="line-71"></span><span>      </span><span class="hs-comment">-- In some corrupted codebases we don't necessarily process every causal, or there may</span><span>
+</span><span id="line-72"></span><span>      </span><span class="hs-comment">-- be unreachable causals. We'll show the final number here just so everything looks</span><span>
+</span><span id="line-73"></span><span>      </span><span class="hs-comment">-- good to users. It's okay since we'll process the other branches and clean them up in</span><span>
+</span><span id="line-74"></span><span>      </span><span class="hs-comment">-- a batch step.</span><span>
+</span><span id="line-75"></span><span>      </span><span class="annot"><span class="annottext">forall a. IO a -&gt; Transaction a
 </span><span class="hs-identifier hs-var">Sqlite.unsafeIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO ()
 </span><span class="hs-identifier hs-var">putStrLn</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -208,18 +207,18 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;\r&#127959;  &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847640"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680851462"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; / ~&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680847640"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680851462"><span class="hs-identifier hs-var">totalBranches</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; entities migrated. &#128679;&quot;</span></span><span>
-</span><span id="line-77"></span><span>      </span><span class="annot"><span class="annottext">forall a. IO a -&gt; Transaction a
+</span><span id="line-76"></span><span>      </span><span class="annot"><span class="annottext">forall a. IO a -&gt; Transaction a
 </span><span class="hs-identifier hs-var">Sqlite.unsafeIO</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO ()
 </span><span class="hs-identifier hs-var">putStrLn</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Finished.&quot;</span></span><span>
-</span><span id="line-78"></span></pre></body></html>
+</span><span id="line-77"></span></pre></body></html>

@@ -11,13 +11,14 @@ module Unison.Sqlite.Internal
 data Param
 FieldParam :: !Text -> Param
 RowParam :: !Text -> !Int -> Param
+data ParsedLump
+ParsedOuterLump :: !Text -> ![Param] -> ParsedLump
+ParsedInnerLump :: !Text -> ParsedLump
+ParsedValuesLump :: !Text -> ParsedLump
 
--- | Parse a SQL string, and return the list of lumps, where each Left is a
---   prettefied SQL string along with the named parameters it contains, and
---   each Right is the name of a query to be interpolated.
---   
---   Exported only for testing.
-internalParseSql :: Text -> Either String [Either (Text, [Param]) Text]
+-- | Parse a SQL string, and return the list of lumps. Exported only for
+--   testing.
+internalParseSql :: Text -> Either String [ParsedLump]
 
 module Unison.Sqlite.Connection
 
@@ -36,55 +37,27 @@ Connection :: String -> FilePath -> Connection -> Connection
 --   maintain backwards compatibility with code that was written before the
 --   foreign key integrity feature was implemented.
 withConnection :: MonadUnliftIO m => String -> FilePath -> (Connection -> m a) -> m a
-execute :: ToRow a => Connection -> Sql -> a -> IO ()
-execute2 :: Connection -> Sql2 -> IO ()
-executeMany :: ToRow a => Connection -> Sql -> [a] -> IO ()
+execute :: Connection -> Sql -> IO ()
 
 -- | Execute one or more semicolon-delimited statements.
 --   
 --   This function does not support parameters, and is mostly useful for
 --   executing DDL and migrations.
 executeStatements :: Connection -> Text -> IO ()
-execute_ :: Connection -> Sql -> IO ()
-queryStreamRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
-queryStreamCol :: forall a b r. (FromField b, ToRow a) => Connection -> Sql -> a -> (IO (Maybe b) -> IO r) -> IO r
-queryListRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> IO [b]
-queryListRow2 :: forall a. FromRow a => Connection -> Sql2 -> IO [a]
-queryListCol :: forall a b. (FromField b, ToRow a) => Connection -> Sql -> a -> IO [b]
-queryListCol2 :: forall a. FromField a => Connection -> Sql2 -> IO [a]
-queryMaybeRow :: (ToRow a, FromRow b) => Connection -> Sql -> a -> IO (Maybe b)
-queryMaybeRow2 :: FromRow a => Connection -> Sql2 -> IO (Maybe a)
-queryMaybeCol :: forall a b. (ToRow a, FromField b) => Connection -> Sql -> a -> IO (Maybe b)
-queryMaybeCol2 :: forall a. FromField a => Connection -> Sql2 -> IO (Maybe a)
-queryOneRow :: (FromRow b, ToRow a) => Connection -> Sql -> a -> IO b
-queryOneRow2 :: FromRow a => Connection -> Sql2 -> IO a
-queryOneCol :: forall a b. (FromField b, ToRow a) => Connection -> Sql -> a -> IO b
-queryOneCol2 :: forall a. FromField a => Connection -> Sql2 -> IO a
-
--- | Run a query many times using a prepared statement.
-queryManyListRow :: forall q r. (ToRow q, FromRow r) => Connection -> Sql -> [q] -> IO [[r]]
-queryListRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> ([b] -> Either e r) -> IO r
-queryListColCheck :: forall a b e r. (FromField b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> ([b] -> Either e r) -> IO r
-queryMaybeRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> (b -> Either e r) -> IO (Maybe r)
-queryMaybeRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql2 -> (a -> Either e r) -> IO (Maybe r)
-queryMaybeColCheck :: forall a b e r. (FromField b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> (b -> Either e r) -> IO (Maybe r)
-queryMaybeColCheck2 :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql2 -> (a -> Either e r) -> IO (Maybe r)
-queryOneRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> (b -> Either e r) -> IO r
-queryOneRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql2 -> (a -> Either e r) -> IO r
-queryOneColCheck :: forall a b e r. (FromField b, ToRow a, SqliteExceptionReason e) => Connection -> Sql -> a -> (b -> Either e r) -> IO r
-queryOneColCheck2 :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql2 -> (a -> Either e r) -> IO r
-queryListRow_ :: FromRow a => Connection -> Sql -> IO [a]
-queryListCol_ :: forall a. FromField a => Connection -> Sql -> IO [a]
-queryMaybeRow_ :: FromRow a => Connection -> Sql -> IO (Maybe a)
-queryMaybeCol_ :: forall a. FromField a => Connection -> Sql -> IO (Maybe a)
-queryOneRow_ :: FromRow a => Connection -> Sql -> IO a
-queryOneCol_ :: forall a. FromField a => Connection -> Sql -> IO a
-queryListRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> ([a] -> Either e r) -> IO r
-queryListColCheck_ :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> ([a] -> Either e r) -> IO r
-queryMaybeRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO (Maybe r)
-queryMaybeColCheck_ :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO (Maybe r)
-queryOneRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO r
-queryOneColCheck_ :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO r
+queryStreamRow :: FromRow a => Connection -> Sql -> (IO (Maybe a) -> IO r) -> IO r
+queryStreamCol :: forall a r. FromField a => Connection -> Sql -> (IO (Maybe a) -> IO r) -> IO r
+queryListRow :: forall a. FromRow a => Connection -> Sql -> IO [a]
+queryListCol :: forall a. FromField a => Connection -> Sql -> IO [a]
+queryMaybeRow :: FromRow a => Connection -> Sql -> IO (Maybe a)
+queryMaybeCol :: forall a. FromField a => Connection -> Sql -> IO (Maybe a)
+queryOneRow :: FromRow a => Connection -> Sql -> IO a
+queryOneCol :: forall a. FromField a => Connection -> Sql -> IO a
+queryListRowCheck :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> ([a] -> Either e r) -> IO r
+queryListColCheck :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> ([a] -> Either e r) -> IO r
+queryMaybeRowCheck :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO (Maybe r)
+queryMaybeColCheck :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO (Maybe r)
+queryOneRowCheck :: (FromRow a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO r
+queryOneColCheck :: forall a e r. (FromField a, SqliteExceptionReason e) => Connection -> Sql -> (a -> Either e r) -> IO r
 rowsModified :: Connection -> IO Int
 
 -- | <tt>VACUUM</tt>, and return whether or not the vacuum succeeded. A
@@ -153,7 +126,6 @@ instance Unison.Sqlite.Exception.SqliteExceptionReason Unison.Sqlite.Connection.
 instance GHC.Show.Show Unison.Sqlite.Connection.ExpectedExactlyOneRowException
 instance Unison.Sqlite.Exception.SqliteExceptionReason Unison.Sqlite.Connection.ExpectedAtMostOneRowException
 instance GHC.Show.Show Unison.Sqlite.Connection.ExpectedAtMostOneRowException
-instance GHC.Show.Show Unison.Sqlite.Connection.Query2
 instance GHC.Show.Show Unison.Sqlite.Connection.Query
 
 module Unison.Sqlite.Transaction
@@ -198,50 +170,22 @@ savepoint :: Transaction (Either a a) -> Transaction a
 --   will cause an exception!
 unsafeIO :: IO a -> Transaction a
 unsafeGetConnection :: Transaction Connection
-execute :: ToRow a => Sql -> a -> Transaction ()
-execute2 :: Sql2 -> Transaction ()
-executeMany :: ToRow a => Sql -> [a] -> Transaction ()
+execute :: Sql -> Transaction ()
 executeStatements :: Text -> Transaction ()
-execute_ :: Sql -> Transaction ()
-queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
-queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
-queryListRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction [a]
-queryListRow2 :: FromRow a => Sql2 -> Transaction [a]
-queryListCol :: (FromField a, ToRow b) => Sql -> b -> Transaction [a]
-queryListCol2 :: FromField a => Sql2 -> Transaction [a]
-queryMaybeRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction (Maybe a)
-queryMaybeRow2 :: FromRow a => Sql2 -> Transaction (Maybe a)
-queryMaybeCol :: (FromField a, ToRow b) => Sql -> b -> Transaction (Maybe a)
-queryMaybeCol2 :: FromField a => Sql2 -> Transaction (Maybe a)
-queryOneRow :: (FromRow b, ToRow a) => Sql -> a -> Transaction b
-queryOneRow2 :: FromRow a => Sql2 -> Transaction a
-queryOneCol :: (FromField b, ToRow a) => Sql -> a -> Transaction b
-queryOneCol2 :: FromField a => Sql2 -> Transaction a
-
--- | Run a query many times using a prepared statement.
-queryManyListRow :: (FromRow r, ToRow q) => Sql -> [q] -> Transaction [[r]]
-queryListRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> ([b] -> Either e r) -> Transaction r
-queryListColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> ([b] -> Either e r) -> Transaction r
-queryMaybeRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction (Maybe r)
-queryMaybeRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck2 :: (FromField a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction (Maybe r)
-queryOneRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction r
-queryOneRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction r
-queryOneColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction r
-queryOneColCheck2 :: (FromField a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction r
-queryListRow_ :: FromRow a => Sql -> Transaction [a]
-queryListCol_ :: FromField a => Sql -> Transaction [a]
-queryMaybeRow_ :: FromRow a => Sql -> Transaction (Maybe a)
-queryMaybeCol_ :: FromField a => Sql -> Transaction (Maybe a)
-queryOneRow_ :: FromRow a => Sql -> Transaction a
-queryOneCol_ :: FromField a => Sql -> Transaction a
-queryListRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
-queryListColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
-queryMaybeRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
-queryOneRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
-queryOneColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
+queryStreamRow :: FromRow a => Sql -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
+queryStreamCol :: forall a r. FromField a => Sql -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
+queryListRow :: FromRow a => Sql -> Transaction [a]
+queryListCol :: FromField a => Sql -> Transaction [a]
+queryMaybeRow :: FromRow a => Sql -> Transaction (Maybe a)
+queryMaybeCol :: FromField a => Sql -> Transaction (Maybe a)
+queryOneRow :: FromRow a => Sql -> Transaction a
+queryOneCol :: FromField a => Sql -> Transaction a
+queryListRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
+queryListColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
+queryMaybeRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
+queryMaybeColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
+queryOneRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
+queryOneColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
 rowsModified :: Transaction Int
 instance GHC.Base.Monad Unison.Sqlite.Transaction.Transaction
 instance GHC.Base.Functor Unison.Sqlite.Transaction.Transaction
@@ -319,17 +263,10 @@ savepoint :: Transaction (Either a a) -> Transaction a
 --   will cause an exception!
 unsafeIO :: IO a -> Transaction a
 
--- | A SQL snippet.
-newtype Sql
-Sql :: Text -> Sql
-
--- | A quasi-quoter that produces expressions of type <a>Sql</a>.
-sql :: QuasiQuoter
-
 -- | A SQL query.
-data Sql2
+data Sql
 
--- | A quasi-quoter for producing a <a>Sql2</a> from a SQL query string,
+-- | A quasi-quoter for producing a <a>Sql</a> from a SQL query string,
 --   using the Haskell variables in scope for each named parameter.
 --   
 --   For example, the query
@@ -337,7 +274,7 @@ data Sql2
 --   <pre>
 --   let qux = 5 :: Int
 --   
---   [sql2|
+--   [sql|
 --     SELECT foo
 --     FROM bar
 --     WHERE baz = :qux
@@ -347,7 +284,7 @@ data Sql2
 --   would produce a value like
 --   
 --   <pre>
---   Sql2
+--   Sql
 --     { query = "SELECT foo FROM bar WHERE baz = ?"
 --     , params = [SQLInteger 5]
 --     }
@@ -356,22 +293,23 @@ data Sql2
 --   which, of course, will require a <tt>qux</tt> with a <a>ToField</a>
 --   instance in scope.
 --   
---   There are three valid syntaxes for interpolating a variable:
+--   There are four valid syntaxes for interpolating a variable:
 --   
 --   <ul>
 --   <li><tt>:colon</tt>, which denotes a single-field variable</li>
 --   <li><tt>@at</tt>, followed by 1+ bare <tt>@</tt>, which denotes a
 --   multi-field variable</li>
---   <li><tt>$dollar</tt>, which denotes an entire <a>Sql2</a>
---   fragment</li>
+--   <li><tt>$dollar</tt>, which denotes an entire <a>Sql</a> fragment</li>
+--   <li><tt>VALUES :colon</tt>, which denotes an entire <tt>VALUES</tt>
+--   literal (1+ tuples)</li>
 --   </ul>
 --   
---   As an example of the second, consider a variable <tt>plonk</tt> with a
---   two-field <a>ToRow</a> instance. A query that interpolates
---   <tt>plonk</tt> might look like:
+--   As an example of the <tt>@at</tt> syntax, consider a variable
+--   <tt>plonk</tt> with a two-field <a>ToRow</a> instance. A query that
+--   interpolates <tt>plonk</tt> might look like:
 --   
 --   <pre>
---   [sql2|
+--   [sql|
 --     SELECT foo
 --     FROM bar
 --     WHERE stuff = @plonk
@@ -379,74 +317,49 @@ data Sql2
 --   |]
 --   </pre>
 --   
---   As an example of the third,
+--   As an example of <tt>$dollar</tt> syntax,
 --   
 --   <pre>
---   let foo = [sql2| bar |] in [sql2| $foo baz |]
+--   let foo = [sql| bar |] in [sql| $foo baz |]
 --   </pre>
 --   
---   is equivalent to
+--   splices <tt>foo</tt> into the second fragment, and is equivalent to
 --   
 --   <pre>
---   [sql2| bar baz |]
+--   [sql| bar baz |]
 --   </pre>
-sql2 :: QuasiQuoter
-
--- | A <tt>VALUES</tt> literal.
-newtype Values a
-Values :: NonEmpty a -> Values a
-
--- | Example: given a <a>Values</a> of length 3, where each element has a
---   <tt>toRow</tt> that produces 2 elements, produce the SQL string:
+--   
+--   As an example of <tt>VALUES :colon</tt> syntax, the query
+--   
+--   <pre>
+--   [sql| VALUES :foo |]
+--   </pre>
+--   
+--   will require a non-empty list "foo" to be in scope, whose elements
+--   have <tt>ToRow</tt> instances, and will expand to SQL that looks like
 --   
 --   <pre>
 --   VALUES (?, ?), (?, ?), (?, ?)
 --   </pre>
-valuesSql :: ToRow a => Values a -> Sql
-execute :: ToRow a => Sql -> a -> Transaction ()
-execute2 :: Sql2 -> Transaction ()
-executeMany :: ToRow a => Sql -> [a] -> Transaction ()
+--   
+--   depending on how many elements "foo" has, and how wide its rows are.
+sql :: QuasiQuoter
+execute :: Sql -> Transaction ()
 executeStatements :: Text -> Transaction ()
-execute_ :: Sql -> Transaction ()
-queryStreamRow :: (FromRow a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
-queryStreamCol :: forall a b r. (FromField a, ToRow b) => Sql -> b -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
-queryListRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction [a]
-queryListRow2 :: FromRow a => Sql2 -> Transaction [a]
-queryListCol :: (FromField a, ToRow b) => Sql -> b -> Transaction [a]
-queryListCol2 :: FromField a => Sql2 -> Transaction [a]
-queryMaybeRow :: (FromRow a, ToRow b) => Sql -> b -> Transaction (Maybe a)
-queryMaybeRow2 :: FromRow a => Sql2 -> Transaction (Maybe a)
-queryMaybeCol :: (FromField a, ToRow b) => Sql -> b -> Transaction (Maybe a)
-queryMaybeCol2 :: FromField a => Sql2 -> Transaction (Maybe a)
-queryOneRow :: (FromRow b, ToRow a) => Sql -> a -> Transaction b
-queryOneRow2 :: FromRow a => Sql2 -> Transaction a
-queryOneCol :: (FromField b, ToRow a) => Sql -> a -> Transaction b
-queryOneCol2 :: FromField a => Sql2 -> Transaction a
-
--- | Run a query many times using a prepared statement.
-queryManyListRow :: (FromRow r, ToRow q) => Sql -> [q] -> Transaction [[r]]
-queryListRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> ([b] -> Either e r) -> Transaction r
-queryListColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> ([b] -> Either e r) -> Transaction r
-queryMaybeRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction (Maybe r)
-queryMaybeRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck2 :: (FromField a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction (Maybe r)
-queryOneRowCheck :: (FromRow b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction r
-queryOneRowCheck2 :: (FromRow a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction r
-queryOneColCheck :: (FromField b, ToRow a, SqliteExceptionReason e) => Sql -> a -> (b -> Either e r) -> Transaction r
-queryOneColCheck2 :: (FromField a, SqliteExceptionReason e) => Sql2 -> (a -> Either e r) -> Transaction r
-queryListRow_ :: FromRow a => Sql -> Transaction [a]
-queryListCol_ :: FromField a => Sql -> Transaction [a]
-queryMaybeRow_ :: FromRow a => Sql -> Transaction (Maybe a)
-queryMaybeCol_ :: FromField a => Sql -> Transaction (Maybe a)
-queryOneRow_ :: FromRow a => Sql -> Transaction a
-queryOneCol_ :: FromField a => Sql -> Transaction a
-queryListRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
-queryListColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
-queryMaybeRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
-queryMaybeColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
-queryOneRowCheck_ :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
-queryOneColCheck_ :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
+queryStreamRow :: FromRow a => Sql -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
+queryStreamCol :: forall a r. FromField a => Sql -> (Transaction (Maybe a) -> Transaction r) -> Transaction r
+queryListRow :: FromRow a => Sql -> Transaction [a]
+queryListCol :: FromField a => Sql -> Transaction [a]
+queryMaybeRow :: FromRow a => Sql -> Transaction (Maybe a)
+queryMaybeCol :: FromField a => Sql -> Transaction (Maybe a)
+queryOneRow :: FromRow a => Sql -> Transaction a
+queryOneCol :: FromField a => Sql -> Transaction a
+queryListRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
+queryListColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> ([a] -> Either e r) -> Transaction r
+queryMaybeRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
+queryMaybeColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction (Maybe r)
+queryOneRowCheck :: (FromRow a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
+queryOneColCheck :: (FromField a, SqliteExceptionReason e) => Sql -> (a -> Either e r) -> Transaction r
 rowsModified :: Transaction Int
 newtype DataVersion
 DataVersion :: Int64 -> DataVersion

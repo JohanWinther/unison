@@ -385,13 +385,15 @@ NamedRef :: ReversedSegments -> ref -> NamedRef ref
 --   well as adding a trailing <a>.</a> to the db format of both the
 --   namespace and reversed_name.
 --   
---   Converts a NamedRef to SQLData of the form: [reversedName, namespace,
+--   This type has a ToRow instance of the form: [reversedName, namespace,
 --   lastNameSegment] &lt;&gt; ref fields...
-namedRefToScopedRow :: ToRow ref => NamedRef ref -> [SQLData]
+newtype ScopedRow ref
+ScopedRow :: NamedRef ref -> ScopedRow ref
 instance Data.Traversable.Traversable U.Codebase.Sqlite.NamedRef.NamedRef
 instance Data.Foldable.Foldable U.Codebase.Sqlite.NamedRef.NamedRef
 instance GHC.Base.Functor U.Codebase.Sqlite.NamedRef.NamedRef
 instance GHC.Show.Show ref => GHC.Show.Show (U.Codebase.Sqlite.NamedRef.NamedRef ref)
+instance Database.SQLite.Simple.ToRow.ToRow ref => Database.SQLite.Simple.ToRow.ToRow (U.Codebase.Sqlite.NamedRef.ScopedRow ref)
 instance Database.SQLite.Simple.ToRow.ToRow ref => Database.SQLite.Simple.ToRow.ToRow (U.Codebase.Sqlite.NamedRef.NamedRef ref)
 instance Database.SQLite.Simple.FromRow.FromRow ref => Database.SQLite.Simple.FromRow.FromRow (U.Codebase.Sqlite.NamedRef.NamedRef ref)
 instance Database.SQLite.Simple.ToField.ToField U.Codebase.Sqlite.NamedRef.ConstructorType
