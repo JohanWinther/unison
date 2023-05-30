@@ -5026,11 +5026,11 @@ DontCreateWhenMissing :: CodebasePath -> SpecifiedCodebase
 data MigrationStrategy
 
 -- | Perform a migration immediately if one is required.
-MigrateAutomatically :: BackupStrategy -> MigrationStrategy
+MigrateAutomatically :: BackupStrategy -> VacuumStrategy -> MigrationStrategy
 
 -- | Prompt the user that a migration is about to occur, continue after
 --   acknownledgment
-MigrateAfterPrompt :: BackupStrategy -> MigrationStrategy
+MigrateAfterPrompt :: BackupStrategy -> VacuumStrategy -> MigrationStrategy
 
 -- | Triggers an <a>OpenCodebaseRequiresMigration</a> error instead of
 --   migrating
@@ -5038,6 +5038,9 @@ DontMigrate :: MigrationStrategy
 data BackupStrategy
 Backup :: BackupStrategy
 NoBackup :: BackupStrategy
+data VacuumStrategy
+Vacuum :: VacuumStrategy
+NoVacuum :: VacuumStrategy
 type Pretty = Pretty ColorText
 createCodebase :: MonadIO m => Init m v a -> DebugName -> CodebasePath -> CodebaseLockOption -> (Codebase m v a -> m r) -> m (Either Pretty r)
 
@@ -5050,6 +5053,9 @@ withTemporaryUcmCodebase :: MonadUnliftIO m => Init m Symbol Ann -> DebugName ->
 instance GHC.Classes.Ord Unison.Codebase.Init.BackupStrategy
 instance GHC.Classes.Eq Unison.Codebase.Init.BackupStrategy
 instance GHC.Show.Show Unison.Codebase.Init.BackupStrategy
+instance GHC.Classes.Ord Unison.Codebase.Init.VacuumStrategy
+instance GHC.Classes.Eq Unison.Codebase.Init.VacuumStrategy
+instance GHC.Show.Show Unison.Codebase.Init.VacuumStrategy
 instance GHC.Classes.Ord Unison.Codebase.Init.MigrationStrategy
 instance GHC.Classes.Eq Unison.Codebase.Init.MigrationStrategy
 instance GHC.Show.Show Unison.Codebase.Init.MigrationStrategy
@@ -5072,7 +5078,7 @@ checkCodebaseIsUpToDate :: Transaction CodebaseVersionStatus
 -- | Migrates a codebase up to the most recent version known to ucm. This
 --   is a No-op if it's up to date Returns an error if the schema version
 --   is newer than this ucm knows about.
-ensureCodebaseIsUpToDate :: MonadIO m => LocalOrRemote -> CodebasePath -> (Reference -> Transaction ConstructorType) -> TVar (Map Hash TermBufferEntry) -> TVar (Map Hash DeclBufferEntry) -> Bool -> BackupStrategy -> Connection -> m (Either OpenCodebaseError ())
+ensureCodebaseIsUpToDate :: MonadIO m => LocalOrRemote -> CodebasePath -> (Reference -> Transaction ConstructorType) -> TVar (Map Hash TermBufferEntry) -> TVar (Map Hash DeclBufferEntry) -> Bool -> BackupStrategy -> VacuumStrategy -> Connection -> m (Either OpenCodebaseError ())
 
 -- | If we need to make a backup, then copy the sqlite database to a new
 --   file with a unique name based on current time.
@@ -5090,11 +5096,11 @@ initWithSetup :: (HasCallStack, MonadUnliftIO m) => Transaction () -> Init m Sym
 data MigrationStrategy
 
 -- | Perform a migration immediately if one is required.
-MigrateAutomatically :: BackupStrategy -> MigrationStrategy
+MigrateAutomatically :: BackupStrategy -> VacuumStrategy -> MigrationStrategy
 
 -- | Prompt the user that a migration is about to occur, continue after
 --   acknownledgment
-MigrateAfterPrompt :: BackupStrategy -> MigrationStrategy
+MigrateAfterPrompt :: BackupStrategy -> VacuumStrategy -> MigrationStrategy
 
 -- | Triggers an <a>OpenCodebaseRequiresMigration</a> error instead of
 --   migrating
@@ -5102,6 +5108,9 @@ DontMigrate :: MigrationStrategy
 data BackupStrategy
 Backup :: BackupStrategy
 NoBackup :: BackupStrategy
+data VacuumStrategy
+Vacuum :: VacuumStrategy
+NoVacuum :: VacuumStrategy
 data CodebaseLockOption
 DoLock :: CodebaseLockOption
 DontLock :: CodebaseLockOption
