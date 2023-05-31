@@ -7113,11 +7113,12 @@ $c== :: LoadRemoteBranchFlag -&gt; LoadRemoteBranchFlag -&gt; Bool
             t.depth + 1
           FROM
             t
-          JOIN project_branch_parent AS pbp ON pbp.project_id = t.project_id
+          LEFT JOIN project_branch_parent AS pbp ON pbp.project_id = t.project_id
             AND pbp.branch_id = t.parent_branch_id
           LEFT JOIN project_branch_remote_mapping AS pbrm ON pbrm.local_project_id = t.project_id
           AND pbrm.local_branch_id = t.parent_branch_id
           AND pbrm.remote_host = :remoteUri
+          WHERE t.parent_branch_id IS NOT NULL
         )
         SELECT
           remote_project_id,
@@ -7130,42 +7131,42 @@ $c== :: LoadRemoteBranchFlag -&gt; LoadRemoteBranchFlag -&gt; Bool
           depth
         LIMIT 1
       |]</span></span><span>
-</span><span id="line-3287"></span><span>
-</span><span id="line-3288"></span><span>    </span><span class="annot"><a href="#local-6989586621679529363"><span class="hs-identifier hs-type">whereClause</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sql</span></span><span>
-</span><span id="line-3289"></span><span>    </span><span id="local-6989586621679529363"><span class="annot"><span class="annottext">whereClause :: Sql
+</span><span id="line-3288"></span><span>
+</span><span id="line-3289"></span><span>    </span><span class="annot"><a href="#local-6989586621679529363"><span class="hs-identifier hs-type">whereClause</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sql</span></span><span>
+</span><span id="line-3290"></span><span>    </span><span id="local-6989586621679529363"><span class="annot"><span class="annottext">whereClause :: Sql
 </span><a href="#local-6989586621679529363"><span class="hs-identifier hs-var hs-var">whereClause</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3290"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679529362"><span class="annot"><span class="annottext">clauses :: Sql
+</span><span id="line-3291"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679529362"><span class="annot"><span class="annottext">clauses :: Sql
 </span><a href="#local-6989586621679529362"><span class="hs-identifier hs-var hs-var">clauses</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3291"></span><span>            </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a b.
+</span><span id="line-3292"></span><span>            </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a b.
 Foldable t =&gt;
 (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
 </span><span class="hs-identifier hs-var">foldr</span></span><span>
-</span><span id="line-3292"></span><span>              </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679529360"><span class="annot"><span class="annottext">Sql
+</span><span id="line-3293"></span><span>              </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679529360"><span class="annot"><span class="annottext">Sql
 </span><a href="#local-6989586621679529360"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621679529359"><span class="annot"><span class="annottext">Sql
 </span><a href="#local-6989586621679529359"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="">[sql| $a AND $b |]</span></span><span class="hs-special">)</span><span>
-</span><span id="line-3293"></span><span>              </span><span class="annot"><span class="">[sql| TRUE |]</span></span><span>
-</span><span id="line-3294"></span><span>              </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="">[sql| remote_project_id IS NOT NULL |]</span></span><span class="hs-special">,</span><span>
-</span><span id="line-3295"></span><span>                </span><span class="annot"><span class="annottext">Sql
+</span><span id="line-3294"></span><span>              </span><span class="annot"><span class="">[sql| TRUE |]</span></span><span>
+</span><span id="line-3295"></span><span>              </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="">[sql| remote_project_id IS NOT NULL |]</span></span><span class="hs-special">,</span><span>
+</span><span id="line-3296"></span><span>                </span><span class="annot"><span class="annottext">Sql
 </span><a href="#local-6989586621679529358"><span class="hs-identifier hs-var">selfRemoteFilter</span></a></span><span>
-</span><span id="line-3296"></span><span>              </span><span class="hs-special">]</span><span>
-</span><span id="line-3297"></span><span>       </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="">[sql| WHERE $clauses |]</span></span><span>
-</span><span id="line-3298"></span><span>
-</span><span id="line-3299"></span><span>    </span><span id="local-6989586621679529358"><span class="annot"><span class="annottext">selfRemoteFilter :: Sql
+</span><span id="line-3297"></span><span>              </span><span class="hs-special">]</span><span>
+</span><span id="line-3298"></span><span>       </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="">[sql| WHERE $clauses |]</span></span><span>
+</span><span id="line-3299"></span><span>
+</span><span id="line-3300"></span><span>    </span><span id="local-6989586621679529358"><span class="annot"><span class="annottext">selfRemoteFilter :: Sql
 </span><a href="#local-6989586621679529358"><span class="hs-identifier hs-var hs-var">selfRemoteFilter</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">LoadRemoteBranchFlag
 </span><a href="#local-6989586621679529368"><span class="hs-identifier hs-var">loadRemoteBranchFlag</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-3300"></span><span>      </span><span class="annot"><span class="annottext">LoadRemoteBranchFlag
-</span><a href="U.Codebase.Sqlite.Queries.html#IncludeSelfRemote"><span class="hs-identifier hs-var">IncludeSelfRemote</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="">[sql| TRUE |]</span></span><span>
 </span><span id="line-3301"></span><span>      </span><span class="annot"><span class="annottext">LoadRemoteBranchFlag
+</span><a href="U.Codebase.Sqlite.Queries.html#IncludeSelfRemote"><span class="hs-identifier hs-var">IncludeSelfRemote</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="">[sql| TRUE |]</span></span><span>
+</span><span id="line-3302"></span><span>      </span><span class="annot"><span class="annottext">LoadRemoteBranchFlag
 </span><a href="U.Codebase.Sqlite.Queries.html#ExcludeSelfRemote"><span class="hs-identifier hs-var">ExcludeSelfRemote</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="">[sql| depth &gt; 0 |]</span></span><span>
-</span><span id="line-3302"></span><span>
-</span><span id="line-3303"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadRemoteProject"><span class="hs-identifier hs-type">loadRemoteProject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.RemoteProject.html#RemoteProject"><span class="hs-identifier hs-type">RemoteProject</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-3304"></span><span id="loadRemoteProject"><span class="annot"><span class="annottext">loadRemoteProject :: RemoteProjectId -&gt; URI -&gt; Transaction (Maybe RemoteProject)
+</span><span id="line-3303"></span><span>
+</span><span id="line-3304"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadRemoteProject"><span class="hs-identifier hs-type">loadRemoteProject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.RemoteProject.html#RemoteProject"><span class="hs-identifier hs-type">RemoteProject</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-3305"></span><span id="loadRemoteProject"><span class="annot"><span class="annottext">loadRemoteProject :: RemoteProjectId -&gt; URI -&gt; Transaction (Maybe RemoteProject)
 </span><a href="U.Codebase.Sqlite.Queries.html#loadRemoteProject"><span class="hs-identifier hs-var hs-var">loadRemoteProject</span></a></span></span><span> </span><span id="local-6989586621679529357"><span class="annot"><span class="annottext">RemoteProjectId
 </span><a href="#local-6989586621679529357"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529356"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529356"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3305"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromRow a =&gt; Sql -&gt; Transaction (Maybe a)
+</span><span id="line-3306"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromRow a =&gt; Sql -&gt; Transaction (Maybe a)
 </span><span class="hs-identifier hs-var">queryMaybeRow</span></span><span>
-</span><span id="line-3306"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3307"></span><span>    </span><span class="annot"><span class="">[sql|
       SELECT
         id,
         host,
@@ -7176,16 +7177,16 @@ Foldable t =&gt;
         id = :rpid
         and host = :host
     |]</span></span><span>
-</span><span id="line-3317"></span><span>
-</span><span id="line-3318"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureRemoteProject"><span class="hs-identifier hs-type">ensureRemoteProject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3319"></span><span id="ensureRemoteProject"><span class="annot"><span class="annottext">ensureRemoteProject :: RemoteProjectId -&gt; URI -&gt; ProjectName -&gt; Transaction ()
+</span><span id="line-3318"></span><span>
+</span><span id="line-3319"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureRemoteProject"><span class="hs-identifier hs-type">ensureRemoteProject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3320"></span><span id="ensureRemoteProject"><span class="annot"><span class="annottext">ensureRemoteProject :: RemoteProjectId -&gt; URI -&gt; ProjectName -&gt; Transaction ()
 </span><a href="U.Codebase.Sqlite.Queries.html#ensureRemoteProject"><span class="hs-identifier hs-var hs-var">ensureRemoteProject</span></a></span></span><span> </span><span id="local-6989586621679529355"><span class="annot"><span class="annottext">RemoteProjectId
 </span><a href="#local-6989586621679529355"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529354"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529354"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529353"><span class="annot"><span class="annottext">ProjectName
 </span><a href="#local-6989586621679529353"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3320"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3321"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3321"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3322"></span><span>    </span><span class="annot"><span class="">[sql|
       INSERT INTO remote_project (
         id,
         host,
@@ -7200,15 +7201,15 @@ Foldable t =&gt;
         -- should this update the name instead?
         DO NOTHING
     |]</span></span><span>
-</span><span id="line-3336"></span><span>
-</span><span id="line-3337"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#expectRemoteProjectName"><span class="hs-identifier hs-type">expectRemoteProjectName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span>
-</span><span id="line-3338"></span><span id="expectRemoteProjectName"><span class="annot"><span class="annottext">expectRemoteProjectName :: RemoteProjectId -&gt; URI -&gt; Transaction ProjectName
+</span><span id="line-3337"></span><span>
+</span><span id="line-3338"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#expectRemoteProjectName"><span class="hs-identifier hs-type">expectRemoteProjectName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span>
+</span><span id="line-3339"></span><span id="expectRemoteProjectName"><span class="annot"><span class="annottext">expectRemoteProjectName :: RemoteProjectId -&gt; URI -&gt; Transaction ProjectName
 </span><a href="U.Codebase.Sqlite.Queries.html#expectRemoteProjectName"><span class="hs-identifier hs-var hs-var">expectRemoteProjectName</span></a></span></span><span> </span><span id="local-6989586621679529352"><span class="annot"><span class="annottext">RemoteProjectId
 </span><a href="#local-6989586621679529352"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span id="local-6989586621679529351"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529351"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3339"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
+</span><span id="line-3340"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
 </span><span class="hs-identifier hs-var">queryOneCol</span></span><span>
-</span><span id="line-3340"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3341"></span><span>    </span><span class="annot"><span class="">[sql|
       SELECT
         name
       FROM
@@ -7217,15 +7218,15 @@ Foldable t =&gt;
         id = :projectId
         AND host = :host
     |]</span></span><span>
-</span><span id="line-3349"></span><span>
-</span><span id="line-3350"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setRemoteProjectName"><span class="hs-identifier hs-type">setRemoteProjectName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3351"></span><span id="setRemoteProjectName"><span class="annot"><span class="annottext">setRemoteProjectName :: RemoteProjectId -&gt; ProjectName -&gt; Transaction ()
+</span><span id="line-3350"></span><span>
+</span><span id="line-3351"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setRemoteProjectName"><span class="hs-identifier hs-type">setRemoteProjectName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3352"></span><span id="setRemoteProjectName"><span class="annot"><span class="annottext">setRemoteProjectName :: RemoteProjectId -&gt; ProjectName -&gt; Transaction ()
 </span><a href="U.Codebase.Sqlite.Queries.html#setRemoteProjectName"><span class="hs-identifier hs-var hs-var">setRemoteProjectName</span></a></span></span><span> </span><span id="local-6989586621679529350"><span class="annot"><span class="annottext">RemoteProjectId
 </span><a href="#local-6989586621679529350"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529349"><span class="annot"><span class="annottext">ProjectName
 </span><a href="#local-6989586621679529349"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3352"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3353"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3353"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3354"></span><span>    </span><span class="annot"><span class="">[sql|
       UPDATE
         remote_project
       SET
@@ -7233,9 +7234,9 @@ Foldable t =&gt;
       WHERE
         id = :rpid
     |]</span></span><span>
-</span><span id="line-3361"></span><span>
-</span><span id="line-3362"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadRemoteBranch"><span class="hs-identifier hs-type">loadRemoteBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.RemoteProjectBranch.html#RemoteProjectBranch"><span class="hs-identifier hs-type">RemoteProjectBranch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-3363"></span><span id="loadRemoteBranch"><span class="annot"><span class="annottext">loadRemoteBranch :: RemoteProjectId
+</span><span id="line-3362"></span><span>
+</span><span id="line-3363"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadRemoteBranch"><span class="hs-identifier hs-type">loadRemoteBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.RemoteProjectBranch.html#RemoteProjectBranch"><span class="hs-identifier hs-type">RemoteProjectBranch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-3364"></span><span id="loadRemoteBranch"><span class="annot"><span class="annottext">loadRemoteBranch :: RemoteProjectId
 -&gt; URI
 -&gt; RemoteProjectBranchId
 -&gt; Transaction (Maybe RemoteProjectBranch)
@@ -7243,9 +7244,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529348"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529347"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529347"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529346"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529346"><span class="hs-identifier hs-var">rbid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3364"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromRow a =&gt; Sql -&gt; Transaction (Maybe a)
+</span><span id="line-3365"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromRow a =&gt; Sql -&gt; Transaction (Maybe a)
 </span><span class="hs-identifier hs-var">queryMaybeRow</span></span><span>
-</span><span id="line-3365"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3366"></span><span>    </span><span class="annot"><span class="">[sql|
       SELECT
         project_id,
         branch_id,
@@ -7258,9 +7259,9 @@ Foldable t =&gt;
         AND branch_id = :rbid
         AND host = :host
     |]</span></span><span>
-</span><span id="line-3378"></span><span>
-</span><span id="line-3379"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureRemoteProjectBranch"><span class="hs-identifier hs-type">ensureRemoteProjectBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3380"></span><span id="ensureRemoteProjectBranch"><span class="annot"><span class="annottext">ensureRemoteProjectBranch :: RemoteProjectId
+</span><span id="line-3379"></span><span>
+</span><span id="line-3380"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureRemoteProjectBranch"><span class="hs-identifier hs-type">ensureRemoteProjectBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3381"></span><span id="ensureRemoteProjectBranch"><span class="annot"><span class="annottext">ensureRemoteProjectBranch :: RemoteProjectId
 -&gt; URI
 -&gt; RemoteProjectBranchId
 -&gt; ProjectBranchName
@@ -7270,9 +7271,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529344"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529343"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529343"><span class="hs-identifier hs-var">rbid</span></a></span></span><span> </span><span id="local-6989586621679529342"><span class="annot"><span class="annottext">ProjectBranchName
 </span><a href="#local-6989586621679529342"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3381"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3382"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3382"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3383"></span><span>    </span><span class="annot"><span class="">[sql|
       INSERT INTO remote_project_branch (
         project_id,
         host,
@@ -7290,9 +7291,9 @@ Foldable t =&gt;
         -- should this update the name instead?
         DO NOTHING
         |]</span></span><span>
-</span><span id="line-3400"></span><span>
-</span><span id="line-3401"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#expectRemoteProjectBranchName"><span class="hs-identifier hs-type">expectRemoteProjectBranchName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span>
-</span><span id="line-3402"></span><span id="expectRemoteProjectBranchName"><span class="annot"><span class="annottext">expectRemoteProjectBranchName :: URI
+</span><span id="line-3401"></span><span>
+</span><span id="line-3402"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#expectRemoteProjectBranchName"><span class="hs-identifier hs-type">expectRemoteProjectBranchName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span>
+</span><span id="line-3403"></span><span id="expectRemoteProjectBranchName"><span class="annot"><span class="annottext">expectRemoteProjectBranchName :: URI
 -&gt; RemoteProjectId
 -&gt; RemoteProjectBranchId
 -&gt; Transaction ProjectBranchName
@@ -7300,9 +7301,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529341"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529340"><span class="annot"><span class="annottext">RemoteProjectId
 </span><a href="#local-6989586621679529340"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span id="local-6989586621679529339"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529339"><span class="hs-identifier hs-var">branchId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3403"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
+</span><span id="line-3404"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
 </span><span class="hs-identifier hs-var">queryOneCol</span></span><span>
-</span><span id="line-3404"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3405"></span><span>    </span><span class="annot"><span class="">[sql|
       SELECT
         name
       FROM
@@ -7312,9 +7313,9 @@ Foldable t =&gt;
         AND project_id = :projectId
         AND branch_id = :branchId
     |]</span></span><span>
-</span><span id="line-3414"></span><span>
-</span><span id="line-3415"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setRemoteProjectBranchName"><span class="hs-identifier hs-type">setRemoteProjectBranchName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3416"></span><span id="setRemoteProjectBranchName"><span class="annot"><span class="annottext">setRemoteProjectBranchName :: RemoteProjectId
+</span><span id="line-3415"></span><span>
+</span><span id="line-3416"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setRemoteProjectBranchName"><span class="hs-identifier hs-type">setRemoteProjectBranchName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ProjectBranchName</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3417"></span><span id="setRemoteProjectBranchName"><span class="annot"><span class="annottext">setRemoteProjectBranchName :: RemoteProjectId
 -&gt; URI
 -&gt; RemoteProjectBranchId
 -&gt; ProjectBranchName
@@ -7324,9 +7325,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529337"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529336"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529336"><span class="hs-identifier hs-var">rbid</span></a></span></span><span> </span><span id="local-6989586621679529335"><span class="annot"><span class="annottext">ProjectBranchName
 </span><a href="#local-6989586621679529335"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3417"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3418"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3418"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3419"></span><span>    </span><span class="annot"><span class="">[sql|
       UPDATE
         remote_project_branch
       SET
@@ -7336,15 +7337,15 @@ Foldable t =&gt;
         AND host = :host
         AND branch_id = :rbid
     |]</span></span><span>
-</span><span id="line-3428"></span><span>
-</span><span id="line-3429"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#insertBranchRemoteMapping"><span class="hs-identifier hs-type">insertBranchRemoteMapping</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-3430"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3431"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3432"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3433"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3434"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3435"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3436"></span><span id="insertBranchRemoteMapping"><span class="annot"><span class="annottext">insertBranchRemoteMapping :: ProjectId
+</span><span id="line-3429"></span><span>
+</span><span id="line-3430"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#insertBranchRemoteMapping"><span class="hs-identifier hs-type">insertBranchRemoteMapping</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-3431"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3432"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3433"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3434"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3435"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3436"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3437"></span><span id="insertBranchRemoteMapping"><span class="annot"><span class="annottext">insertBranchRemoteMapping :: ProjectId
 -&gt; ProjectBranchId
 -&gt; RemoteProjectId
 -&gt; URI
@@ -7356,9 +7357,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529332"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529331"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529331"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529330"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529330"><span class="hs-identifier hs-var">rbid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3437"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3438"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3438"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3439"></span><span>    </span><span class="annot"><span class="">[sql|
       INSERT INTO project_branch_remote_mapping (
         local_project_id,
         local_branch_id,
@@ -7372,15 +7373,15 @@ Foldable t =&gt;
         :rbid,
         :host)
         |]</span></span><span>
-</span><span id="line-3452"></span><span>
-</span><span id="line-3453"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureBranchRemoteMapping"><span class="hs-identifier hs-type">ensureBranchRemoteMapping</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-3454"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3455"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3456"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3457"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3458"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-3459"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3460"></span><span id="ensureBranchRemoteMapping"><span class="annot"><span class="annottext">ensureBranchRemoteMapping :: ProjectId
+</span><span id="line-3453"></span><span>
+</span><span id="line-3454"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#ensureBranchRemoteMapping"><span class="hs-identifier hs-type">ensureBranchRemoteMapping</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-3455"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3456"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3457"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectId"><span class="hs-identifier hs-type">RemoteProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3458"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">URI</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3459"></span><span>  </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#RemoteProjectBranchId"><span class="hs-identifier hs-type">RemoteProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-3460"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3461"></span><span id="ensureBranchRemoteMapping"><span class="annot"><span class="annottext">ensureBranchRemoteMapping :: ProjectId
 -&gt; ProjectBranchId
 -&gt; RemoteProjectId
 -&gt; URI
@@ -7392,9 +7393,9 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529327"><span class="hs-identifier hs-var">rpid</span></a></span></span><span> </span><span id="local-6989586621679529326"><span class="annot"><span class="annottext">URI
 </span><a href="#local-6989586621679529326"><span class="hs-identifier hs-var">host</span></a></span></span><span> </span><span id="local-6989586621679529325"><span class="annot"><span class="annottext">RemoteProjectBranchId
 </span><a href="#local-6989586621679529325"><span class="hs-identifier hs-var">rbid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3461"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3462"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3462"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3463"></span><span>    </span><span class="annot"><span class="">[sql|
       INSERT INTO project_branch_remote_mapping (
         local_project_id,
         local_branch_id,
@@ -7413,13 +7414,13 @@ Foldable t =&gt;
         remote_host)
         DO NOTHING
     |]</span></span><span>
-</span><span id="line-3481"></span><span>
-</span><span id="line-3482"></span><span class="hs-comment">-- | Convert reversed name segments into glob for searching based on suffix</span><span>
-</span><span id="line-3483"></span><span class="hs-comment">--</span><span>
-</span><span id="line-3484"></span><span class="hs-comment">-- &gt;&gt;&gt; toSuffixGlob (&quot;foo&quot; NonEmpty.:| [&quot;bar&quot;])</span><span>
-</span><span id="line-3485"></span><span class="hs-comment">-- &quot;foo.bar.*&quot;</span><span>
-</span><span id="line-3486"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toSuffixGlob"><span class="hs-identifier hs-type">toSuffixGlob</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-3487"></span><span id="toSuffixGlob"><span class="annot"><span class="annottext">toSuffixGlob :: ReversedSegments -&gt; Text
+</span><span id="line-3482"></span><span>
+</span><span id="line-3483"></span><span class="hs-comment">-- | Convert reversed name segments into glob for searching based on suffix</span><span>
+</span><span id="line-3484"></span><span class="hs-comment">--</span><span>
+</span><span id="line-3485"></span><span class="hs-comment">-- &gt;&gt;&gt; toSuffixGlob (&quot;foo&quot; NonEmpty.:| [&quot;bar&quot;])</span><span>
+</span><span id="line-3486"></span><span class="hs-comment">-- &quot;foo.bar.*&quot;</span><span>
+</span><span id="line-3487"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toSuffixGlob"><span class="hs-identifier hs-type">toSuffixGlob</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-3488"></span><span id="toSuffixGlob"><span class="annot"><span class="annottext">toSuffixGlob :: ReversedSegments -&gt; Text
 </span><a href="U.Codebase.Sqlite.Queries.html#toSuffixGlob"><span class="hs-identifier hs-var hs-var">toSuffixGlob</span></a></span></span><span> </span><span id="local-6989586621679529324"><span class="annot"><span class="annottext">ReversedSegments
 </span><a href="#local-6989586621679529324"><span class="hs-identifier hs-var">suffix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text
 </span><a href="U.Codebase.Sqlite.Queries.html#globEscape"><span class="hs-identifier hs-var">globEscape</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
@@ -7429,13 +7430,13 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529324"><span class="hs-identifier hs-var">suffix</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;.*&quot;</span></span><span>
-</span><span id="line-3488"></span><span>
-</span><span id="line-3489"></span><span class="hs-comment">-- | Convert reversed segments into the DB representation of a reversed_name.</span><span>
-</span><span id="line-3490"></span><span class="hs-comment">--</span><span>
-</span><span id="line-3491"></span><span class="hs-comment">-- &gt;&gt;&gt; toReversedName (NonEmpty.fromList [&quot;foo&quot;, &quot;bar&quot;])</span><span>
-</span><span id="line-3492"></span><span class="hs-comment">-- &quot;foo.bar.&quot;</span><span>
-</span><span id="line-3493"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toReversedName"><span class="hs-identifier hs-type">toReversedName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-3494"></span><span id="toReversedName"><span class="annot"><span class="annottext">toReversedName :: ReversedSegments -&gt; Text
+</span><span id="line-3489"></span><span>
+</span><span id="line-3490"></span><span class="hs-comment">-- | Convert reversed segments into the DB representation of a reversed_name.</span><span>
+</span><span id="line-3491"></span><span class="hs-comment">--</span><span>
+</span><span id="line-3492"></span><span class="hs-comment">-- &gt;&gt;&gt; toReversedName (NonEmpty.fromList [&quot;foo&quot;, &quot;bar&quot;])</span><span>
+</span><span id="line-3493"></span><span class="hs-comment">-- &quot;foo.bar.&quot;</span><span>
+</span><span id="line-3494"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toReversedName"><span class="hs-identifier hs-type">toReversedName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-3495"></span><span id="toReversedName"><span class="annot"><span class="annottext">toReversedName :: ReversedSegments -&gt; Text
 </span><a href="U.Codebase.Sqlite.Queries.html#toReversedName"><span class="hs-identifier hs-var hs-var">toReversedName</span></a></span></span><span> </span><span id="local-6989586621679529322"><span class="annot"><span class="annottext">ReversedSegments
 </span><a href="#local-6989586621679529322"><span class="hs-identifier hs-var">revSegs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; [Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.intercalate</span></span><span> </span><span class="annot"><span class="annottext">Text
@@ -7444,30 +7445,30 @@ Foldable t =&gt;
 </span><a href="#local-6989586621679529322"><span class="hs-identifier hs-var">revSegs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;.&quot;</span></span><span>
-</span><span id="line-3495"></span><span>
-</span><span id="line-3496"></span><span class="hs-comment">-- | Convert a namespace into the appropriate glob for searching within that namespace</span><span>
-</span><span id="line-3497"></span><span class="hs-comment">--</span><span>
-</span><span id="line-3498"></span><span class="hs-comment">-- &gt;&gt;&gt; toNamespaceGlob &quot;foo.bar&quot;</span><span>
-</span><span id="line-3499"></span><span class="hs-comment">-- &quot;foo.bar.*&quot;</span><span>
-</span><span id="line-3500"></span><span class="hs-comment">--</span><span>
-</span><span id="line-3501"></span><span class="hs-comment">-- &gt;&gt;&gt; toNamespaceGlob &quot;&quot;</span><span>
-</span><span id="line-3502"></span><span class="hs-comment">-- &quot;*&quot;</span><span>
-</span><span id="line-3503"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toNamespaceGlob"><span class="hs-identifier hs-type">toNamespaceGlob</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-3504"></span><span id="toNamespaceGlob"><span class="annot"><span class="annottext">toNamespaceGlob :: Text -&gt; Text
+</span><span id="line-3496"></span><span>
+</span><span id="line-3497"></span><span class="hs-comment">-- | Convert a namespace into the appropriate glob for searching within that namespace</span><span>
+</span><span id="line-3498"></span><span class="hs-comment">--</span><span>
+</span><span id="line-3499"></span><span class="hs-comment">-- &gt;&gt;&gt; toNamespaceGlob &quot;foo.bar&quot;</span><span>
+</span><span id="line-3500"></span><span class="hs-comment">-- &quot;foo.bar.*&quot;</span><span>
+</span><span id="line-3501"></span><span class="hs-comment">--</span><span>
+</span><span id="line-3502"></span><span class="hs-comment">-- &gt;&gt;&gt; toNamespaceGlob &quot;&quot;</span><span>
+</span><span id="line-3503"></span><span class="hs-comment">-- &quot;*&quot;</span><span>
+</span><span id="line-3504"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toNamespaceGlob"><span class="hs-identifier hs-type">toNamespaceGlob</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-3505"></span><span id="toNamespaceGlob"><span class="annot"><span class="annottext">toNamespaceGlob :: Text -&gt; Text
 </span><a href="U.Codebase.Sqlite.Queries.html#toNamespaceGlob"><span class="hs-identifier hs-var hs-var">toNamespaceGlob</span></a></span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;*&quot;</span></span><span>
-</span><span id="line-3505"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toNamespaceGlob"><span class="hs-identifier hs-var">toNamespaceGlob</span></a></span><span> </span><span id="local-6989586621679529321"><span class="annot"><span class="annottext">Text
+</span><span id="line-3506"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#toNamespaceGlob"><span class="hs-identifier hs-var">toNamespaceGlob</span></a></span><span> </span><span id="local-6989586621679529321"><span class="annot"><span class="annottext">Text
 </span><a href="#local-6989586621679529321"><span class="hs-identifier hs-var">namespace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text
 </span><a href="U.Codebase.Sqlite.Queries.html#globEscape"><span class="hs-identifier hs-var">globEscape</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><a href="#local-6989586621679529321"><span class="hs-identifier hs-var">namespace</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;.*&quot;</span></span><span>
-</span><span id="line-3506"></span><span>
-</span><span id="line-3507"></span><span class="hs-comment">-- | Thrown if we try to get the segments of an empty name, shouldn't ever happen since empty names</span><span>
-</span><span id="line-3508"></span><span class="hs-comment">-- are invalid.</span><span>
-</span><span id="line-3509"></span><span class="hs-keyword">data</span><span> </span><span id="EmptyName"><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-var">EmptyName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EmptyName"><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-var">EmptyName</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-3510"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679529314"><span id="local-6989586621679529318"><span class="annot"><span class="annottext">EmptyName -&gt; EmptyName -&gt; Bool
+</span><span id="line-3507"></span><span>
+</span><span id="line-3508"></span><span class="hs-comment">-- | Thrown if we try to get the segments of an empty name, shouldn't ever happen since empty names</span><span>
+</span><span id="line-3509"></span><span class="hs-comment">-- are invalid.</span><span>
+</span><span id="line-3510"></span><span class="hs-keyword">data</span><span> </span><span id="EmptyName"><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-var">EmptyName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EmptyName"><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-var">EmptyName</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-3511"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679529314"><span id="local-6989586621679529318"><span class="annot"><span class="annottext">EmptyName -&gt; EmptyName -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: EmptyName -&gt; EmptyName -&gt; Bool
 $c/= :: EmptyName -&gt; EmptyName -&gt; Bool
@@ -7485,33 +7486,33 @@ $cshow :: EmptyName -&gt; [Char]
 showsPrec :: Int -&gt; EmptyName -&gt; ShowS
 $cshowsPrec :: Int -&gt; EmptyName -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-3511"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Show EmptyName
+</span><span id="line-3512"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Show EmptyName
 Typeable EmptyName
 forall e. Show e -&gt; Typeable e -&gt; SqliteExceptionReason e
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">SqliteExceptionReason</span></span><span class="hs-special">)</span><span>
-</span><span id="line-3512"></span><span>
-</span><span id="line-3513"></span><span class="hs-comment">-- | Convert a reversed name into reversed segments.</span><span>
-</span><span id="line-3514"></span><span class="hs-comment">--</span><span>
-</span><span id="line-3515"></span><span class="hs-comment">-- &gt;&gt;&gt; reversedNameToReversedSegments &quot;foo.bar.&quot;</span><span>
-</span><span id="line-3516"></span><span class="hs-comment">-- Right (&quot;foo&quot; :| [&quot;bar&quot;])</span><span>
-</span><span id="line-3517"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#reversedNameToReversedSegments"><span class="hs-identifier hs-type">reversedNameToReversedSegments</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HasCallStack</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-type">EmptyName</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span>
-</span><span id="line-3518"></span><span id="reversedNameToReversedSegments"><span class="annot"><span class="annottext">reversedNameToReversedSegments :: HasCallStack =&gt; Text -&gt; Either EmptyName ReversedSegments
+</span><span id="line-3513"></span><span>
+</span><span id="line-3514"></span><span class="hs-comment">-- | Convert a reversed name into reversed segments.</span><span>
+</span><span id="line-3515"></span><span class="hs-comment">--</span><span>
+</span><span id="line-3516"></span><span class="hs-comment">-- &gt;&gt;&gt; reversedNameToReversedSegments &quot;foo.bar.&quot;</span><span>
+</span><span id="line-3517"></span><span class="hs-comment">-- Right (&quot;foo&quot; :| [&quot;bar&quot;])</span><span>
+</span><span id="line-3518"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#reversedNameToReversedSegments"><span class="hs-identifier hs-type">reversedNameToReversedSegments</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HasCallStack</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#EmptyName"><span class="hs-identifier hs-type">EmptyName</span></a></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.NamedRef.html#ReversedSegments"><span class="hs-identifier hs-type">ReversedSegments</span></a></span><span>
+</span><span id="line-3519"></span><span id="reversedNameToReversedSegments"><span class="annot"><span class="annottext">reversedNameToReversedSegments :: HasCallStack =&gt; Text -&gt; Either EmptyName ReversedSegments
 </span><a href="U.Codebase.Sqlite.Queries.html#reversedNameToReversedSegments"><span class="hs-identifier hs-var hs-var">reversedNameToReversedSegments</span></a></span></span><span> </span><span id="local-6989586621679529292"><span class="annot"><span class="annottext">Text
 </span><a href="#local-6989586621679529292"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3519"></span><span>  </span><span class="annot"><span class="annottext">Text
+</span><span id="line-3520"></span><span>  </span><span class="annot"><span class="annottext">Text
 </span><a href="#local-6989586621679529292"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-3520"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><span id="line-3521"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; [Text]
 </span><span class="hs-identifier hs-var">Text.splitOn</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;.&quot;</span></span><span>
-</span><span id="line-3521"></span><span>    </span><span class="hs-comment">-- Names have a trailing dot, so we need to drop the last empty segment</span><span>
-</span><span id="line-3522"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><span id="line-3522"></span><span>    </span><span class="hs-comment">-- Names have a trailing dot, so we need to drop the last empty segment</span><span>
+</span><span id="line-3523"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">List.dropEnd1</span></span><span>
-</span><span id="line-3523"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><span id="line-3524"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; Maybe (NonEmpty a)
 </span><span class="hs-identifier hs-var">NonEmpty.nonEmpty</span></span><span>
-</span><span id="line-3524"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><span id="line-3525"></span><span>    </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 </span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Char] -&gt; EmptyName
@@ -7520,15 +7521,15 @@ forall e. Show e -&gt; Typeable e -&gt; SqliteExceptionReason e
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">HasCallStack =&gt; CallStack
 </span><span class="hs-identifier hs-var">callStack</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span>
-</span><span id="line-3525"></span><span>
-</span><span id="line-3526"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setMostRecentBranch"><span class="hs-identifier hs-type">setMostRecentBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-3527"></span><span id="setMostRecentBranch"><span class="annot"><span class="annottext">setMostRecentBranch :: ProjectId -&gt; ProjectBranchId -&gt; Transaction ()
+</span><span id="line-3526"></span><span>
+</span><span id="line-3527"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#setMostRecentBranch"><span class="hs-identifier hs-type">setMostRecentBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-3528"></span><span id="setMostRecentBranch"><span class="annot"><span class="annottext">setMostRecentBranch :: ProjectId -&gt; ProjectBranchId -&gt; Transaction ()
 </span><a href="U.Codebase.Sqlite.Queries.html#setMostRecentBranch"><span class="hs-identifier hs-var hs-var">setMostRecentBranch</span></a></span></span><span> </span><span id="local-6989586621679529288"><span class="annot"><span class="annottext">ProjectId
 </span><a href="#local-6989586621679529288"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span id="local-6989586621679529287"><span class="annot"><span class="annottext">ProjectBranchId
 </span><a href="#local-6989586621679529287"><span class="hs-identifier hs-var">branchId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3528"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
+</span><span id="line-3529"></span><span>  </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">execute</span></span><span>
-</span><span id="line-3529"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3530"></span><span>    </span><span class="annot"><span class="">[sql|
       INSERT INTO most_recent_branch (
         project_id,
         branch_id)
@@ -7540,14 +7541,14 @@ forall e. Show e -&gt; Typeable e -&gt; SqliteExceptionReason e
           project_id = excluded.project_id,
           branch_id = excluded.branch_id
   |]</span></span><span>
-</span><span id="line-3541"></span><span>
-</span><span id="line-3542"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadMostRecentBranch"><span class="hs-identifier hs-type">loadMostRecentBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-3543"></span><span id="loadMostRecentBranch"><span class="annot"><span class="annottext">loadMostRecentBranch :: ProjectId -&gt; Transaction (Maybe ProjectBranchId)
+</span><span id="line-3542"></span><span>
+</span><span id="line-3543"></span><span class="annot"><a href="U.Codebase.Sqlite.Queries.html#loadMostRecentBranch"><span class="hs-identifier hs-type">loadMostRecentBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectId"><span class="hs-identifier hs-type">ProjectId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="U.Codebase.Sqlite.DbId.html#ProjectBranchId"><span class="hs-identifier hs-type">ProjectBranchId</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-3544"></span><span id="loadMostRecentBranch"><span class="annot"><span class="annottext">loadMostRecentBranch :: ProjectId -&gt; Transaction (Maybe ProjectBranchId)
 </span><a href="U.Codebase.Sqlite.Queries.html#loadMostRecentBranch"><span class="hs-identifier hs-var hs-var">loadMostRecentBranch</span></a></span></span><span> </span><span id="local-6989586621679529286"><span class="annot"><span class="annottext">ProjectId
 </span><a href="#local-6989586621679529286"><span class="hs-identifier hs-var">projectId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-3544"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction (Maybe a)
+</span><span id="line-3545"></span><span>  </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction (Maybe a)
 </span><span class="hs-identifier hs-var">queryMaybeCol</span></span><span>
-</span><span id="line-3545"></span><span>    </span><span class="annot"><span class="">[sql|
+</span><span id="line-3546"></span><span>    </span><span class="annot"><span class="">[sql|
       SELECT
         branch_id
       FROM
@@ -7555,4 +7556,4 @@ forall e. Show e -&gt; Typeable e -&gt; SqliteExceptionReason e
       WHERE
         project_id = :projectId
     |]</span></span><span>
-</span><span id="line-3553"></span></pre></body></html>
+</span><span id="line-3554"></span></pre></body></html>
