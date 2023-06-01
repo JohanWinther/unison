@@ -287,7 +287,7 @@ syntax :: Element -> SyntaxText -> SyntaxText
 firstReference :: SyntaxText -> Maybe UnisonHash
 reference :: SyntaxSegment -> Maybe UnisonHash
 
--- | Convert a <a>SyntaxText</a> to a <a>String</a>, ignoring syntax markup
+-- | Convert a <a>SyntaxText</a> to a <a>Value</a>, ignoring syntax markup
 toPlain :: SyntaxText -> String
 toPlainText :: SyntaxText -> Text
 toHtml :: SyntaxText -> Html ()
@@ -298,12 +298,12 @@ instance GHC.Generics.Generic Unison.Server.Syntax.Element
 instance GHC.Show.Show Unison.Server.Syntax.Element
 instance GHC.Classes.Ord Unison.Server.Syntax.Element
 instance GHC.Classes.Eq Unison.Server.Syntax.Element
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Syntax.Element
 instance Data.OpenApi.Internal.Schema.ToSchema a => Data.OpenApi.Internal.Schema.ToSchema (Unison.Util.AnnotatedText.Segment a)
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Pattern.SeqOp
+instance Data.Aeson.Types.ToJSON.ToJSON (Unison.Util.AnnotatedText.AnnotatedText Unison.Server.Syntax.Element)
+instance Data.Aeson.Types.FromJSON.FromJSON (Unison.Util.AnnotatedText.AnnotatedText Unison.Server.Syntax.Element)
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Syntax.SyntaxText
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Syntax.SyntaxText
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.Server.Syntax.SyntaxText
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Syntax.Element
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Syntax.Element
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.Server.Syntax.Element
 instance Data.Aeson.Types.ToJSON.ToJSON a => Data.Aeson.Types.ToJSON.ToJSON (Unison.Util.AnnotatedText.Segment a)
@@ -576,9 +576,6 @@ Data :: TypeTag
 data UnisonRef
 TypeRef :: UnisonHash -> UnisonRef
 TermRef :: UnisonHash -> UnisonRef
-data FoundEntry
-FoundTerm :: NamedTerm -> FoundEntry
-FoundType :: NamedType -> FoundEntry
 unisonRefToText :: UnisonRef -> Text
 data NamedTerm
 NamedTerm :: HashQualified NameSegment -> ShortHash -> Maybe SyntaxText -> TermTag -> NamedTerm
@@ -634,20 +631,15 @@ instance GHC.Classes.Eq Unison.Server.Types.NamedTerm
 instance GHC.Show.Show Unison.Server.Types.NamedType
 instance GHC.Generics.Generic Unison.Server.Types.NamedType
 instance GHC.Classes.Eq Unison.Server.Types.NamedType
-instance GHC.Generics.Generic Unison.Server.Types.FoundEntry
-instance GHC.Show.Show Unison.Server.Types.FoundEntry
-instance GHC.Classes.Eq Unison.Server.Types.FoundEntry
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Types.Suffixify
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Types.Suffixify
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TypeDefinition
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TermDefinition
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.DefinitionDisplayResults
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.FoundEntry
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamedTerm
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamedType
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TermTag
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TypeTag
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.FoundEntry
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.NamedType
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.Server.Types.NamedType
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.NamedTerm
