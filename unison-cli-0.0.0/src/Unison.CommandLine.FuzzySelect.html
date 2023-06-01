@@ -41,12 +41,12 @@
 </span><span id="line-37"></span><span class="hs-comment">-- | Convert options into command-line args for fzf</span><span>
 </span><span id="line-38"></span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#optsToArgs"><span class="hs-identifier hs-type">optsToArgs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#Options"><span class="hs-identifier hs-type">Options</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span>
 </span><span id="line-39"></span><span id="optsToArgs"><span class="annot"><span class="annottext">optsToArgs :: Options -&gt; [String]
-</span><a href="Unison.CommandLine.FuzzySelect.html#optsToArgs"><span class="hs-identifier hs-var hs-var">optsToArgs</span></a></span></span><span> </span><span id="local-6989586621679758402"><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679758402"><span class="hs-identifier hs-var">opts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.CommandLine.FuzzySelect.html#optsToArgs"><span class="hs-identifier hs-var hs-var">optsToArgs</span></a></span></span><span> </span><span id="local-6989586621679758917"><span class="annot"><span class="annottext">Options
+</span><a href="#local-6989586621679758917"><span class="hs-identifier hs-var">opts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-40"></span><span>  </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679758401"><span class="hs-identifier hs-var">defaultArgs</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679758916"><span class="hs-identifier hs-var">defaultArgs</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679758402"><span class="hs-identifier hs-var">opts</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679758917"><span class="hs-identifier hs-var">opts</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-41"></span><span>    </span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#Options"><span class="hs-identifier hs-type">Options</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:allowMultiSelect:Options :: Options -&gt; Bool
 </span><a href="Unison.CommandLine.FuzzySelect.html#%24sel%3AallowMultiSelect%3AOptions"><span class="hs-identifier hs-var">allowMultiSelect</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
@@ -54,8 +54,8 @@
 </span><span id="line-42"></span><span>    </span><span class="annot"><span class="annottext">Options
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-43"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-44"></span><span>    </span><span id="local-6989586621679758401"><span class="annot"><span class="annottext">defaultArgs :: [String]
-</span><a href="#local-6989586621679758401"><span class="hs-identifier hs-var hs-var">defaultArgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-44"></span><span>    </span><span id="local-6989586621679758916"><span class="annot"><span class="annottext">defaultArgs :: [String]
+</span><a href="#local-6989586621679758916"><span class="hs-identifier hs-var hs-var">defaultArgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-45"></span><span>      </span><span class="hs-comment">-- Don't show or match on the first column of input.</span><span>
 </span><span id="line-46"></span><span>      </span><span class="hs-comment">-- This allows us to prepend each line with a number, and use that number to determine</span><span>
 </span><span id="line-47"></span><span>      </span><span class="hs-comment">-- which values from the input list were selected.</span><span>
@@ -73,30 +73,30 @@
 </span><span id="line-55"></span><span>
 </span><span id="line-56"></span><span class="hs-comment">-- | Allows prompting the user to interactively fuzzy-select a result from a list of options, currently shells out to `fzf` under the hood.</span><span>
 </span><span id="line-57"></span><span class="hs-comment">-- If fzf is missing, or an error (other than ctrl-c) occurred, returns Nothing.</span><span>
-</span><span id="line-58"></span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#fuzzySelect"><span class="hs-identifier hs-type">fuzzySelect</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679758511"><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#Options"><span class="hs-identifier hs-type">Options</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#fuzzySelect"><span class="hs-identifier hs-type">fuzzySelect</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679759026"><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="Unison.CommandLine.FuzzySelect.html#Options"><span class="hs-identifier hs-type">Options</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
 </span><span id="line-59"></span><span id="fuzzySelect"><span class="annot"><span class="annottext">fuzzySelect :: forall a. Options -&gt; (a -&gt; Text) -&gt; [a] -&gt; IO (Maybe [a])
-</span><a href="Unison.CommandLine.FuzzySelect.html#fuzzySelect"><span class="hs-identifier hs-var hs-var">fuzzySelect</span></a></span></span><span> </span><span id="local-6989586621679758315"><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679758315"><span class="hs-identifier hs-var">opts</span></a></span></span><span> </span><span id="local-6989586621679758314"><span class="annot"><span class="annottext">a -&gt; Text
-</span><a href="#local-6989586621679758314"><span class="hs-identifier hs-var">intoSearchText</span></a></span></span><span> </span><span id="local-6989586621679758313"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679758313"><span class="hs-identifier hs-var">choices</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.CommandLine.FuzzySelect.html#fuzzySelect"><span class="hs-identifier hs-var hs-var">fuzzySelect</span></a></span></span><span> </span><span id="local-6989586621679758830"><span class="annot"><span class="annottext">Options
+</span><a href="#local-6989586621679758830"><span class="hs-identifier hs-var">opts</span></a></span></span><span> </span><span id="local-6989586621679758829"><span class="annot"><span class="annottext">a -&gt; Text
+</span><a href="#local-6989586621679758829"><span class="hs-identifier hs-var">intoSearchText</span></a></span></span><span> </span><span id="local-6989586621679758828"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679758828"><span class="hs-identifier hs-var">choices</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-60"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 MonadUnliftIO m =&gt;
 (SomeException -&gt; m a) -&gt; m a -&gt; m a
 </span><span class="hs-identifier hs-var">UnliftIO.handleAny</span></span><span> </span><span class="annot"><span class="annottext">SomeException -&gt; IO (Maybe [a])
-</span><a href="#local-6989586621679758311"><span class="hs-identifier hs-var">handleException</span></a></span><span>
+</span><a href="#local-6989586621679758826"><span class="hs-identifier hs-var">handleException</span></a></span><span>
 </span><span id="line-61"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">IO (Either Text [a]) -&gt; IO (Maybe [a])
-</span><a href="#local-6989586621679758309"><span class="hs-identifier hs-var">handleError</span></a></span><span>
+</span><a href="#local-6989586621679758824"><span class="hs-identifier hs-var">handleError</span></a></span><span>
 </span><span id="line-62"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall c. IO c -&gt; IO c
-</span><a href="#local-6989586621679758308"><span class="hs-identifier hs-var">restoreBuffering</span></a></span><span>
+</span><a href="#local-6989586621679758823"><span class="hs-identifier hs-var">restoreBuffering</span></a></span><span>
 </span><span id="line-63"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. ExceptT e m a -&gt; m (Either e a)
 </span><span class="hs-identifier hs-var">runExceptT</span></span><span>
 </span><span id="line-64"></span><span>    </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-65"></span><span>      </span><span id="local-6989586621679758307"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679758307"><span class="hs-identifier hs-var">fzfPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-65"></span><span>      </span><span id="local-6989586621679758822"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679758822"><span class="hs-identifier hs-var">fzfPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-66"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). MonadIO m =&gt; String -&gt; m (Maybe String)
 </span><span class="hs-identifier hs-var">findExecutable</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -106,41 +106,41 @@ MonadUnliftIO m =&gt;
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;I couldn't find the `fzf` executable on your path, consider installing `fzf` to enable fuzzy searching.&quot;</span></span><span>
-</span><span id="line-68"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758305"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679758305"><span class="hs-identifier hs-var">fzfPath</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-68"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758820"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679758820"><span class="hs-identifier hs-var">fzfPath</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679758305"><span class="hs-identifier hs-var">fzfPath</span></a></span><span>
-</span><span id="line-69"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758304"><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679758304"><span class="hs-identifier hs-var">fzfArgs</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679758820"><span class="hs-identifier hs-var">fzfPath</span></a></span><span>
+</span><span id="line-69"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758819"><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679758819"><span class="hs-identifier hs-var">fzfArgs</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-70"></span><span>            </span><span class="annot"><span class="annottext">Options -&gt; [String]
 </span><a href="Unison.CommandLine.FuzzySelect.html#optsToArgs"><span class="hs-identifier hs-var">optsToArgs</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679758315"><span class="hs-identifier hs-var">opts</span></a></span><span>
-</span><span id="line-71"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758303"><span class="annot"><span class="annottext">[(Int, a)]
-</span><a href="#local-6989586621679758303"><span class="hs-identifier hs-var">numberedChoices</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679758830"><span class="hs-identifier hs-var">opts</span></a></span><span>
+</span><span id="line-71"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758818"><span class="annot"><span class="annottext">[(Int, a)]
+</span><a href="#local-6989586621679758818"><span class="hs-identifier hs-var">numberedChoices</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-72"></span><span>            </span><span class="annot"><span class="annottext">forall a b. [a] -&gt; [b] -&gt; [(a, b)]
 </span><span class="hs-identifier hs-var">zip</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">..</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679758313"><span class="hs-identifier hs-var">choices</span></a></span><span>
-</span><span id="line-73"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758302"><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679758302"><span class="hs-identifier hs-var">searchTexts</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-74"></span><span>            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679758301"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679758301"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758300"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679758300"><span class="hs-identifier hs-var">ch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; Text
+</span><a href="#local-6989586621679758828"><span class="hs-identifier hs-var">choices</span></a></span><span>
+</span><span id="line-73"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758817"><span class="annot"><span class="annottext">[Text]
+</span><a href="#local-6989586621679758817"><span class="hs-identifier hs-var">searchTexts</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-74"></span><span>            </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679758816"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679758816"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758815"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679758815"><span class="hs-identifier hs-var">ch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; Text
 </span><span class="hs-identifier hs-var">tShow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679758301"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679758816"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; Text
-</span><a href="#local-6989586621679758314"><span class="hs-identifier hs-var">intoSearchText</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679758300"><span class="hs-identifier hs-var">ch</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679758829"><span class="hs-identifier hs-var">intoSearchText</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679758815"><span class="hs-identifier hs-var">ch</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">[(Int, a)]
-</span><a href="#local-6989586621679758303"><span class="hs-identifier hs-var">numberedChoices</span></a></span><span>
-</span><span id="line-75"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758297"><span class="annot"><span class="annottext">CreateProcess
-</span><a href="#local-6989586621679758297"><span class="hs-identifier hs-var">fzfProc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Proc.CreateProcess</span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679758818"><span class="hs-identifier hs-var">numberedChoices</span></a></span><span>
+</span><span id="line-75"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758812"><span class="annot"><span class="annottext">CreateProcess
+</span><a href="#local-6989586621679758812"><span class="hs-identifier hs-var">fzfProc</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Proc.CreateProcess</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-76"></span><span>            </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; [String] -&gt; CreateProcess
 </span><span class="hs-identifier hs-var">Proc.proc</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679758307"><span class="hs-identifier hs-var">fzfPath</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679758304"><span class="hs-identifier hs-var">fzfArgs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679758822"><span class="hs-identifier hs-var">fzfPath</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679758819"><span class="hs-identifier hs-var">fzfArgs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-77"></span><span>              </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">std_in :: StdStream
 </span><span class="hs-identifier hs-var">Proc.std_in</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StdStream
 </span><span class="hs-identifier hs-var">Proc.CreatePipe</span></span><span class="hs-special">,</span><span>
@@ -151,16 +151,16 @@ MonadUnliftIO m =&gt;
 </span><span class="hs-identifier hs-var">Proc.delegate_ctlc</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span>
 </span><span id="line-80"></span><span>              </span><span class="hs-special">}</span><span>
-</span><span id="line-81"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758291"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758291"><span class="hs-identifier hs-var">stdin'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758290"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758290"><span class="hs-identifier hs-var">stdout'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Handle
-</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758289"><span class="annot"><span class="annottext">ProcessHandle
-</span><a href="#local-6989586621679758289"><span class="hs-identifier hs-var">procHandle</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+</span><span id="line-81"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758806"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679758806"><span class="hs-identifier hs-var">stdin'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679758805"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679758805"><span class="hs-identifier hs-var">stdout'</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758804"><span class="annot"><span class="annottext">ProcessHandle
+</span><a href="#local-6989586621679758804"><span class="hs-identifier hs-var">procHandle</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 MonadIO m =&gt;
 CreateProcess
 -&gt; m (Maybe Handle, Maybe Handle, Maybe Handle, ProcessHandle)
 </span><span class="hs-identifier hs-var">Proc.createProcess</span></span><span> </span><span class="annot"><span class="annottext">CreateProcess
-</span><a href="#local-6989586621679758297"><span class="hs-identifier hs-var">fzfProc</span></a></span><span>
+</span><a href="#local-6989586621679758812"><span class="hs-identifier hs-var">fzfProc</span></a></span><span>
 </span><span id="line-82"></span><span>      </span><span class="hs-comment">-- Generally no-buffering is helpful for highly interactive processes.</span><span>
 </span><span id="line-83"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). MonadIO m =&gt; Handle -&gt; BufferMode -&gt; m ()
 </span><span class="hs-identifier hs-var">hSetBuffering</span></span><span> </span><span class="annot"><span class="annottext">Handle
@@ -168,10 +168,10 @@ CreateProcess
 </span><span class="hs-identifier hs-var">NoBuffering</span></span><span>
 </span><span id="line-84"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). MonadIO m =&gt; Handle -&gt; BufferMode -&gt; m ()
 </span><span class="hs-identifier hs-var">hSetBuffering</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758291"><span class="hs-identifier hs-var">stdin'</span></a></span><span> </span><span class="annot"><span class="annottext">BufferMode
+</span><a href="#local-6989586621679758806"><span class="hs-identifier hs-var">stdin'</span></a></span><span> </span><span class="annot"><span class="annottext">BufferMode
 </span><span class="hs-identifier hs-var">NoBuffering</span></span><span>
-</span><span id="line-85"></span><span>      </span><span id="local-6989586621679758287"><span class="annot"><span class="annottext">Either SomeException [Text]
-</span><a href="#local-6989586621679758287"><span class="hs-identifier hs-var">result</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span id="line-85"></span><span>      </span><span id="local-6989586621679758802"><span class="annot"><span class="annottext">Either SomeException [Text]
+</span><a href="#local-6989586621679758802"><span class="hs-identifier hs-var">result</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 MonadUnliftIO m =&gt;
@@ -184,37 +184,37 @@ m a -&gt; m (Either SomeException a)
 (a -&gt; f b) -&gt; t a -&gt; f (t b)
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Handle -&gt; Text -&gt; IO ()
 </span><span class="hs-identifier hs-var">Text.hPutStrLn</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758291"><span class="hs-identifier hs-var">stdin'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679758302"><span class="hs-identifier hs-var">searchTexts</span></a></span><span>
+</span><a href="#local-6989586621679758806"><span class="hs-identifier hs-var">stdin'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Text]
+</span><a href="#local-6989586621679758817"><span class="hs-identifier hs-var">searchTexts</span></a></span><span>
 </span><span id="line-88"></span><span>        </span><span class="hs-comment">-- Wire up the interactive terminal to fzf now that the inputs have been loaded.</span><span>
 </span><span id="line-89"></span><span>        </span><span class="annot"><span class="annottext">Handle -&gt; Handle -&gt; IO ()
 </span><span class="hs-identifier hs-var">hDuplicateTo</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758291"><span class="hs-identifier hs-var">stdin'</span></a></span><span>
+</span><a href="#local-6989586621679758806"><span class="hs-identifier hs-var">stdin'</span></a></span><span>
 </span><span id="line-90"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Functor f =&gt; f a -&gt; f ()
 </span><span class="hs-identifier hs-var">void</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). MonadIO m =&gt; ProcessHandle -&gt; m ExitCode
 </span><span class="hs-identifier hs-var">Proc.waitForProcess</span></span><span> </span><span class="annot"><span class="annottext">ProcessHandle
-</span><a href="#local-6989586621679758289"><span class="hs-identifier hs-var">procHandle</span></a></span><span>
+</span><a href="#local-6989586621679758804"><span class="hs-identifier hs-var">procHandle</span></a></span><span>
 </span><span id="line-91"></span><span>        </span><span class="annot"><span class="annottext">Text -&gt; [Text]
 </span><span class="hs-identifier hs-var">Text.lines</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Handle -&gt; IO Text
 </span><span class="hs-identifier hs-var">Text.hGetContents</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679758290"><span class="hs-identifier hs-var">stdout'</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679758805"><span class="hs-identifier hs-var">stdout'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-92"></span><span>      </span><span class="hs-comment">-- Ignore any errors from fzf, or from trying to write to pipes which may have been</span><span>
 </span><span id="line-93"></span><span>      </span><span class="hs-comment">-- closed by a ctrl-c, just treat it as an empty selection.</span><span>
-</span><span id="line-94"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758279"><span class="annot"><span class="annottext">selections :: [Text]
-</span><a href="#local-6989586621679758279"><span class="hs-identifier hs-var hs-var">selections</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall b a. b -&gt; Either a b -&gt; b
+</span><span id="line-94"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758794"><span class="annot"><span class="annottext">selections :: [Text]
+</span><a href="#local-6989586621679758794"><span class="hs-identifier hs-var hs-var">selections</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall b a. b -&gt; Either a b -&gt; b
 </span><span class="hs-identifier hs-var">fromRight</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Either SomeException [Text]
-</span><a href="#local-6989586621679758287"><span class="hs-identifier hs-var">result</span></a></span><span>
+</span><a href="#local-6989586621679758802"><span class="hs-identifier hs-var">result</span></a></span><span>
 </span><span id="line-95"></span><span>      </span><span class="hs-comment">-- Since we prefixed every search term with its number earlier, we know each result</span><span>
 </span><span id="line-96"></span><span>      </span><span class="hs-comment">-- is prefixed with a number, we need to parse it and use it to select the matching</span><span>
 </span><span id="line-97"></span><span>      </span><span class="hs-comment">-- value from our input list.</span><span>
-</span><span id="line-98"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758277"><span class="annot"><span class="annottext">selectedNumbers :: Set Int
-</span><a href="#local-6989586621679758277"><span class="hs-identifier hs-var hs-var">selectedNumbers</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-98"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679758792"><span class="annot"><span class="annottext">selectedNumbers :: Set Int
+</span><a href="#local-6989586621679758792"><span class="hs-identifier hs-var hs-var">selectedNumbers</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-99"></span><span>            </span><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679758279"><span class="hs-identifier hs-var">selections</span></a></span><span>
+</span><a href="#local-6989586621679758794"><span class="hs-identifier hs-var">selections</span></a></span><span>
 </span><span id="line-100"></span><span>              </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b.
 Filterable f =&gt;
@@ -233,23 +233,23 @@ Filterable f =&gt;
 </span><span id="line-102"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b.
 Filterable f =&gt;
 (a -&gt; Maybe b) -&gt; f a -&gt; f b
-</span><span class="hs-identifier hs-var">mapMaybe</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679758269"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679758269"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758268"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679758268"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679758269"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
+</span><span class="hs-identifier hs-var">mapMaybe</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679758784"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679758784"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679758783"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679758783"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679758784"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; Set a -&gt; Bool
 </span><span class="hs-operator hs-var">`Set.member`</span></span><span> </span><span class="annot"><span class="annottext">Set Int
-</span><a href="#local-6989586621679758277"><span class="hs-identifier hs-var">selectedNumbers</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679758792"><span class="hs-identifier hs-var">selectedNumbers</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679758268"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><a href="#local-6989586621679758783"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[(Int, a)]
-</span><a href="#local-6989586621679758303"><span class="hs-identifier hs-var">numberedChoices</span></a></span><span>
+</span><a href="#local-6989586621679758818"><span class="hs-identifier hs-var">numberedChoices</span></a></span><span>
 </span><span id="line-103"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-104"></span><span>    </span><span class="annot"><a href="#local-6989586621679758311"><span class="hs-identifier hs-type">handleException</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">SomeException</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-105"></span><span>    </span><span id="local-6989586621679758311"><span class="annot"><span class="annottext">handleException :: SomeException -&gt; IO (Maybe [a])
-</span><a href="#local-6989586621679758311"><span class="hs-identifier hs-var hs-var">handleException</span></a></span></span><span> </span><span id="local-6989586621679758266"><span class="annot"><span class="annottext">SomeException
-</span><a href="#local-6989586621679758266"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a (f :: * -&gt; *). (Show a, Applicative f) =&gt; a -&gt; f ()
+</span><span id="line-104"></span><span>    </span><span class="annot"><a href="#local-6989586621679758826"><span class="hs-identifier hs-type">handleException</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">SomeException</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span>    </span><span id="local-6989586621679758826"><span class="annot"><span class="annottext">handleException :: SomeException -&gt; IO (Maybe [a])
+</span><a href="#local-6989586621679758826"><span class="hs-identifier hs-var hs-var">handleException</span></a></span></span><span> </span><span id="local-6989586621679758781"><span class="annot"><span class="annottext">SomeException
+</span><a href="#local-6989586621679758781"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a (f :: * -&gt; *). (Show a, Applicative f) =&gt; a -&gt; f ()
 </span><span class="hs-identifier hs-var">traceShowM</span></span><span> </span><span class="annot"><span class="annottext">SomeException
-</span><a href="#local-6989586621679758266"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
+</span><a href="#local-6989586621679758781"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; String -&gt; IO ()
 </span><span class="hs-identifier hs-var">hPutStrLn</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stderr</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -257,30 +257,30 @@ Filterable f =&gt;
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-106"></span><span>    </span><span class="annot"><a href="#local-6989586621679758309"><span class="hs-identifier hs-type">handleError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679758511"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-107"></span><span>    </span><span id="local-6989586621679758309"><span class="annot"><span class="annottext">handleError :: IO (Either Text [a]) -&gt; IO (Maybe [a])
-</span><a href="#local-6989586621679758309"><span class="hs-identifier hs-var hs-var">handleError</span></a></span></span><span> </span><span id="local-6989586621679758264"><span class="annot"><span class="annottext">IO (Either Text [a])
-</span><a href="#local-6989586621679758264"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-106"></span><span>    </span><span class="annot"><a href="#local-6989586621679758824"><span class="hs-identifier hs-type">handleError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679759026"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>    </span><span id="local-6989586621679758824"><span class="annot"><span class="annottext">handleError :: IO (Either Text [a]) -&gt; IO (Maybe [a])
+</span><a href="#local-6989586621679758824"><span class="hs-identifier hs-var hs-var">handleError</span></a></span></span><span> </span><span id="local-6989586621679758779"><span class="annot"><span class="annottext">IO (Either Text [a])
+</span><a href="#local-6989586621679758779"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-108"></span><span>      </span><span class="annot"><span class="annottext">IO (Either Text [a])
-</span><a href="#local-6989586621679758264"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679758779"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-109"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679758263"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679758263"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; Text -&gt; IO ()
+</span><span id="line-109"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679758778"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679758778"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; Text -&gt; IO ()
 </span><span class="hs-identifier hs-var">Text.hPutStrLn</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stderr</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679758263"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
+</span><a href="#local-6989586621679758778"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f a -&gt; f b -&gt; f b
 </span><span class="hs-operator hs-var">*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-110"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679758262"><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679758262"><span class="hs-keyword hs-var">as</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-110"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679758777"><span class="annot"><span class="annottext">[a]
+</span><a href="#local-6989586621679758777"><span class="hs-keyword hs-var">as</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">[a]
-</span><a href="#local-6989586621679758262"><span class="hs-keyword hs-var">as</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-111"></span><span>    </span><span id="local-6989586621679758485"><span class="annot"><a href="#local-6989586621679758308"><span class="hs-identifier hs-type">restoreBuffering</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679758485"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679758485"><span class="hs-identifier hs-type">c</span></a></span></span><span>
-</span><span id="line-112"></span><span>    </span><span id="local-6989586621679758308"><span class="annot"><span class="annottext">restoreBuffering :: forall c. IO c -&gt; IO c
-</span><a href="#local-6989586621679758308"><span class="hs-identifier hs-var hs-var">restoreBuffering</span></a></span></span><span> </span><span id="local-6989586621679758258"><span class="annot"><span class="annottext">IO c
-</span><a href="#local-6989586621679758258"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679758777"><span class="hs-keyword hs-var">as</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>    </span><span id="local-6989586621679759000"><span class="annot"><a href="#local-6989586621679758823"><span class="hs-identifier hs-type">restoreBuffering</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679759000"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679759000"><span class="hs-identifier hs-type">c</span></a></span></span><span>
+</span><span id="line-112"></span><span>    </span><span id="local-6989586621679758823"><span class="annot"><span class="annottext">restoreBuffering :: forall c. IO c -&gt; IO c
+</span><a href="#local-6989586621679758823"><span class="hs-identifier hs-var hs-var">restoreBuffering</span></a></span></span><span> </span><span id="local-6989586621679758773"><span class="annot"><span class="annottext">IO c
+</span><a href="#local-6989586621679758773"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-113"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b c.
 MonadUnliftIO m =&gt;
 m a -&gt; (a -&gt; m b) -&gt; (a -&gt; m c) -&gt; m c
@@ -290,5 +290,5 @@ m a -&gt; (a -&gt; m b) -&gt; (a -&gt; m c) -&gt; m c
 </span><span class="hs-identifier hs-var">hSetBuffering</span></span><span> </span><span class="annot"><span class="annottext">Handle
 </span><span class="hs-identifier hs-var">stdin</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. a -&gt; b -&gt; a
 </span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">IO c
-</span><a href="#local-6989586621679758258"><span class="hs-identifier hs-var">action</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679758773"><span class="hs-identifier hs-var">action</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-114"></span></pre></body></html>

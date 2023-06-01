@@ -294,7 +294,7 @@ ProjectCreateI :: ProjectName -> Input
 ProjectSwitchI :: ProjectAndBranchNames -> Input
 ProjectsI :: Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
-BranchesI :: Input
+BranchesI :: Maybe ProjectName -> Input
 CloneI :: ProjectAndBranchNames -> Maybe ProjectAndBranchNames -> Input
 ReleaseDraftI :: Semver -> Input
 
@@ -2109,6 +2109,9 @@ getCurrentProject :: Cli (Maybe Project)
 --   not on a project branch.
 expectCurrentProject :: Cli Project
 
+-- | Get the current project ids that a user is on.
+getCurrentProjectIds :: Cli (Maybe (ProjectAndBranch ProjectId ProjectBranchId))
+
 -- | Get the current project+branch+branch path that a user is on.
 getCurrentProjectBranch :: Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
 
@@ -2594,7 +2597,7 @@ handleDeleteBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> 
 
 -- | <tt>branches</tt> input handler
 module Unison.Codebase.Editor.HandleInput.Branches
-handleBranches :: Cli ()
+handleBranches :: Maybe ProjectName -> Cli ()
 
 
 -- | <tt>branch</tt> input handler
