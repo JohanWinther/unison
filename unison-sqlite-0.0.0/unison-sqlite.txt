@@ -14,6 +14,7 @@ RowParam :: !Text -> !Int -> Param
 data ParsedLump
 ParsedOuterLump :: !Text -> ![Param] -> ParsedLump
 ParsedInnerLump :: !Text -> ParsedLump
+ParsedInLump :: !Text -> ParsedLump
 ParsedValuesLump :: !Text -> ParsedLump
 
 -- | Parse a SQL string, and return the list of lumps. Exported only for
@@ -293,13 +294,15 @@ data Sql
 --   which, of course, will require a <tt>qux</tt> with a <a>ToField</a>
 --   instance in scope.
 --   
---   There are four valid syntaxes for interpolating a variable:
+--   There are five valid syntaxes for interpolating a variable:
 --   
 --   <ul>
 --   <li><tt>:colon</tt>, which denotes a single-field variable</li>
 --   <li><tt>@at</tt>, followed by 1+ bare <tt>@</tt>, which denotes a
 --   multi-field variable</li>
 --   <li><tt>$dollar</tt>, which denotes an entire <a>Sql</a> fragment</li>
+--   <li><tt>IN :colon</tt>, which denotes an <tt>IN</tt> expression, where
+--   the right-hand side is a list of scalars</li>
 --   <li><tt>VALUES :colon</tt>, which denotes an entire <tt>VALUES</tt>
 --   literal (1+ tuples)</li>
 --   </ul>
@@ -328,6 +331,21 @@ data Sql
 --   <pre>
 --   [sql| bar baz |]
 --   </pre>
+--   
+--   As an example of <tt>IN :colon</tt> syntax, the query
+--   
+--   <pre>
+--   [sql| IN :foo |]
+--   </pre>
+--   
+--   will require a list "foo" to be in scope, whose elements have
+--   <tt>ToField</tt> instances, and will expand to SQL that looks like
+--   
+--   <pre>
+--   IN (?, ?, ?, ?)
+--   </pre>
+--   
+--   depending on how man elements "foo" has.
 --   
 --   As an example of <tt>VALUES :colon</tt> syntax, the query
 --   
