@@ -974,6 +974,7 @@ loadHashIdByHash :: Hash -> Transaction (Maybe HashId)
 expectHashIdByHash :: Hash -> Transaction HashId
 saveCausalHash :: CausalHash -> Transaction CausalHashId
 expectCausalHash :: CausalHashId -> Transaction CausalHash
+expectBranchHashForCausalHash :: CausalHash -> Transaction BranchHash
 saveBranchHash :: BranchHash -> Transaction BranchHashId
 saveHashObject :: HashId -> ObjectId -> HashVersion -> Transaction ()
 expectHashIdsForObject :: ObjectId -> Transaction (NonEmpty HashId)
@@ -1313,6 +1314,11 @@ typeNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transa
 --   suffix.
 longestMatchingTermNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReferent -> Transaction (Maybe (NamedRef (TextReferent, Maybe ConstructorType)))
 longestMatchingTypeNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReference -> Transaction (Maybe (NamedRef TextReference))
+
+-- | Delete any name lookup that's not in the provided list.
+--   
+--   This can be used to garbage collect unreachable name lookups.
+deleteNameLookupsExceptFor :: [BranchHashId] -> Transaction ()
 appendReflog :: Entry CausalHashId Text -> Transaction ()
 getReflog :: Int -> Transaction [Entry CausalHashId Text]
 
@@ -1599,6 +1605,11 @@ longestMatchingTermNameForSuffixification :: BranchHash -> NamespaceText -> Name
 --   this up if we make a custom PPE type just for sqlite pretty printing,
 --   but for now this works fine.
 longestMatchingTypeNameForSuffixification :: BranchHash -> NamespaceText -> NamedRef Reference -> Transaction (Maybe (NamedRef Reference))
+
+-- | Delete any name lookup that's not in the provided list.
+--   
+--   This can be used to garbage collect unreachable name lookups.
+deleteNameLookupsExceptFor :: Set BranchHash -> Transaction ()
 
 -- | Gets the specified number of reflog entries in chronological order,
 --   most recent first.
