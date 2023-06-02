@@ -2179,6 +2179,331 @@ loadRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName
 expectRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 expectRemoteProjectBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 
+module Unison.CommandLine.InputPatterns
+showPatternHelp :: InputPattern -> Pretty ColorText
+patternName :: InputPattern -> Pretty ColorText
+makeExample :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
+makeExampleNoBackticks :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
+makeExample' :: InputPattern -> Pretty ColorText
+makeExampleEOS :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
+helpFor :: InputPattern -> Either (Pretty ColorText) Input
+mergeBuiltins :: InputPattern
+mergeIOBuiltins :: InputPattern
+updateBuiltins :: InputPattern
+todo :: InputPattern
+load :: InputPattern
+clear :: InputPattern
+add :: InputPattern
+previewAdd :: InputPattern
+updateNoPatch :: InputPattern
+update :: InputPattern
+previewUpdate :: InputPattern
+patch :: InputPattern
+view :: InputPattern
+viewGlobal :: InputPattern
+display :: InputPattern
+displayTo :: InputPattern
+docs :: InputPattern
+api :: InputPattern
+ui :: InputPattern
+undo :: InputPattern
+viewByPrefix :: InputPattern
+find :: InputPattern
+findAll :: InputPattern
+findGlobal :: InputPattern
+find' :: String -> FindScope -> InputPattern
+findShallow :: InputPattern
+findVerbose :: InputPattern
+findVerboseAll :: InputPattern
+findPatch :: InputPattern
+renameTerm :: InputPattern
+renameType :: InputPattern
+deleteGen :: Maybe String -> String -> ([HQSplit'] -> DeleteTarget) -> InputPattern
+delete :: InputPattern
+deleteVerbose :: InputPattern
+deleteTerm :: InputPattern
+deleteTermVerbose :: InputPattern
+deleteType :: InputPattern
+deleteTypeVerbose :: InputPattern
+deleteTermReplacementCommand :: String
+deleteTypeReplacementCommand :: String
+deleteReplacement :: Bool -> InputPattern
+deleteProject :: InputPattern
+deleteBranch :: InputPattern
+deleteTermReplacement :: InputPattern
+deleteTypeReplacement :: InputPattern
+aliasTerm :: InputPattern
+aliasType :: InputPattern
+aliasMany :: InputPattern
+up :: InputPattern
+cd :: InputPattern
+back :: InputPattern
+deleteNamespace :: InputPattern
+deleteNamespaceForce :: InputPattern
+deleteNamespaceParser :: Pretty ColorText -> Insistence -> [String] -> Either (Pretty ColorText) Input
+deletePatch :: InputPattern
+movePatch :: String -> String -> Either (Pretty ColorText) Input
+copyPatch' :: String -> String -> Either (Pretty ColorText) Input
+copyPatch :: InputPattern
+renamePatch :: InputPattern
+renameBranch :: InputPattern
+history :: InputPattern
+forkLocal :: InputPattern
+resetRoot :: InputPattern
+pull :: InputPattern
+pullVerbose :: InputPattern
+pullWithoutHistory :: InputPattern
+pullImpl :: String -> [String] -> Verbosity -> PullMode -> Pretty ColorText -> InputPattern
+pullExhaustive :: InputPattern
+debugTabCompletion :: InputPattern
+push :: InputPattern
+pushCreate :: InputPattern
+pushForce :: InputPattern
+pushExhaustive :: InputPattern
+squashMerge :: InputPattern
+mergeLocal :: InputPattern
+parseLooseCodeOrProject :: String -> Either String LooseCodeOrProject
+diffNamespace :: InputPattern
+previewMergeLocal :: InputPattern
+replaceEdit :: (HashQualified Name -> HashQualified Name -> Maybe PatchPath -> Input) -> InputPattern
+replace :: InputPattern
+viewReflog :: InputPattern
+edit :: InputPattern
+topicNameArg :: ArgumentType
+codebaseServerNameArg :: ArgumentType
+helpTopics :: InputPattern
+helpTopicsMap :: Map String (Pretty ColorText)
+help :: InputPattern
+quit :: InputPattern
+viewPatch :: InputPattern
+link :: InputPattern
+links :: InputPattern
+unlink :: InputPattern
+names :: IsGlobal -> InputPattern
+dependents :: InputPattern
+dependencies :: InputPattern
+namespaceDependencies :: InputPattern
+debugNumberedArgs :: InputPattern
+debugFileHashes :: InputPattern
+debugDumpNamespace :: InputPattern
+debugDumpNamespaceSimple :: InputPattern
+debugClearWatchCache :: InputPattern
+debugDoctor :: InputPattern
+debugNameDiff :: InputPattern
+test :: InputPattern
+testAll :: InputPattern
+docsToHtml :: InputPattern
+docToMarkdown :: InputPattern
+execute :: InputPattern
+saveExecuteResult :: InputPattern
+ioTest :: InputPattern
+makeStandalone :: InputPattern
+runScheme :: InputPattern
+compileScheme :: InputPattern
+schemeLibgen :: InputPattern
+fetchScheme :: InputPattern
+createAuthor :: InputPattern
+gist :: InputPattern
+authLogin :: InputPattern
+printVersion :: InputPattern
+diffNamespaceToPatch :: InputPattern
+projectCreate :: InputPattern
+projectRenameInputPattern :: InputPattern
+projectSwitch :: InputPattern
+projects :: InputPattern
+branches :: InputPattern
+branchInputPattern :: InputPattern
+branchEmptyInputPattern :: InputPattern
+clone :: InputPattern
+releaseDraft :: InputPattern
+validInputs :: [InputPattern]
+
+-- | A map of all command patterns by pattern name or alias.
+patternMap :: Map String InputPattern
+visibleInputs :: [InputPattern]
+commandNames :: [String]
+commandNameArg :: ArgumentType
+exactDefinitionArg :: ArgumentType
+fuzzyDefinitionQueryArg :: ArgumentType
+definitionQueryArg :: ArgumentType
+exactDefinitionTypeQueryArg :: ArgumentType
+exactDefinitionTermQueryArg :: ArgumentType
+patchArg :: ArgumentType
+namespaceArg :: ArgumentType
+
+-- | Names of child branches of the branch, only gives options for one
+--   <tt>layer</tt> deeper at a time.
+childNamespaceNames :: Branch0 m -> [Text]
+newNameArg :: ArgumentType
+noCompletionsArg :: ArgumentType
+gitUrlArg :: ArgumentType
+
+-- | Refers to a namespace on some remote code host.
+remoteNamespaceArg :: ArgumentType
+
+-- | A project name, branch name, or both.
+projectAndBranchNamesArg :: ArgumentType
+
+-- | A project branch name.
+projectBranchNameArg :: ArgumentType
+projectBranchNameWithOptionalProjectNameArg :: ArgumentType
+
+-- | A project name.
+projectNameArg :: ArgumentType
+parseProjectName :: Text -> Either (Pretty ColorText) ProjectName
+parseProjectBranchName :: Text -> Either (Pretty ColorText) ProjectBranchName
+parsePullTarget :: String -> Either (Pretty ColorText) (PullTarget (These ProjectName ProjectBranchName))
+
+-- | Parse a <a>PushSource</a>.
+parsePushSource :: String -> Either (Pretty ColorText) PushSource
+
+-- | Parse a push target.
+parsePushTarget :: String -> Either (Pretty ColorText) (WriteRemoteNamespace (These ProjectName ProjectBranchName))
+parseHashQualifiedName :: String -> Either (Pretty ColorText) (HashQualified Name)
+parseWriteGitRepo :: String -> String -> Either (Pretty ColorText) WriteGitRepo
+collectNothings :: (a -> Maybe b) -> [a] -> [a]
+explainRemote :: PushPull -> Pretty ColorText
+showErrorFancy :: ShowErrorComponent e => ErrorFancy e -> String
+showErrorItem :: ErrorItem (Token Text) -> String
+
+module Unison.CommandLine.OutputMessages
+type Pretty = Pretty ColorText
+shortenDirectory :: FilePath -> IO FilePath
+renderFileName :: FilePath -> IO Pretty
+notifyNumbered :: NumberedOutput -> (Pretty, NumberedArgs)
+undoTip :: Pretty ColorText
+showListEdits :: Patch -> PrettyPrintEnv -> (Pretty ColorText, NumberedArgs)
+prettyURI :: URI -> Pretty
+prettyReadRemoteNamespace :: ReadRemoteNamespace RemoteProjectBranch -> Pretty
+prettyReadRemoteNamespaceWith :: (a -> Text) -> ReadRemoteNamespace a -> Pretty
+prettyWriteRemoteNamespace :: WriteRemoteNamespace (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
+notifyUser :: FilePath -> Output -> IO Pretty
+expectedEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
+expectedNonEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
+prettyShareError :: ShareError -> Pretty
+prettyCheckAndSetPushError :: CheckAndSetPushError -> Pretty
+prettyDownloadEntitiesError :: DownloadEntitiesError -> Pretty
+prettyFastForwardPathError :: Path -> FastForwardPathError -> Pretty
+prettyFastForwardPushError :: FastForwardPushError -> Pretty
+prettyGetCausalHashByPathError :: GetCausalHashByPathError -> Pretty
+prettyPullError :: PullError -> Pretty
+prettyUpdatePathError :: RepoInfo -> UpdatePathError -> Pretty
+prettyUploadEntitiesError :: UploadEntitiesError -> Pretty
+prettyTransportError :: CodeserverTransportError -> Pretty
+invalidRepoInfo :: Text -> RepoInfo -> Pretty
+pushPublicNote :: InputPattern -> Text -> [Text] -> Pretty
+needDependencies :: NeedDependencies Hash32 -> Pretty
+noReadPermissionForPath :: Path -> Pretty
+noReadPermissionForRepo :: RepoInfo -> Pretty
+noWritePermissionForPath :: Path -> Pretty
+noWritePermissionForRepo :: RepoInfo -> Pretty
+notFastForward :: Path -> Pretty
+shareProjectNotFound :: Text -> Pretty
+shareUserNotFound :: RepoInfo -> Pretty
+sharePathToWriteRemotePathShare :: Path -> WriteRemoteNamespace void
+shareOrigin :: Text
+prettyRepoInfo :: RepoInfo -> Pretty
+prettyShareLink :: WriteShareRemoteNamespace -> Pretty
+prettySharePath :: Path -> Pretty
+prettyFilePath :: FilePath -> Pretty
+prettyPath' :: Path' -> Pretty
+prettyPullTarget :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Pretty
+prettyBranchId :: AbsBranchId -> Pretty
+prettyRelative :: Relative -> Pretty
+prettyAbsolute :: Absolute -> Pretty
+prettySCH :: IsString s => ShortCausalHash -> Pretty s
+prettyCausalHash :: IsString s => CausalHash -> Pretty s
+prettyBase32Hex :: IsString s => Base32Hex -> Pretty s
+prettyBase32Hex# :: IsString s => Base32Hex -> Pretty s
+prettyHash :: IsString s => Hash -> Pretty s
+prettyHash32 :: IsString s => Hash32 -> Pretty s
+prettyProjectName :: ProjectName -> Pretty
+
+-- | <a>prettyProjectName</a> with a trailing slash.
+prettyProjectNameSlash :: ProjectName -> Pretty
+prettyProjectBranchName :: ProjectBranchName -> Pretty
+prettySemver :: Semver -> Pretty
+
+-- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
+--   This is used in some outputs to encourage/advertise an unambiguous
+--   syntax for project branches, as there's an ambiguity with
+--   single-segment relative paths.
+--   
+--   Not all project branches are printed such: for example, when listing
+--   all branches of a project, we probably don't need or want to prefix
+--   every one with a forward slash.
+prettySlashProjectBranchName :: ProjectBranchName -> Pretty
+prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
+prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
+formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
+displayDefinitions' :: Var v => Ord a1 => PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a1)) -> Map Reference (DisplayObject (Type v a1) (Term v a1)) -> Pretty
+displayRendered :: Maybe FilePath -> Pretty -> IO Pretty
+displayDefinitions :: DisplayDefinitionsOutput -> IO Pretty
+displayTestResults :: Bool -> PrettyPrintEnv -> [(Reference, Text)] -> [(Reference, Text)] -> Pretty
+unsafePrettyTermResultSig' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
+unsafePrettyTermResultSigFull' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
+prettyTypeResultHeader' :: Var v => TypeResult' v a -> Pretty
+prettyTypeResultHeaderFull' :: Var v => TypeResult' v a -> Pretty
+prettyDeclTriple :: Var v => (HashQualified Name, Reference, DisplayObject () (Decl v a)) -> Pretty
+prettyDeclPair :: Var v => PrettyPrintEnv -> (Reference, DisplayObject () (Decl v a)) -> Pretty
+renderNameConflicts :: PrettyPrintEnv -> Names -> Numbered Pretty
+renderEditConflicts :: PrettyPrintEnv -> Patch -> Numbered Pretty
+type Numbered = State (Int, Seq String)
+addNumberedArg :: String -> Numbered Int
+formatNum :: Int -> Pretty
+runNumbered :: Numbered a -> (a, NumberedArgs)
+todoOutput :: Var v => PrettyPrintEnvDecl -> TodoOutput v a -> (Pretty, NumberedArgs)
+listOfDefinitions :: Var v => FindScope -> PrettyPrintEnv -> ListDetailed -> [SearchResult' v a] -> IO Pretty
+listOfLinks :: Var v => PrettyPrintEnv -> [(HashQualified Name, Maybe (Type v a))] -> IO Pretty
+data ShowNumbers
+ShowNumbers :: ShowNumbers
+HideNumbers :: ShowNumbers
+
+-- | <tt>ppe</tt> is just for rendering type signatures `oldPath, newPath
+--   :: Path.Absolute` are just for producing fully-qualified numbered args
+showDiffNamespace :: forall v. Var v => ShowNumbers -> PrettyPrintEnv -> AbsBranchId -> AbsBranchId -> BranchDiffOutput v Ann -> (Pretty, NumberedArgs)
+noResults :: FindScope -> Pretty
+listOfDefinitions' :: Var v => FindScope -> PrettyPrintEnv -> ListDetailed -> [SearchResult' v a] -> Pretty
+watchPrinter :: Var v => Text -> PrettyPrintEnv -> Ann -> WatchKind -> Term v () -> IsCacheHit -> Pretty
+filestatusTip :: Pretty
+prettyDiff :: Diff -> Pretty
+prettyTermName :: PrettyPrintEnv -> Referent -> Pretty
+prettyTypeName :: PrettyPrintEnv -> Reference -> Pretty
+prettyReadGitRepo :: ReadGitRepo -> Pretty
+prettyWriteGitRepo :: WriteGitRepo -> Pretty
+
+-- | Pretty-print a <a>WhichBranchEmpty</a>.
+prettyWhichBranchEmpty :: WhichBranchEmpty -> Pretty
+isTestOk :: Term v Ann -> Bool
+
+-- | Get the list of numbered args corresponding to an endangerment map,
+--   which is used by a few outputs. See <a>endangeredDependentsTable</a>.
+numberedArgsForEndangerments :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> NumberedArgs
+
+-- | Format and render all dependents which are endangered by references
+--   going extinct.
+endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> Pretty ColorText
+
+-- | Displays a full, non-truncated Branch.CausalHash to a string, e.g.
+--   #abcdef
+displayBranchHash :: CausalHash -> String
+prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
+prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
+stripProjectBranchInfo :: Absolute -> Maybe Path
+prettyAbsoluteStripProject :: Absolute -> Pretty
+prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
+listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty ColorText
+
+module Unison.CommandLine.DisplayValues
+type Pretty = Pretty ColorText
+displayTerm :: Monad m => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
+type ElideUnit = Bool
+displayTerm' :: Monad m => ElideUnit -> PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
+displayPretty :: forall m. Monad m => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
+displayDoc :: forall v m. (Var v, Monad m) => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term v ()))) -> (Referent -> m (Maybe (Type v ()))) -> (Term v () -> m (Maybe (Term v ()))) -> (Reference -> m (Maybe (Decl v ()))) -> Term v () -> m Pretty
+termName :: PrettyPrintEnv -> Referent -> Pretty
+typeName :: PrettyPrintEnv -> Reference -> Pretty
+
 
 -- | <tt>push</tt> input handler
 module Unison.Codebase.Editor.HandleInput.Push
@@ -2317,333 +2642,6 @@ module Unison.Codebase.Editor.HandleInput.ReleaseDraft
 
 -- | Handle a <tt>release.draft</tt> command.
 handleReleaseDraft :: Semver -> Cli ()
-
-
--- | Small combinators that pretty-print small types in a canonical way for
---   human consumption, such as hashes, file paths, and project names.
-module Unison.Cli.Pretty
-
--- | Displays a full, non-truncated Branch.CausalHash to a string, e.g.
---   #abcdef
-displayBranchHash :: CausalHash -> String
-prettyAbsolute :: Absolute -> Pretty
-prettyAbsoluteStripProject :: Absolute -> Pretty
-prettyBase32Hex# :: IsString s => Base32Hex -> Pretty s
-prettyBase32Hex :: IsString s => Base32Hex -> Pretty s
-prettyBranchId :: AbsBranchId -> Pretty
-prettyCausalHash :: IsString s => CausalHash -> Pretty s
-prettyDeclPair :: Var v => PrettyPrintEnv -> (Reference, DisplayObject () (Decl v a)) -> Pretty
-prettyDeclTriple :: Var v => (HashQualified Name, Reference, DisplayObject () (Decl v a)) -> Pretty
-prettyFilePath :: FilePath -> Pretty
-prettyHash :: IsString s => Hash -> Pretty s
-prettyHash32 :: IsString s => Hash32 -> Pretty s
-prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
-prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
-prettyPath' :: Path' -> Pretty
-prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
-prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
-prettyProjectBranchName :: ProjectBranchName -> Pretty
-prettyProjectName :: ProjectName -> Pretty
-
--- | <a>prettyProjectName</a> with a trailing slash.
-prettyProjectNameSlash :: ProjectName -> Pretty
-prettyPullTarget :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Pretty
-prettyReadGitRepo :: ReadGitRepo -> Pretty
-prettyReadRemoteNamespace :: ReadRemoteNamespace RemoteProjectBranch -> Pretty
-prettyReadRemoteNamespaceWith :: (a -> Text) -> ReadRemoteNamespace a -> Pretty
-prettyRelative :: Relative -> Pretty
-prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
-prettyRepoInfo :: RepoInfo -> Pretty
-prettySCH :: IsString s => ShortCausalHash -> Pretty s
-prettySemver :: Semver -> Pretty
-prettyShareLink :: WriteShareRemoteNamespace -> Pretty
-prettySharePath :: Path -> Pretty
-
--- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
---   This is used in some outputs to encourage/advertise an unambiguous
---   syntax for project branches, as there's an ambiguity with
---   single-segment relative paths.
---   
---   Not all project branches are printed such: for example, when listing
---   all branches of a project, we probably don't need or want to prefix
---   every one with a forward slash.
-prettySlashProjectBranchName :: ProjectBranchName -> Pretty
-prettyTermName :: PrettyPrintEnv -> Referent -> Pretty
-prettyTypeName :: PrettyPrintEnv -> Reference -> Pretty
-prettyTypeResultHeader' :: Var v => TypeResult' v a -> Pretty
-prettyTypeResultHeaderFull' :: Var v => TypeResult' v a -> Pretty
-prettyURI :: URI -> Pretty
-
--- | Pretty-print a <a>WhichBranchEmpty</a>.
-prettyWhichBranchEmpty :: WhichBranchEmpty -> Pretty
-prettyWriteGitRepo :: WriteGitRepo -> Pretty
-prettyWriteRemoteNamespace :: WriteRemoteNamespace (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
-shareOrigin :: Text
-unsafePrettyTermResultSigFull' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
-
-module Unison.CommandLine.InputPatterns
-showPatternHelp :: InputPattern -> Pretty ColorText
-patternName :: InputPattern -> Pretty ColorText
-makeExample :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
-makeExampleNoBackticks :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
-makeExample' :: InputPattern -> Pretty ColorText
-makeExampleEOS :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
-helpFor :: InputPattern -> Either (Pretty ColorText) Input
-mergeBuiltins :: InputPattern
-mergeIOBuiltins :: InputPattern
-updateBuiltins :: InputPattern
-todo :: InputPattern
-load :: InputPattern
-clear :: InputPattern
-add :: InputPattern
-previewAdd :: InputPattern
-updateNoPatch :: InputPattern
-update :: InputPattern
-previewUpdate :: InputPattern
-patch :: InputPattern
-view :: InputPattern
-viewGlobal :: InputPattern
-display :: InputPattern
-displayTo :: InputPattern
-docs :: InputPattern
-api :: InputPattern
-ui :: InputPattern
-undo :: InputPattern
-viewByPrefix :: InputPattern
-find :: InputPattern
-findAll :: InputPattern
-findGlobal :: InputPattern
-find' :: String -> FindScope -> InputPattern
-findShallow :: InputPattern
-findVerbose :: InputPattern
-findVerboseAll :: InputPattern
-findPatch :: InputPattern
-renameTerm :: InputPattern
-renameType :: InputPattern
-deleteGen :: Maybe String -> String -> ([HQSplit'] -> DeleteTarget) -> InputPattern
-delete :: InputPattern
-deleteVerbose :: InputPattern
-deleteTerm :: InputPattern
-deleteTermVerbose :: InputPattern
-deleteType :: InputPattern
-deleteTypeVerbose :: InputPattern
-deleteTermReplacementCommand :: String
-deleteTypeReplacementCommand :: String
-deleteReplacement :: Bool -> InputPattern
-deleteProject :: InputPattern
-deleteBranch :: InputPattern
-deleteTermReplacement :: InputPattern
-deleteTypeReplacement :: InputPattern
-aliasTerm :: InputPattern
-aliasType :: InputPattern
-aliasMany :: InputPattern
-up :: InputPattern
-cd :: InputPattern
-back :: InputPattern
-deleteNamespace :: InputPattern
-deleteNamespaceForce :: InputPattern
-deleteNamespaceParser :: Pretty ColorText -> Insistence -> [String] -> Either (Pretty ColorText) Input
-deletePatch :: InputPattern
-movePatch :: String -> String -> Either (Pretty ColorText) Input
-copyPatch' :: String -> String -> Either (Pretty ColorText) Input
-copyPatch :: InputPattern
-renamePatch :: InputPattern
-renameBranch :: InputPattern
-history :: InputPattern
-forkLocal :: InputPattern
-resetRoot :: InputPattern
-pull :: InputPattern
-pullVerbose :: InputPattern
-pullWithoutHistory :: InputPattern
-pullImpl :: String -> [String] -> Verbosity -> PullMode -> Pretty ColorText -> InputPattern
-pullExhaustive :: InputPattern
-debugTabCompletion :: InputPattern
-push :: InputPattern
-pushCreate :: InputPattern
-pushForce :: InputPattern
-pushExhaustive :: InputPattern
-squashMerge :: InputPattern
-mergeLocal :: InputPattern
-parseLooseCodeOrProject :: String -> Either String LooseCodeOrProject
-diffNamespace :: InputPattern
-previewMergeLocal :: InputPattern
-replaceEdit :: (HashQualified Name -> HashQualified Name -> Maybe PatchPath -> Input) -> InputPattern
-replace :: InputPattern
-viewReflog :: InputPattern
-edit :: InputPattern
-topicNameArg :: ArgumentType
-codebaseServerNameArg :: ArgumentType
-helpTopics :: InputPattern
-helpTopicsMap :: Map String (Pretty ColorText)
-help :: InputPattern
-quit :: InputPattern
-viewPatch :: InputPattern
-link :: InputPattern
-links :: InputPattern
-unlink :: InputPattern
-names :: IsGlobal -> InputPattern
-dependents :: InputPattern
-dependencies :: InputPattern
-namespaceDependencies :: InputPattern
-debugNumberedArgs :: InputPattern
-debugFileHashes :: InputPattern
-debugDumpNamespace :: InputPattern
-debugDumpNamespaceSimple :: InputPattern
-debugClearWatchCache :: InputPattern
-debugDoctor :: InputPattern
-debugNameDiff :: InputPattern
-test :: InputPattern
-testAll :: InputPattern
-docsToHtml :: InputPattern
-docToMarkdown :: InputPattern
-execute :: InputPattern
-saveExecuteResult :: InputPattern
-ioTest :: InputPattern
-makeStandalone :: InputPattern
-runScheme :: InputPattern
-compileScheme :: InputPattern
-schemeLibgen :: InputPattern
-fetchScheme :: InputPattern
-createAuthor :: InputPattern
-gist :: InputPattern
-authLogin :: InputPattern
-printVersion :: InputPattern
-diffNamespaceToPatch :: InputPattern
-projectCreate :: InputPattern
-projectRenameInputPattern :: InputPattern
-projectSwitch :: InputPattern
-projectsInputPattern :: InputPattern
-branchesInputPattern :: InputPattern
-branchInputPattern :: InputPattern
-branchEmptyInputPattern :: InputPattern
-clone :: InputPattern
-releaseDraft :: InputPattern
-validInputs :: [InputPattern]
-
--- | A map of all command patterns by pattern name or alias.
-patternMap :: Map String InputPattern
-visibleInputs :: [InputPattern]
-commandNames :: [String]
-commandNameArg :: ArgumentType
-exactDefinitionArg :: ArgumentType
-fuzzyDefinitionQueryArg :: ArgumentType
-definitionQueryArg :: ArgumentType
-exactDefinitionTypeQueryArg :: ArgumentType
-exactDefinitionTermQueryArg :: ArgumentType
-patchArg :: ArgumentType
-namespaceArg :: ArgumentType
-
--- | Names of child branches of the branch, only gives options for one
---   <tt>layer</tt> deeper at a time.
-childNamespaceNames :: Branch0 m -> [Text]
-newNameArg :: ArgumentType
-noCompletionsArg :: ArgumentType
-gitUrlArg :: ArgumentType
-
--- | Refers to a namespace on some remote code host.
-remoteNamespaceArg :: ArgumentType
-
--- | A project name, branch name, or both.
-projectAndBranchNamesArg :: Bool -> Bool -> ArgumentType
-
--- | A project branch name.
-projectBranchNameArg :: ArgumentType
-projectBranchNameWithOptionalProjectNameArg :: ArgumentType
-
--- | A project name.
-projectNameArg :: ArgumentType
-parsePullTarget :: String -> Either (Pretty ColorText) (PullTarget (These ProjectName ProjectBranchName))
-
--- | Parse a <a>PushSource</a>.
-parsePushSource :: String -> Either (Pretty ColorText) PushSource
-
--- | Parse a push target.
-parsePushTarget :: String -> Either (Pretty ColorText) (WriteRemoteNamespace (These ProjectName ProjectBranchName))
-parseHashQualifiedName :: String -> Either (Pretty ColorText) (HashQualified Name)
-parseWriteGitRepo :: String -> String -> Either (Pretty ColorText) WriteGitRepo
-collectNothings :: (a -> Maybe b) -> [a] -> [a]
-explainRemote :: PushPull -> Pretty ColorText
-showErrorFancy :: ShowErrorComponent e => ErrorFancy e -> String
-showErrorItem :: ErrorItem (Token Text) -> String
-
-module Unison.CommandLine.OutputMessages
-type Pretty = Pretty ColorText
-shortenDirectory :: FilePath -> IO FilePath
-renderFileName :: FilePath -> IO Pretty
-notifyNumbered :: NumberedOutput -> (Pretty, NumberedArgs)
-undoTip :: Pretty ColorText
-showListEdits :: Patch -> PrettyPrintEnv -> (Pretty ColorText, NumberedArgs)
-notifyUser :: FilePath -> Output -> IO Pretty
-expectedEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
-expectedNonEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
-prettyShareError :: ShareError -> Pretty
-prettyCheckAndSetPushError :: CheckAndSetPushError -> Pretty
-prettyDownloadEntitiesError :: DownloadEntitiesError -> Pretty
-prettyFastForwardPathError :: Path -> FastForwardPathError -> Pretty
-prettyFastForwardPushError :: FastForwardPushError -> Pretty
-prettyGetCausalHashByPathError :: GetCausalHashByPathError -> Pretty
-prettyPullError :: PullError -> Pretty
-prettyUpdatePathError :: RepoInfo -> UpdatePathError -> Pretty
-prettyUploadEntitiesError :: UploadEntitiesError -> Pretty
-prettyTransportError :: CodeserverTransportError -> Pretty
-invalidRepoInfo :: Text -> RepoInfo -> Pretty
-pushPublicNote :: InputPattern -> Text -> [Text] -> Pretty
-needDependencies :: NeedDependencies Hash32 -> Pretty
-noReadPermissionForPath :: Path -> Pretty
-noReadPermissionForRepo :: RepoInfo -> Pretty
-noWritePermissionForPath :: Path -> Pretty
-noWritePermissionForRepo :: RepoInfo -> Pretty
-notFastForward :: Path -> Pretty
-shareProjectNotFound :: Text -> Pretty
-shareUserNotFound :: RepoInfo -> Pretty
-sharePathToWriteRemotePathShare :: Path -> WriteRemoteNamespace void
-formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
-displayDefinitions' :: Var v => Ord a1 => PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a1)) -> Map Reference (DisplayObject (Type v a1) (Term v a1)) -> Pretty
-displayRendered :: Maybe FilePath -> Pretty -> IO Pretty
-displayDefinitions :: DisplayDefinitionsOutput -> IO Pretty
-displayTestResults :: Bool -> PrettyPrintEnv -> [(Reference, Text)] -> [(Reference, Text)] -> Pretty
-unsafePrettyTermResultSig' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
-renderNameConflicts :: PrettyPrintEnv -> Names -> Numbered Pretty
-renderEditConflicts :: PrettyPrintEnv -> Patch -> Numbered Pretty
-type Numbered = State (Int, Seq String)
-addNumberedArg :: String -> Numbered Int
-formatNum :: Int -> Pretty
-runNumbered :: Numbered a -> (a, NumberedArgs)
-todoOutput :: Var v => PrettyPrintEnvDecl -> TodoOutput v a -> (Pretty, NumberedArgs)
-listOfDefinitions :: Var v => FindScope -> PrettyPrintEnv -> ListDetailed -> [SearchResult' v a] -> IO Pretty
-listOfLinks :: Var v => PrettyPrintEnv -> [(HashQualified Name, Maybe (Type v a))] -> IO Pretty
-data ShowNumbers
-ShowNumbers :: ShowNumbers
-HideNumbers :: ShowNumbers
-
--- | <tt>ppe</tt> is just for rendering type signatures `oldPath, newPath
---   :: Path.Absolute` are just for producing fully-qualified numbered args
-showDiffNamespace :: forall v. Var v => ShowNumbers -> PrettyPrintEnv -> AbsBranchId -> AbsBranchId -> BranchDiffOutput v Ann -> (Pretty, NumberedArgs)
-noResults :: FindScope -> Pretty
-listOfDefinitions' :: Var v => FindScope -> PrettyPrintEnv -> ListDetailed -> [SearchResult' v a] -> Pretty
-watchPrinter :: Var v => Text -> PrettyPrintEnv -> Ann -> WatchKind -> Term v () -> IsCacheHit -> Pretty
-filestatusTip :: Pretty
-prettyDiff :: Diff -> Pretty
-isTestOk :: Term v Ann -> Bool
-
--- | Get the list of numbered args corresponding to an endangerment map,
---   which is used by a few outputs. See <a>endangeredDependentsTable</a>.
-numberedArgsForEndangerments :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> NumberedArgs
-
--- | Format and render all dependents which are endangered by references
---   going extinct.
-endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> Pretty ColorText
-listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty ColorText
-
-module Unison.CommandLine.DisplayValues
-type Pretty = Pretty ColorText
-displayTerm :: Monad m => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
-type ElideUnit = Bool
-displayTerm' :: Monad m => ElideUnit -> PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
-displayPretty :: forall m. Monad m => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term Symbol ()))) -> (Referent -> m (Maybe (Type Symbol ()))) -> (Term Symbol () -> m (Maybe (Term Symbol ()))) -> (Reference -> m (Maybe (Decl Symbol ()))) -> Term Symbol () -> m Pretty
-displayDoc :: forall v m. (Var v, Monad m) => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term v ()))) -> (Referent -> m (Maybe (Type v ()))) -> (Term v () -> m (Maybe (Term v ()))) -> (Reference -> m (Maybe (Decl v ()))) -> Term v () -> m Pretty
-termName :: PrettyPrintEnv -> Referent -> Pretty
-typeName :: PrettyPrintEnv -> Reference -> Pretty
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
