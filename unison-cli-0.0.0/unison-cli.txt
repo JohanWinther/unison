@@ -291,6 +291,7 @@ AuthLoginI :: Input
 VersionI :: Input
 DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
 ProjectCreateI :: ProjectName -> Input
+ProjectRenameI :: ProjectName -> Input
 ProjectSwitchI :: ProjectAndBranchNames -> Input
 ProjectsI :: Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
@@ -1320,6 +1321,7 @@ AmbiguousCloneLocal :: ProjectAndBranch ProjectName ProjectBranchName -> Project
 -- | The <tt>remote</tt> in a `clone remote local` is ambiguous
 AmbiguousCloneRemote :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 ClonedProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
+RenamedProject :: ProjectName -> ProjectName -> Output
 
 -- | What did we create a project branch from?
 --   
@@ -2306,6 +2308,7 @@ authLogin :: InputPattern
 printVersion :: InputPattern
 diffNamespaceToPatch :: InputPattern
 projectCreate :: InputPattern
+projectRenameInputPattern :: InputPattern
 projectSwitch :: InputPattern
 projects :: InputPattern
 branches :: InputPattern
@@ -2532,6 +2535,11 @@ module Unison.Codebase.Editor.HandleInput.ProjectSwitch
 --   in the current project</li>
 --   </ol>
 projectSwitch :: ProjectAndBranchNames -> Cli ()
+
+
+-- | <tt>project.rename</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ProjectRename
+handleProjectRename :: ProjectName -> Cli ()
 
 
 -- | <tt>project.create</tt> input handler
