@@ -2179,6 +2179,208 @@ loadRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName
 expectRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 expectRemoteProjectBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 
+
+-- | <tt>push</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Push
+
+-- | Handle a <tt>gist</tt> command.
+handleGist :: GistInput -> Cli ()
+
+-- | Handle a <tt>push</tt> command.
+handlePushRemoteBranch :: PushRemoteBranchInput -> Cli ()
+
+
+-- | <tt>switch</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ProjectSwitch
+
+-- | Switch to an existing project or project branch, with a flexible
+--   syntax that does not require prefixing branch names with forward
+--   slashes (though doing so makes the command unambiguous).
+--   
+--   When the argument is ambiguous, when outside of a project, "switch
+--   foo" means switch to project "foo", not branch "foo" (since there is
+--   no current project). And when inside a project, "switch foo" means one
+--   of:
+--   
+--   <ol>
+--   <li>Switch to project "foo", since there isn't a branch "foo" in the
+--   current project</li>
+--   <li>Switch to branch "foo", since there isn't a project "foo"</li>
+--   <li>Complain, because there's both a project "foo" and a branch "foo"
+--   in the current project</li>
+--   </ol>
+projectSwitch :: ProjectAndBranchNames -> Cli ()
+
+
+-- | <tt>project.rename</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ProjectRename
+handleProjectRename :: ProjectName -> Cli ()
+
+
+-- | <tt>project.create</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ProjectCreate
+
+-- | Create a new project.
+--   
+--   <ol>
+--   <li>If a project already exists with the given name, bail.</li>
+--   <li>Otherwise, create a scaffold out a new project with a "main"
+--   branch, and add it to the namespace (at a magic location that the user
+--   isn't supposed to look at).</li>
+--   </ol>
+--   
+--   Big danger: we first commit the project identity and metadata (like
+--   its name) to the codebase, then manipulate our in-memory namespace and
+--   flush its contents out in a separate transaction. This means that if
+--   lightning strikes at the wrong time, we'll be in an inconsistent
+--   state.
+--   
+--   This could be fixed in a few different ways:
+--   
+--   <ol>
+--   <li>Make a better <tt>stepAt</tt> helper that can mutate the namespace
+--   in a transaction.</li>
+--   <li>Add more code to detect the inconsistency and work around it. For
+--   example, if we ever see that a project id exists in the codebase but
+--   not at its corresponding place in the namespace, we could consider it
+--   garbage and delete it. Then, any user who tried to create a project
+--   called "foo" shortly before getting hit by lightning could simply try
+--   creating "foo" again later.</li>
+--   <li>Don't store projects in the root namespace at all. We don't even
+--   want them there, it's just a little too convenient because *not*
+--   storing them in the root namespace would require a lot of reworking
+--   and rewriting. We'd rather hit some shorter-term project milestones
+--   and clean our mess up Later (TM).</li>
+--   </ol>
+--   
+--   For now, it doesn't seem worth it to do (1) or (2), since we want to
+--   do (3) eventually, and we'd rather not waste too much time getting
+--   everything perfectly correct before we get there.
+projectCreate :: ProjectName -> Cli ()
+
+
+-- | <tt>delete.project</tt> input handler
+module Unison.Codebase.Editor.HandleInput.DeleteProject
+
+-- | Delete a project
+handleDeleteProject :: ProjectName -> Cli ()
+
+
+-- | <tt>delete.branch</tt> input handler
+module Unison.Codebase.Editor.HandleInput.DeleteBranch
+
+-- | Delete a project branch.
+--   
+--   Currently, deleting a branch means deleting its
+--   <tt>project_branch</tt> row, then deleting its contents from the
+--   namespace. Its children branches, if any, are reparented to their
+--   grandparent, if any. You may delete the only branch in a project.
+handleDeleteBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
+
+
+-- | <tt>branches</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Branches
+handleBranches :: Maybe ProjectName -> Cli ()
+
+
+-- | <tt>branch</tt> input handler
+module Unison.Codebase.Editor.HandleInput.Branch
+
+-- | Create a new project branch from an existing project branch or
+--   namespace.
+handleBranch :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
+data CreateFrom
+CreateFrom'Branch :: ProjectAndBranch Project ProjectBranch -> CreateFrom
+CreateFrom'LooseCode :: Absolute -> CreateFrom
+CreateFrom'Nothingness :: CreateFrom
+
+-- | <tt>doCreateBranch createFrom project branch description</tt>:
+--   
+--   <ol>
+--   <li>Creates a new branch row for <tt>branch</tt> in project
+--   <tt>project</tt> (failing if <tt>branch</tt> already exists in
+--   <tt>project</tt>)</li>
+--   <li>Puts the branch contents from <tt>createFrom</tt> in the root
+--   namespace., using <tt>description</tt> for the reflog.</li>
+--   <li>cds to the new branch in the root namespace.</li>
+--   </ol>
+--   
+--   This bit of functionality is factored out from the main
+--   <a>handleBranch</a> handler because it is also called by the
+--   <tt>release.draft</tt> command, which essentially just creates a
+--   branch, but with some different output for the user.
+doCreateBranch :: CreateFrom -> Project -> ProjectBranchName -> Text -> Cli ()
+
+
+-- | <tt>release.draft</tt> input handler
+module Unison.Codebase.Editor.HandleInput.ReleaseDraft
+
+-- | Handle a <tt>release.draft</tt> command.
+handleReleaseDraft :: Semver -> Cli ()
+
+
+-- | Small combinators that pretty-print small types in a canonical way for
+--   human consumption, such as hashes, file paths, and project names.
+module Unison.Cli.Pretty
+
+-- | Displays a full, non-truncated Branch.CausalHash to a string, e.g.
+--   #abcdef
+displayBranchHash :: CausalHash -> String
+prettyAbsolute :: Absolute -> Pretty
+prettyAbsoluteStripProject :: Absolute -> Pretty
+prettyBase32Hex# :: IsString s => Base32Hex -> Pretty s
+prettyBase32Hex :: IsString s => Base32Hex -> Pretty s
+prettyBranchId :: AbsBranchId -> Pretty
+prettyCausalHash :: IsString s => CausalHash -> Pretty s
+prettyDeclPair :: Var v => PrettyPrintEnv -> (Reference, DisplayObject () (Decl v a)) -> Pretty
+prettyDeclTriple :: Var v => (HashQualified Name, Reference, DisplayObject () (Decl v a)) -> Pretty
+prettyFilePath :: FilePath -> Pretty
+prettyHash :: IsString s => Hash -> Pretty s
+prettyHash32 :: IsString s => Hash32 -> Pretty s
+prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
+prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
+prettyPath' :: Path' -> Pretty
+prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
+prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
+prettyProjectBranchName :: ProjectBranchName -> Pretty
+prettyProjectName :: ProjectName -> Pretty
+
+-- | <a>prettyProjectName</a> with a trailing slash.
+prettyProjectNameSlash :: ProjectName -> Pretty
+prettyPullTarget :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Pretty
+prettyReadGitRepo :: ReadGitRepo -> Pretty
+prettyReadRemoteNamespace :: ReadRemoteNamespace RemoteProjectBranch -> Pretty
+prettyReadRemoteNamespaceWith :: (a -> Text) -> ReadRemoteNamespace a -> Pretty
+prettyRelative :: Relative -> Pretty
+prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
+prettyRepoInfo :: RepoInfo -> Pretty
+prettySCH :: IsString s => ShortCausalHash -> Pretty s
+prettySemver :: Semver -> Pretty
+prettyShareLink :: WriteShareRemoteNamespace -> Pretty
+prettySharePath :: Path -> Pretty
+
+-- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
+--   This is used in some outputs to encourage/advertise an unambiguous
+--   syntax for project branches, as there's an ambiguity with
+--   single-segment relative paths.
+--   
+--   Not all project branches are printed such: for example, when listing
+--   all branches of a project, we probably don't need or want to prefix
+--   every one with a forward slash.
+prettySlashProjectBranchName :: ProjectBranchName -> Pretty
+prettyTermName :: PrettyPrintEnv -> Referent -> Pretty
+prettyTypeName :: PrettyPrintEnv -> Reference -> Pretty
+prettyTypeResultHeader' :: Var v => TypeResult' v a -> Pretty
+prettyTypeResultHeaderFull' :: Var v => TypeResult' v a -> Pretty
+prettyURI :: URI -> Pretty
+
+-- | Pretty-print a <a>WhichBranchEmpty</a>.
+prettyWhichBranchEmpty :: WhichBranchEmpty -> Pretty
+prettyWriteGitRepo :: WriteGitRepo -> Pretty
+prettyWriteRemoteNamespace :: WriteRemoteNamespace (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
+shareOrigin :: Text
+unsafePrettyTermResultSigFull' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
+
 module Unison.CommandLine.InputPatterns
 showPatternHelp :: InputPattern -> Pretty ColorText
 patternName :: InputPattern -> Pretty ColorText
@@ -2310,8 +2512,8 @@ diffNamespaceToPatch :: InputPattern
 projectCreate :: InputPattern
 projectRenameInputPattern :: InputPattern
 projectSwitch :: InputPattern
-projects :: InputPattern
-branches :: InputPattern
+projectsInputPattern :: InputPattern
+branchesInputPattern :: InputPattern
 branchInputPattern :: InputPattern
 branchEmptyInputPattern :: InputPattern
 clone :: InputPattern
@@ -2342,7 +2544,7 @@ gitUrlArg :: ArgumentType
 remoteNamespaceArg :: ArgumentType
 
 -- | A project name, branch name, or both.
-projectAndBranchNamesArg :: ArgumentType
+projectAndBranchNamesArg :: Bool -> Bool -> ArgumentType
 
 -- | A project branch name.
 projectBranchNameArg :: ArgumentType
@@ -2350,8 +2552,6 @@ projectBranchNameWithOptionalProjectNameArg :: ArgumentType
 
 -- | A project name.
 projectNameArg :: ArgumentType
-parseProjectName :: Text -> Either (Pretty ColorText) ProjectName
-parseProjectBranchName :: Text -> Either (Pretty ColorText) ProjectBranchName
 parsePullTarget :: String -> Either (Pretty ColorText) (PullTarget (These ProjectName ProjectBranchName))
 
 -- | Parse a <a>PushSource</a>.
@@ -2373,10 +2573,6 @@ renderFileName :: FilePath -> IO Pretty
 notifyNumbered :: NumberedOutput -> (Pretty, NumberedArgs)
 undoTip :: Pretty ColorText
 showListEdits :: Patch -> PrettyPrintEnv -> (Pretty ColorText, NumberedArgs)
-prettyURI :: URI -> Pretty
-prettyReadRemoteNamespace :: ReadRemoteNamespace RemoteProjectBranch -> Pretty
-prettyReadRemoteNamespaceWith :: (a -> Text) -> ReadRemoteNamespace a -> Pretty
-prettyWriteRemoteNamespace :: WriteRemoteNamespace (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
 notifyUser :: FilePath -> Output -> IO Pretty
 expectedEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
 expectedNonEmptyPushDest :: WriteRemoteNamespace Void -> Pretty
@@ -2401,51 +2597,12 @@ notFastForward :: Path -> Pretty
 shareProjectNotFound :: Text -> Pretty
 shareUserNotFound :: RepoInfo -> Pretty
 sharePathToWriteRemotePathShare :: Path -> WriteRemoteNamespace void
-shareOrigin :: Text
-prettyRepoInfo :: RepoInfo -> Pretty
-prettyShareLink :: WriteShareRemoteNamespace -> Pretty
-prettySharePath :: Path -> Pretty
-prettyFilePath :: FilePath -> Pretty
-prettyPath' :: Path' -> Pretty
-prettyPullTarget :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Pretty
-prettyBranchId :: AbsBranchId -> Pretty
-prettyRelative :: Relative -> Pretty
-prettyAbsolute :: Absolute -> Pretty
-prettySCH :: IsString s => ShortCausalHash -> Pretty s
-prettyCausalHash :: IsString s => CausalHash -> Pretty s
-prettyBase32Hex :: IsString s => Base32Hex -> Pretty s
-prettyBase32Hex# :: IsString s => Base32Hex -> Pretty s
-prettyHash :: IsString s => Hash -> Pretty s
-prettyHash32 :: IsString s => Hash32 -> Pretty s
-prettyProjectName :: ProjectName -> Pretty
-
--- | <a>prettyProjectName</a> with a trailing slash.
-prettyProjectNameSlash :: ProjectName -> Pretty
-prettyProjectBranchName :: ProjectBranchName -> Pretty
-prettySemver :: Semver -> Pretty
-
--- | Like <a>prettyProjectBranchName</a>, but with a leading forward slash.
---   This is used in some outputs to encourage/advertise an unambiguous
---   syntax for project branches, as there's an ambiguity with
---   single-segment relative paths.
---   
---   Not all project branches are printed such: for example, when listing
---   all branches of a project, we probably don't need or want to prefix
---   every one with a forward slash.
-prettySlashProjectBranchName :: ProjectBranchName -> Pretty
-prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
-prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
 formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
 displayDefinitions' :: Var v => Ord a1 => PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a1)) -> Map Reference (DisplayObject (Type v a1) (Term v a1)) -> Pretty
 displayRendered :: Maybe FilePath -> Pretty -> IO Pretty
 displayDefinitions :: DisplayDefinitionsOutput -> IO Pretty
 displayTestResults :: Bool -> PrettyPrintEnv -> [(Reference, Text)] -> [(Reference, Text)] -> Pretty
 unsafePrettyTermResultSig' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
-unsafePrettyTermResultSigFull' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
-prettyTypeResultHeader' :: Var v => TypeResult' v a -> Pretty
-prettyTypeResultHeaderFull' :: Var v => TypeResult' v a -> Pretty
-prettyDeclTriple :: Var v => (HashQualified Name, Reference, DisplayObject () (Decl v a)) -> Pretty
-prettyDeclPair :: Var v => PrettyPrintEnv -> (Reference, DisplayObject () (Decl v a)) -> Pretty
 renderNameConflicts :: PrettyPrintEnv -> Names -> Numbered Pretty
 renderEditConflicts :: PrettyPrintEnv -> Patch -> Numbered Pretty
 type Numbered = State (Int, Seq String)
@@ -2467,13 +2624,6 @@ listOfDefinitions' :: Var v => FindScope -> PrettyPrintEnv -> ListDetailed -> [S
 watchPrinter :: Var v => Text -> PrettyPrintEnv -> Ann -> WatchKind -> Term v () -> IsCacheHit -> Pretty
 filestatusTip :: Pretty
 prettyDiff :: Diff -> Pretty
-prettyTermName :: PrettyPrintEnv -> Referent -> Pretty
-prettyTypeName :: PrettyPrintEnv -> Reference -> Pretty
-prettyReadGitRepo :: ReadGitRepo -> Pretty
-prettyWriteGitRepo :: WriteGitRepo -> Pretty
-
--- | Pretty-print a <a>WhichBranchEmpty</a>.
-prettyWhichBranchEmpty :: WhichBranchEmpty -> Pretty
 isTestOk :: Term v Ann -> Bool
 
 -- | Get the list of numbered args corresponding to an endangerment map,
@@ -2483,15 +2633,6 @@ numberedArgsForEndangerments :: PrettyPrintEnvDecl -> Map LabeledDependency (NES
 -- | Format and render all dependents which are endangered by references
 --   going extinct.
 endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> Pretty ColorText
-
--- | Displays a full, non-truncated Branch.CausalHash to a string, e.g.
---   #abcdef
-displayBranchHash :: CausalHash -> String
-prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
-prettyRemoteBranchInfo :: (URI, ProjectName, ProjectBranchName) -> Pretty
-stripProjectBranchInfo :: Absolute -> Maybe Path
-prettyAbsoluteStripProject :: Absolute -> Pretty
-prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
 listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty ColorText
 
 module Unison.CommandLine.DisplayValues
@@ -2503,145 +2644,6 @@ displayPretty :: forall m. Monad m => PrettyPrintEnvDecl -> (Reference -> m (May
 displayDoc :: forall v m. (Var v, Monad m) => PrettyPrintEnvDecl -> (Reference -> m (Maybe (Term v ()))) -> (Referent -> m (Maybe (Type v ()))) -> (Term v () -> m (Maybe (Term v ()))) -> (Reference -> m (Maybe (Decl v ()))) -> Term v () -> m Pretty
 termName :: PrettyPrintEnv -> Referent -> Pretty
 typeName :: PrettyPrintEnv -> Reference -> Pretty
-
-
--- | <tt>push</tt> input handler
-module Unison.Codebase.Editor.HandleInput.Push
-
--- | Handle a <tt>gist</tt> command.
-handleGist :: GistInput -> Cli ()
-
--- | Handle a <tt>push</tt> command.
-handlePushRemoteBranch :: PushRemoteBranchInput -> Cli ()
-
-
--- | <tt>project.switch</tt> input handler
-module Unison.Codebase.Editor.HandleInput.ProjectSwitch
-
--- | Switch to an existing project or project branch, with a flexible
---   syntax that does not require prefixing branch names with forward
---   slashes (though doing so makes the command unambiguous).
---   
---   When the argument is ambiguous, when outside of a project, "switch
---   foo" means switch to project "foo", not branch "foo" (since there is
---   no current project). And when inside a project, "switch foo" means one
---   of:
---   
---   <ol>
---   <li>Switch to project "foo", since there isn't a branch "foo" in the
---   current project</li>
---   <li>Switch to branch "foo", since there isn't a project "foo"</li>
---   <li>Complain, because there's both a project "foo" and a branch "foo"
---   in the current project</li>
---   </ol>
-projectSwitch :: ProjectAndBranchNames -> Cli ()
-
-
--- | <tt>project.rename</tt> input handler
-module Unison.Codebase.Editor.HandleInput.ProjectRename
-handleProjectRename :: ProjectName -> Cli ()
-
-
--- | <tt>project.create</tt> input handler
-module Unison.Codebase.Editor.HandleInput.ProjectCreate
-
--- | Create a new project.
---   
---   <ol>
---   <li>If a project already exists with the given name, bail.</li>
---   <li>Otherwise, create a scaffold out a new project with a "main"
---   branch, and add it to the namespace (at a magic location that the user
---   isn't supposed to look at).</li>
---   </ol>
---   
---   Big danger: we first commit the project identity and metadata (like
---   its name) to the codebase, then manipulate our in-memory namespace and
---   flush its contents out in a separate transaction. This means that if
---   lightning strikes at the wrong time, we'll be in an inconsistent
---   state.
---   
---   This could be fixed in a few different ways:
---   
---   <ol>
---   <li>Make a better <tt>stepAt</tt> helper that can mutate the namespace
---   in a transaction.</li>
---   <li>Add more code to detect the inconsistency and work around it. For
---   example, if we ever see that a project id exists in the codebase but
---   not at its corresponding place in the namespace, we could consider it
---   garbage and delete it. Then, any user who tried to create a project
---   called "foo" shortly before getting hit by lightning could simply try
---   creating "foo" again later.</li>
---   <li>Don't store projects in the root namespace at all. We don't even
---   want them there, it's just a little too convenient because *not*
---   storing them in the root namespace would require a lot of reworking
---   and rewriting. We'd rather hit some shorter-term project milestones
---   and clean our mess up Later (TM).</li>
---   </ol>
---   
---   For now, it doesn't seem worth it to do (1) or (2), since we want to
---   do (3) eventually, and we'd rather not waste too much time getting
---   everything perfectly correct before we get there.
-projectCreate :: ProjectName -> Cli ()
-
-
--- | <tt>delete.project</tt> input handler
-module Unison.Codebase.Editor.HandleInput.DeleteProject
-
--- | Delete a project
-handleDeleteProject :: ProjectName -> Cli ()
-
-
--- | <tt>delete.branch</tt> input handler
-module Unison.Codebase.Editor.HandleInput.DeleteBranch
-
--- | Delete a project branch.
---   
---   Currently, deleting a branch means deleting its
---   <tt>project_branch</tt> row, then deleting its contents from the
---   namespace. Its children branches, if any, are reparented to their
---   grandparent, if any. You may delete the only branch in a project.
-handleDeleteBranch :: ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
-
-
--- | <tt>branches</tt> input handler
-module Unison.Codebase.Editor.HandleInput.Branches
-handleBranches :: Maybe ProjectName -> Cli ()
-
-
--- | <tt>branch</tt> input handler
-module Unison.Codebase.Editor.HandleInput.Branch
-
--- | Create a new project branch from an existing project branch or
---   namespace.
-handleBranch :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Cli ()
-data CreateFrom
-CreateFrom'Branch :: ProjectAndBranch Project ProjectBranch -> CreateFrom
-CreateFrom'LooseCode :: Absolute -> CreateFrom
-CreateFrom'Nothingness :: CreateFrom
-
--- | <tt>doCreateBranch createFrom project branch description</tt>:
---   
---   <ol>
---   <li>Creates a new branch row for <tt>branch</tt> in project
---   <tt>project</tt> (failing if <tt>branch</tt> already exists in
---   <tt>project</tt>)</li>
---   <li>Puts the branch contents from <tt>createFrom</tt> in the root
---   namespace., using <tt>description</tt> for the reflog.</li>
---   <li>cds to the new branch in the root namespace.</li>
---   </ol>
---   
---   This bit of functionality is factored out from the main
---   <a>handleBranch</a> handler because it is also called by the
---   <tt>release.draft</tt> command, which essentially just creates a
---   branch, but with some different output for the user.
-doCreateBranch :: CreateFrom -> Project -> ProjectBranchName -> Text -> Cli ()
-
-
--- | <tt>release.draft</tt> input handler
-module Unison.Codebase.Editor.HandleInput.ReleaseDraft
-
--- | Handle a <tt>release.draft</tt> command.
-handleReleaseDraft :: Semver -> Cli ()
 
 
 -- | Utilities that have to do with constructing pretty-print environments,
