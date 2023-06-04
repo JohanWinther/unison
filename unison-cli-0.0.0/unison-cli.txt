@@ -295,6 +295,7 @@ ProjectRenameI :: ProjectName -> Input
 ProjectSwitchI :: ProjectAndBranchNames -> Input
 ProjectsI :: Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
+BranchRenameI :: ProjectBranchName -> Input
 BranchesI :: Maybe ProjectName -> Input
 CloneI :: ProjectAndBranchNames -> Maybe ProjectAndBranchNames -> Input
 ReleaseDraftI :: Semver -> Input
@@ -1322,6 +1323,8 @@ AmbiguousCloneLocal :: ProjectAndBranch ProjectName ProjectBranchName -> Project
 AmbiguousCloneRemote :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 ClonedProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RenamedProject :: ProjectName -> ProjectName -> Output
+RenamedProjectBranch :: ProjectName -> ProjectBranchName -> ProjectBranchName -> Output
+CantRenameBranchTo :: ProjectBranchName -> Output
 
 -- | What did we create a project branch from?
 --   
@@ -2283,6 +2286,11 @@ module Unison.Codebase.Editor.HandleInput.Branches
 handleBranches :: Maybe ProjectName -> Cli ()
 
 
+-- | <tt>branch.rename</tt> input handler
+module Unison.Codebase.Editor.HandleInput.BranchRename
+handleBranchRename :: ProjectBranchName -> Cli ()
+
+
 -- | <tt>branch</tt> input handler
 module Unison.Codebase.Editor.HandleInput.Branch
 
@@ -2516,6 +2524,7 @@ projectsInputPattern :: InputPattern
 branchesInputPattern :: InputPattern
 branchInputPattern :: InputPattern
 branchEmptyInputPattern :: InputPattern
+branchRenameInputPattern :: InputPattern
 clone :: InputPattern
 releaseDraft :: InputPattern
 validInputs :: [InputPattern]

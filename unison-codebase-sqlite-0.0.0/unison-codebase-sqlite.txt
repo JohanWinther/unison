@@ -1116,10 +1116,15 @@ loadAllProjectBranchesBeginningWith :: ProjectId -> Text -> Transaction [(Projec
 --   remote branches.
 loadAllProjectBranchInfo :: ProjectId -> Transaction (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
 loadProjectAndBranchNames :: ProjectId -> ProjectBranchId -> Transaction (Maybe (ProjectName, ProjectBranchName))
+loadProjectBranch :: ProjectId -> ProjectBranchId -> Transaction (Maybe ProjectBranch)
 
 -- | Insert a project branch.
 insertProjectBranch :: ProjectBranch -> Transaction ()
-loadProjectBranch :: ProjectId -> ProjectBranchId -> Transaction (Maybe ProjectBranch)
+
+-- | Rename a project branch.
+--   
+--   Precondition: the new name is available.
+renameProjectBranch :: ProjectId -> ProjectBranchId -> ProjectBranchName -> Transaction ()
 
 -- | Delete a project branch.
 --   
