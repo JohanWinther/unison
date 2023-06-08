@@ -365,9 +365,17 @@ instance Unison.Name.Convert path0 path1 => Unison.Name.Convert (path0, name) (p
 
 module U.Codebase.Projects
 
--- | Infers path to use for loading names. Currently this means finding the
---   closest parent with a "lib" child.
-inferNamesRoot :: Path -> Branch Transaction -> Transaction (Maybe Path)
+-- | Find all dependency mounts within a branch and the path to those
+--   mounts.
+--   
+--   For a typical project this will return something like: <tt>[(lib.base,
+--   #abc), (lib.distributed, #def)]</tt>
+--   
+--   For the top-level name lookup of a user codebase it returns the
+--   project roots, and will return something like:
+--   <tt>[(public.nested.myproject.latest, #abc),
+--   (public.other.namespace.otherproject.main, #def)]</tt>
+inferDependencyMounts :: Branch Transaction -> Transaction [(Path, BranchHash)]
 
 module Unison.Codebase.Path.Parse
 parsePath' :: String -> Either String Path'
@@ -428,6 +436,13 @@ abortMigration :: String -> Transaction a
 
 module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema10To11
 migrateSchema10To11 :: Transaction ()
+
+module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema11To12
+
+-- | This migration just deletes all the old name lookups, it doesn't
+--   recreate them. On share we'll rebuild only the required name lookups
+--   from scratch.
+migrateSchema11To12 :: Transaction ()
 
 module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema1To2.DbHelpers
 dbBranchHash :: DbBranch -> Transaction BranchHash
@@ -3593,9 +3608,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4IP9 loc_a4IPa. Lens' (Env v_a4IP9 loc_a4IPa) (TypeLookup v_a4IP9 loc_a4IPa)
-termsByShortname :: forall v_a4IP9 loc_a4IPa. Lens' (Env v_a4IP9 loc_a4IPa) (Map Name [NamedReference v_a4IP9 loc_a4IPa])
-ambientAbilities :: forall v_a4IP9 loc_a4IPa. Lens' (Env v_a4IP9 loc_a4IPa) [Type v_a4IP9 loc_a4IPa]
+typeLookup :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) (TypeLookup v_a4JtB loc_a4JtC)
+termsByShortname :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) (Map Name [NamedReference v_a4JtB loc_a4JtC])
+ambientAbilities :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) [Type v_a4JtB loc_a4JtC]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -4558,10 +4573,8 @@ before :: CausalHash -> CausalHash -> Transaction Bool
 -- | Construct a <a>ScopedNames</a> which can produce names which are
 --   relative to the provided Path.
 --   
---   NOTE: this method requires an up-to-date name lookup index, which is
---   currently not kept up-to-date automatically (because it's slow to do
---   so).
-namesAtPath :: BranchHash -> Path -> Path -> Transaction ScopedNames
+--   NOTE: this method requires an up-to-date name lookup index
+namesAtPath :: BranchHash -> Path -> Transaction ScopedNames
 
 -- | Add an index for the provided branch hash if one doesn't already
 --   exist.
@@ -4818,10 +4831,8 @@ expectRootCausalHash :: Transaction CausalHash
 -- | Construct a <a>ScopedNames</a> which can produce names which are
 --   relative to the provided Path.
 --   
---   NOTE: this method requires an up-to-date name lookup index, which is
---   currently not kept up-to-date automatically (because it's slow to do
---   so).
-namesAtPath :: BranchHash -> Path -> Path -> Transaction ScopedNames
+--   NOTE: this method requires an up-to-date name lookup index
+namesAtPath :: BranchHash -> Path -> Transaction ScopedNames
 
 -- | Check whether the given patch exists in the codebase.
 patchExists :: PatchHash -> Transaction Bool
@@ -4948,7 +4959,7 @@ module Unison.PrettyPrintEnvDecl.Sqlite
 -- | Given a set of references, return a PPE which contains names for only
 --   those references. Names are limited to those within the provided
 --   perspective
-ppedForReferences :: BranchHash -> Path -> Set LabeledDependency -> Transaction PrettyPrintEnvDecl
+ppedForReferences :: NamesPerspective -> Set LabeledDependency -> Transaction PrettyPrintEnvDecl
 
 module Unison.Codebase.SqliteCodebase.Paths
 

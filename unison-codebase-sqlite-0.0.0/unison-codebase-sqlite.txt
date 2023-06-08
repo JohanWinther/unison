@@ -366,16 +366,64 @@ localToDbDiff :: BranchLocalIds -> LocalDiff -> Diff
 instance (GHC.Show.Show t, GHC.Show.Show d, GHC.Show.Show p, GHC.Show.Show c) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Format.BranchLocalIds' t d p c)
 instance GHC.Show.Show U.Codebase.Sqlite.Branch.Format.BranchFormat
 
-module U.Codebase.Sqlite.NamedRef
 
--- | E.g. ("map" :| [<a>List</a>, "base"])
-type ReversedSegments = NonEmpty Text
+-- | Types related to working with NameLookups. We define these low-level
+--   types rather than use Path's because we don't have access to those
+--   domain types given the package dependency tree.
+module U.Codebase.Sqlite.NameLookups
+newtype ReversedName
+ReversedName :: NonEmpty Text -> ReversedName
+newtype ReversedPath
+ReversedPath :: [Text] -> ReversedPath
+newtype PathSegments
+PathSegments :: [Text] -> PathSegments
+
+-- | A namespace rendered as a path, no leading <a>.</a> E.g. "base.data"
+type NamespaceText = Text
+
+-- | <pre>
+--   &gt;&gt;&gt; reversedSegmentsToNamespaceText (["List", "data", "base"])
+--   "base.data.List"
+--   </pre>
+reversedNameToNamespaceText :: ReversedName -> NamespaceText
+
+-- | <pre>
+--   &gt;&gt;&gt; pathSegmentsToText (PathSegments ["base", "data", "List"])
+--   "base.data.List"
+--   </pre>
+pathSegmentsToText :: PathSegments -> Text
+
+-- | <pre>
+--   &gt;&gt;&gt; textToPathSegments "base.data.List"
+--   PathSegments ["base","data","List"]
+--   </pre>
+textToPathSegments :: Text -> PathSegments
+instance GHC.Show.Show U.Codebase.Sqlite.NameLookups.ReversedName
+instance GHC.Classes.Ord U.Codebase.Sqlite.NameLookups.ReversedName
+instance GHC.Classes.Eq U.Codebase.Sqlite.NameLookups.ReversedName
+instance GHC.Show.Show U.Codebase.Sqlite.NameLookups.ReversedPath
+instance GHC.Classes.Ord U.Codebase.Sqlite.NameLookups.ReversedPath
+instance GHC.Classes.Eq U.Codebase.Sqlite.NameLookups.ReversedPath
+instance GHC.Base.Monoid U.Codebase.Sqlite.NameLookups.PathSegments
+instance GHC.Base.Semigroup U.Codebase.Sqlite.NameLookups.PathSegments
+instance GHC.Show.Show U.Codebase.Sqlite.NameLookups.PathSegments
+instance GHC.Classes.Ord U.Codebase.Sqlite.NameLookups.PathSegments
+instance GHC.Classes.Eq U.Codebase.Sqlite.NameLookups.PathSegments
+instance Witch.From.From U.Codebase.Sqlite.NameLookups.PathSegments [Data.Text.Internal.Text]
+instance Witch.From.From [Data.Text.Internal.Text] U.Codebase.Sqlite.NameLookups.PathSegments
+instance Witch.From.From U.Codebase.Sqlite.NameLookups.ReversedPath [Data.Text.Internal.Text]
+instance Witch.From.From [Data.Text.Internal.Text] U.Codebase.Sqlite.NameLookups.ReversedPath
+instance Witch.From.From U.Codebase.Sqlite.NameLookups.ReversedName (GHC.Base.NonEmpty Data.Text.Internal.Text)
+instance Witch.From.From (GHC.Base.NonEmpty Data.Text.Internal.Text) U.Codebase.Sqlite.NameLookups.ReversedName
+instance Witch.From.From U.Codebase.Sqlite.NameLookups.ReversedName [Data.Text.Internal.Text]
+
+module U.Codebase.Sqlite.NamedRef
 data ConstructorType
 DataConstructor :: ConstructorType
 EffectConstructor :: ConstructorType
 data NamedRef ref
-NamedRef :: ReversedSegments -> ref -> NamedRef ref
-[$sel:reversedSegments:NamedRef] :: NamedRef ref -> ReversedSegments
+NamedRef :: ReversedName -> ref -> NamedRef ref
+[$sel:reversedSegments:NamedRef] :: NamedRef ref -> ReversedName
 [$sel:ref:NamedRef] :: NamedRef ref -> ref
 
 -- | The new <tt>scoped</tt> name lookup format is different from the old
@@ -1218,11 +1266,6 @@ causalHashIdByBase32Prefix :: Text -> Transaction [CausalHashId]
 --   lookup index from an existing one as performantly as possible.
 copyScopedNameLookup :: BranchHashId -> BranchHashId -> Transaction ()
 
--- | Not used in typical operations, but if we ever end up in a situation
---   where a bug has caused the name lookup index to go out of sync this
---   can be used to get back to a clean slate.
-dropNameLookupTables :: Transaction ()
-
 -- | Insert the given set of term names into the name lookup table
 insertScopedTermNames :: BranchHashId -> [NamedRef (TextReferent, Maybe ConstructorType)] -> Transaction ()
 
@@ -1235,42 +1278,91 @@ removeScopedTermNames :: BranchHashId -> [NamedRef TextReferent] -> Transaction 
 -- | Remove the given set of term names into the name lookup table
 removeScopedTypeNames :: BranchHashId -> [NamedRef TextReference] -> Transaction ()
 
--- | Get the list of a term names in the root namespace according to the
---   name lookup index
-termNamesWithinNamespace :: BranchHashId -> Maybe Text -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the list of a term names in the provided name lookup and relative
+--   namespace. Includes dependencies, but not transitive dependencies.
+termNamesWithinNamespace :: BranchHashId -> PathSegments -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
---   | Get the list of a type names in the root namespace according to the
---   name lookup index
-typeNamesWithinNamespace :: BranchHashId -> Maybe Text -> Transaction [NamedRef TextReference]
+--   Get the list of a type names in the provided name lookup and relative
+--   namespace. Includes dependencies, but not transitive dependencies.
+typeNamesWithinNamespace :: BranchHashId -> PathSegments -> Transaction [NamedRef TextReference]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
 --   Get the list of term names for a given Referent within a given
---   namespace.
-termNamesForRefWithinNamespace :: BranchHashId -> NamespaceText -> TextReferent -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+--   namespace. Considers one level of dependencies, but not transitive
+--   dependencies.
+termNamesForRefWithinNamespace :: BranchHashId -> PathSegments -> TextReferent -> Maybe ReversedName -> Transaction [ReversedName]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
 --   Get the list of type names for a given Reference within a given
---   namespace.
-typeNamesForRefWithinNamespace :: BranchHashId -> NamespaceText -> TextReference -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+--   namespace. Considers one level of dependencies, but not transitive
+--   dependencies.
+typeNamesForRefWithinNamespace :: BranchHashId -> PathSegments -> TextReference -> Maybe ReversedName -> Transaction [ReversedName]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
---   Get the set of refs for an exact name.
-termRefsForExactName :: BranchHashId -> ReversedSegments -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+--   Searches all dependencies transitively looking for the provided
+--   referent. Prefer <a>termNamesForRefWithinNamespace</a> in most cases.
+--   This is slower and only necessary when resolving the name of
+--   references when you don't know which dependency it may exist in.
+--   
+--   Searching transitive dependencies is exponential so we want to replace
+--   this with a more efficient approach as soon as possible.
+--   
+--   Note: this returns the first name it finds by searching in order of:
+--   Names in the current namespace, then names in the current namespace's
+--   dependencies, then through the current namespace's dependencies'
+--   dependencies, etc.
+recursiveTermNameSearch :: BranchHashId -> TextReferent -> Transaction (Maybe ReversedName)
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
---   Get the set of refs for an exact name.
-typeRefsForExactName :: BranchHashId -> ReversedSegments -> Transaction [NamedRef TextReference]
+--   Searches all dependencies transitively looking for the provided
+--   referent. Prefer <a>typeNamesForRefWithinNamespace</a> in most cases.
+--   This is slower and only necessary when resolving the name of
+--   references when you don't know which dependency it may exist in.
+--   
+--   Searching transitive dependencies is exponential so we want to replace
+--   this with a more efficient approach as soon as possible.
+--   
+--   Note: this returns the first name it finds by searching in order of:
+--   Names in the current namespace, then names in the current namespace's
+--   dependencies, then through the current namespace's dependencies'
+--   dependencies, etc.
+recursiveTypeNameSearch :: BranchHashId -> TextReference -> Transaction (Maybe ReversedName)
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the set of refs for an exact name. This will only return results
+--   which are within the name lookup for the provided branch hash id. It's
+--   the caller's job to select the correct name lookup for your exact
+--   name.
+--   
+--   See termRefsForExactName in U.Codebase.Sqlite.Operations
+termRefsForExactName :: BranchHashId -> ReversedName -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   Get the set of refs for an exact name. This will only return results
+--   which are within the name lookup for the provided branch hash id. It's
+--   the caller's job to select the correct name lookup for your exact
+--   name.
+--   
+--   See termRefsForExactName in U.Codebase.Sqlite.Operations
+typeRefsForExactName :: BranchHashId -> ReversedName -> Transaction [NamedRef TextReference]
 
 -- | Check if we've already got an index for the desired root branch hash.
 checkBranchHashNameLookupExists :: BranchHashId -> Transaction Bool
@@ -1288,14 +1380,14 @@ deleteNameLookup :: BranchHashId -> Transaction ()
 --   
 --   Get the list of term names within a given namespace which have the
 --   given suffix.
-termNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+termNamesBySuffix :: BranchHashId -> PathSegments -> ReversedName -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
 --   Get the list of type names within a given namespace which have the
 --   given suffix.
-typeNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transaction [NamedRef TextReference]
+typeNamesBySuffix :: BranchHashId -> PathSegments -> ReversedName -> Transaction [NamedRef TextReference]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
@@ -1317,8 +1409,40 @@ typeNamesBySuffix :: BranchHashId -> NamespaceText -> ReversedSegments -> Transa
 --   LIMIT 1 to make each individual query fast, and in the common case
 --   we'll only need two or three queries to find the longest matching
 --   suffix.
-longestMatchingTermNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReferent -> Transaction (Maybe (NamedRef (TextReferent, Maybe ConstructorType)))
-longestMatchingTypeNameForSuffixification :: BranchHashId -> NamespaceText -> NamedRef TextReference -> Transaction (Maybe (NamedRef TextReference))
+--   
+--   Considers one level of dependencies, but not transitive dependencies.
+longestMatchingTermNameForSuffixification :: BranchHashId -> PathSegments -> NamedRef TextReferent -> Transaction (Maybe (NamedRef (TextReferent, Maybe ConstructorType)))
+
+-- | NOTE: requires that the codebase has an up-to-date name lookup index.
+--   As of writing, this is only true on Share.
+--   
+--   The goal of this query is to search the codebase for the single name
+--   which has a different hash from the provided name, but shares longest
+--   matching suffix for for that name.
+--   
+--   Including this name in the pretty-printer object causes it to
+--   suffixify the name so that it is unambiguous from other names in
+--   scope.
+--   
+--   Sqlite doesn't provide enough functionality to do this query in a
+--   single query, so we do it iteratively, querying for longer and longer
+--   suffixes we no longer find matches. Then we return the name with
+--   longest matching suffix.
+--   
+--   This is still relatively efficient because we can use an index and
+--   LIMIT 1 to make each individual query fast, and in the common case
+--   we'll only need two or three queries to find the longest matching
+--   suffix.
+--   
+--   Considers one level of dependencies, but not transitive dependencies.
+longestMatchingTypeNameForSuffixification :: BranchHashId -> PathSegments -> NamedRef TextReference -> Transaction (Maybe (NamedRef TextReference))
+
+-- | Associate name lookup indexes for dependencies to specific mounting
+--   points within another name lookup.
+associateNameLookupMounts :: BranchHashId -> [(PathSegments, BranchHashId)] -> Transaction ()
+
+-- | Fetch the name lookup mounts for a given name lookup index.
+listNameLookupMounts :: BranchHashId -> Transaction [(PathSegments, BranchHashId)]
 
 -- | Delete any name lookup that's not in the provided list.
 --   
@@ -1405,6 +1529,7 @@ addNamespaceStatsTables :: Transaction ()
 addProjectTables :: Transaction ()
 addMostRecentBranchTable :: Transaction ()
 fixScopedNameLookupTables :: Transaction ()
+addNameLookupMountTables :: Transaction ()
 currentSchemaVersion :: SchemaVersion
 
 -- | Expect the given schema version.
@@ -1518,6 +1643,7 @@ saveBranch :: HashHandle -> CausalBranch Transaction -> Transaction (BranchObjec
 loadCausalBranchByCausalHash :: CausalHash -> Transaction (Maybe (CausalBranch Transaction))
 expectCausalBranchByCausalHash :: CausalHash -> Transaction (CausalBranch Transaction)
 expectBranchByBranchHash :: BranchHash -> Transaction (Branch Transaction)
+expectBranchByBranchHashId :: BranchHashId -> Transaction (Branch Transaction)
 
 -- | Looks up statistics for a given branch, if none exist, we compute them
 --   and save them then return them.
@@ -1568,28 +1694,87 @@ termsMentioningType :: Reference -> Transaction (Set Id)
 -- | Get all the term and type names for the given namespace from the
 --   lookup table. Requires that an index for this branch hash already
 --   exists, which is currently only true on Share.
-namesByPath :: BranchHash -> Maybe Text -> Transaction NamesByPath
-data NamesByPath
-NamesByPath :: [NamedRef (Referent, Maybe ConstructorType)] -> [NamedRef Reference] -> NamesByPath
-[$sel:termNamesInPath:NamesByPath] :: NamesByPath -> [NamedRef (Referent, Maybe ConstructorType)]
-[$sel:typeNamesInPath:NamesByPath] :: NamesByPath -> [NamedRef Reference]
+allNamesInPerspective :: NamesPerspective -> Transaction NamesInPerspective
+data NamesInPerspective
+NamesInPerspective :: [NamedRef (Referent, Maybe ConstructorType)] -> [NamedRef Reference] -> NamesInPerspective
+[$sel:termNamesInPerspective:NamesInPerspective] :: NamesInPerspective -> [NamedRef (Referent, Maybe ConstructorType)]
+[$sel:typeNamesInPerspective:NamesInPerspective] :: NamesInPerspective -> [NamedRef Reference]
+
+-- | Any time we need to lookup or search names we need to know what the
+--   scope of that search should be. This can be complicated to keep track
+--   of, so this is a helper type to make it easy to pass around.
+--   
+--   You should use <a>namesPerspectiveForRootAndPath</a> to construct this
+--   type.
+--   
+--   E.g. if we're in loose code, we need to search the correct name lookup
+--   for the user's perspective. If their perspective is
+--   "myprojects.json.latest.lib.base.data.List", we need to search names
+--   using the name index mounted at "myprojects.json.latest.lib.base".
+--   
+--   The NamesPerspective representing this viewpoint would be:
+--   
+--   @<tt> NamesPerspective { nameLookupBranchHashId = #libbasehash ,
+--   pathToMountedNameLookup = ["myprojects.json", "latest", "lib", "base"]
+--   , relativePerspective = ["data", <a>List</a>] } </tt>@
+data NamesPerspective
+NamesPerspective :: BranchHashId -> PathSegments -> PathSegments -> NamesPerspective
+
+-- | The branch hash of the name lookup we'll use for queries
+[$sel:nameLookupBranchHashId:NamesPerspective] :: NamesPerspective -> BranchHashId
+
+-- | Where the name lookup is mounted relative to the root branch
+[$sel:pathToMountedNameLookup:NamesPerspective] :: NamesPerspective -> PathSegments
+
+-- | The path to the perspective relative to the current name lookup
+[$sel:relativePerspective:NamesPerspective] :: NamesPerspective -> PathSegments
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
 --   Get the list of a names for a given Referent.
-termNamesForRefWithinNamespace :: BranchHash -> NamespaceText -> Referent -> Maybe ReversedSegments -> Transaction [ReversedSegments]
+termNamesForRefWithinNamespace :: NamesPerspective -> Referent -> Maybe ReversedName -> Transaction [ReversedName]
 
 -- | NOTE: requires that the codebase has an up-to-date name lookup index.
 --   As of writing, this is only true on Share.
 --   
 --   Get the list of a names for a given Reference, with an optional
 --   required suffix.
-typeNamesForRefWithinNamespace :: BranchHash -> NamespaceText -> Reference -> Maybe ReversedSegments -> Transaction [ReversedSegments]
-termNamesBySuffix :: BranchHash -> NamespaceText -> ReversedSegments -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
-typeNamesBySuffix :: BranchHash -> NamespaceText -> ReversedSegments -> Transaction [NamedRef Reference]
-termRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
-typeRefsForExactName :: BranchHash -> ReversedSegments -> Transaction [NamedRef Reference]
+typeNamesForRefWithinNamespace :: NamesPerspective -> Reference -> Maybe ReversedName -> Transaction [ReversedName]
+termNamesBySuffix :: NamesPerspective -> ReversedName -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
+typeNamesBySuffix :: NamesPerspective -> ReversedName -> Transaction [NamedRef Reference]
+termRefsForExactName :: NamesPerspective -> ReversedName -> Transaction [NamedRef (Referent, Maybe ConstructorType)]
+typeRefsForExactName :: NamesPerspective -> ReversedName -> Transaction [NamedRef Reference]
+
+-- | Searches all dependencies transitively looking for the provided ref
+--   within the provided namespace. Prefer
+--   <a>termNamesForRefWithinNamespace</a> in most cases. This is slower
+--   and only necessary when resolving the name of refs when you don't know
+--   which dependency it may exist in.
+--   
+--   Searching transitive dependencies is exponential so we want to replace
+--   this with a more efficient approach as soon as possible.
+--   
+--   Note: this returns the first name it finds by searching in order of:
+--   Names in the current namespace, then names in the current namespace's
+--   dependencies, then through the current namespace's dependencies'
+--   dependencies, etc.
+recursiveTermNameSearch :: NamesPerspective -> Referent -> Transaction (Maybe ReversedName)
+
+-- | Searches all dependencies transitively looking for the provided ref
+--   within the provided namespace. Prefer
+--   <a>typeNamesForRefWithinNamespace</a> in most cases. This is slower
+--   and only necessary when resolving the name of references when you
+--   don't know which dependency it may exist in.
+--   
+--   Searching transitive dependencies is exponential so we want to replace
+--   this with a more efficient approach as soon as possible.
+--   
+--   Note: this returns the first name it finds by searching in order of:
+--   Names in the current namespace, then names in the current namespace's
+--   dependencies, then through the current namespace's dependencies'
+--   dependencies, etc.
+recursiveTypeNameSearch :: NamesPerspective -> Reference -> Transaction (Maybe ReversedName)
 
 -- | Check whether we've already got an index for a given branch hash.
 checkBranchHashNameLookupExists :: BranchHash -> Transaction Bool
@@ -1597,24 +1782,46 @@ checkBranchHashNameLookupExists :: BranchHash -> Transaction Bool
 -- | Apply a set of name updates to an existing index.
 buildNameLookupForBranchHash :: Maybe BranchHash -> BranchHash -> ((([NamedRef (Referent, Maybe ConstructorType)], [NamedRef Referent]) -> ([NamedRef Reference], [NamedRef Reference]) -> Transaction ()) -> Transaction ()) -> Transaction ()
 
--- | Get the name within the provided namespace that has the longest
---   matching suffix with the provided name, but a different ref. This is a
---   bit of a hack but allows us to shortcut suffixification. We can clean
---   this up if we make a custom PPE type just for sqlite pretty printing,
---   but for now this works fine.
-longestMatchingTermNameForSuffixification :: BranchHash -> NamespaceText -> NamedRef Referent -> Transaction (Maybe (NamedRef (Referent, Maybe ConstructorType)))
+-- | Save a list of (mount-path, branch hash) mounts for the provided name
+--   lookup index branch hash.
+--   
+--   E.g. associateNameLookupMounts #roothash [(["lib", "base"],
+--   #basehash)]
+associateNameLookupMounts :: BranchHash -> [(PathSegments, BranchHash)] -> Transaction ()
 
 -- | Get the name within the provided namespace that has the longest
 --   matching suffix with the provided name, but a different ref. This is a
 --   bit of a hack but allows us to shortcut suffixification. We can clean
 --   this up if we make a custom PPE type just for sqlite pretty printing,
 --   but for now this works fine.
-longestMatchingTypeNameForSuffixification :: BranchHash -> NamespaceText -> NamedRef Reference -> Transaction (Maybe (NamedRef Reference))
+longestMatchingTermNameForSuffixification :: NamesPerspective -> NamedRef Referent -> Transaction (Maybe (NamedRef (Referent, Maybe ConstructorType)))
+
+-- | Get the name within the provided namespace that has the longest
+--   matching suffix with the provided name, but a different ref. This is a
+--   bit of a hack but allows us to shortcut suffixification. We can clean
+--   this up if we make a custom PPE type just for sqlite pretty printing,
+--   but for now this works fine.
+longestMatchingTypeNameForSuffixification :: NamesPerspective -> NamedRef Reference -> Transaction (Maybe (NamedRef Reference))
 
 -- | Delete any name lookup that's not in the provided list.
 --   
 --   This can be used to garbage collect unreachable name lookups.
 deleteNameLookupsExceptFor :: Set BranchHash -> Transaction ()
+
+-- | Determine which nameLookup is the closest parent of the provided
+--   perspective.
+--   
+--   Returns (rootBranchId of the closest parent index, namespace that
+--   index is mounted at, location of the perspective within the mounted
+--   namespace)
+--   
+--   E.g. If your namespace is "lib.distributed.lib.base.data.List", you'd
+--   get back (rootBranchId of the lib.distributed.lib.base name lookup,
+--   "lib.distributed.lib.base", "data.List")
+--   
+--   Or if your namespace is "subnamespace.user", you'd get back (the
+--   rootBranchId you provided, "", "subnamespace.user")
+namesPerspectiveForRootAndPath :: BranchHash -> PathSegments -> Transaction NamesPerspective
 
 -- | Gets the specified number of reflog entries in chronological order,
 --   most recent first.
@@ -1658,6 +1865,8 @@ namespaceHashesByPrefix :: ShortNamespaceHash -> Transaction (Set BranchHash)
 derivedDependencies :: Id -> Transaction (Set Id)
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Operations.NeedTypeForBuiltinMetadata
 instance GHC.Show.Show U.Codebase.Sqlite.Operations.NeedTypeForBuiltinMetadata
+instance GHC.Show.Show U.Codebase.Sqlite.Operations.NamesPerspective
+instance GHC.Classes.Eq U.Codebase.Sqlite.Operations.NamesPerspective
 
 module U.Codebase.Branch
 nonEmptyChildren :: Branch m -> Transaction (Map NameSegment (CausalBranch m))

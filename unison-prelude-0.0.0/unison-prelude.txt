@@ -2736,6 +2736,37 @@ type Field2' s a = Field2 s s a a
 type Field3' s a = Field3 s s a a
 type Field4' s a = Field4 s s a a
 
+module Unison.Util.List
+multimap :: Foldable f => Ord k => f (k, v) -> Map k [v]
+groupBy :: (Foldable f, Ord k) => (v -> k) -> f v -> Map k [v]
+
+-- | group _consecutive_ elements by a key. e.g. &gt;&gt;&gt; groupMap (n
+--   -&gt; (odd n, show n)) [1, 3, 4, 6, 7]
+--   [(True,["1","3"]),(False,["4","6"]),(True,["7"])]
+groupMap :: (Foldable f, Eq k) => (a -> (k, b)) -> f a -> [(k, [b])]
+uniqueBy :: (Foldable f, Ord b) => (a -> b) -> f a -> [a]
+nubOrdOn :: (Foldable f, Ord b) => (a -> b) -> f a -> [a]
+uniqueBy' :: (Foldable f, Ord b) => (a -> b) -> f a -> [a]
+safeHead :: Foldable f => f a -> Maybe a
+validate :: (Semigroup e, Foldable f) => (a -> Either e b) -> f a -> Either e [b]
+intercalateMapWith :: (a -> a -> b) -> (a -> b) -> [a] -> [b]
+quenchRuns :: Eq a => a -> a -> [a] -> [a]
+
+-- | Finds the longest shared path prefix of two paths. Returns (shared
+--   prefix, path to first location from shared prefix, path to second
+--   location from shared prefix)
+--   
+--   <pre>
+--   &gt;&gt;&gt; splitOnLongestCommonPrefix ["a", "b", "x"] ["a", "b", "c"]
+--   (["a","b"],["x"],["c"])
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; splitOnLongestCommonPrefix [] ["a", "b", "c"]
+--   ([],[],["a","b","c"])
+--   </pre>
+splitOnLongestCommonPrefix :: Eq a => [a] -> [a] -> ([a], [a], [a])
+
 
 -- | <tt>Map</tt> utilities.
 module Unison.Util.Map
