@@ -3608,9 +3608,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) (TypeLookup v_a4JtB loc_a4JtC)
-termsByShortname :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) (Map Name [NamedReference v_a4JtB loc_a4JtC])
-ambientAbilities :: forall v_a4JtB loc_a4JtC. Lens' (Env v_a4JtB loc_a4JtC) [Type v_a4JtB loc_a4JtC]
+typeLookup :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) (TypeLookup v_a4JuW loc_a4JuX)
+termsByShortname :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) (Map Name [NamedReference v_a4JuW loc_a4JuX])
+ambientAbilities :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) [Type v_a4JuW loc_a4JuX]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -5178,6 +5178,7 @@ singleton :: Char -> Text
 appendUnbalanced :: Text -> Text -> Text
 threshold :: Int
 replicate :: Int -> Text -> Text
+toLazyText :: Text -> Text
 chunkToText :: Chunk -> Text
 chunk :: Text -> Chunk
 take :: Int -> Text -> Text
@@ -5198,6 +5199,7 @@ pack :: String -> Text
 toString :: Text -> String
 unpack :: Text -> String
 toText :: Text -> Text
+indexOf :: Text -> Text -> Maybe Word64
 dropTextWhileMax :: (Char -> Bool) -> Int -> Text -> (Int, Text)
 dropWhileMax :: (Char -> Bool) -> Int -> Text -> (Int, Text)
 instance GHC.Base.Monoid Unison.Util.Text.Text
@@ -5333,6 +5335,7 @@ CATT :: POp
 TAKT :: POp
 DRPT :: POp
 SIZT :: POp
+IXOT :: POp
 UCNS :: POp
 USNC :: POp
 EQLT :: POp
@@ -5355,6 +5358,7 @@ PAKB :: POp
 UPKB :: POp
 TAKB :: POp
 DRPB :: POp
+IXOB :: POp
 IDXB :: POp
 SIZB :: POp
 FLTB :: POp
@@ -5715,6 +5719,7 @@ CMPU :: BPrim2
 DRPT :: BPrim2
 CATT :: BPrim2
 TAKT :: BPrim2
+IXOT :: BPrim2
 EQLT :: BPrim2
 LEQT :: BPrim2
 LEST :: BPrim2
@@ -5730,6 +5735,7 @@ TAKB :: BPrim2
 DRPB :: BPrim2
 IDXB :: BPrim2
 CATB :: BPrim2
+IXOB :: BPrim2
 THRO :: BPrim2
 TRCE :: BPrim2
 SDBX :: BPrim2
