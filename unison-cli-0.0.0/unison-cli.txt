@@ -211,6 +211,7 @@ DiffNamespaceI :: BranchId -> BranchId -> Input
 PullRemoteBranchI :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Input
 PushRemoteBranchI :: PushRemoteBranchInput -> Input
 ResetRootI :: Either ShortCausalHash Path' -> Input
+ResetI :: These (Either ShortCausalHash Path') (ProjectAndBranch (Maybe ProjectName) ProjectBranchName) -> Maybe LooseCodeOrProject -> Input
 CreateMessage :: Pretty ColorText -> Input
 SwitchBranchI :: Maybe Path' -> Input
 UpI :: Input
@@ -1325,6 +1326,9 @@ ClonedProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> Project
 RenamedProject :: ProjectName -> ProjectName -> Output
 RenamedProjectBranch :: ProjectName -> ProjectBranchName -> ProjectBranchName -> Output
 CantRenameBranchTo :: ProjectBranchName -> Output
+data AmbiguousReset'Argument
+AmbiguousReset'Hash :: AmbiguousReset'Argument
+AmbiguousReset'Target :: AmbiguousReset'Argument
 
 -- | What did we create a project branch from?
 --   
@@ -1382,6 +1386,7 @@ ListEdits :: Patch -> PrettyPrintEnv -> NumberedOutput
 ListProjects :: [Project] -> NumberedOutput
 ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
 AmbiguousSwitch :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
+AmbiguousReset :: AmbiguousReset'Argument -> (ProjectAndBranch Project ProjectBranch, Path) -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
@@ -2173,6 +2178,7 @@ projectBranchSegment :: ProjectBranchId -> NameSegment
 projectBranchPathPrism :: Prism' Absolute (ProjectAndBranch ProjectId ProjectBranchId, Path)
 hydrateNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch ProjectName ProjectBranchName)
 expectProjectAndBranchByIds :: ProjectAndBranch ProjectId ProjectBranchId -> Transaction (ProjectAndBranch Project ProjectBranch)
+getProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (Maybe (ProjectAndBranch Project ProjectBranch))
 expectProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch Project ProjectBranch)
 expectRemoteProjectByName :: ProjectName -> Cli RemoteProject
 expectRemoteProjectBranchById :: ProjectAndBranch (RemoteProjectId, ProjectName) (RemoteProjectBranchId, ProjectBranchName) -> Cli RemoteProjectBranch
@@ -2459,6 +2465,7 @@ renamePatch :: InputPattern
 renameBranch :: InputPattern
 history :: InputPattern
 forkLocal :: InputPattern
+reset :: InputPattern
 resetRoot :: InputPattern
 pull :: InputPattern
 pullVerbose :: InputPattern
