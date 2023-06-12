@@ -1,40 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE OverloadedStrings #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.CommandLine.Welcome</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-2"></span><span>
-</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.CommandLine.Welcome</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-4"></span><span>
-</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Sequence</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">singleton</span></span><span class="hs-special">)</span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">System.Random</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">randomRIO</span></span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
-</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html"><span class="hs-identifier">Unison.Codebase.Editor.Input</span></a></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Editor.RemoteRepo</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ReadShareLooseCode</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Path</span></span><span class="hs-special">)</span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.SyncMode</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SyncMode</span></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Verbosity</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Verbosity</span></span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html"><span class="hs-identifier">Unison.CommandLine.Types</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier">ShouldWatchFiles</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
-</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readFile</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">writeFile</span></span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span>
-</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="Welcome"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-var">Welcome</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Welcome"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-var">Welcome</span></a></span></span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3Aonboarding%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; Onboarding
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Sequence</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">singleton</span></span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.These</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">These</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">System.Random</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">randomRIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html"><span class="hs-identifier">Unison.Codebase.Editor.Input</span></a></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Editor.RemoteRepo</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ReadRemoteNamespace</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">ReadShareLooseCode</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Path</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.SyncMode</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SyncMode</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Verbosity</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Verbosity</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html"><span class="hs-identifier">Unison.CommandLine.Types</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier">ShouldWatchFiles</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">P</span></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readFile</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier">writeFile</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">data</span><span> </span><span id="Welcome"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-var">Welcome</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Welcome"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-var">Welcome</span></a></span></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="%24sel%3Aonboarding%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#%24sel%3Aonboarding%3AWelcome"><span class="hs-identifier hs-var hs-var">onboarding</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-type">Onboarding</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- Onboarding States</span><span>
-</span><span id="line-23"></span><span>    </span><span id="%24sel%3AdownloadBase%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; DownloadBase
+</span><span id="line-22"></span><span>    </span><span id="%24sel%3AdownloadBase%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; DownloadBase
 </span><a href="Unison.CommandLine.Welcome.html#%24sel%3AdownloadBase%3AWelcome"><span class="hs-identifier hs-var hs-var">downloadBase</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-24"></span><span>    </span><span id="%24sel%3AwatchDir%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; FilePath
+</span><span id="line-23"></span><span>    </span><span id="%24sel%3AwatchDir%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; FilePath
 </span><a href="Unison.CommandLine.Welcome.html#%24sel%3AwatchDir%3AWelcome"><span class="hs-identifier hs-var hs-var">watchDir</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span class="hs-special">,</span><span>
-</span><span id="line-25"></span><span>    </span><span id="%24sel%3AunisonVersion%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; Text
+</span><span id="line-24"></span><span>    </span><span id="%24sel%3AunisonVersion%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; Text
 </span><a href="Unison.CommandLine.Welcome.html#%24sel%3AunisonVersion%3AWelcome"><span class="hs-identifier hs-var hs-var">unisonVersion</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">,</span><span>
-</span><span id="line-26"></span><span>    </span><span id="%24sel%3AshouldWatchFiles%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; ShouldWatchFiles
+</span><span id="line-25"></span><span>    </span><span id="%24sel%3AshouldWatchFiles%3AWelcome"><span class="annot"><span class="annottext">Welcome -&gt; ShouldWatchFiles
 </span><a href="Unison.CommandLine.Welcome.html#%24sel%3AshouldWatchFiles%3AWelcome"><span class="hs-identifier hs-var hs-var">shouldWatchFiles</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-type">ShouldWatchFiles</span></a></span><span>
-</span><span id="line-27"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span class="hs-keyword">data</span><span> </span><span id="DownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-var">DownloadBase</span></a></span></span><span>
-</span><span id="line-30"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="DownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-var">DownloadBase</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span>
-</span><span id="line-31"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DontDownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DontDownloadBase"><span class="hs-identifier hs-var">DontDownloadBase</span></a></span></span><span>
-</span><span id="line-32"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679763518"><span id="local-6989586621679763520"><span id="local-6989586621679763526"><span class="annot"><span class="annottext">Int -&gt; DownloadBase -&gt; ShowS
+</span><span id="line-26"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">data</span><span> </span><span id="DownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-var">DownloadBase</span></a></span></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="DownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-var">DownloadBase</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DontDownloadBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DontDownloadBase"><span class="hs-identifier hs-var">DontDownloadBase</span></a></span></span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679761156"><span id="local-6989586621679761158"><span id="local-6989586621679761164"><span class="annot"><span class="annottext">Int -&gt; DownloadBase -&gt; ShowS
 [DownloadBase] -&gt; ShowS
 DownloadBase -&gt; FilePath
 forall a.
@@ -45,22 +44,22 @@ show :: DownloadBase -&gt; FilePath
 $cshow :: DownloadBase -&gt; FilePath
 showsPrec :: Int -&gt; DownloadBase -&gt; ShowS
 $cshowsPrec :: Int -&gt; DownloadBase -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679763511"><span id="local-6989586621679763515"><span class="annot"><span class="annottext">DownloadBase -&gt; DownloadBase -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679761149"><span id="local-6989586621679761153"><span class="annot"><span class="annottext">DownloadBase -&gt; DownloadBase -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: DownloadBase -&gt; DownloadBase -&gt; Bool
 $c/= :: DownloadBase -&gt; DownloadBase -&gt; Bool
 == :: DownloadBase -&gt; DownloadBase -&gt; Bool
 $c== :: DownloadBase -&gt; DownloadBase -&gt; Bool
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-33"></span><span>
-</span><span id="line-34"></span><span class="hs-comment">-- Previously Created is different from Previously Onboarded because a user can</span><span>
-</span><span id="line-35"></span><span class="hs-comment">-- 1.) create a new codebase</span><span>
-</span><span id="line-36"></span><span class="hs-comment">-- 2.) decide not to go through the onboarding flow until later and exit</span><span>
-</span><span id="line-37"></span><span class="hs-comment">-- 3.) then reopen their blank codebase</span><span>
-</span><span id="line-38"></span><span class="hs-keyword">data</span><span> </span><span id="CodebaseInitStatus"><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-var">CodebaseInitStatus</span></a></span></span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NewlyCreatedCodebase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#NewlyCreatedCodebase"><span class="hs-identifier hs-var">NewlyCreatedCodebase</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Base, Author, Finished]</span><span>
-</span><span id="line-40"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PreviouslyCreatedCodebase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#PreviouslyCreatedCodebase"><span class="hs-identifier hs-var">PreviouslyCreatedCodebase</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Base, Author, Finished, PreviouslyOnboarded].</span><span>
-</span><span id="line-41"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679763502"><span id="local-6989586621679763504"><span id="local-6989586621679763506"><span class="annot"><span class="annottext">Int -&gt; CodebaseInitStatus -&gt; ShowS
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- Previously Created is different from Previously Onboarded because a user can</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- 1.) create a new codebase</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- 2.) decide not to go through the onboarding flow until later and exit</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- 3.) then reopen their blank codebase</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">data</span><span> </span><span id="CodebaseInitStatus"><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-var">CodebaseInitStatus</span></a></span></span><span>
+</span><span id="line-38"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="NewlyCreatedCodebase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#NewlyCreatedCodebase"><span class="hs-identifier hs-var">NewlyCreatedCodebase</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Base, Author, Finished]</span><span>
+</span><span id="line-39"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PreviouslyCreatedCodebase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#PreviouslyCreatedCodebase"><span class="hs-identifier hs-var">PreviouslyCreatedCodebase</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Base, Author, Finished, PreviouslyOnboarded].</span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679761140"><span id="local-6989586621679761142"><span id="local-6989586621679761144"><span class="annot"><span class="annottext">Int -&gt; CodebaseInitStatus -&gt; ShowS
 [CodebaseInitStatus] -&gt; ShowS
 CodebaseInitStatus -&gt; FilePath
 forall a.
@@ -71,22 +70,22 @@ show :: CodebaseInitStatus -&gt; FilePath
 $cshow :: CodebaseInitStatus -&gt; FilePath
 showsPrec :: Int -&gt; CodebaseInitStatus -&gt; ShowS
 $cshowsPrec :: Int -&gt; CodebaseInitStatus -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679763498"><span id="local-6989586621679763500"><span class="annot"><span class="annottext">CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679761136"><span id="local-6989586621679761138"><span class="annot"><span class="annottext">CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
 $c/= :: CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
 == :: CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
 $c== :: CodebaseInitStatus -&gt; CodebaseInitStatus -&gt; Bool
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-42"></span><span>
-</span><span id="line-43"></span><span class="hs-keyword">data</span><span> </span><span id="Onboarding"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-var">Onboarding</span></a></span></span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Init"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-var">Init</span></a></span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-type">CodebaseInitStatus</span></a></span><span> </span><span class="hs-comment">-- Can transition to [DownloadingBase, Author, Finished, PreviouslyOnboarded]</span><span>
-</span><span id="line-45"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DownloadingBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadingBase"><span class="hs-identifier hs-var">DownloadingBase</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-comment">-- Can transition to [Author, Finished]</span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Author"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Author"><span class="hs-identifier hs-var">Author</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Finished]</span><span>
-</span><span id="line-47"></span><span>  </span><span class="hs-comment">-- End States</span><span>
-</span><span id="line-48"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Finished"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Finished"><span class="hs-identifier hs-var">Finished</span></a></span></span><span>
-</span><span id="line-49"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PreviouslyOnboarded"><span class="annot"><a href="Unison.CommandLine.Welcome.html#PreviouslyOnboarded"><span class="hs-identifier hs-var">PreviouslyOnboarded</span></a></span></span><span>
-</span><span id="line-50"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679763483"><span id="local-6989586621679763485"><span id="local-6989586621679763491"><span class="annot"><span class="annottext">Int -&gt; Onboarding -&gt; ShowS
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">data</span><span> </span><span id="Onboarding"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-var">Onboarding</span></a></span></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-glyph">=</span><span> </span><span id="Init"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-var">Init</span></a></span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-type">CodebaseInitStatus</span></a></span><span> </span><span class="hs-comment">-- Can transition to [DownloadingBase, Author, Finished, PreviouslyOnboarded]</span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DownloadingBase"><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadingBase"><span class="hs-identifier hs-var">DownloadingBase</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-comment">-- Can transition to [Author, Finished]</span><span>
+</span><span id="line-45"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Author"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Author"><span class="hs-identifier hs-var">Author</span></a></span></span><span> </span><span class="hs-comment">-- Can transition to [Finished]</span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-comment">-- End States</span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Finished"><span class="annot"><a href="Unison.CommandLine.Welcome.html#Finished"><span class="hs-identifier hs-var">Finished</span></a></span></span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PreviouslyOnboarded"><span class="annot"><a href="Unison.CommandLine.Welcome.html#PreviouslyOnboarded"><span class="hs-identifier hs-var">PreviouslyOnboarded</span></a></span></span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679761121"><span id="local-6989586621679761123"><span id="local-6989586621679761129"><span class="annot"><span class="annottext">Int -&gt; Onboarding -&gt; ShowS
 [Onboarding] -&gt; ShowS
 Onboarding -&gt; FilePath
 forall a.
@@ -97,415 +96,414 @@ show :: Onboarding -&gt; FilePath
 $cshow :: Onboarding -&gt; FilePath
 showsPrec :: Int -&gt; Onboarding -&gt; ShowS
 $cshowsPrec :: Int -&gt; Onboarding -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679763477"><span id="local-6989586621679763481"><span class="annot"><span class="annottext">Onboarding -&gt; Onboarding -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679761115"><span id="local-6989586621679761119"><span class="annot"><span class="annottext">Onboarding -&gt; Onboarding -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Onboarding -&gt; Onboarding -&gt; Bool
 $c/= :: Onboarding -&gt; Onboarding -&gt; Bool
 == :: Onboarding -&gt; Onboarding -&gt; Bool
 $c== :: Onboarding -&gt; Onboarding -&gt; Bool
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-51"></span><span>
-</span><span id="line-52"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#welcome"><span class="hs-identifier hs-type">welcome</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-type">CodebaseInitStatus</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-type">ShouldWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span>
-</span><span id="line-53"></span><span id="welcome"><span class="annot"><span class="annottext">welcome :: CodebaseInitStatus
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#welcome"><span class="hs-identifier hs-type">welcome</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#CodebaseInitStatus"><span class="hs-identifier hs-type">CodebaseInitStatus</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-type">ShouldWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span>
+</span><span id="line-52"></span><span id="welcome"><span class="annot"><span class="annottext">welcome :: CodebaseInitStatus
 -&gt; DownloadBase -&gt; FilePath -&gt; Text -&gt; ShouldWatchFiles -&gt; Welcome
-</span><a href="Unison.CommandLine.Welcome.html#welcome"><span class="hs-identifier hs-var hs-var">welcome</span></a></span></span><span> </span><span id="local-6989586621679763475"><span class="annot"><span class="annottext">CodebaseInitStatus
-</span><a href="#local-6989586621679763475"><span class="hs-identifier hs-var">initStatus</span></a></span></span><span> </span><span id="local-6989586621679763474"><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763474"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span> </span><span id="local-6989586621679763473"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763473"><span class="hs-identifier hs-var">filePath</span></a></span></span><span> </span><span id="local-6989586621679763472"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763472"><span class="hs-identifier hs-var">unisonVersion</span></a></span></span><span> </span><span id="local-6989586621679763471"><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763471"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-54"></span><span>  </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="Unison.CommandLine.Welcome.html#welcome"><span class="hs-identifier hs-var hs-var">welcome</span></a></span></span><span> </span><span id="local-6989586621679761113"><span class="annot"><span class="annottext">CodebaseInitStatus
+</span><a href="#local-6989586621679761113"><span class="hs-identifier hs-var">initStatus</span></a></span></span><span> </span><span id="local-6989586621679761112"><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761112"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span> </span><span id="local-6989586621679761111"><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761111"><span class="hs-identifier hs-var">filePath</span></a></span></span><span> </span><span id="local-6989586621679761110"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679761110"><span class="hs-identifier hs-var">unisonVersion</span></a></span></span><span> </span><span id="local-6989586621679761109"><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761109"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-53"></span><span>  </span><span class="annot"><span class="annottext">Onboarding
 -&gt; DownloadBase -&gt; FilePath -&gt; Text -&gt; ShouldWatchFiles -&gt; Welcome
 </span><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-var">Welcome</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CodebaseInitStatus -&gt; Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-var">Init</span></a></span><span> </span><span class="annot"><span class="annottext">CodebaseInitStatus
-</span><a href="#local-6989586621679763475"><span class="hs-identifier hs-var">initStatus</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763474"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763473"><span class="hs-identifier hs-var">filePath</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763472"><span class="hs-identifier hs-var">unisonVersion</span></a></span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763471"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span>
-</span><span id="line-55"></span><span>
-</span><span id="line-56"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#pullBase"><span class="hs-identifier hs-type">pullBase</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span>
-</span><span id="line-57"></span><span id="pullBase"><span class="annot"><span class="annottext">pullBase :: ReadShareLooseCode -&gt; Either Event Input
-</span><a href="Unison.CommandLine.Welcome.html#pullBase"><span class="hs-identifier hs-var hs-var">pullBase</span></a></span></span><span> </span><span id="local-6989586621679763469"><span class="annot"><span class="annottext">ReadShareLooseCode
-</span><a href="#local-6989586621679763469"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-58"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679763466"><span class="annot"><span class="annottext">seg :: NameSegment
-</span><a href="#local-6989586621679763466"><span class="hs-identifier hs-var hs-var">seg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; NameSegment
+</span><a href="#local-6989586621679761113"><span class="hs-identifier hs-var">initStatus</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761112"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761111"><span class="hs-identifier hs-var">filePath</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679761110"><span class="hs-identifier hs-var">unisonVersion</span></a></span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761109"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#pullBase"><span class="hs-identifier hs-type">pullBase</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span>
+</span><span id="line-56"></span><span id="pullBase"><span class="annot"><span class="annottext">pullBase :: ReadShareLooseCode -&gt; Either Event Input
+</span><a href="Unison.CommandLine.Welcome.html#pullBase"><span class="hs-identifier hs-var hs-var">pullBase</span></a></span></span><span> </span><span id="local-6989586621679761107"><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679761107"><span class="hs-identifier hs-var">ns</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679761104"><span class="annot"><span class="annottext">seg :: NameSegment
+</span><a href="#local-6989586621679761104"><span class="hs-identifier hs-var hs-var">seg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; NameSegment
 </span><span class="hs-identifier hs-var">NameSegment</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;base&quot;</span></span><span>
-</span><span id="line-59"></span><span>      </span><span id="local-6989586621679763465"><span class="annot"><span class="annottext">rootPath :: Path
-</span><a href="#local-6989586621679763465"><span class="hs-identifier hs-var hs-var">rootPath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:toSeq:Path :: Seq NameSegment
-</span><a href="#local-6989586621679763463"><span class="hs-identifier hs-var">Path.toSeq</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Seq a
+</span><span id="line-58"></span><span>      </span><span id="local-6989586621679761103"><span class="annot"><span class="annottext">rootPath :: Path
+</span><a href="#local-6989586621679761103"><span class="hs-identifier hs-var hs-var">rootPath</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:toSeq:Path :: Seq NameSegment
+</span><a href="#local-6989586621679761101"><span class="hs-identifier hs-var">Path.toSeq</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Seq a
 </span><span class="hs-identifier hs-var">singleton</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679763466"><span class="hs-identifier hs-var">seg</span></a></span><span class="hs-special">}</span><span>
-</span><span id="line-60"></span><span>      </span><span id="local-6989586621679763462"><span class="annot"><span class="annottext">abs :: Absolute
-</span><a href="#local-6989586621679763462"><span class="hs-identifier hs-var hs-var">abs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:unabsolute:Absolute :: Path
-</span><a href="#local-6989586621679763460"><span class="hs-identifier hs-var">Path.unabsolute</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679763465"><span class="hs-identifier hs-var">rootPath</span></a></span><span class="hs-special">}</span><span>
-</span><span id="line-61"></span><span>      </span><span id="local-6989586621679763459"><span class="annot"><span class="annottext">pullRemote :: Input
-</span><a href="#local-6989586621679763459"><span class="hs-identifier hs-var hs-var">pullRemote</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-62"></span><span>        </span><span class="annot"><span class="annottext">PullSourceTarget -&gt; SyncMode -&gt; PullMode -&gt; Verbosity -&gt; Input
+</span><a href="#local-6989586621679761104"><span class="hs-identifier hs-var">seg</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-59"></span><span>      </span><span id="local-6989586621679761100"><span class="annot"><span class="annottext">abs :: Absolute
+</span><a href="#local-6989586621679761100"><span class="hs-identifier hs-var hs-var">abs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:unabsolute:Absolute :: Path
+</span><a href="#local-6989586621679761098"><span class="hs-identifier hs-var">Path.unabsolute</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679761103"><span class="hs-identifier hs-var">rootPath</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-60"></span><span>      </span><span id="local-6989586621679761097"><span class="annot"><span class="annottext">pullRemote :: Input
+</span><a href="#local-6989586621679761097"><span class="hs-identifier hs-var hs-var">pullRemote</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-61"></span><span>        </span><span class="annot"><span class="annottext">PullSourceTarget -&gt; SyncMode -&gt; PullMode -&gt; Verbosity -&gt; Input
 </span><a href="Unison.Codebase.Editor.Input.html#PullRemoteBranchI"><span class="hs-identifier hs-var">PullRemoteBranchI</span></a></span><span>
-</span><span id="line-63"></span><span>          </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
--&gt; PullTarget (These ProjectName ProjectBranchName)
--&gt; PullSourceTarget
+</span><span id="line-62"></span><span>          </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">ReadRemoteNamespace (These ProjectName ProjectBranchName)
+-&gt; LooseCodeOrProject -&gt; PullSourceTarget
 </span><a href="Unison.Codebase.Editor.Input.html#PullSourceTarget2"><span class="hs-identifier hs-var">PullSourceTarget2</span></a></span><span>
-</span><span id="line-64"></span><span>              </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. ReadShareLooseCode -&gt; ReadRemoteNamespace a
+</span><span id="line-63"></span><span>              </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. ReadShareLooseCode -&gt; ReadRemoteNamespace a
 </span><span class="hs-identifier hs-var">ReadShare'LooseCode</span></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode
-</span><a href="#local-6989586621679763469"><span class="hs-identifier hs-var">ns</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-65"></span><span>              </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Path' -&gt; PullTarget a
-</span><a href="Unison.Codebase.Editor.Input.html#PullTargetLooseCode"><span class="hs-identifier hs-var">PullTargetLooseCode</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:unPath':Path' :: Either Absolute Relative
-</span><a href="#local-6989586621679763453"><span class="hs-identifier hs-var">Path.unPath'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
+</span><a href="#local-6989586621679761107"><span class="hs-identifier hs-var">ns</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>              </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. a -&gt; These a b
+</span><span class="hs-identifier hs-var">This</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path.Path'</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:unPath':Path' :: Either Absolute Relative
+</span><a href="#local-6989586621679761091"><span class="hs-identifier hs-var">Path.unPath'</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679763462"><span class="hs-identifier hs-var">abs</span></a></span><span class="hs-special">}</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-66"></span><span>          </span><span class="hs-special">)</span><span>
-</span><span id="line-67"></span><span>          </span><span class="annot"><span class="annottext">SyncMode
+</span><a href="#local-6989586621679761100"><span class="hs-identifier hs-var">abs</span></a></span><span class="hs-special">}</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>          </span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span>          </span><span class="annot"><span class="annottext">SyncMode
 </span><span class="hs-identifier hs-var">SyncMode.Complete</span></span><span>
-</span><span id="line-68"></span><span>          </span><span class="annot"><span class="annottext">PullMode
+</span><span id="line-67"></span><span>          </span><span class="annot"><span class="annottext">PullMode
 </span><a href="Unison.Codebase.Editor.Input.html#PullWithHistory"><span class="hs-identifier hs-var">PullWithHistory</span></a></span><span>
-</span><span id="line-69"></span><span>          </span><span class="annot"><span class="annottext">Verbosity
+</span><span id="line-68"></span><span>          </span><span class="annot"><span class="annottext">Verbosity
 </span><span class="hs-identifier hs-var">Verbosity.Silent</span></span><span>
-</span><span id="line-70"></span><span>   </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><span id="line-69"></span><span>   </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Input
-</span><a href="#local-6989586621679763459"><span class="hs-identifier hs-var">pullRemote</span></a></span><span>
-</span><span id="line-71"></span><span>
-</span><span id="line-72"></span><span id="local-6989586621679763769"><span id="local-6989586621679763770"><span class="annot"><a href="Unison.CommandLine.Welcome.html#run"><span class="hs-identifier hs-type">run</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679763770"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679763769"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span></span></span><span>
-</span><span id="line-73"></span><span id="run"><span class="annot"><span class="annottext">run :: forall v a. Codebase IO v a -&gt; Welcome -&gt; IO [Either Event Input]
-</span><a href="Unison.CommandLine.Welcome.html#run"><span class="hs-identifier hs-var hs-var">run</span></a></span></span><span> </span><span id="local-6989586621679763444"><span class="annot"><span class="annottext">Codebase IO v a
-</span><a href="#local-6989586621679763444"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:onboarding:Welcome :: Welcome -&gt; Onboarding
-</span><a href="Unison.CommandLine.Welcome.html#%24sel%3Aonboarding%3AWelcome"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679763443"><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763443"><span class="hs-identifier hs-var">onboarding</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:downloadBase:Welcome :: Welcome -&gt; DownloadBase
-</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AdownloadBase%3AWelcome"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679763442"><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763442"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:watchDir:Welcome :: Welcome -&gt; FilePath
-</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AwatchDir%3AWelcome"><span class="hs-identifier hs-var">watchDir</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679763441"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763441"><span class="hs-identifier hs-var">dir</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:unisonVersion:Welcome :: Welcome -&gt; Text
-</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AunisonVersion%3AWelcome"><span class="hs-identifier hs-var">unisonVersion</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679763440"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763440"><span class="hs-identifier hs-var">version</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679763439"><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761097"><span class="hs-identifier hs-var">pullRemote</span></a></span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span id="local-6989586621679761407"><span id="local-6989586621679761408"><span class="annot"><a href="Unison.CommandLine.Welcome.html#run"><span class="hs-identifier hs-type">run</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679761408"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679761407"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span></span></span><span>
+</span><span id="line-72"></span><span id="run"><span class="annot"><span class="annottext">run :: forall v a. Codebase IO v a -&gt; Welcome -&gt; IO [Either Event Input]
+</span><a href="Unison.CommandLine.Welcome.html#run"><span class="hs-identifier hs-var hs-var">run</span></a></span></span><span> </span><span id="local-6989586621679761082"><span class="annot"><span class="annottext">Codebase IO v a
+</span><a href="#local-6989586621679761082"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Welcome"><span class="hs-identifier hs-type">Welcome</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:onboarding:Welcome :: Welcome -&gt; Onboarding
+</span><a href="Unison.CommandLine.Welcome.html#%24sel%3Aonboarding%3AWelcome"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679761081"><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761081"><span class="hs-identifier hs-var">onboarding</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:downloadBase:Welcome :: Welcome -&gt; DownloadBase
+</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AdownloadBase%3AWelcome"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679761080"><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761080"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:watchDir:Welcome :: Welcome -&gt; FilePath
+</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AwatchDir%3AWelcome"><span class="hs-identifier hs-var">watchDir</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679761079"><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761079"><span class="hs-identifier hs-var">dir</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">$sel:unisonVersion:Welcome :: Welcome -&gt; Text
+</span><a href="Unison.CommandLine.Welcome.html#%24sel%3AunisonVersion%3AWelcome"><span class="hs-identifier hs-var">unisonVersion</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621679761078"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679761078"><span class="hs-identifier hs-var">version</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679761077"><span class="annot"><span class="annottext">ShouldWatchFiles
 shouldWatchFiles :: ShouldWatchFiles
 $sel:shouldWatchFiles:Welcome :: Welcome -&gt; ShouldWatchFiles
-</span><a href="#local-6989586621679763439"><span class="hs-identifier hs-var hs-var">shouldWatchFiles</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-74"></span><span>  </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763443"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-75"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-76"></span><span>    </span><span class="annot"><a href="#local-6989586621679763438"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-type">Onboarding</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-77"></span><span>    </span><span id="local-6989586621679763438"><span class="annot"><span class="annottext">go :: Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679763437"><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763437"><span class="hs-identifier hs-var">onboarding</span></a></span></span><span> </span><span id="local-6989586621679763436"><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-78"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763437"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-79"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-type">Init</span></a></span><span> </span><span class="annot"><span class="annottext">CodebaseInitStatus
+</span><a href="#local-6989586621679761077"><span class="hs-identifier hs-var hs-var">shouldWatchFiles</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-73"></span><span>  </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761081"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-75"></span><span>    </span><span class="annot"><a href="#local-6989586621679761076"><span class="hs-identifier hs-type">go</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-type">Onboarding</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-76"></span><span>    </span><span id="local-6989586621679761076"><span class="annot"><span class="annottext">go :: Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679761075"><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761075"><span class="hs-identifier hs-var">onboarding</span></a></span></span><span> </span><span id="local-6989586621679761074"><span class="annot"><span class="annottext">[Either Event Input]
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-77"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761075"><span class="hs-identifier hs-var">onboarding</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-78"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-type">Init</span></a></span><span> </span><span class="annot"><span class="annottext">CodebaseInitStatus
 </span><a href="Unison.CommandLine.Welcome.html#NewlyCreatedCodebase"><span class="hs-identifier hs-var">NewlyCreatedCodebase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-80"></span><span>          </span><span class="annot"><span class="annottext">forall v a. DownloadBase -&gt; Codebase IO v a -&gt; IO Onboarding
+</span><span id="line-79"></span><span>          </span><span class="annot"><span class="annottext">forall v a. DownloadBase -&gt; Codebase IO v a -&gt; IO Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#determineFirstStep"><span class="hs-identifier hs-var">determineFirstStep</span></a></span><span> </span><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763442"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO v a
-</span><a href="#local-6989586621679763444"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
-</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679763434"><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763434"><span class="hs-identifier hs-var">step</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
-</span><a href="#local-6989586621679763434"><span class="hs-identifier hs-var">step</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Either Event Input
-</span><a href="#local-6989586621679763433"><span class="hs-identifier hs-var">headerMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761080"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO v a
+</span><a href="#local-6989586621679761082"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679761072"><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761072"><span class="hs-identifier hs-var">step</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761072"><span class="hs-identifier hs-var">step</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Either Event Input
+</span><a href="#local-6989586621679761071"><span class="hs-identifier hs-var">headerMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-81"></span><span>          </span><span class="hs-keyword">where</span><span>
-</span><span id="line-82"></span><span>            </span><span id="local-6989586621679763433"><span class="annot"><span class="annottext">headerMsg :: Either Event Input
-</span><a href="#local-6989586621679763433"><span class="hs-identifier hs-var hs-var">headerMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span>          </span><span class="hs-keyword">where</span><span>
+</span><span id="line-81"></span><span>            </span><span id="local-6989586621679761071"><span class="annot"><span class="annottext">headerMsg :: Either Event Input
+</span><a href="#local-6989586621679761071"><span class="hs-identifier hs-var hs-var">headerMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var">toInput</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763440"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-83"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-type">Init</span></a></span><span> </span><span class="annot"><span class="annottext">CodebaseInitStatus
+</span><a href="#local-6989586621679761078"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Init"><span class="hs-identifier hs-type">Init</span></a></span><span> </span><span class="annot"><span class="annottext">CodebaseInitStatus
 </span><a href="Unison.CommandLine.Welcome.html#PreviouslyCreatedCodebase"><span class="hs-identifier hs-var">PreviouslyCreatedCodebase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-84"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><span id="line-83"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#PreviouslyOnboarded"><span class="hs-identifier hs-var">PreviouslyOnboarded</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Either Event Input
-</span><a href="#local-6989586621679763430"><span class="hs-identifier hs-var">headerMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761068"><span class="hs-identifier hs-var">headerMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-85"></span><span>          </span><span class="hs-keyword">where</span><span>
-</span><span id="line-86"></span><span>            </span><span id="local-6989586621679763430"><span class="annot"><span class="annottext">headerMsg :: Either Event Input
-</span><a href="#local-6989586621679763430"><span class="hs-identifier hs-var hs-var">headerMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span>          </span><span class="hs-keyword">where</span><span>
+</span><span id="line-85"></span><span>            </span><span id="local-6989586621679761068"><span class="annot"><span class="annottext">headerMsg :: Either Event Input
+</span><a href="#local-6989586621679761068"><span class="hs-identifier hs-var hs-var">headerMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var">toInput</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-var">header</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763440"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-87"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadingBase"><span class="hs-identifier hs-type">DownloadingBase</span></a></span><span> </span><span id="local-6989586621679763429"><span class="annot"><span class="annottext">ns :: ReadShareLooseCode
-</span><a href="#local-6989586621679763429"><span class="hs-identifier hs-var">ns</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679763427"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679761078"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>        </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadingBase"><span class="hs-identifier hs-type">DownloadingBase</span></a></span><span> </span><span id="local-6989586621679761067"><span class="annot"><span class="annottext">ns :: ReadShareLooseCode
+</span><a href="#local-6989586621679761067"><span class="hs-identifier hs-var">ns</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ReadShareLooseCode</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679761065"><span class="annot"><span class="annottext">Path
 $sel:path:ReadShareLooseCode :: ReadShareLooseCode -&gt; Path
 path :: Path
 </span><span class="hs-identifier hs-var hs-var">path</span></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-88"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><span id="line-87"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#Author"><span class="hs-identifier hs-var">Author</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><span class="annottext">Either Event Input
-</span><a href="#local-6989586621679763425"><span class="hs-identifier hs-var">pullBaseInput</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Either Event Input
-</span><a href="#local-6989586621679763424"><span class="hs-identifier hs-var">downloadMsg</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761063"><span class="hs-identifier hs-var">pullBaseInput</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Either Event Input
+</span><a href="#local-6989586621679761062"><span class="hs-identifier hs-var">downloadMsg</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-89"></span><span>          </span><span class="hs-keyword">where</span><span>
-</span><span id="line-90"></span><span>            </span><span id="local-6989586621679763424"><span class="annot"><span class="annottext">downloadMsg :: Either Event Input
-</span><a href="#local-6989586621679763424"><span class="hs-identifier hs-var hs-var">downloadMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>          </span><span class="hs-keyword">where</span><span>
+</span><span id="line-89"></span><span>            </span><span id="local-6989586621679761062"><span class="annot"><span class="annottext">downloadMsg :: Either Event Input
+</span><a href="#local-6989586621679761062"><span class="hs-identifier hs-var hs-var">downloadMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Input
 </span><a href="Unison.Codebase.Editor.Input.html#CreateMessage"><span class="hs-identifier hs-var">CreateMessage</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#downloading"><span class="hs-identifier hs-var">downloading</span></a></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679763427"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-91"></span><span>            </span><span id="local-6989586621679763425"><span class="annot"><span class="annottext">pullBaseInput :: Either Event Input
-</span><a href="#local-6989586621679763425"><span class="hs-identifier hs-var hs-var">pullBaseInput</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode -&gt; Either Event Input
+</span><a href="#local-6989586621679761065"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>            </span><span id="local-6989586621679761063"><span class="annot"><span class="annottext">pullBaseInput :: Either Event Input
+</span><a href="#local-6989586621679761063"><span class="hs-identifier hs-var hs-var">pullBaseInput</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#pullBase"><span class="hs-identifier hs-var">pullBase</span></a></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode
-</span><a href="#local-6989586621679763429"><span class="hs-identifier hs-var">ns</span></a></span><span>
-</span><span id="line-92"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761067"><span class="hs-identifier hs-var">ns</span></a></span><span>
+</span><span id="line-91"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#Author"><span class="hs-identifier hs-var">Author</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-93"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
-</span><a href="#local-6989586621679763438"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
+</span><span id="line-92"></span><span>          </span><span class="annot"><span class="annottext">Onboarding -&gt; [Either Event Input] -&gt; IO [Either Event Input]
+</span><a href="#local-6989586621679761076"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#Finished"><span class="hs-identifier hs-var">Finished</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Either Event Input
-</span><a href="#local-6989586621679763421"><span class="hs-identifier hs-var">authorMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761059"><span class="hs-identifier hs-var">authorMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-94"></span><span>          </span><span class="hs-keyword">where</span><span>
-</span><span id="line-95"></span><span>            </span><span id="local-6989586621679763421"><span class="annot"><span class="annottext">authorMsg :: Either Event Input
-</span><a href="#local-6989586621679763421"><span class="hs-identifier hs-var hs-var">authorMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>          </span><span class="hs-keyword">where</span><span>
+</span><span id="line-94"></span><span>            </span><span id="local-6989586621679761059"><span class="annot"><span class="annottext">authorMsg :: Either Event Input
+</span><a href="#local-6989586621679761059"><span class="hs-identifier hs-var hs-var">authorMsg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var">toInput</span></a></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#authorSuggestion"><span class="hs-identifier hs-var">authorSuggestion</span></a></span><span>
-</span><span id="line-96"></span><span>        </span><span class="hs-comment">-- These are our two terminal Welcome conditions, at the end we reverse the order of the desired input commands otherwise they come out backwards</span><span>
-</span><span id="line-97"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
+</span><span id="line-95"></span><span>        </span><span class="hs-comment">-- These are our two terminal Welcome conditions, at the end we reverse the order of the desired input commands otherwise they come out backwards</span><span>
+</span><span id="line-96"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#Finished"><span class="hs-identifier hs-var">Finished</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-98"></span><span>          </span><span id="local-6989586621679763419"><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763419"><span class="hs-identifier hs-var">startMsg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
+</span><span id="line-97"></span><span>          </span><span id="local-6989586621679761057"><span class="annot"><span class="annottext">Pretty ColorText
+</span><a href="#local-6989586621679761057"><span class="hs-identifier hs-var">startMsg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
 </span><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-var">getStarted</span></a></span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763439"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763441"><span class="hs-identifier hs-var">dir</span></a></span><span>
-</span><span id="line-99"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a]
+</span><a href="#local-6989586621679761077"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761079"><span class="hs-identifier hs-var">dir</span></a></span><span>
+</span><span id="line-98"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var">toInput</span></a></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763419"><span class="hs-identifier hs-var">startMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761057"><span class="hs-identifier hs-var">startMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-100"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>        </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#PreviouslyOnboarded"><span class="hs-identifier hs-var">PreviouslyOnboarded</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-101"></span><span>          </span><span id="local-6989586621679763416"><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763416"><span class="hs-identifier hs-var">startMsg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
+</span><span id="line-100"></span><span>          </span><span id="local-6989586621679761054"><span class="annot"><span class="annottext">Pretty ColorText
+</span><a href="#local-6989586621679761054"><span class="hs-identifier hs-var">startMsg</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
 </span><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-var">getStarted</span></a></span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763439"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763441"><span class="hs-identifier hs-var">dir</span></a></span><span>
-</span><span id="line-102"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a]
+</span><a href="#local-6989586621679761077"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761079"><span class="hs-identifier hs-var">dir</span></a></span><span>
+</span><span id="line-101"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a]
 </span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Either Event Input
 </span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var">toInput</span></a></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763416"><span class="hs-identifier hs-var">startMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679761054"><span class="hs-identifier hs-var">startMsg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Either Event Input]
-</span><a href="#local-6989586621679763436"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-103"></span><span>
-</span><span id="line-104"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-type">toInput</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span>
-</span><span id="line-105"></span><span id="toInput"><span class="annot"><span class="annottext">toInput :: Pretty ColorText -&gt; Either Event Input
-</span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var hs-var">toInput</span></a></span></span><span> </span><span id="local-6989586621679763415"><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763415"><span class="hs-identifier hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-106"></span><span>  </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621679761074"><span class="hs-identifier hs-var">acc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-type">toInput</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><a href="Unison.Codebase.Editor.Input.html#Input"><span class="hs-identifier hs-type">Input</span></a></span><span>
+</span><span id="line-104"></span><span id="toInput"><span class="annot"><span class="annottext">toInput :: Pretty ColorText -&gt; Either Event Input
+</span><a href="Unison.CommandLine.Welcome.html#toInput"><span class="hs-identifier hs-var hs-var">toInput</span></a></span></span><span> </span><span id="local-6989586621679761053"><span class="annot"><span class="annottext">Pretty ColorText
+</span><a href="#local-6989586621679761053"><span class="hs-identifier hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-105"></span><span>  </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Input
 </span><a href="Unison.Codebase.Editor.Input.html#CreateMessage"><span class="hs-identifier hs-var">CreateMessage</span></a></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763415"><span class="hs-identifier hs-var">pretty</span></a></span><span>
-</span><span id="line-107"></span><span>
-</span><span id="line-108"></span><span id="local-6989586621679763763"><span id="local-6989586621679763764"><span class="annot"><a href="Unison.CommandLine.Welcome.html#determineFirstStep"><span class="hs-identifier hs-type">determineFirstStep</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679763764"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679763763"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-type">Onboarding</span></a></span></span></span><span>
-</span><span id="line-109"></span><span id="determineFirstStep"><span class="annot"><span class="annottext">determineFirstStep :: forall v a. DownloadBase -&gt; Codebase IO v a -&gt; IO Onboarding
-</span><a href="Unison.CommandLine.Welcome.html#determineFirstStep"><span class="hs-identifier hs-var hs-var">determineFirstStep</span></a></span></span><span> </span><span id="local-6989586621679763409"><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763409"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span> </span><span id="local-6989586621679763408"><span class="annot"><span class="annottext">Codebase IO v a
-</span><a href="#local-6989586621679763408"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-110"></span><span>  </span><span id="local-6989586621679763407"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679763407"><span class="hs-identifier hs-var">isEmptyCodebase</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
+</span><a href="#local-6989586621679761053"><span class="hs-identifier hs-var">pretty</span></a></span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span id="local-6989586621679761401"><span id="local-6989586621679761402"><span class="annot"><a href="Unison.CommandLine.Welcome.html#determineFirstStep"><span class="hs-identifier hs-type">determineFirstStep</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679761402"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679761401"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#Onboarding"><span class="hs-identifier hs-type">Onboarding</span></a></span></span></span><span>
+</span><span id="line-108"></span><span id="determineFirstStep"><span class="annot"><span class="annottext">determineFirstStep :: forall v a. DownloadBase -&gt; Codebase IO v a -&gt; IO Onboarding
+</span><a href="Unison.CommandLine.Welcome.html#determineFirstStep"><span class="hs-identifier hs-var hs-var">determineFirstStep</span></a></span></span><span> </span><span id="local-6989586621679761047"><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761047"><span class="hs-identifier hs-var">downloadBase</span></a></span></span><span> </span><span id="local-6989586621679761046"><span class="annot"><span class="annottext">Codebase IO v a
+</span><a href="#local-6989586621679761046"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-109"></span><span>  </span><span id="local-6989586621679761045"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679761045"><span class="hs-identifier hs-var">isEmptyCodebase</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
 MonadIO m =&gt;
 Codebase m v a -&gt; Transaction b -&gt; m b
 </span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO v a
-</span><a href="#local-6989586621679763408"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction Bool
+</span><a href="#local-6989586621679761046"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">Transaction Bool
 </span><span class="hs-identifier hs-var">Codebase.getRootBranchExists</span></span><span>
-</span><span id="line-111"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">DownloadBase
-</span><a href="#local-6989586621679763409"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-112"></span><span>    </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span id="local-6989586621679763404"><span class="annot"><span class="annottext">ReadShareLooseCode
-</span><a href="#local-6989586621679763404"><span class="hs-identifier hs-var">ns</span></a></span></span><span>
-</span><span id="line-113"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679763407"><span class="hs-identifier hs-var">isEmptyCodebase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-114"></span><span>          </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-110"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761047"><span class="hs-identifier hs-var">downloadBase</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-111"></span><span>    </span><span class="annot"><a href="Unison.CommandLine.Welcome.html#DownloadBase"><span class="hs-identifier hs-type">DownloadBase</span></a></span><span> </span><span id="local-6989586621679761042"><span class="annot"><span class="annottext">ReadShareLooseCode
+</span><a href="#local-6989586621679761042"><span class="hs-identifier hs-var">ns</span></a></span></span><span>
+</span><span id="line-112"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679761045"><span class="hs-identifier hs-var">isEmptyCodebase</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-113"></span><span>          </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode -&gt; Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#DownloadingBase"><span class="hs-identifier hs-var">DownloadingBase</span></a></span><span> </span><span class="annot"><span class="annottext">ReadShareLooseCode
-</span><a href="#local-6989586621679763404"><span class="hs-identifier hs-var">ns</span></a></span><span>
-</span><span id="line-115"></span><span>    </span><span class="annot"><span class="annottext">DownloadBase
+</span><a href="#local-6989586621679761042"><span class="hs-identifier hs-var">ns</span></a></span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><span class="annottext">DownloadBase
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-116"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-115"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Onboarding
 </span><a href="Unison.CommandLine.Welcome.html#PreviouslyOnboarded"><span class="hs-identifier hs-var">PreviouslyOnboarded</span></a></span><span>
-</span><span id="line-117"></span><span>
-</span><span id="line-118"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#asciiartUnison"><span class="hs-identifier hs-type">asciiartUnison</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
-</span><span id="line-119"></span><span id="asciiartUnison"><span class="annot"><span class="annottext">asciiartUnison :: Pretty ColorText
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#asciiartUnison"><span class="hs-identifier hs-type">asciiartUnison</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
+</span><span id="line-118"></span><span id="asciiartUnison"><span class="annot"><span class="annottext">asciiartUnison :: Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#asciiartUnison"><span class="hs-identifier hs-var hs-var">asciiartUnison</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-120"></span><span>  </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
+</span><span id="line-119"></span><span>  </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.red</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot; _____&quot;</span></span><span>
-</span><span id="line-121"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-120"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiYellow</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;     _             &quot;</span></span><span>
-</span><span id="line-122"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-121"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span>
-</span><span id="line-123"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-122"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.red</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|  |  |&quot;</span></span><span>
-</span><span id="line-124"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-123"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiRed</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;___&quot;</span></span><span>
-</span><span id="line-125"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-124"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiYellow</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|_|&quot;</span></span><span>
-</span><span id="line-126"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-125"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiGreen</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span class="hs-string">&quot;___ &quot;</span></span><span>
+</span><span id="line-126"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
+</span><span class="hs-identifier hs-var">P.cyan</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;___ &quot;</span></span><span>
 </span><span id="line-127"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
-</span><span class="hs-identifier hs-var">P.cyan</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
-</span><span class="hs-string">&quot;___ &quot;</span></span><span>
-</span><span id="line-128"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.purple</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;___ &quot;</span></span><span>
-</span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-128"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span>
-</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.red</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|  |  |   &quot;</span></span><span>
-</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiYellow</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;| |&quot;</span></span><span>
-</span><span id="line-132"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiGreen</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;_ -&quot;</span></span><span>
-</span><span id="line-133"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-132"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.cyan</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;| . |&quot;</span></span><span>
-</span><span id="line-134"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-133"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.purple</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;   |&quot;</span></span><span>
-</span><span id="line-135"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-134"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span>
-</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-135"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.red</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|_____|&quot;</span></span><span>
-</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiRed</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;_|_&quot;</span></span><span>
-</span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiYellow</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|_|&quot;</span></span><span>
-</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.hiGreen</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;___&quot;</span></span><span>
-</span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.cyan</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;|___|&quot;</span></span><span>
-</span><span id="line-141"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.purple</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;_|_|&quot;</span></span><span>
-</span><span id="line-142"></span><span>
-</span><span id="line-143"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#downloading"><span class="hs-identifier hs-type">downloading</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
-</span><span id="line-144"></span><span id="downloading"><span class="annot"><span class="annottext">downloading :: Path -&gt; Pretty ColorText
-</span><a href="Unison.CommandLine.Welcome.html#downloading"><span class="hs-identifier hs-var hs-var">downloading</span></a></span></span><span> </span><span id="local-6989586621679763395"><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679763395"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-145"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
+</span><span id="line-141"></span><span>
+</span><span id="line-142"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#downloading"><span class="hs-identifier hs-type">downloading</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
+</span><span id="line-143"></span><span id="downloading"><span class="annot"><span class="annottext">downloading :: Path -&gt; Pretty ColorText
+</span><a href="Unison.CommandLine.Welcome.html#downloading"><span class="hs-identifier hs-var hs-var">downloading</span></a></span></span><span> </span><span id="local-6989586621679761033"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679761033"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-144"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
 (Foldable f, IsString s) =&gt;
 f (Pretty s) -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.lines</span></span><span>
-</span><span id="line-146"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. Pretty s -&gt; Pretty s
+</span><span id="line-145"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.group</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128035; Since this is a fresh codebase, let me download the base library for you.&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-147"></span><span>      </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-146"></span><span>      </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span>
-</span><span id="line-148"></span><span>        </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-147"></span><span>        </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128336; Downloading&quot;</span></span><span>
-</span><span id="line-149"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-148"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. IsString s =&gt; FilePath -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.string</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; FilePath
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679763395"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-150"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679761033"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;of the&quot;</span></span><span>
-</span><span id="line-151"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-150"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.bold</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;base library&quot;</span></span><span>
-</span><span id="line-152"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-151"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;into&quot;</span></span><span>
-</span><span id="line-153"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-152"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.group</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;.base&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;, this may take a minute...&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-154"></span><span>        </span><span class="hs-special">)</span><span>
-</span><span id="line-155"></span><span>    </span><span class="hs-special">]</span><span>
-</span><span id="line-156"></span><span>
-</span><span id="line-157"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-type">header</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
-</span><span id="line-158"></span><span id="header"><span class="annot"><span class="annottext">header :: Text -&gt; Pretty ColorText
-</span><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-var hs-var">header</span></a></span></span><span> </span><span id="local-6989586621679763387"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763387"><span class="hs-identifier hs-var">version</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-159"></span><span>  </span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-153"></span><span>        </span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-155"></span><span>
+</span><span id="line-156"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-type">header</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
+</span><span id="line-157"></span><span id="header"><span class="annot"><span class="annottext">header :: Text -&gt; Pretty ColorText
+</span><a href="Unison.CommandLine.Welcome.html#header"><span class="hs-identifier hs-var hs-var">header</span></a></span></span><span> </span><span id="local-6989586621679761025"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679761025"><span class="hs-identifier hs-var">version</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-158"></span><span>  </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#asciiartUnison"><span class="hs-identifier hs-var">asciiartUnison</span></a></span><span>
+</span><span id="line-159"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
+</span><span class="hs-identifier hs-var">P.newline</span></span><span>
 </span><span id="line-160"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span>
 </span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
-</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
-</span><span class="hs-identifier hs-var">P.newline</span></span><span>
-</span><span id="line-162"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
 (Foldable f, IsString s) =&gt;
 f (Pretty s) -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.linesSpaced</span></span><span>
-</span><span id="line-163"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-162"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128075; Welcome to Unison!&quot;</span></span><span class="hs-special">,</span><span>
-</span><span id="line-164"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-163"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;You are running version: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.bold</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Text -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.text</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679763387"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-165"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-166"></span><span>
-</span><span id="line-167"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#authorSuggestion"><span class="hs-identifier hs-type">authorSuggestion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
-</span><span id="line-168"></span><span id="authorSuggestion"><span class="annot"><span class="annottext">authorSuggestion :: Pretty ColorText
+</span><a href="#local-6989586621679761025"><span class="hs-identifier hs-var">version</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-165"></span><span>
+</span><span id="line-166"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#authorSuggestion"><span class="hs-identifier hs-type">authorSuggestion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span>
+</span><span id="line-167"></span><span id="authorSuggestion"><span class="annot"><span class="annottext">authorSuggestion :: Pretty ColorText
 </span><a href="Unison.CommandLine.Welcome.html#authorSuggestion"><span class="hs-identifier hs-var hs-var">authorSuggestion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-169"></span><span>  </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
+</span><span id="line-168"></span><span>  </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span>
-</span><span id="line-170"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-169"></span><span>    </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
 (Foldable f, IsString s) =&gt;
 f (Pretty s) -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.lines</span></span><span>
-</span><span id="line-171"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-170"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128220;&#129718; You might want to set up your author information next.&quot;</span></span><span class="hs-special">,</span><span>
-</span><span id="line-172"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-171"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Type&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
@@ -513,26 +511,26 @@ f (Pretty s) -&gt; Pretty s
 </span><span class="hs-string">&quot; create.author&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot; to create an author for this codebase&quot;</span></span><span class="hs-special">,</span><span>
-</span><span id="line-173"></span><span>        </span><span class="annot"><span class="annottext">forall s. Pretty s -&gt; Pretty s
+</span><span id="line-172"></span><span>        </span><span class="annot"><span class="annottext">forall s. Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.group</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. IsString s =&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.newline</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Read about how to link your author to your code at&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-174"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-173"></span><span>        </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;https://www.unison-lang.org/learn/tooling/configuration/&quot;</span></span><span>
-</span><span id="line-175"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-176"></span><span>
-</span><span id="line-177"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-type">getStarted</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-type">ShouldWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span class="hs-special">)</span><span>
-</span><span id="line-178"></span><span id="getStarted"><span class="annot"><span class="annottext">getStarted :: ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
-</span><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-var hs-var">getStarted</span></a></span></span><span> </span><span id="local-6989586621679763383"><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763383"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span></span><span> </span><span id="local-6989586621679763382"><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763382"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-179"></span><span>  </span><span id="local-6989586621679763381"><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763381"><span class="hs-identifier hs-var">earth</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-174"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span><span class="annot"><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-type">getStarted</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-type">ShouldWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">P.Pretty</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">P.ColorText</span></span><span class="hs-special">)</span><span>
+</span><span id="line-177"></span><span id="getStarted"><span class="annot"><span class="annottext">getStarted :: ShouldWatchFiles -&gt; FilePath -&gt; IO (Pretty ColorText)
+</span><a href="Unison.CommandLine.Welcome.html#getStarted"><span class="hs-identifier hs-var hs-var">getStarted</span></a></span></span><span> </span><span id="local-6989586621679761021"><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761021"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span></span><span> </span><span id="local-6989586621679761020"><span class="annot"><span class="annottext">FilePath
+</span><a href="#local-6989586621679761020"><span class="hs-identifier hs-var">dir</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621679761019"><span class="annot"><span class="annottext">Pretty ColorText
+</span><a href="#local-6989586621679761019"><span class="hs-identifier hs-var">earth</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#127758;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#127757;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#127759;&quot;</span></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; Int -&gt; a
@@ -541,26 +539,26 @@ f (Pretty s) -&gt; Pretty s
 </span><span class="hs-identifier hs-var">randomRIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span class="hs-special">)</span><span>
-</span><span id="line-180"></span><span>
-</span><span id="line-181"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span>
-</span><span id="line-182"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
+</span><span id="line-179"></span><span>
+</span><span id="line-180"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span>
+</span><span id="line-181"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) s.
 (Foldable f, IsString s) =&gt;
 f (Pretty s) -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.linesSpaced</span></span><span>
-</span><span id="line-183"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
+</span><span id="line-182"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall s. (ListLike s Char, IsString s) =&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.wrap</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Get started:&quot;</span></span><span class="hs-special">,</span><span>
-</span><span id="line-184"></span><span>        </span><span class="annot"><span class="annottext">forall s.
+</span><span id="line-183"></span><span>        </span><span class="annot"><span class="annottext">forall s.
 (ListLike s Char, IsString s) =&gt;
 Width -&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.indentN</span></span><span> </span><span class="annot"><span class="annottext">Width
 </span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
-</span><span id="line-185"></span><span>          </span><span class="annot"><span class="annottext">forall s.
+</span><span id="line-184"></span><span>          </span><span class="annot"><span class="annottext">forall s.
 (ListLike s Char, IsString s) =&gt;
 [(Pretty s, Pretty s)] -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.column2</span></span><span>
-</span><span id="line-186"></span><span>            </span><span class="hs-special">(</span><span> </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-185"></span><span>            </span><span class="hs-special">(</span><span> </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128214;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Type &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
@@ -573,7 +571,7 @@ Width -&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-string">&quot;help &lt;cmd&gt;&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot; to view help for one command&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-187"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-186"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#127912;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Type &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
@@ -581,25 +579,25 @@ Width -&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-string">&quot;ui&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot; to open the Codebase UI in your default browser&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-188"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-187"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128218;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Read the official docs at &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;https://www.unison-lang.org/learn/&quot;</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-189"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
-</span><a href="#local-6989586621679763381"><span class="hs-identifier hs-var">earth</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
+</span><span id="line-188"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
+</span><a href="#local-6989586621679761019"><span class="hs-identifier hs-var">earth</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;Visit Unison Share at &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;https://share.unison-lang.org&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot; to discover libraries&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-190"></span><span>              </span><span class="hs-special">]</span><span>
-</span><span id="line-191"></span><span>                </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-189"></span><span>              </span><span class="hs-special">]</span><span>
+</span><span id="line-190"></span><span>                </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ShouldWatchFiles
-</span><a href="#local-6989586621679763383"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-192"></span><span>                  </span><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761021"><span class="hs-identifier hs-var">shouldWatchFiles</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-191"></span><span>                  </span><span class="annot"><span class="annottext">ShouldWatchFiles
 </span><a href="Unison.CommandLine.Types.html#ShouldWatchFiles"><span class="hs-identifier hs-var">ShouldWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128064;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;I'm watching for changes to &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
@@ -614,11 +612,11 @@ Width -&gt; Pretty s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.blue</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; FilePath -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.string</span></span><span> </span><span class="annot"><span class="annottext">FilePath
-</span><a href="#local-6989586621679763382"><span class="hs-identifier hs-var">dir</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">]</span><span>
-</span><span id="line-193"></span><span>                  </span><span class="annot"><span class="annottext">ShouldWatchFiles
+</span><a href="#local-6989586621679761020"><span class="hs-identifier hs-var">dir</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-192"></span><span>                  </span><span class="annot"><span class="annottext">ShouldWatchFiles
 </span><a href="Unison.CommandLine.Types.html#ShouldNotWatchFiles"><span class="hs-identifier hs-var">ShouldNotWatchFiles</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;&#128221;&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Pretty ColorText
 </span><span class="hs-string">&quot;File watching is disabled, use the 'load' command to parse and typecheck unison files.&quot;</span></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
-</span><span id="line-194"></span><span>            </span><span class="hs-special">)</span><span>
-</span><span id="line-195"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-196"></span></pre></body></html>
+</span><span id="line-193"></span><span>            </span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-195"></span></pre></body></html>

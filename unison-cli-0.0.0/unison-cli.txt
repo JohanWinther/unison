@@ -330,12 +330,7 @@ GistInput :: WriteGitRepo -> GistInput
 data PullSourceTarget
 PullSourceTarget0 :: PullSourceTarget
 PullSourceTarget1 :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> PullSourceTarget
-PullSourceTarget2 :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> PullTarget (These ProjectName ProjectBranchName) -> PullSourceTarget
-
--- | Where are we pulling into?
-data PullTarget a
-PullTargetLooseCode :: Path' -> PullTarget a
-PullTargetProject :: a -> PullTarget a
+PullSourceTarget2 :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> LooseCodeOrProject -> PullSourceTarget
 data PushRemoteBranchInput
 PushRemoteBranchInput :: PushSourceTarget -> PushBehavior -> SyncMode -> PushRemoteBranchInput
 [$sel:sourceTarget:PushRemoteBranchInput] :: PushRemoteBranchInput -> PushSourceTarget
@@ -423,9 +418,6 @@ instance GHC.Generics.Generic Unison.Codebase.Editor.Input.DiffNamespaceToPatchI
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.DiffNamespaceToPatchInput
 instance GHC.Show.Show Unison.Codebase.Editor.Input.GistInput
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.GistInput
-instance GHC.Generics.Generic (Unison.Codebase.Editor.Input.PullTarget a)
-instance GHC.Show.Show a => GHC.Show.Show (Unison.Codebase.Editor.Input.PullTarget a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (Unison.Codebase.Editor.Input.PullTarget a)
 instance GHC.Show.Show Unison.Codebase.Editor.Input.PullSourceTarget
 instance GHC.Classes.Eq Unison.Codebase.Editor.Input.PullSourceTarget
 instance GHC.Show.Show Unison.Codebase.Editor.Input.PushSource
@@ -1239,15 +1231,15 @@ PatchInvolvesExternalDependents :: PrettyPrintEnv -> Set Reference -> Output
 WarnIncomingRootBranch :: ShortCausalHash -> Set ShortCausalHash -> Output
 StartOfCurrentPathHistory :: Output
 ShowReflog :: [(Maybe UTCTime, ShortCausalHash, Text)] -> Output
-PullAlreadyUpToDate :: ReadRemoteNamespace RemoteProjectBranch -> PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
-PullSuccessful :: ReadRemoteNamespace RemoteProjectBranch -> PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
+PullAlreadyUpToDate :: ReadRemoteNamespace RemoteProjectBranch -> Either Path' (ProjectAndBranch Project ProjectBranch) -> Output
+PullSuccessful :: ReadRemoteNamespace RemoteProjectBranch -> Either Path' (ProjectAndBranch Project ProjectBranch) -> Output
 AboutToMerge :: Output
 
 -- | Indicates a trivial merge where the destination was empty and was just
 --   replaced.
-MergeOverEmpty :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Output
-MergeAlreadyUpToDate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Output
-PreviewMergeAlreadyUpToDate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Output
+MergeOverEmpty :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Output
+MergeAlreadyUpToDate :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Either Path' (ProjectAndBranch Project ProjectBranch) -> Output
+PreviewMergeAlreadyUpToDate :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Either Path' (ProjectAndBranch Project ProjectBranch) -> Output
 
 -- | No conflicts or edits remain for the current patch.
 NoConflictsOrEdits :: Output
@@ -1361,9 +1353,9 @@ ShowDiffAfterUndo :: PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOu
 ShowDiffAfterDeleteDefinitions :: PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterDeleteBranch :: Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterModifyBranch :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMerge :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMergePropagate :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> Path' -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
-ShowDiffAfterMergePreview :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMerge :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMergePropagate :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Absolute -> Path' -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
+ShowDiffAfterMergePreview :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterPull :: Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 ShowDiffAfterCreateAuthor :: NameSegment -> Path' -> Absolute -> PrettyPrintEnv -> BranchDiffOutput Symbol Ann -> NumberedOutput
 
@@ -2180,6 +2172,20 @@ hydrateNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch Pro
 expectProjectAndBranchByIds :: ProjectAndBranch ProjectId ProjectBranchId -> Transaction (ProjectAndBranch Project ProjectBranch)
 getProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (Maybe (ProjectAndBranch Project ProjectBranch))
 expectProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli (ProjectAndBranch Project ProjectBranch)
+
+-- | Expect/resolve a possibly-ambiguous "loose code or project", with the
+--   following rules:
+--   
+--   <ol>
+--   <li>If we have an unambiguous `<i>branch` or `project</i>branch`, look
+--   up in the database.</li>
+--   <li>If we have an unambiguous `loose.code.path`, just return it.</li>
+--   <li>If we have an ambiguous <tt>foo</tt>, *because we do not currently
+--   have an unambiguous syntax for relative paths*, we elect to treat it
+--   as a loose code path (because `/branch` can be selected with a leading
+--   forward slash).</li>
+--   </ol>
+expectLooseCodeOrProjectBranch :: These Path' (ProjectAndBranch (Maybe ProjectName) ProjectBranchName) -> Cli (Either Path' (ProjectAndBranch Project ProjectBranch))
 expectRemoteProjectByName :: ProjectName -> Cli RemoteProject
 expectRemoteProjectBranchById :: ProjectAndBranch (RemoteProjectId, ProjectName) (RemoteProjectBranchId, ProjectBranchName) -> Cli RemoteProjectBranch
 loadRemoteProjectBranchByName :: ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
@@ -2354,14 +2360,13 @@ prettyHash32 :: IsString s => Hash32 -> Pretty s
 prettyHumanReadableTime :: UTCTime -> UTCTime -> Pretty
 prettyLabeledDependencies :: PrettyPrintEnv -> Set LabeledDependency -> Pretty
 prettyPath' :: Path' -> Pretty
-prettyPathOrProjectAndBranchName :: Either Path' (ProjectAndBranch ProjectName ProjectBranchName) -> Pretty
 prettyProjectAndBranchName :: ProjectAndBranch ProjectName ProjectBranchName -> Pretty
 prettyProjectBranchName :: ProjectBranchName -> Pretty
 prettyProjectName :: ProjectName -> Pretty
 
 -- | <a>prettyProjectName</a> with a trailing slash.
 prettyProjectNameSlash :: ProjectName -> Pretty
-prettyPullTarget :: PullTarget (ProjectAndBranch Project ProjectBranch) -> Pretty
+prettyNamespaceKey :: Either Path' (ProjectAndBranch Project ProjectBranch) -> Pretty
 prettyReadGitRepo :: ReadGitRepo -> Pretty
 prettyReadRemoteNamespace :: ReadRemoteNamespace RemoteProjectBranch -> Pretty
 prettyReadRemoteNamespaceWith :: (a -> Text) -> ReadRemoteNamespace a -> Pretty
@@ -2479,7 +2484,7 @@ pushForce :: InputPattern
 pushExhaustive :: InputPattern
 squashMerge :: InputPattern
 mergeLocal :: InputPattern
-parseLooseCodeOrProject :: String -> Either String LooseCodeOrProject
+parseLooseCodeOrProject :: String -> Maybe LooseCodeOrProject
 diffNamespace :: InputPattern
 previewMergeLocal :: InputPattern
 replaceEdit :: (HashQualified Name -> HashQualified Name -> Maybe PatchPath -> Input) -> InputPattern
@@ -2568,7 +2573,6 @@ projectBranchNameWithOptionalProjectNameArg :: ArgumentType
 
 -- | A project name.
 projectNameArg :: ArgumentType
-parsePullTarget :: String -> Either (Pretty ColorText) (PullTarget (These ProjectName ProjectBranchName))
 
 -- | Parse a <a>PushSource</a>.
 parsePushSource :: String -> Either (Pretty ColorText) PushSource
@@ -2679,13 +2683,13 @@ diffHelper :: Branch0 IO -> Branch0 IO -> Cli (PrettyPrintEnv, BranchDiffOutput 
 
 -- | <tt>pull</tt> input handler
 module Unison.Codebase.Editor.HandleInput.Pull
-doPullRemoteBranch :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Text -> Cli ()
+doPullRemoteBranch :: PullSourceTarget -> SyncMode -> PullMode -> Verbosity -> Cli ()
 loadShareLooseCodeIntoMemory :: ReadShareLooseCode -> Cli (Branch IO)
-loadPropagateDiffDefaultPatch :: Text -> Maybe (Either Path' (ProjectAndBranch ProjectName ProjectBranchName)) -> Absolute -> Cli ()
+loadPropagateDiffDefaultPatch :: Text -> Maybe (Either Path' (ProjectAndBranch Project ProjectBranch)) -> Absolute -> Cli ()
 
 -- | supply <tt>dest0</tt> if you want to print diff messages supply
 --   unchangedMessage if you want to display it if merge had no effect
-mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Branch IO -> Maybe (Either Path' (ProjectAndBranch ProjectName ProjectBranchName)) -> Absolute -> Cli ()
+mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Branch IO -> Maybe (Either Path' (ProjectAndBranch Project ProjectBranch)) -> Absolute -> Cli ()
 propagatePatch :: Text -> Patch -> Absolute -> Cli Bool
 withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO a
 
