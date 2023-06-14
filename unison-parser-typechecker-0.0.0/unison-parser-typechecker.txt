@@ -434,9 +434,6 @@ instance GHC.Show.Show Unison.Codebase.ShortCausalHash.ShortCausalHash
 module Unison.Codebase.SqliteCodebase.Migrations.Helpers
 abortMigration :: String -> Transaction a
 
-module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema10To11
-migrateSchema10To11 :: Transaction ()
-
 module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema11To12
 
 -- | This migration just deletes all the old name lookups, it doesn't
@@ -482,28 +479,6 @@ instance GHC.Show.Show Unison.Codebase.IntegrityCheck.IntegrityResult
 instance GHC.Base.Semigroup Unison.Codebase.IntegrityCheck.IntegrityResult
 instance GHC.Base.Monoid Unison.Codebase.IntegrityCheck.IntegrityResult
 
-module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema2To3
-
--- | The 1 to 2 migration kept around hash objects of hash version 1,
---   unfortunately this caused an issue:
---   
---   The migration would detect causals whose value hash did not have a
---   corresponding branch object, this was caused by a race-condition in
---   sync which could end up in a partial sync. When a branch object was
---   determined to be missing, the migration would replace it with the
---   empty branch. This worked well, but led to a situation where related
---   parent or successors of that causal would have their hash objects
---   mapped to the new v2 object which contained the empty branch in place
---   of missing branches. This is fine, but, if a different codebase
---   migrated the same branch and wasn't missing the branch in question it
---   would migrate successfully and each database now have the same v1 hash
---   object mapped to two distinct v2 objects, which rightfully causes a
---   crash when syncing.
---   
---   This migration drops all the v1 hash objects to avoid this issue,
---   since these hash objects weren't being used for anything anyways.
-migrateSchema2To3 :: Transaction ()
-
 module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4
 
 -- | There was a bug in previous versions of UCM which incorrectly used
@@ -543,12 +518,6 @@ module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4
 migrateSchema3To4 :: Transaction ()
 instance GHC.Generics.Generic Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.MigrationState
 
-module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema4To5
-
--- | The 4 to 5 migration adds initial support for out-of-order sync i.e.
---   Unison Share
-migrateSchema4To5 :: Transaction ()
-
 module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema6To7
 
 -- | Adds a table for tracking namespace statistics Adds stats for all
@@ -562,15 +531,6 @@ module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema7To8
 --   existing namespaces, even though missing stats are computed on-demand
 --   if missing.
 migrateSchema7To8 :: Transaction ()
-
-module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema8To9
-
--- | Recreates the name lookup tables because the primary key was missing
---   the root hash id.
-migrateSchema8To9 :: Transaction ()
-
-module Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema9To10
-migrateSchema9To10 :: Transaction ()
 
 module Unison.Codebase.SqliteCodebase.SyncEphemeral
 data Dependencies
@@ -3608,9 +3568,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) (TypeLookup v_a4JuW loc_a4JuX)
-termsByShortname :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) (Map Name [NamedReference v_a4JuW loc_a4JuX])
-ambientAbilities :: forall v_a4JuW loc_a4JuX. Lens' (Env v_a4JuW loc_a4JuX) [Type v_a4JuW loc_a4JuX]
+typeLookup :: forall v_a4J5Y loc_a4J5Z. Lens' (Env v_a4J5Y loc_a4J5Z) (TypeLookup v_a4J5Y loc_a4J5Z)
+termsByShortname :: forall v_a4J5Y loc_a4J5Z. Lens' (Env v_a4J5Y loc_a4J5Z) (Map Name [NamedReference v_a4J5Y loc_a4J5Z])
+ambientAbilities :: forall v_a4J5Y loc_a4J5Z. Lens' (Env v_a4J5Y loc_a4J5Z) [Type v_a4J5Y loc_a4J5Z]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
