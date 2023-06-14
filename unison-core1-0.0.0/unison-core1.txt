@@ -237,6 +237,23 @@ endsWithReverseSegments :: Name -> [NameSegment] -> Bool
 endsWithSegments :: Name -> [NameSegment] -> Bool
 stripReversedPrefix :: Name -> [NameSegment] -> Maybe Name
 
+-- | Like <a>stripReversedPrefix</a> but if the prefix doesn't match, or if
+--   it would strip the entire name away just return the original name.
+--   
+--   <pre>
+--   &gt;&gt;&gt; tryStripReversedPrefix (fromReverseSegments ("c" :| ["b", "a"])) ["b", "a"]
+--   Name Relative (NameSegment {toText = "c"} :| [])
+--   
+--   &gt;&gt;&gt; tryStripReversedPrefix (fromReverseSegments ("y" :| ["x"])) ["b", "a"]
+--   Name Relative (NameSegment {toText = "y"} :| [NameSegment {toText = "x"}])
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; tryStripReversedPrefix (fromReverseSegments ("c" :| ["b", "a"])) ["b", "a"]
+--   Name Relative (NameSegment {toText = "c"} :| [])
+--   </pre>
+tryStripReversedPrefix :: Name -> [NameSegment] -> Name
+
 -- | Return the name segments of a name, in reverse order.
 --   
 --   <pre>
