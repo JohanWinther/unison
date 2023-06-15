@@ -386,6 +386,7 @@ type NamespaceText = Text
 --   "base.data.List"
 --   </pre>
 reversedNameToNamespaceText :: ReversedName -> NamespaceText
+reversedNameToPathSegments :: ReversedName -> PathSegments
 
 -- | <pre>
 --   &gt;&gt;&gt; pathSegmentsToText (PathSegments ["base", "data", "List"])
@@ -1448,6 +1449,16 @@ listNameLookupMounts :: BranchHashId -> Transaction [(PathSegments, BranchHashId
 --   
 --   This can be used to garbage collect unreachable name lookups.
 deleteNameLookupsExceptFor :: [BranchHashId] -> Transaction ()
+
+-- | Searches for all names within the given name lookup which contain the
+--   provided list of segments in order. Search is case insensitive.
+fuzzySearchTerms :: Bool -> BranchHashId -> Int -> PathSegments -> [Text] -> Transaction [NamedRef (TextReferent, Maybe ConstructorType)]
+
+-- | Searches for all names within the given name lookup which contain the
+--   provided list of segments in order.
+--   
+--   Search is case insensitive.
+fuzzySearchTypes :: Bool -> BranchHashId -> Int -> PathSegments -> [Text] -> Transaction [NamedRef TextReference]
 appendReflog :: Entry CausalHashId Text -> Transaction ()
 getReflog :: Int -> Transaction [Entry CausalHashId Text]
 
@@ -1816,6 +1827,10 @@ longestMatchingTypeNameForSuffixification :: NamesPerspective -> NamedRef Refere
 --   
 --   This can be used to garbage collect unreachable name lookups.
 deleteNameLookupsExceptFor :: Set BranchHash -> Transaction ()
+
+-- | Search for term or type names which contain the provided list of
+--   segments in order. Search is case insensitive.
+fuzzySearchDefinitions :: Bool -> NamesPerspective -> Int -> [Text] -> Transaction ([NamedRef (Referent, Maybe ConstructorType)], [NamedRef Reference])
 
 -- | Determine which nameLookup is the closest parent of the provided
 --   perspective.

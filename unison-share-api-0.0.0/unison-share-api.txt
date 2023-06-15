@@ -799,7 +799,8 @@ termEntryDisplayName :: TermEntry v a -> Text
 termEntryHQName :: TermEntry v a -> HashQualified NameSegment
 termEntryToNamedTerm :: Var v => PrettyPrintEnv -> Maybe Width -> TermEntry v a -> NamedTerm
 ($sel:termEntryType:TermEntry) :: TermEntry v a -> Maybe (Type v a)
-termListEntry :: MonadIO m => Codebase m Symbol Ann -> Branch n -> ExactName NameSegment Referent -> m (TermEntry Symbol Ann)
+termEntryLabeledDependencies :: Ord v => TermEntry v a -> Set LabeledDependency
+termListEntry :: MonadIO m => Codebase m Symbol Ann -> Maybe (Branch n) -> ExactName NameSegment Referent -> m (TermEntry Symbol Ann)
 
 -- | Look up terms in the codebase by short hash, and include builtins.
 termReferentsByShortHash :: Codebase m v a -> ShortHash -> Transaction (Set Referent)
@@ -807,7 +808,8 @@ typeDeclHeader :: forall v m. Var v => Codebase m v Ann -> PrettyPrintEnv -> Ref
 typeEntryDisplayName :: TypeEntry -> Text
 typeEntryHQName :: TypeEntry -> HashQualified NameSegment
 typeEntryToNamedType :: TypeEntry -> NamedType
-typeListEntry :: Var v => Codebase m v Ann -> Branch n -> ExactName NameSegment Reference -> Transaction TypeEntry
+typeEntryLabeledDependencies :: TypeEntry -> Set LabeledDependency
+typeListEntry :: Var v => Codebase m v Ann -> Maybe (Branch n) -> ExactName NameSegment Reference -> Transaction TypeEntry
 
 -- | Look up types in the codebase by short hash, and include builtins.
 typeReferencesByShortHash :: ShortHash -> Transaction (Set Reference)
@@ -879,6 +881,81 @@ instance Control.Monad.Trans.Class.MonadTrans Unison.Server.Backend.Backend
 -- | Helper for rendering docs within a given namespace
 module Unison.Server.Share.RenderDoc
 renderDoc :: Set NameSegment -> Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Width -> Backend IO (Maybe Doc)
+
+module Unison.Server.Share.FuzzyFind
+type FuzzyFindAPI = "find" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "limit" Int :> QueryParam "renderWidth" Width :> QueryParam "query" String :> APIGet [(Alignment, FoundResult)]
+data FoundTerm
+FoundTerm :: HashQualifiedName -> NamedTerm -> FoundTerm
+[$sel:bestFoundTermName:FoundTerm] :: FoundTerm -> HashQualifiedName
+[$sel:namedTerm:FoundTerm] :: FoundTerm -> NamedTerm
+data FoundType
+FoundType :: HashQualifiedName -> DisplayObject SyntaxText SyntaxText -> NamedType -> FoundType
+[$sel:bestFoundTypeName:FoundType] :: FoundType -> HashQualifiedName
+[$sel:typeDef:FoundType] :: FoundType -> DisplayObject SyntaxText SyntaxText
+[$sel:namedType:FoundType] :: FoundType -> NamedType
+data FoundResult
+FoundTermResult :: FoundTerm -> FoundResult
+FoundTypeResult :: FoundType -> FoundResult
+serveFuzzyFind :: Bool -> Bool -> Codebase IO Symbol Ann -> CausalHash -> Path -> Maybe Int -> Maybe Width -> Text -> Backend IO [(Alignment, FoundResult)]
+scoreMatch :: NamedRef r -> Int
+data Alignment
+Alignment :: Int -> MatchResult -> Alignment
+[$sel:score:Alignment] :: Alignment -> Int
+[$sel:result:Alignment] :: Alignment -> MatchResult
+data MatchResult
+MatchResult :: [MatchSegment] -> MatchResult
+[$sel:segments:MatchResult] :: MatchResult -> [MatchSegment]
+data MatchSegment
+Gap :: Text -> MatchSegment
+Match :: Text -> MatchSegment
+computeMatchSegments :: [Text] -> NamedRef r -> [MatchSegment]
+
+-- | Splits a query into segments, where each segment must appear in order
+--   in any matching names.
+--   
+--   <pre>
+--   &gt;&gt;&gt; prepareQuery "foo bar baz"
+--   ["foo","bar","baz"]
+--   </pre>
+--   
+--   Split camel-case style words into segments. &gt;&gt;&gt; prepareQuery
+--   "fMap" ["f",<a>Map</a>]
+--   
+--   Collapse multiple spaces &gt;&gt;&gt; prepareQuery "foo barBaz boom"
+--   ["foo","bar",<a>Baz</a>,"boom"]
+--   
+--   Split namespaces into segments with a required dot in between.
+--   &gt;&gt;&gt; prepareQuery "List.map" [<a>List</a>,".","map"]
+--   
+--   Shouldn't get multiple splits for capitalized letters &gt;&gt;&gt;
+--   prepareQuery <a>List.Map</a> [<a>List</a>,".",<a>Map</a>]
+prepareQuery :: String -> [Text]
+instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundTerm
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundTerm
+instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundType
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundType
+instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundResult
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundResult
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.MatchSegment
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.MatchSegment
+instance GHC.Show.Show Unison.Server.Share.FuzzyFind.MatchSegment
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.MatchResult
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.MatchResult
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.Alignment
+instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.Alignment
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundType
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundTerm
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundResult
+instance Servant.Docs.Internal.ToSample Unison.Server.Share.FuzzyFind.Alignment
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.Alignment
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.MatchResult
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.MatchSegment
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundResult
+instance Servant.Docs.Internal.ToSample Unison.Server.Share.FuzzyFind.FoundResult
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundType
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundTerm
+instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "limit" GHC.Types.Int)
+instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "query" GHC.Base.String)
 
 
 -- | This module contains implementations of Backend methods which are
