@@ -846,7 +846,7 @@ logError :: Text -> Lsp ()
 
 -- | Environment for the Lsp monad.
 data Env
-Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO (NameSearch Transaction) -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri FileAnalysis) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
+Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO (NameSearch Transaction) -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri (TMVar FileAnalysis)) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
 [$sel:lspContext:Env] :: Env -> LanguageContextEnv Config
 [$sel:codebase:Env] :: Env -> Codebase IO Symbol Ann
 [$sel:parseNamesCache:Env] :: Env -> IO NamesWithHistory
@@ -855,7 +855,7 @@ Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistor
 [$sel:currentPathCache:Env] :: Env -> IO Absolute
 [$sel:vfsVar:Env] :: Env -> MVar VFS
 [$sel:runtime:Env] :: Env -> Runtime Symbol
-[$sel:checkedFilesVar:Env] :: Env -> TVar (Map Uri FileAnalysis)
+[$sel:checkedFilesVar:Env] :: Env -> TVar (Map Uri (TMVar FileAnalysis))
 [$sel:dirtyFilesVar:Env] :: Env -> TVar (Set Uri)
 [$sel:cancellationMapVar:Env] :: Env -> TVar (Map SomeLspId (IO ()))
 [$sel:completionsVar:Env] :: Env -> TVar CompletionTree
@@ -1698,7 +1698,7 @@ analyseFile :: Foldable f => Uri -> Text -> f (Note Symbol Ann) -> Lsp ([Diagnos
 getTokenMap :: [Token Lexeme] -> IntervalMap Position Lexeme
 analyseNotes :: Foldable f => Uri -> PrettyPrintEnv -> String -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
 toRangeMap :: Foldable f => f (Range, a) -> IntervalMap Position [a]
-getFileAnalysis :: Uri -> Lsp (Maybe FileAnalysis)
+getFileAnalysis :: Uri -> MaybeT Lsp FileAnalysis
 getFileSummary :: Uri -> MaybeT Lsp FileSummary
 ppedForFile :: Uri -> Lsp PrettyPrintEnvDecl
 ppedForFileHelper :: Maybe (UnisonFile Symbol a) -> Maybe (TypecheckedUnisonFile Symbol a) -> Lsp PrettyPrintEnvDecl
