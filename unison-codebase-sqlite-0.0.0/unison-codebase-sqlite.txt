@@ -1095,6 +1095,9 @@ loadNamespaceStatsByHashId :: BranchHashId -> Transaction (Maybe NamespaceStats)
 --   if we end up wanting to store other kinds of Causals here too.
 saveCausal :: HashHandle -> CausalHashId -> BranchHashId -> [CausalHashId] -> Transaction ()
 isCausalHash :: HashId -> Transaction Bool
+
+-- | Return whether or not a causal exists with the given hash32.
+causalExistsByHash32 :: Hash32 -> Transaction Bool
 expectCausal :: CausalHashId -> Transaction SyncCausalFormat
 loadCausalHashIdByCausalHash :: CausalHash -> Transaction (Maybe CausalHashId)
 expectCausalHashIdByCausalHash :: CausalHash -> Transaction CausalHashId
