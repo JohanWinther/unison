@@ -734,7 +734,7 @@ instance U.Core.ABT.Var.Var U.Codebase.Sqlite.Symbol.Symbol
 
 module U.Codebase.Sqlite.HashHandle
 data HashHandle
-HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> HashHandle
+HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> HashHandle
 
 -- | Hash type
 [$sel:toReference:HashHandle] :: HashHandle -> Type Symbol -> Reference
@@ -748,6 +748,8 @@ HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (H
 
 -- | Hash decl's mentions
 [$sel:toReferenceDeclMentions:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Set Reference
+[$sel:hashBranch:HashHandle] :: HashHandle -> forall m. Monad m => Branch m -> m BranchHash
+[$sel:hashCausal:HashHandle] :: HashHandle -> BranchHash -> Set CausalHash -> CausalHash
 
 module U.Codebase.Sqlite.Decl.Format
 
@@ -1108,6 +1110,13 @@ loadBranchObjectIdByCausalHashId :: CausalHashId -> Transaction (Maybe BranchObj
 loadBranchObjectIdByBranchHashId :: BranchHashId -> Transaction (Maybe BranchObjectId)
 expectBranchObjectIdByCausalHashId :: CausalHashId -> Transaction BranchObjectId
 expectBranchObjectIdByBranchHashId :: BranchHashId -> Transaction BranchObjectId
+
+-- | Get the causal hash result from squashing the provided branch hash if
+--   we've squashed it at some point in the past.
+tryGetSquashResult :: BranchHashId -> Transaction (Maybe CausalHashId)
+
+-- | Save the result of running a squash on the provided branch hash id.
+saveSquashResult :: BranchHashId -> CausalHashId -> Transaction ()
 saveCausalParents :: CausalHashId -> [CausalHashId] -> Transaction ()
 loadCausalParents :: CausalHashId -> Transaction [CausalHashId]
 
@@ -1551,6 +1560,7 @@ addMostRecentBranchTable :: Transaction ()
 fixScopedNameLookupTables :: Transaction ()
 addNameLookupMountTables :: Transaction ()
 addMostRecentNamespaceTable :: Transaction ()
+addSquashResultTable :: Transaction ()
 currentSchemaVersion :: SchemaVersion
 
 -- | Expect the given schema version.
@@ -1675,6 +1685,14 @@ expectNamespaceStatsByHash :: BranchHash -> Transaction NamespaceStats
 -- | Looks up statistics for a given branch, if none exist, we compute them
 --   and save them then return them.
 expectNamespaceStatsByHashId :: BranchHashId -> Transaction NamespaceStats
+
+-- | Get the causal hash which would be the result of squashing the
+--   provided branch hash. Returns Nothing if we haven't computed it
+--   before.
+tryGetSquashResult :: BranchHash -> Transaction (Maybe CausalHash)
+
+-- | Saves the result of a squash
+saveSquashResult :: BranchHash -> CausalHash -> Transaction ()
 saveTermComponent :: HashHandle -> Maybe ByteString -> Hash -> [(Term Symbol, Type Symbol)] -> Transaction ObjectId
 loadTermComponent :: Hash -> MaybeT Transaction [(Term Symbol, Type Symbol)]
 loadTermByReference :: Id -> MaybeT Transaction (Term Symbol)
@@ -1894,6 +1912,9 @@ instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Operati
 instance GHC.Show.Show U.Codebase.Sqlite.Operations.NeedTypeForBuiltinMetadata
 instance GHC.Show.Show U.Codebase.Sqlite.Operations.NamesPerspective
 instance GHC.Classes.Eq U.Codebase.Sqlite.Operations.NamesPerspective
+
+module U.Codebase.Causal.Squash
+squashCausal :: HashHandle -> CausalBranch Transaction -> Transaction (CausalBranch Transaction)
 
 module U.Codebase.Branch
 nonEmptyChildren :: Branch m -> Transaction (Map NameSegment (CausalBranch m))
