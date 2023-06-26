@@ -1262,10 +1262,6 @@ ListDependencies :: PrettyPrintEnv -> Set LabeledDependency -> [HashQualified Na
 
 -- | List dependents of a type or term.
 ListDependents :: PrettyPrintEnv -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Output
-
--- | List all direct dependencies which don't have any names in the current
---   branch
-ListNamespaceDependencies :: PrettyPrintEnv -> Absolute -> Map LabeledDependency (Set Name) -> Output
 DumpNumberedArgs :: NumberedArgs -> Output
 DumpBitBooster :: CausalHash -> Map CausalHash [CausalHash] -> Output
 DumpUnisonFileHashes :: Int -> [(Name, Id)] -> [(Name, Id)] -> [(Name, Id)] -> Output
@@ -1395,6 +1391,10 @@ ListProjects :: [Project] -> NumberedOutput
 ListBranches :: ProjectName -> [(ProjectBranchName, [(URI, ProjectName, ProjectBranchName)])] -> NumberedOutput
 AmbiguousSwitch :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
 AmbiguousReset :: AmbiguousReset'Argument -> (ProjectAndBranch Project ProjectBranch, Path) -> ProjectAndBranch ProjectName ProjectBranchName -> NumberedOutput
+
+-- | List all direct dependencies which don't have any names in the current
+--   branch
+ListNamespaceDependencies :: PrettyPrintEnv -> Absolute -> Map LabeledDependency (Set Name) -> NumberedOutput
 type NumberedArgs = [String]
 type ListDetailed = Bool
 data HistoryTail
