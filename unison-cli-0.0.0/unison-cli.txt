@@ -728,22 +728,6 @@ instance GHC.Show.Show Unison.Codebase.Editor.UriParser.GitProtocol
 instance GHC.Classes.Ord Unison.Codebase.Editor.UriParser.GitProtocol
 instance GHC.Classes.Eq Unison.Codebase.Editor.UriParser.GitProtocol
 
-module Unison.Codebase.Editor.VersionParser
-
--- | Parse git version strings into valid unison namespaces.
---   
---   <pre>
---   &gt;&gt;&gt; parseMaybe defaultBaseLib "release/M4"
---   
---   &gt;&gt;&gt; parseMaybe defaultBaseLib "release/M4b"
---   
---   &gt;&gt;&gt; parseMaybe defaultBaseLib "release/M4c.2"
---   Just (ReadShareLooseCode {server = DefaultCodeserver, repo = "unison", path = public.base.releases.M4})
---   Just (ReadShareLooseCode {server = DefaultCodeserver, repo = "unison", path = public.base.releases.M4b})
---   Just (ReadShareLooseCode {server = DefaultCodeserver, repo = "unison", path = public.base.releases.M4c_2})
---   </pre>
-defaultBaseLib :: Parsec Void Text ReadShareLooseCode
-
 
 -- | Command-line fuzzy selection of arbitrary values. Shells out to fzf
 --   for the actual selection.
@@ -791,37 +775,16 @@ instance GHC.Classes.Eq Unison.CommandLine.Types.ShouldWatchFiles
 instance GHC.Show.Show Unison.CommandLine.Types.ShouldWatchFiles
 
 module Unison.CommandLine.Welcome
-data Welcome
-Welcome :: Onboarding -> DownloadBase -> FilePath -> Text -> ShouldWatchFiles -> Welcome
-[$sel:onboarding:Welcome] :: Welcome -> Onboarding
-[$sel:downloadBase:Welcome] :: Welcome -> DownloadBase
-[$sel:watchDir:Welcome] :: Welcome -> FilePath
-[$sel:unisonVersion:Welcome] :: Welcome -> Text
-[$sel:shouldWatchFiles:Welcome] :: Welcome -> ShouldWatchFiles
-data DownloadBase
-DownloadBase :: ReadShareLooseCode -> DownloadBase
-DontDownloadBase :: DownloadBase
 data CodebaseInitStatus
 NewlyCreatedCodebase :: CodebaseInitStatus
 PreviouslyCreatedCodebase :: CodebaseInitStatus
-data Onboarding
-Init :: CodebaseInitStatus -> Onboarding
-DownloadingBase :: ReadShareLooseCode -> Onboarding
-Author :: Onboarding
-Finished :: Onboarding
-PreviouslyOnboarded :: Onboarding
-welcome :: CodebaseInitStatus -> DownloadBase -> FilePath -> Text -> ShouldWatchFiles -> Welcome
-pullBase :: ReadShareLooseCode -> Either Event Input
-run :: Codebase IO v a -> Welcome -> IO [Either Event Input]
-toInput :: Pretty ColorText -> Either Event Input
-determineFirstStep :: DownloadBase -> Codebase IO v a -> IO Onboarding
+data Welcome
+Welcome :: Onboarding -> Text -> Welcome
+[$sel:onboarding:Welcome] :: Welcome -> Onboarding
+[$sel:unisonVersion:Welcome] :: Welcome -> Text
 asciiartUnison :: Pretty ColorText
-downloading :: Path -> Pretty ColorText
-header :: Text -> Pretty ColorText
-authorSuggestion :: Pretty ColorText
-getStarted :: ShouldWatchFiles -> FilePath -> IO (Pretty ColorText)
-instance GHC.Classes.Eq Unison.CommandLine.Welcome.DownloadBase
-instance GHC.Show.Show Unison.CommandLine.Welcome.DownloadBase
+run :: Welcome -> [Either Event Input]
+welcome :: CodebaseInitStatus -> Text -> Welcome
 instance GHC.Classes.Eq Unison.CommandLine.Welcome.CodebaseInitStatus
 instance GHC.Show.Show Unison.CommandLine.Welcome.CodebaseInitStatus
 instance GHC.Classes.Eq Unison.CommandLine.Welcome.Onboarding
