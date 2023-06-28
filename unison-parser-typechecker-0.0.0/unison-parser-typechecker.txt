@@ -3787,17 +3787,8 @@ unsafeParseFileBuiltinsOnly :: FilePath -> IO (UnisonFile Symbol Ann)
 unsafeParseFile :: String -> ParsingEnv -> UnisonFile Symbol Ann
 
 module Unison.FileParsers
-type Term v = Term v Ann
-type Type v = Type v Ann
-type UnisonFile v = UnisonFile v Ann
-type Result' v = Result (Seq (Note v Ann))
-debug :: Bool
-convertNotes :: Ord v => Notes v ann -> Seq (Note v ann)
 parseAndSynthesizeFile :: (Var v, Monad m) => [Type v] -> (Set Reference -> m (TypeLookup v Ann)) -> ParsingEnv -> FilePath -> Text -> ResultT (Seq (Note v Ann)) m (Either (UnisonFile v Ann) (TypecheckedUnisonFile v Ann))
-type TDNRMap v = Map Name [NamedReference v Ann]
-resolveNames :: (Var v, Monad m) => (Set Reference -> m (TypeLookup v Ann)) -> Names -> UnisonFile v -> ResultT (Seq (Note v Ann)) m (Term v, TDNRMap v, TypeLookup v Ann)
 synthesizeFile' :: forall v. Var v => [Type v] -> TypeLookup v Ann -> UnisonFile v -> Result (Seq (Note v Ann)) (TypecheckedUnisonFile v Ann)
-synthesizeFile :: forall v. Var v => [Type v] -> TypeLookup v Ann -> TDNRMap v -> UnisonFile v -> Term v -> Result (Seq (Note v Ann)) (TypecheckedUnisonFile v Ann)
 
 module Unison.Runtime.IOSource
 debug :: Bool
