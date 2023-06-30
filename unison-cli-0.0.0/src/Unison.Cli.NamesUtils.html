@@ -54,40 +54,40 @@
 </span><span id="line-44"></span><span class="hs-comment">-- implementation detail of basicParseNames and basicPrettyPrintNames</span><span>
 </span><span id="line-45"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#basicNames%27"><span class="hs-identifier hs-type">basicNames'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Backend.NameScoping</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span class="hs-special">)</span><span>
 </span><span id="line-46"></span><span id="basicNames%27"><span class="annot"><span class="annottext">basicNames' :: (Path -&gt; NameScoping) -&gt; Cli (Names, Names)
-</span><a href="Unison.Cli.NamesUtils.html#basicNames%27"><span class="hs-identifier hs-var hs-var">basicNames'</span></a></span></span><span> </span><span id="local-6989586621679801707"><span class="annot"><span class="annottext">Path -&gt; NameScoping
-</span><a href="#local-6989586621679801707"><span class="hs-identifier hs-var">nameScoping</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-47"></span><span>  </span><span id="local-6989586621679801706"><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801706"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
+</span><a href="Unison.Cli.NamesUtils.html#basicNames%27"><span class="hs-identifier hs-var hs-var">basicNames'</span></a></span></span><span> </span><span id="local-6989586621679801584"><span class="annot"><span class="annottext">Path -&gt; NameScoping
+</span><a href="#local-6989586621679801584"><span class="hs-identifier hs-var">nameScoping</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621679801583"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679801583"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
 </span><a href="Unison.Cli.MonadUtils.html#getRootBranch"><span class="hs-identifier hs-var">Cli.getRootBranch</span></a></span><span>
-</span><span id="line-48"></span><span>  </span><span id="local-6989586621679801704"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801704"><span class="hs-identifier hs-var">currentPath'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621679801581"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801581"><span class="hs-identifier hs-var">currentPath'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
-</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679801702"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801702"><span class="hs-identifier hs-var">parse</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801701"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801701"><span class="hs-identifier hs-var">pretty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801700"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801700"><span class="hs-identifier hs-var">_local</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679801579"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801579"><span class="hs-identifier hs-var">parse</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801578"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801578"><span class="hs-identifier hs-var">pretty</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801577"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801577"><span class="hs-identifier hs-var">_local</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Branch m -&gt; NameScoping -&gt; (Names, Names, Names)
 </span><span class="hs-identifier hs-var">Backend.namesForBranch</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801706"><span class="hs-identifier hs-var">root'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; NameScoping
-</span><a href="#local-6989586621679801707"><span class="hs-identifier hs-var">nameScoping</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679801583"><span class="hs-identifier hs-var">root'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; NameScoping
+</span><a href="#local-6989586621679801584"><span class="hs-identifier hs-var">nameScoping</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801704"><span class="hs-identifier hs-var">currentPath'</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801581"><span class="hs-identifier hs-var">currentPath'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801702"><span class="hs-identifier hs-var">parse</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801701"><span class="hs-identifier hs-var">pretty</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801579"><span class="hs-identifier hs-var">parse</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801578"><span class="hs-identifier hs-var">pretty</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-51"></span><span>
 </span><span id="line-52"></span><span class="hs-comment">-- | Produce a `Names` needed to display all the hashes used in the given file.</span><span>
-</span><span id="line-53"></span><span id="local-6989586621679801802"><span id="local-6989586621679801804"><span class="annot"><a href="Unison.Cli.NamesUtils.html#displayNames"><span class="hs-identifier hs-type">displayNames</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-54"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621679801804"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
-</span><span id="line-55"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">TypecheckedUnisonFile</span></span><span> </span><span class="annot"><a href="#local-6989586621679801804"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679801802"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-53"></span><span id="local-6989586621679801679"><span id="local-6989586621679801681"><span class="annot"><a href="Unison.Cli.NamesUtils.html#displayNames"><span class="hs-identifier hs-type">displayNames</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621679801681"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
+</span><span id="line-55"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">TypecheckedUnisonFile</span></span><span> </span><span class="annot"><a href="#local-6989586621679801681"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679801679"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-56"></span><span>  </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NamesWithHistory</span></span></span></span><span>
 </span><span id="line-57"></span><span id="displayNames"><span class="annot"><span class="annottext">displayNames :: forall v a.
 Var v =&gt;
 TypecheckedUnisonFile v a -&gt; Cli NamesWithHistory
-</span><a href="Unison.Cli.NamesUtils.html#displayNames"><span class="hs-identifier hs-var hs-var">displayNames</span></a></span></span><span> </span><span id="local-6989586621679801690"><span class="annot"><span class="annottext">TypecheckedUnisonFile v a
-</span><a href="#local-6989586621679801690"><span class="hs-identifier hs-var">unisonFile</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Cli.NamesUtils.html#displayNames"><span class="hs-identifier hs-var hs-var">displayNames</span></a></span></span><span> </span><span id="local-6989586621679801567"><span class="annot"><span class="annottext">TypecheckedUnisonFile v a
+</span><a href="#local-6989586621679801567"><span class="hs-identifier hs-var">unisonFile</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-58"></span><span>  </span><span class="hs-comment">-- voodoo</span><span>
 </span><span id="line-59"></span><span>  </span><span class="annot"><span class="annottext">Set LabeledDependency -&gt; Names -&gt; Cli NamesWithHistory
 </span><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromLabeled"><span class="hs-identifier hs-var">makeShadowedPrintNamesFromLabeled</span></a></span><span>
@@ -95,22 +95,22 @@ TypecheckedUnisonFile v a -&gt; Cli NamesWithHistory
 Ord v =&gt;
 TypecheckedUnisonFile v a -&gt; Set LabeledDependency
 </span><span class="hs-identifier hs-var">UF.termSignatureExternalLabeledDependencies</span></span><span> </span><span class="annot"><span class="annottext">TypecheckedUnisonFile v a
-</span><a href="#local-6989586621679801690"><span class="hs-identifier hs-var">unisonFile</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801567"><span class="hs-identifier hs-var">unisonFile</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-61"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v a. Var v =&gt; TypecheckedUnisonFile v a -&gt; Names
 </span><span class="hs-identifier hs-var">UF.typecheckedToNames</span></span><span> </span><span class="annot"><span class="annottext">TypecheckedUnisonFile v a
-</span><a href="#local-6989586621679801690"><span class="hs-identifier hs-var">unisonFile</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801567"><span class="hs-identifier hs-var">unisonFile</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-62"></span><span>
 </span><span id="line-63"></span><span class="hs-comment">-- discards inputs that aren't hashqualified;</span><span>
 </span><span id="line-64"></span><span class="hs-comment">-- I'd enforce it with finer-grained types if we had them.</span><span>
 </span><span id="line-65"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#findHistoricalHQs"><span class="hs-identifier hs-type">findHistoricalHQs</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span>
 </span><span id="line-66"></span><span id="findHistoricalHQs"><span class="annot"><span class="annottext">findHistoricalHQs :: Set (HashQualified Name) -&gt; Cli Names
-</span><a href="Unison.Cli.NamesUtils.html#findHistoricalHQs"><span class="hs-identifier hs-var hs-var">findHistoricalHQs</span></a></span></span><span> </span><span id="local-6989586621679801686"><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801686"><span class="hs-identifier hs-var">lexedHQs0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-67"></span><span>  </span><span id="local-6989586621679801685"><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801685"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
+</span><a href="Unison.Cli.NamesUtils.html#findHistoricalHQs"><span class="hs-identifier hs-var hs-var">findHistoricalHQs</span></a></span></span><span> </span><span id="local-6989586621679801563"><span class="annot"><span class="annottext">Set (HashQualified Name)
+</span><a href="#local-6989586621679801563"><span class="hs-identifier hs-var">lexedHQs0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-67"></span><span>  </span><span id="local-6989586621679801562"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679801562"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
 </span><a href="Unison.Cli.MonadUtils.html#getRootBranch"><span class="hs-identifier hs-var">Cli.getRootBranch</span></a></span><span>
-</span><span id="line-68"></span><span>  </span><span id="local-6989586621679801684"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801684"><span class="hs-identifier hs-var">curPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><span id="line-68"></span><span>  </span><span id="local-6989586621679801561"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801561"><span class="hs-identifier hs-var">curPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
 </span><span id="line-69"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-comment">-- omg this nightmare name-to-path parsing code is littered everywhere.</span><span>
 </span><span id="line-70"></span><span>      </span><span class="hs-comment">-- We need to refactor so that the absolute-ness of a name isn't represented</span><span>
@@ -118,26 +118,26 @@ TypecheckedUnisonFile v a -&gt; Set LabeledDependency
 </span><span id="line-72"></span><span>      </span><span class="hs-comment">-- Anyway, this function takes a name, tries to determine whether it is</span><span>
 </span><span id="line-73"></span><span>      </span><span class="hs-comment">-- relative or absolute, and tries to return the corresponding name that is</span><span>
 </span><span id="line-74"></span><span>      </span><span class="hs-comment">-- /relative/ to the Command.root.</span><span>
-</span><span id="line-75"></span><span>      </span><span id="local-6989586621679801683"><span class="annot"><span class="annottext">preprocess :: Name -&gt; Name
-</span><a href="#local-6989586621679801683"><span class="hs-identifier hs-var hs-var">preprocess</span></a></span></span><span> </span><span id="local-6989586621679801682"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801682"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
+</span><span id="line-75"></span><span>      </span><span id="local-6989586621679801560"><span class="annot"><span class="annottext">preprocess :: Name -&gt; Name
+</span><a href="#local-6989586621679801560"><span class="hs-identifier hs-var hs-var">preprocess</span></a></span></span><span> </span><span id="local-6989586621679801559"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679801559"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
 </span><span class="hs-identifier hs-var">Name.toString</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801682"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679801559"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-76"></span><span>        </span><span class="hs-comment">-- some absolute name that isn't just &quot;.&quot;</span><span>
 </span><span id="line-77"></span><span>        </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'.'</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679801681"><span class="annot"><span class="annottext">t :: String
-</span><a href="#local-6989586621679801681"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><span class="hs-char">'.'</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621679801558"><span class="annot"><span class="annottext">t :: String
+</span><a href="#local-6989586621679801558"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
 </span><span class="hs-identifier hs-var">Name.unsafeFromString</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679801681"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679801558"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-78"></span><span>        </span><span class="hs-comment">-- something in current path</span><span>
 </span><span id="line-79"></span><span>        </span><span class="annot"><span class="annottext">String
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-80"></span><span>          </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801684"><span class="hs-identifier hs-var">curPath</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-81"></span><span>            </span><span id="local-6989586621679801680"><span class="annot"><span class="annottext">p :: Absolute
-</span><a href="#local-6989586621679801680"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801561"><span class="hs-identifier hs-var">curPath</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-81"></span><span>            </span><span id="local-6989586621679801557"><span class="annot"><span class="annottext">p :: Absolute
+</span><a href="#local-6989586621679801557"><span class="hs-identifier hs-var">p</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">:&gt;</span></span><span> </span><span class="annot"><span class="annottext">NameSegment
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">HasCallStack =&gt; Name -&gt; Name -&gt; Name
 </span><span class="hs-identifier hs-var">Name.joinDot</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; Name
@@ -145,36 +145,36 @@ TypecheckedUnisonFile v a -&gt; Set LabeledDependency
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801680"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801682"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679801557"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679801559"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-82"></span><span>            </span><span class="annot"><span class="annottext">Absolute
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801682"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679801559"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-83"></span><span>
-</span><span id="line-84"></span><span>      </span><span id="local-6989586621679801675"><span class="annot"><span class="annottext">lexedHQs :: Set (HashQualified Name)
-</span><a href="#local-6989586621679801675"><span class="hs-identifier hs-var hs-var">lexedHQs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
+</span><span id="line-84"></span><span>      </span><span id="local-6989586621679801552"><span class="annot"><span class="annottext">lexedHQs :: Set (HashQualified Name)
+</span><a href="#local-6989586621679801552"><span class="hs-identifier hs-var hs-var">lexedHQs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall b a. Ord b =&gt; (a -&gt; b) -&gt; Set a -&gt; Set b
 </span><span class="hs-identifier hs-var">Set.map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name
-</span><a href="#local-6989586621679801683"><span class="hs-identifier hs-var">preprocess</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679801560"><span class="hs-identifier hs-var">preprocess</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. (a -&gt; Bool) -&gt; Set a -&gt; Set a
 </span><span class="hs-identifier hs-var">Set.filter</span></span><span> </span><span class="annot"><span class="annottext">HashQualified Name -&gt; Bool
 </span><span class="hs-identifier hs-var">HQ.hasHash</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801686"><span class="hs-identifier hs-var">lexedHQs0</span></a></span><span>
-</span><span id="line-85"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679801671"><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801671"><span class="hs-identifier hs-var">_missing</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801670"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801670"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><a href="#local-6989586621679801563"><span class="hs-identifier hs-var">lexedHQs0</span></a></span><span>
+</span><span id="line-85"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679801548"><span class="annot"><span class="annottext">Set (HashQualified Name)
+</span><a href="#local-6989586621679801548"><span class="hs-identifier hs-var">_missing</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801547"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801547"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Monad m =&gt;
 Set (HashQualified Name)
 -&gt; Branch m -&gt; m (Set (HashQualified Name), Names)
 </span><span class="hs-identifier hs-var">Branch.findHistoricalHQs</span></span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801675"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span> </span><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801685"><span class="hs-identifier hs-var">root'</span></a></span><span>
+</span><a href="#local-6989586621679801552"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span> </span><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679801562"><span class="hs-identifier hs-var">root'</span></a></span><span>
 </span><span id="line-86"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801670"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
+</span><a href="#local-6989586621679801547"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
 </span><span id="line-87"></span><span>
 </span><span id="line-88"></span><span class="hs-comment">-- Any absolute names in the input which have `currentPath` as a prefix</span><span>
 </span><span id="line-89"></span><span class="hs-comment">-- are converted to names relative to current path. all other names are</span><span>
@@ -185,93 +185,93 @@ Set (HashQualified Name)
 </span><span id="line-94"></span><span class="hs-comment">--           name cat.dog     becomes .cat.dog</span><span>
 </span><span id="line-95"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-type">fixupNamesRelative</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span>
 </span><span id="line-96"></span><span id="fixupNamesRelative"><span class="annot"><span class="annottext">fixupNamesRelative :: Absolute -&gt; Names -&gt; Names
-</span><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-var hs-var">fixupNamesRelative</span></a></span></span><span> </span><span id="local-6989586621679801666"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801666"><span class="hs-identifier hs-var">currentPath'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Name) -&gt; Names -&gt; Names
+</span><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-var hs-var">fixupNamesRelative</span></a></span></span><span> </span><span id="local-6989586621679801543"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801543"><span class="hs-identifier hs-var">currentPath'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Name) -&gt; Names -&gt; Names
 </span><span class="hs-identifier hs-var">Names.map</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Name
-</span><a href="#local-6989586621679801664"><span class="hs-identifier hs-var">fixName</span></a></span><span>
+</span><a href="#local-6989586621679801541"><span class="hs-identifier hs-var">fixName</span></a></span><span>
 </span><span id="line-97"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-98"></span><span>    </span><span id="local-6989586621679801664"><span class="annot"><span class="annottext">fixName :: Name -&gt; Name
-</span><a href="#local-6989586621679801664"><span class="hs-identifier hs-var hs-var">fixName</span></a></span></span><span> </span><span id="local-6989586621679801663"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801663"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-98"></span><span>    </span><span id="local-6989586621679801541"><span class="annot"><span class="annottext">fixName :: Name -&gt; Name
+</span><a href="#local-6989586621679801541"><span class="hs-identifier hs-var hs-var">fixName</span></a></span></span><span> </span><span id="local-6989586621679801540"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679801540"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-99"></span><span>      </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801666"><span class="hs-identifier hs-var">currentPath'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679801543"><span class="hs-identifier hs-var">currentPath'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Absolute
 </span><span class="hs-identifier hs-var">Path.absoluteEmpty</span></span><span>
 </span><span id="line-100"></span><span>        </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801663"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679801540"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-101"></span><span>        </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Name
 </span><span class="hs-identifier hs-var">Name.makeAbsolute</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801663"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-102"></span><span>          </span><span id="local-6989586621679801659"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801659"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Name
+</span><a href="#local-6989586621679801540"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-102"></span><span>          </span><span id="local-6989586621679801536"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679801536"><span class="hs-identifier hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Path -&gt; Maybe Name
 </span><span class="hs-identifier hs-var">Path.toName</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801666"><span class="hs-identifier hs-var">currentPath'</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801543"><span class="hs-identifier hs-var">currentPath'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-103"></span><span>          </span><span class="annot"><span class="annottext">Name -&gt; Name -&gt; Maybe Name
 </span><span class="hs-identifier hs-var">Name.stripNamePrefix</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801659"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679801663"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679801536"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679801540"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-104"></span><span>
 </span><span id="line-105"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#getBasicPrettyPrintNames"><span class="hs-identifier hs-type">getBasicPrettyPrintNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span>
 </span><span id="line-106"></span><span id="getBasicPrettyPrintNames"><span class="annot"><span class="annottext">getBasicPrettyPrintNames :: Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#getBasicPrettyPrintNames"><span class="hs-identifier hs-var hs-var">getBasicPrettyPrintNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-107"></span><span>  </span><span id="local-6989586621679801656"><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801656"><span class="hs-identifier hs-var">rootBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
+</span><span id="line-107"></span><span>  </span><span id="local-6989586621679801533"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679801533"><span class="hs-identifier hs-var">rootBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
 </span><a href="Unison.Cli.MonadUtils.html#getRootBranch"><span class="hs-identifier hs-var">Cli.getRootBranch</span></a></span><span>
-</span><span id="line-108"></span><span>  </span><span id="local-6989586621679801655"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801655"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><span id="line-108"></span><span>  </span><span id="local-6989586621679801532"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801532"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
 </span><span id="line-109"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Branch m -&gt; NameScoping -&gt; Names
 </span><span class="hs-identifier hs-var">Backend.prettyNamesForBranch</span></span><span> </span><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801656"><span class="hs-identifier hs-var">rootBranch</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; NameScoping
+</span><a href="#local-6989586621679801533"><span class="hs-identifier hs-var">rootBranch</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Path -&gt; NameScoping
 </span><span class="hs-identifier hs-var">Backend.AllNames</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var">Path.unabsolute</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801655"><span class="hs-identifier hs-var">currentPath</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801532"><span class="hs-identifier hs-var">currentPath</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-110"></span><span>
 </span><span id="line-111"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#makeHistoricalParsingNames"><span class="hs-identifier hs-type">makeHistoricalParsingNames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NamesWithHistory</span></span><span>
 </span><span id="line-112"></span><span id="makeHistoricalParsingNames"><span class="annot"><span class="annottext">makeHistoricalParsingNames :: Set (HashQualified Name) -&gt; Cli NamesWithHistory
-</span><a href="Unison.Cli.NamesUtils.html#makeHistoricalParsingNames"><span class="hs-identifier hs-var hs-var">makeHistoricalParsingNames</span></a></span></span><span> </span><span id="local-6989586621679801653"><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801653"><span class="hs-identifier hs-var">lexedHQs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-113"></span><span>  </span><span id="local-6989586621679801652"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801652"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><a href="Unison.Cli.NamesUtils.html#makeHistoricalParsingNames"><span class="hs-identifier hs-var hs-var">makeHistoricalParsingNames</span></a></span></span><span> </span><span id="local-6989586621679801530"><span class="annot"><span class="annottext">Set (HashQualified Name)
+</span><a href="#local-6989586621679801530"><span class="hs-identifier hs-var">lexedHQs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-113"></span><span>  </span><span id="local-6989586621679801529"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801529"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
 </span><span id="line-114"></span><span>
-</span><span id="line-115"></span><span>  </span><span id="local-6989586621679801651"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801651"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name) -&gt; Cli Names
+</span><span id="line-115"></span><span>  </span><span id="local-6989586621679801528"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801528"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name) -&gt; Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#findHistoricalHQs"><span class="hs-identifier hs-var">findHistoricalHQs</span></a></span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801653"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span>
-</span><span id="line-116"></span><span>  </span><span id="local-6989586621679801650"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801650"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
+</span><a href="#local-6989586621679801530"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span>
+</span><span id="line-116"></span><span>  </span><span id="local-6989586621679801527"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801527"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#basicParseNames"><span class="hs-identifier hs-var">basicParseNames</span></a></span><span>
 </span><span id="line-117"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span>
 </span><span id="line-118"></span><span>    </span><span class="annot"><span class="annottext">Names -&gt; Names -&gt; NamesWithHistory
 </span><span class="hs-identifier hs-var">NamesWithHistory</span></span><span>
 </span><span id="line-119"></span><span>      </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801650"><span class="hs-identifier hs-var">basicNames</span></a></span><span>
+</span><a href="#local-6989586621679801527"><span class="hs-identifier hs-var">basicNames</span></a></span><span>
 </span><span id="line-120"></span><span>      </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">Names -&gt; Names
 </span><span class="hs-identifier hs-var">Names.makeAbsolute</span></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801651"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
+</span><a href="#local-6989586621679801528"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
 </span><span id="line-121"></span><span>          </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Names -&gt; Names
 </span><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-var">fixupNamesRelative</span></a></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801652"><span class="hs-identifier hs-var">currentPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801651"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
+</span><a href="#local-6989586621679801529"><span class="hs-identifier hs-var">currentPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801528"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span>
 </span><span id="line-122"></span><span>      </span><span class="hs-special">)</span><span>
 </span><span id="line-123"></span><span>
 </span><span id="line-124"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#makePrintNamesFromLabeled%27"><span class="hs-identifier hs-type">makePrintNamesFromLabeled'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">LabeledDependency</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NamesWithHistory</span></span><span>
 </span><span id="line-125"></span><span id="makePrintNamesFromLabeled%27"><span class="annot"><span class="annottext">makePrintNamesFromLabeled' :: Set LabeledDependency -&gt; Cli NamesWithHistory
-</span><a href="Unison.Cli.NamesUtils.html#makePrintNamesFromLabeled%27"><span class="hs-identifier hs-var hs-var">makePrintNamesFromLabeled'</span></a></span></span><span> </span><span id="local-6989586621679801647"><span class="annot"><span class="annottext">Set LabeledDependency
-</span><a href="#local-6989586621679801647"><span class="hs-identifier hs-var">deps</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-126"></span><span>  </span><span id="local-6989586621679801646"><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801646"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
+</span><a href="Unison.Cli.NamesUtils.html#makePrintNamesFromLabeled%27"><span class="hs-identifier hs-var hs-var">makePrintNamesFromLabeled'</span></a></span></span><span> </span><span id="local-6989586621679801524"><span class="annot"><span class="annottext">Set LabeledDependency
+</span><a href="#local-6989586621679801524"><span class="hs-identifier hs-var">deps</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-126"></span><span>  </span><span id="local-6989586621679801523"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621679801523"><span class="hs-identifier hs-var">root'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli (Branch IO)
 </span><a href="Unison.Cli.MonadUtils.html#getRootBranch"><span class="hs-identifier hs-var">Cli.getRootBranch</span></a></span><span>
-</span><span id="line-127"></span><span>  </span><span id="local-6989586621679801645"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801645"><span class="hs-identifier hs-var">curPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621679801522"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801522"><span class="hs-identifier hs-var">curPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
-</span><span id="line-128"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679801644"><span class="annot"><span class="annottext">Set LabeledDependency
-</span><a href="#local-6989586621679801644"><span class="hs-identifier hs-var">_missing</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801643"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801643"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679801521"><span class="annot"><span class="annottext">Set LabeledDependency
+</span><a href="#local-6989586621679801521"><span class="hs-identifier hs-var">_missing</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679801520"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801520"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
@@ -281,33 +281,33 @@ Set LabeledDependency
 -&gt; Branch m -&gt; m (Set LabeledDependency, Names)
 </span><span class="hs-identifier hs-var">Branch.findHistoricalRefs</span></span><span>
 </span><span id="line-131"></span><span>        </span><span class="annot"><span class="annottext">Set LabeledDependency
-</span><a href="#local-6989586621679801647"><span class="hs-identifier hs-var">deps</span></a></span><span>
+</span><a href="#local-6989586621679801524"><span class="hs-identifier hs-var">deps</span></a></span><span>
 </span><span id="line-132"></span><span>        </span><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621679801646"><span class="hs-identifier hs-var">root'</span></a></span><span>
-</span><span id="line-133"></span><span>  </span><span id="local-6989586621679801641"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801641"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
+</span><a href="#local-6989586621679801523"><span class="hs-identifier hs-var">root'</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621679801518"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801518"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#basicPrettyPrintNamesA"><span class="hs-identifier hs-var">basicPrettyPrintNamesA</span></a></span><span>
 </span><span id="line-134"></span><span>  </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span> </span><span class="annot"><span class="annottext">Names -&gt; Names -&gt; NamesWithHistory
 </span><span class="hs-identifier hs-var">NamesWithHistory</span></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801641"><span class="hs-identifier hs-var">basicNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Names -&gt; Names
+</span><a href="#local-6989586621679801518"><span class="hs-identifier hs-var">basicNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Names -&gt; Names
 </span><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-var">fixupNamesRelative</span></a></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801645"><span class="hs-identifier hs-var">curPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801643"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801522"><span class="hs-identifier hs-var">curPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801520"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-135"></span><span>
 </span><span id="line-136"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromHQ"><span class="hs-identifier hs-type">makeShadowedPrintNamesFromHQ</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HQ.HashQualified</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NamesWithHistory</span></span><span>
 </span><span id="line-137"></span><span id="makeShadowedPrintNamesFromHQ"><span class="annot"><span class="annottext">makeShadowedPrintNamesFromHQ :: Set (HashQualified Name) -&gt; Names -&gt; Cli NamesWithHistory
-</span><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromHQ"><span class="hs-identifier hs-var hs-var">makeShadowedPrintNamesFromHQ</span></a></span></span><span> </span><span id="local-6989586621679801640"><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801640"><span class="hs-identifier hs-var">lexedHQs</span></a></span></span><span> </span><span id="local-6989586621679801639"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801639"><span class="hs-identifier hs-var">shadowing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-138"></span><span>  </span><span id="local-6989586621679801638"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801638"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name) -&gt; Cli Names
+</span><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromHQ"><span class="hs-identifier hs-var hs-var">makeShadowedPrintNamesFromHQ</span></a></span></span><span> </span><span id="local-6989586621679801517"><span class="annot"><span class="annottext">Set (HashQualified Name)
+</span><a href="#local-6989586621679801517"><span class="hs-identifier hs-var">lexedHQs</span></a></span></span><span> </span><span id="local-6989586621679801516"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801516"><span class="hs-identifier hs-var">shadowing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-138"></span><span>  </span><span id="local-6989586621679801515"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801515"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name) -&gt; Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#findHistoricalHQs"><span class="hs-identifier hs-var">findHistoricalHQs</span></a></span><span> </span><span class="annot"><span class="annottext">Set (HashQualified Name)
-</span><a href="#local-6989586621679801640"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span>
-</span><span id="line-139"></span><span>  </span><span id="local-6989586621679801637"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801637"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
+</span><a href="#local-6989586621679801517"><span class="hs-identifier hs-var">lexedHQs</span></a></span><span>
+</span><span id="line-139"></span><span>  </span><span id="local-6989586621679801514"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801514"><span class="hs-identifier hs-var">basicNames</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Names
 </span><a href="Unison.Cli.NamesUtils.html#basicPrettyPrintNamesA"><span class="hs-identifier hs-var">basicPrettyPrintNamesA</span></a></span><span>
-</span><span id="line-140"></span><span>  </span><span id="local-6989586621679801636"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801636"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
+</span><span id="line-140"></span><span>  </span><span id="local-6989586621679801513"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679801513"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Cli Absolute
 </span><a href="Unison.Cli.MonadUtils.html#getCurrentPath"><span class="hs-identifier hs-var">Cli.getCurrentPath</span></a></span><span>
 </span><span id="line-141"></span><span>  </span><span class="hs-comment">-- The basic names go into &quot;current&quot;, but are shadowed by &quot;shadowing&quot;.</span><span>
 </span><span id="line-142"></span><span>  </span><span class="hs-comment">-- They go again into &quot;historical&quot; as a hack that makes them available HQ-ed.</span><span>
@@ -315,23 +315,23 @@ Set LabeledDependency
 </span><span id="line-144"></span><span>    </span><span class="annot"><span class="annottext">Names -&gt; NamesWithHistory -&gt; NamesWithHistory
 </span><span class="hs-identifier hs-var">NamesWithHistory.shadowing</span></span><span>
 </span><span id="line-145"></span><span>      </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801639"><span class="hs-identifier hs-var">shadowing</span></a></span><span>
+</span><a href="#local-6989586621679801516"><span class="hs-identifier hs-var">shadowing</span></a></span><span>
 </span><span id="line-146"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Names -&gt; Names -&gt; NamesWithHistory
 </span><span class="hs-identifier hs-var">NamesWithHistory</span></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801637"><span class="hs-identifier hs-var">basicNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Names -&gt; Names
+</span><a href="#local-6989586621679801514"><span class="hs-identifier hs-var">basicNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Absolute -&gt; Names -&gt; Names
 </span><a href="Unison.Cli.NamesUtils.html#fixupNamesRelative"><span class="hs-identifier hs-var">fixupNamesRelative</span></a></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679801636"><span class="hs-identifier hs-var">currentPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801638"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679801513"><span class="hs-identifier hs-var">currentPath</span></a></span><span> </span><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801515"><span class="hs-identifier hs-var">rawHistoricalNames</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-147"></span><span>
 </span><span id="line-148"></span><span class="annot"><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromLabeled"><span class="hs-identifier hs-type">makeShadowedPrintNamesFromLabeled</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">LabeledDependency</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Names</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.Cli.Monad.html#Cli"><span class="hs-identifier hs-type">Cli</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NamesWithHistory</span></span><span>
 </span><span id="line-149"></span><span id="makeShadowedPrintNamesFromLabeled"><span class="annot"><span class="annottext">makeShadowedPrintNamesFromLabeled :: Set LabeledDependency -&gt; Names -&gt; Cli NamesWithHistory
-</span><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromLabeled"><span class="hs-identifier hs-var hs-var">makeShadowedPrintNamesFromLabeled</span></a></span></span><span> </span><span id="local-6989586621679801634"><span class="annot"><span class="annottext">Set LabeledDependency
-</span><a href="#local-6989586621679801634"><span class="hs-identifier hs-var">deps</span></a></span></span><span> </span><span id="local-6989586621679801633"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801633"><span class="hs-identifier hs-var">shadowing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Cli.NamesUtils.html#makeShadowedPrintNamesFromLabeled"><span class="hs-identifier hs-var hs-var">makeShadowedPrintNamesFromLabeled</span></a></span></span><span> </span><span id="local-6989586621679801511"><span class="annot"><span class="annottext">Set LabeledDependency
+</span><a href="#local-6989586621679801511"><span class="hs-identifier hs-var">deps</span></a></span></span><span> </span><span id="local-6989586621679801510"><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621679801510"><span class="hs-identifier hs-var">shadowing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-150"></span><span>  </span><span class="annot"><span class="annottext">Names -&gt; NamesWithHistory -&gt; NamesWithHistory
 </span><span class="hs-identifier hs-var">NamesWithHistory.shadowing</span></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679801633"><span class="hs-identifier hs-var">shadowing</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679801510"><span class="hs-identifier hs-var">shadowing</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Set LabeledDependency -&gt; Cli NamesWithHistory
 </span><a href="Unison.Cli.NamesUtils.html#makePrintNamesFromLabeled%27"><span class="hs-identifier hs-var">makePrintNamesFromLabeled'</span></a></span><span> </span><span class="annot"><span class="annottext">Set LabeledDependency
-</span><a href="#local-6989586621679801634"><span class="hs-identifier hs-var">deps</span></a></span><span>
+</span><a href="#local-6989586621679801511"><span class="hs-identifier hs-var">deps</span></a></span><span>
 </span><span id="line-151"></span></pre></body></html>
