@@ -547,6 +547,11 @@ type NamespaceFQN = Text
 type Size = Int
 type UnisonName = Text
 type UnisonHash = Text
+data NamespaceDetails
+NamespaceDetails :: Path -> UnisonHash -> Maybe Doc -> NamespaceDetails
+[$sel:fqn:NamespaceDetails] :: NamespaceDetails -> Path
+[$sel:hash:NamespaceDetails] :: NamespaceDetails -> UnisonHash
+[$sel:readme:NamespaceDetails] :: NamespaceDetails -> Maybe Doc
 
 -- | A hash qualified name, unlike HashQualified, the hash is required
 data ExactName name ref
@@ -610,6 +615,8 @@ mayDefaultWidth :: Maybe Width -> Width
 setCacheControl :: v -> APIHeaders v
 branchToUnisonHash :: Branch m -> UnisonHash
 v2CausalBranchToUnisonHash :: CausalBranch m -> UnisonHash
+instance GHC.Show.Show Unison.Server.Types.NamespaceDetails
+instance GHC.Generics.Generic Unison.Server.Types.NamespaceDetails
 instance (GHC.Classes.Ord name, GHC.Classes.Ord ref) => GHC.Classes.Ord (Unison.Server.Types.ExactName name ref)
 instance (GHC.Classes.Eq name, GHC.Classes.Eq ref) => GHC.Classes.Eq (Unison.Server.Types.ExactName name ref)
 instance (GHC.Show.Show name, GHC.Show.Show ref) => GHC.Show.Show (Unison.Server.Types.ExactName name ref)
@@ -644,6 +651,7 @@ instance GHC.Classes.Eq Unison.Server.Types.NamedTerm
 instance GHC.Show.Show Unison.Server.Types.NamedType
 instance GHC.Generics.Generic Unison.Server.Types.NamedType
 instance GHC.Classes.Eq Unison.Server.Types.NamedType
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamespaceDetails
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Types.Suffixify
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Types.Suffixify
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TypeDefinition
@@ -673,6 +681,8 @@ instance Data.Bifunctor.Bifunctor Unison.Server.Types.ExactName
 instance Data.Bifoldable.Bifoldable Unison.Server.Types.ExactName
 instance Data.Bitraversable.Bitraversable Unison.Server.Types.ExactName
 instance Web.Internal.HttpApiData.FromHttpApiData (Unison.Server.Types.ExactName Unison.Name.Internal.Name Unison.ShortHash.ShortHash)
+instance Servant.Docs.Internal.ToSample Unison.Server.Types.NamespaceDetails
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.NamespaceDetails
 
 module Unison.Server.Backend
 data BackendError
@@ -753,7 +763,7 @@ definitionsBySuffixes :: Codebase m Symbol Ann -> NameSearch Transaction -> Incl
 displayType :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject () (Decl Symbol Ann))
 docsInBranchToHtmlFiles :: Runtime Symbol -> Codebase IO Symbol Ann -> Branch IO -> Path -> FilePath -> IO ()
 expandShortCausalHash :: ShortCausalHash -> Backend Transaction CausalHash
-findDocInBranchAndRender :: Set NameSegment -> Width -> Runtime Symbol -> Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Branch m -> Backend IO (Maybe Doc)
+findDocInBranch :: Set NameSegment -> Branch m -> Maybe TermReference
 formatSuffixedType :: Var v => PrettyPrintEnvDecl -> Width -> Type v Ann -> SyntaxText
 getCurrentParseNames :: NameScoping -> Branch m -> NamesWithHistory
 getCurrentPrettyNames :: Int -> NameScoping -> Branch m -> PrettyPrintEnvDecl
@@ -880,7 +890,15 @@ instance Control.Monad.Trans.Class.MonadTrans Unison.Server.Backend.Backend
 
 -- | Helper for rendering docs within a given namespace
 module Unison.Server.Share.RenderDoc
-renderDoc :: Set NameSegment -> Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Width -> Backend IO (Maybe Doc)
+
+-- | Find, eval, and render the first doc we find with any of the provided
+--   names within the given namespace If no doc is found, return Nothing
+--   
+--   Requires Name Lookups, currently only usable on Share.
+findAndRenderDoc :: Set NameSegment -> Runtime Symbol -> Codebase IO Symbol Ann -> Path -> CausalHash -> Maybe Width -> Backend IO (Maybe Doc)
+
+module Unison.Server.Share.NamespaceDetails
+namespaceDetails :: Runtime Symbol -> Codebase IO Symbol Ann -> Path -> CausalHash -> Maybe Width -> Backend IO NamespaceDetails
 
 module Unison.Server.Share.FuzzyFind
 type FuzzyFindAPI = "find" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "limit" Int :> QueryParam "renderWidth" Width :> QueryParam "query" String :> APIGet [(Alignment, FoundResult)]
@@ -1051,17 +1069,7 @@ instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "names
 
 module Unison.Server.Local.Endpoints.NamespaceDetails
 type NamespaceDetailsAPI = "namespaces" :> Capture "namespace" Path :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "renderWidth" Width :> APIGet NamespaceDetails
-data NamespaceDetails
-NamespaceDetails :: Path -> UnisonHash -> Maybe Doc -> NamespaceDetails
-[$sel:fqn:NamespaceDetails] :: NamespaceDetails -> Path
-[$sel:hash:NamespaceDetails] :: NamespaceDetails -> UnisonHash
-[$sel:readme:NamespaceDetails] :: NamespaceDetails -> Maybe Doc
 namespaceDetails :: Runtime Symbol -> Codebase IO Symbol Ann -> Path -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Width -> Backend IO NamespaceDetails
-instance GHC.Show.Show Unison.Server.Local.Endpoints.NamespaceDetails.NamespaceDetails
-instance GHC.Generics.Generic Unison.Server.Local.Endpoints.NamespaceDetails.NamespaceDetails
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.NamespaceDetails.NamespaceDetails
-instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.NamespaceDetails.NamespaceDetails
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.NamespaceDetails.NamespaceDetails
 instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "namespace" Data.Text.Internal.Text)
 
 module Unison.Server.Local.Endpoints.FuzzyFind

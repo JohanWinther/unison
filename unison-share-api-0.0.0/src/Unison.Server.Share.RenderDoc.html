@@ -11,149 +11,147 @@
 </span><span id="line-11"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Unison.Server.Share.RenderDoc</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-12"></span><span>
 </span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Except</span></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Causal</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V2Causal</span></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.HashTags</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CausalHash</span></span><span class="hs-special">)</span><span>
-</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
-</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
-</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Runtime</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Rt</span></span><span>
-</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.ShortCausalHash</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ShortCausalHash</span></span><span class="hs-special">)</span><span>
-</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span class="hs-special">)</span><span>
-</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Parser.Ann</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ann</span></span><span class="hs-special">)</span><span>
-</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
-</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span>
-</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Backend</span></span><span>
-</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Doc.html"><span class="hs-identifier">Unison.Server.Doc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Server.Doc.html#Doc"><span class="hs-identifier">Doc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Types.html"><span class="hs-identifier">Unison.Server.Types</span></a></span><span>
-</span><span id="line-29"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Server.Types.html#mayDefaultWidth"><span class="hs-identifier">mayDefaultWidth</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-30"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Symbol</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Symbol</span></span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Width</span></span><span class="hs-special">)</span><span>
-</span><span id="line-33"></span><span>
-</span><span id="line-34"></span><span class="annot"><a href="Unison.Server.Share.RenderDoc.html#renderDoc"><span class="hs-identifier hs-type">renderDoc</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-35"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-36"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Rt.Runtime</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-37"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-38"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-39"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">ShortCausalHash</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-40"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-41"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Unison.Server.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-42"></span><span id="renderDoc"><span class="annot"><span class="annottext">renderDoc :: Set NameSegment
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Set</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Servant.OpenApi</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Causal</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V2Causal</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.HashTags</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CausalHash</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.NameLookups</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">PathSegments</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">U.Codebase.Sqlite.Operations</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Ops</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Codebase</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Codebase</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Path</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Path</span></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Codebase.Runtime</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Rt</span></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.LabeledDependency</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">LD</span></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">NameSegment</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Parser.Ann</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ann</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.PrettyPrintEnvDecl.Sqlite</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">PPESqlite</span></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Backend.html"><span class="hs-identifier">Unison.Server.Backend</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Backend</span></span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Doc.html"><span class="hs-identifier">Unison.Server.Doc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Server.Doc.html#Doc"><span class="hs-identifier">Doc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Server.Doc.html"><span class="hs-identifier">Unison.Server.Doc</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Doc</span></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Symbol</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Symbol</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Width</span></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | Find, eval, and render the first doc we find with any of the provided names within the given namespace</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- If no doc is found, return Nothing</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- Requires Name Lookups, currently only usable on Share.</span><span>
+</span><span id="line-40"></span><span class="annot"><a href="Unison.Server.Share.RenderDoc.html#findAndRenderDoc"><span class="hs-identifier hs-type">findAndRenderDoc</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-41"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-42"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Rt.Runtime</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-43"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Codebase</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-44"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Path.Path</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-45"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">CausalHash</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-46"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Width</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-47"></span><span>  </span><span class="annot"><a href="Unison.Server.Backend.html#Backend"><span class="hs-identifier hs-type">Backend</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Unison.Server.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span id="findAndRenderDoc"><span class="annot"><span class="annottext">findAndRenderDoc :: Set NameSegment
 -&gt; Runtime Symbol
 -&gt; Codebase IO Symbol Ann
 -&gt; Path
--&gt; Maybe (Either ShortCausalHash CausalHash)
+-&gt; CausalHash
 -&gt; Maybe Width
 -&gt; Backend IO (Maybe Doc)
-</span><a href="Unison.Server.Share.RenderDoc.html#renderDoc"><span class="hs-identifier hs-var hs-var">renderDoc</span></a></span></span><span> </span><span id="local-6989586621679377484"><span class="annot"><span class="annottext">Set NameSegment
-</span><a href="#local-6989586621679377484"><span class="hs-identifier hs-var">docNames</span></a></span></span><span> </span><span id="local-6989586621679377483"><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621679377483"><span class="hs-identifier hs-var">runtime</span></a></span></span><span> </span><span id="local-6989586621679377482"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679377482"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679377481"><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679377481"><span class="hs-identifier hs-var">namespacePath</span></a></span></span><span> </span><span id="local-6989586621679377480"><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
-</span><a href="#local-6989586621679377480"><span class="hs-identifier hs-var">mayRoot</span></a></span></span><span> </span><span id="local-6989586621679377479"><span class="annot"><span class="annottext">Maybe Width
-</span><a href="#local-6989586621679377479"><span class="hs-identifier hs-var">mayWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-43"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679377478"><span class="annot"><span class="annottext">width :: Width
-</span><a href="#local-6989586621679377478"><span class="hs-identifier hs-var hs-var">width</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe Width -&gt; Width
-</span><a href="Unison.Server.Types.html#mayDefaultWidth"><span class="hs-identifier hs-var">mayDefaultWidth</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Width
-</span><a href="#local-6989586621679377479"><span class="hs-identifier hs-var">mayWidth</span></a></span><span>
-</span><span id="line-44"></span><span>   </span><span class="hs-keyword">in</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-45"></span><span>        </span><span class="hs-special">(</span><span id="local-6989586621679377477"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377477"><span class="hs-identifier hs-var">rootCausal</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679377476"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679377476"><span class="hs-identifier hs-var">shallowBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-46"></span><span>          </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) a.
-(forall x. m x -&gt; n x) -&gt; Backend m a -&gt; Backend n a
-</span><a href="Unison.Server.Backend.html#hoistBackend"><span class="hs-identifier hs-var">Backend.hoistBackend</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
+</span><a href="Unison.Server.Share.RenderDoc.html#findAndRenderDoc"><span class="hs-identifier hs-var hs-var">findAndRenderDoc</span></a></span></span><span> </span><span id="local-6989586621679377702"><span class="annot"><span class="annottext">Set NameSegment
+</span><a href="#local-6989586621679377702"><span class="hs-identifier hs-var">docNames</span></a></span></span><span> </span><span id="local-6989586621679377701"><span class="annot"><span class="annottext">Runtime Symbol
+</span><a href="#local-6989586621679377701"><span class="hs-identifier hs-var">runtime</span></a></span></span><span> </span><span id="local-6989586621679377700"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679377700"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621679377699"><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679377699"><span class="hs-identifier hs-var">namespacePath</span></a></span></span><span> </span><span id="local-6989586621679377698"><span class="annot"><span class="annottext">CausalHash
+</span><a href="#local-6989586621679377698"><span class="hs-identifier hs-var">rootCausalHash</span></a></span></span><span> </span><span id="local-6989586621679377697"><span class="annot"><span class="annottext">Maybe Width
+</span><a href="#local-6989586621679377697"><span class="hs-identifier hs-var">_mayWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621679377696"><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679377696"><span class="hs-identifier hs-var">shallowBranchAtNamespace</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679377695"><span class="annot"><span class="annottext">NamesPerspective
+</span><a href="#local-6989586621679377695"><span class="hs-identifier hs-var">namesPerspective</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
 MonadIO m =&gt;
 Codebase m v a -&gt; Transaction b -&gt; m b
 </span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679377482"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-47"></span><span>            </span><span id="local-6989586621679377472"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377472"><span class="hs-identifier hs-var">rootCausalHash</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-48"></span><span>              </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
-</span><a href="#local-6989586621679377480"><span class="hs-identifier hs-var">mayRoot</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-49"></span><span>                </span><span class="annot"><span class="annottext">Maybe (Either ShortCausalHash CausalHash)
-</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe ShortCausalHash
--&gt; Backend Transaction (CausalBranch Transaction)
-</span><a href="Unison.Server.Backend.html#resolveRootBranchHashV2"><span class="hs-identifier hs-var">Backend.resolveRootBranchHashV2</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
-</span><span class="hs-identifier hs-var">Nothing</span></span><span>
-</span><span id="line-50"></span><span>                </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621679377470"><span class="annot"><span class="annottext">ShortCausalHash
-</span><a href="#local-6989586621679377470"><span class="hs-identifier hs-var">sch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe ShortCausalHash
--&gt; Backend Transaction (CausalBranch Transaction)
-</span><a href="Unison.Server.Backend.html#resolveRootBranchHashV2"><span class="hs-identifier hs-var">Backend.resolveRootBranchHashV2</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">ShortCausalHash
-</span><a href="#local-6989586621679377470"><span class="hs-identifier hs-var">sch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-51"></span><span>                </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span id="local-6989586621679377469"><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679377469"><span class="hs-identifier hs-var">ch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
-(MonadTrans t, Monad m) =&gt;
-m a -&gt; t m a
-</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash -&gt; Transaction (CausalBranch Transaction)
+</span><a href="#local-6989586621679377700"><span class="hs-identifier hs-var">codebase</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-51"></span><span>      </span><span id="local-6989586621679377691"><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679377691"><span class="hs-identifier hs-var">rootCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Maybe CausalHash -&gt; Transaction (CausalBranch Transaction)
 </span><a href="Unison.Server.Backend.html#resolveCausalHashV2"><span class="hs-identifier hs-var">Backend.resolveCausalHashV2</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">CausalHash
-</span><a href="#local-6989586621679377469"><span class="hs-identifier hs-var">ch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-52"></span><span>            </span><span class="hs-comment">-- lift (Backend.resolveCausalHashV2 rootCausalHash)</span><span>
-</span><span id="line-53"></span><span>            </span><span id="local-6989586621679377466"><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377466"><span class="hs-identifier hs-var">namespaceCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
-(MonadTrans t, Monad m) =&gt;
-m a -&gt; t m a
-</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679377698"><span class="hs-identifier hs-var">rootCausalHash</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679377689"><span class="annot"><span class="annottext">rootBranchHash :: BranchHash
+</span><a href="#local-6989586621679377689"><span class="hs-identifier hs-var hs-var">rootBranchHash</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; he
+</span><span class="hs-identifier hs-var">V2Causal.valueHash</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679377691"><span class="hs-identifier hs-var">rootCausal</span></a></span><span>
+</span><span id="line-53"></span><span>      </span><span id="local-6989586621679377687"><span class="annot"><span class="annottext">CausalBranch Transaction
+</span><a href="#local-6989586621679377687"><span class="hs-identifier hs-var">namespaceCausal</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Path
 -&gt; Maybe (CausalBranch Transaction)
 -&gt; Transaction (CausalBranch Transaction)
 </span><span class="hs-identifier hs-var">Codebase.getShallowCausalAtPath</span></span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679377481"><span class="hs-identifier hs-var">namespacePath</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679377699"><span class="hs-identifier hs-var">namespacePath</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377472"><span class="hs-identifier hs-var">rootCausalHash</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-54"></span><span>            </span><span id="local-6989586621679377464"><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679377464"><span class="hs-identifier hs-var">shallowBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
-(MonadTrans t, Monad m) =&gt;
-m a -&gt; t m a
-</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
+</span><a href="#local-6989586621679377691"><span class="hs-identifier hs-var">rootCausal</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>      </span><span id="local-6989586621679377685"><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679377685"><span class="hs-identifier hs-var">shallowBranchAtNamespace</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
 </span><span class="hs-identifier hs-var">V2Causal.value</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377466"><span class="hs-identifier hs-var">namespaceCausal</span></a></span><span>
-</span><span id="line-55"></span><span>            </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377472"><span class="hs-identifier hs-var">rootCausalHash</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679377464"><span class="hs-identifier hs-var">shallowBranch</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-56"></span><span>        </span><span class="hs-special">(</span><span id="local-6989586621679377462"><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621679377462"><span class="hs-identifier hs-var">_localNamesOnly</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679377461"><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679377461"><span class="hs-identifier hs-var">ppe</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) (n :: * -&gt; *) v a.
-MonadIO m =&gt;
-Codebase m v a
--&gt; Maybe (CausalBranch n)
--&gt; Path
--&gt; Backend m (Names, PrettyPrintEnvDecl)
-</span><a href="Unison.Server.Backend.html#scopedNamesForBranchHash"><span class="hs-identifier hs-var">Backend.scopedNamesForBranchHash</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679377482"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
-</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">CausalBranch Transaction
-</span><a href="#local-6989586621679377477"><span class="hs-identifier hs-var">rootCausal</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Path
-</span><a href="#local-6989586621679377481"><span class="hs-identifier hs-var">namespacePath</span></a></span><span>
-</span><span id="line-57"></span><span>        </span><span id="local-6989586621679377459"><span class="annot"><span class="annottext">Maybe Doc
-</span><a href="#local-6989586621679377459"><span class="hs-identifier hs-var">renderedDoc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
-</span><span id="line-58"></span><span>          </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
-Set NameSegment
--&gt; Width
--&gt; Runtime Symbol
+</span><a href="#local-6989586621679377687"><span class="hs-identifier hs-var">namespaceCausal</span></a></span><span>
+</span><span id="line-55"></span><span>      </span><span id="local-6989586621679377683"><span class="annot"><span class="annottext">NamesPerspective
+</span><a href="#local-6989586621679377683"><span class="hs-identifier hs-var">namesPerspective</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">BranchHash -&gt; PathSegments -&gt; Transaction NamesPerspective
+</span><span class="hs-identifier hs-var">Ops.namesPerspectiveForRootAndPath</span></span><span> </span><span class="annot"><span class="annottext">BranchHash
+</span><a href="#local-6989586621679377689"><span class="hs-identifier hs-var">rootBranchHash</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">coerce :: forall a b. Coercible a b =&gt; a -&gt; b
+</span><span class="hs-identifier hs-type">coerce</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Path -&gt; [NameSegment]
+</span><span class="hs-identifier hs-var">Path.toList</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Path
+</span><a href="#local-6989586621679377699"><span class="hs-identifier hs-var">namespacePath</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679377685"><span class="hs-identifier hs-var">shallowBranchAtNamespace</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">NamesPerspective
+</span><a href="#local-6989586621679377683"><span class="hs-identifier hs-var">namesPerspective</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679377680"><span class="annot"><span class="annottext">mayDocRef :: Maybe TermReference
+</span><a href="#local-6989586621679377680"><span class="hs-identifier hs-var hs-var">mayDocRef</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+Set NameSegment -&gt; Branch m -&gt; Maybe TermReference
+</span><a href="Unison.Server.Backend.html#findDocInBranch"><span class="hs-identifier hs-var">Backend.findDocInBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Set NameSegment
+</span><a href="#local-6989586621679377702"><span class="hs-identifier hs-var">docNames</span></a></span><span> </span><span class="annot"><span class="annottext">Branch Transaction
+</span><a href="#local-6989586621679377696"><span class="hs-identifier hs-var">shallowBranchAtNamespace</span></a></span><span>
+</span><span id="line-58"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
+(Traversable t, Applicative f) =&gt;
+t a -&gt; (a -&gt; f b) -&gt; f (t b)
+</span><span class="hs-identifier hs-var">for</span></span><span> </span><span class="annot"><span class="annottext">Maybe TermReference
+</span><a href="#local-6989586621679377680"><span class="hs-identifier hs-var">mayDocRef</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679377677"><span class="annot"><span class="annottext">TermReference
+</span><a href="#local-6989586621679377677"><span class="hs-identifier hs-var">docRef</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679377676"><span class="annot"><span class="annottext">EvaluatedDoc Symbol
+</span><a href="#local-6989586621679377676"><span class="hs-identifier hs-var">eDoc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
 -&gt; Codebase IO Symbol Ann
--&gt; PrettyPrintEnvDecl
--&gt; Branch m
--&gt; Backend IO (Maybe Doc)
-</span><a href="Unison.Server.Backend.html#findDocInBranchAndRender"><span class="hs-identifier hs-var">Backend.findDocInBranchAndRender</span></a></span><span>
-</span><span id="line-59"></span><span>            </span><span class="annot"><span class="annottext">Set NameSegment
-</span><a href="#local-6989586621679377484"><span class="hs-identifier hs-var">docNames</span></a></span><span>
-</span><span id="line-60"></span><span>            </span><span class="annot"><span class="annottext">Width
-</span><a href="#local-6989586621679377478"><span class="hs-identifier hs-var">width</span></a></span><span>
-</span><span id="line-61"></span><span>            </span><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621679377483"><span class="hs-identifier hs-var">runtime</span></a></span><span>
-</span><span id="line-62"></span><span>            </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621679377482"><span class="hs-identifier hs-var">codebase</span></a></span><span>
-</span><span id="line-63"></span><span>            </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679377461"><span class="hs-identifier hs-var">ppe</span></a></span><span>
-</span><span id="line-64"></span><span>            </span><span class="annot"><span class="annottext">Branch Transaction
-</span><a href="#local-6989586621679377476"><span class="hs-identifier hs-var">shallowBranch</span></a></span><span>
-</span><span id="line-65"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
-</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Maybe Doc
-</span><a href="#local-6989586621679377459"><span class="hs-identifier hs-var">renderedDoc</span></a></span><span>
-</span><span id="line-66"></span></pre></body></html>
+-&gt; TermReference
+-&gt; IO (EvaluatedDoc Symbol)
+</span><a href="Unison.Server.Backend.html#evalDocRef"><span class="hs-identifier hs-var">evalDocRef</span></a></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
+</span><a href="#local-6989586621679377701"><span class="hs-identifier hs-var">runtime</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679377700"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">TermReference
+</span><a href="#local-6989586621679377677"><span class="hs-identifier hs-var">docRef</span></a></span><span>
+</span><span id="line-60"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679377674"><span class="annot"><span class="annottext">docDeps :: Set LabeledDependency
+</span><a href="#local-6989586621679377674"><span class="hs-identifier hs-var hs-var">docDeps</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v. Ord v =&gt; EvaluatedDoc v -&gt; Set LabeledDependency
+</span><a href="Unison.Server.Doc.html#dependencies"><span class="hs-identifier hs-var">Doc.dependencies</span></a></span><span> </span><span class="annot"><span class="annottext">EvaluatedDoc Symbol
+</span><a href="#local-6989586621679377676"><span class="hs-identifier hs-var">eDoc</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Set a
+</span><span class="hs-identifier hs-var">Set.singleton</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">TermReference -&gt; LabeledDependency
+</span><span class="hs-identifier hs-var">LD.TermReference</span></span><span> </span><span class="annot"><span class="annottext">TermReference
+</span><a href="#local-6989586621679377677"><span class="hs-identifier hs-var">docRef</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span>    </span><span id="local-6989586621679377670"><span class="annot"><span class="annottext">PrettyPrintEnvDecl
+</span><a href="#local-6989586621679377670"><span class="hs-identifier hs-var">docPPE</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
+MonadIO m =&gt;
+Codebase m v a -&gt; Transaction b -&gt; m b
+</span><span class="hs-identifier hs-var">Codebase.runTransaction</span></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621679377700"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">NamesPerspective
+-&gt; Set LabeledDependency -&gt; Transaction PrettyPrintEnvDecl
+</span><span class="hs-identifier hs-var">PPESqlite.ppedForReferences</span></span><span> </span><span class="annot"><span class="annottext">NamesPerspective
+</span><a href="#local-6989586621679377695"><span class="hs-identifier hs-var">namesPerspective</span></a></span><span> </span><span class="annot"><span class="annottext">Set LabeledDependency
+</span><a href="#local-6989586621679377674"><span class="hs-identifier hs-var">docDeps</span></a></span><span>
+</span><span id="line-62"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v. Var v =&gt; PrettyPrintEnvDecl -&gt; EvaluatedDoc v -&gt; Doc
+</span><a href="Unison.Server.Doc.html#renderDoc"><span class="hs-identifier hs-var">Doc.renderDoc</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl
+</span><a href="#local-6989586621679377670"><span class="hs-identifier hs-var">docPPE</span></a></span><span> </span><span class="annot"><span class="annottext">EvaluatedDoc Symbol
+</span><a href="#local-6989586621679377676"><span class="hs-identifier hs-var">eDoc</span></a></span><span>
+</span><span id="line-63"></span></pre></body></html>
