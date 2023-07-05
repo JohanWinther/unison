@@ -26,7 +26,7 @@
 </span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Sqlite</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Sqlite</span></span><span>
 </span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">log</span></span><span class="hs-special">)</span><span>
 </span><span id="line-28"></span><span>
-</span><span id="line-29"></span><span id="local-6989586621680856007"><span id="local-6989586621680856008"></span></span><span class="hs-keyword">data</span><span> </span><span id="MigrationState"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-var">MigrationState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MigrationState"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-var">MigrationState</span></a></span></span><span>
+</span><span id="line-29"></span><span id="local-6989586621680854164"><span id="local-6989586621680854165"></span></span><span class="hs-keyword">data</span><span> </span><span id="MigrationState"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-var">MigrationState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MigrationState"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-var">MigrationState</span></a></span></span><span>
 </span><span id="line-30"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- A mapping from a causal hash to the _corrected_ and _canonicalized_ branch hash and</span><span>
 </span><span id="line-31"></span><span>    </span><span class="hs-comment">-- object.</span><span>
 </span><span id="line-32"></span><span>    </span><span id="%24sel%3A_canonicalBranchForCausalHashId%3AMigrationState"><span class="annot"><span class="annottext">MigrationState -&gt; Map CausalHashId (BranchHashId, BranchObjectId)
@@ -106,14 +106,14 @@ Lens s t a b
 </span><span id="line-83"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Q.expectSchemaVersion</span></span><span> </span><span class="annot"><span class="annottext">SchemaVersion
 </span><span class="hs-number">3</span></span><span>
-</span><span id="line-84"></span><span>  </span><span id="local-6989586621680855889"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855889"><span class="hs-identifier hs-var">rootCausalHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction CausalHashId
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621680854046"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680854046"><span class="hs-identifier hs-var">rootCausalHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction CausalHashId
 </span><span class="hs-identifier hs-var">Q.expectNamespaceRoot</span></span><span>
-</span><span id="line-85"></span><span>  </span><span id="local-6989586621680855887"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855887"><span class="hs-identifier hs-var">totalCausals</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction Int
-</span><a href="#local-6989586621680855886"><span class="hs-identifier hs-var">causalCount</span></a></span><span>
-</span><span id="line-86"></span><span>  </span><span id="local-6989586621680855885"><span class="annot"><span class="annottext">MigrationState
-</span><a href="#local-6989586621680855885"><span class="hs-identifier hs-var">migrationState</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
+</span><span id="line-85"></span><span>  </span><span id="local-6989586621680854044"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680854044"><span class="hs-identifier hs-var">totalCausals</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Transaction Int
+</span><a href="#local-6989586621680854043"><span class="hs-identifier hs-var">causalCount</span></a></span><span>
+</span><span id="line-86"></span><span>  </span><span id="local-6989586621680854042"><span class="annot"><span class="annottext">MigrationState
+</span><a href="#local-6989586621680854042"><span class="hs-identifier hs-var">migrationState</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a. Monad m =&gt; StateT s m a -&gt; s -&gt; m s
 </span><span class="hs-identifier hs-var">execStateT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
 -&gt; Map BranchHashId BranchObjectId -&gt; Int -&gt; MigrationState
@@ -127,40 +127,40 @@ Sync m h -&gt; Progress m h -&gt; [h] -&gt; m ()
 </span><span class="hs-identifier hs-var">Sync.sync</span></span><span> </span><span class="annot"><span class="annottext">Sync (StateT MigrationState Transaction) CausalHashId
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationSync"><span class="hs-identifier hs-var">migrationSync</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; Progress (StateT MigrationState Transaction) CausalHashId
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationProgress"><span class="hs-identifier hs-var">migrationProgress</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855887"><span class="hs-identifier hs-var">totalCausals</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855889"><span class="hs-identifier hs-var">rootCausalHashId</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680854044"><span class="hs-identifier hs-var">totalCausals</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680854046"><span class="hs-identifier hs-var">rootCausalHashId</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-87"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:_canonicalBranchForCausalHashId:MigrationState :: MigrationState -&gt; Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#%24sel%3A_canonicalBranchForCausalHashId%3AMigrationState"><span class="hs-identifier hs-var">_canonicalBranchForCausalHashId</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621680855879"><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="#local-6989586621680855879"><span class="hs-identifier hs-var">mapping</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MigrationState
-</span><a href="#local-6989586621680855885"><span class="hs-identifier hs-var">migrationState</span></a></span><span>
-</span><span id="line-88"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680855878"><span class="annot"><span class="annottext">reachableCausalHashes :: Set CausalHashId
-</span><a href="#local-6989586621680855878"><span class="hs-identifier hs-var hs-var">reachableCausalHashes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k a. Map k a -&gt; Set k
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#%24sel%3A_canonicalBranchForCausalHashId%3AMigrationState"><span class="hs-identifier hs-var">_canonicalBranchForCausalHashId</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="local-6989586621680854036"><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
+</span><a href="#local-6989586621680854036"><span class="hs-identifier hs-var">mapping</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MigrationState
+</span><a href="#local-6989586621680854042"><span class="hs-identifier hs-var">migrationState</span></a></span><span>
+</span><span id="line-88"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680854035"><span class="annot"><span class="annottext">reachableCausalHashes :: Set CausalHashId
+</span><a href="#local-6989586621680854035"><span class="hs-identifier hs-var hs-var">reachableCausalHashes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall k a. Map k a -&gt; Set k
 </span><span class="hs-identifier hs-var">Map.keysSet</span></span><span> </span><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="#local-6989586621680855879"><span class="hs-identifier hs-var">mapping</span></a></span><span>
-</span><span id="line-89"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680855876"><span class="annot"><span class="annottext">reachableBranchObjIds :: Set BranchObjectId
-</span><a href="#local-6989586621680855876"><span class="hs-identifier hs-var hs-var">reachableBranchObjIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a s. Getting (Set a) s a -&gt; s -&gt; Set a
+</span><a href="#local-6989586621680854036"><span class="hs-identifier hs-var">mapping</span></a></span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680854033"><span class="annot"><span class="annottext">reachableBranchObjIds :: Set BranchObjectId
+</span><a href="#local-6989586621680854033"><span class="hs-identifier hs-var hs-var">reachableBranchObjIds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a s. Getting (Set a) s a -&gt; s -&gt; Set a
 </span><span class="hs-identifier hs-var">setOf</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b.
 Traversable f =&gt;
 IndexedTraversal Int (f a) (f b) a b
 </span><span class="hs-identifier hs-var">traversed</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s t a b. Field2 s t a b =&gt; Lens s t a b
 </span><span class="hs-identifier hs-var">_2</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="#local-6989586621680855879"><span class="hs-identifier hs-var">mapping</span></a></span><span>
+</span><a href="#local-6989586621680854036"><span class="hs-identifier hs-var">mapping</span></a></span><span>
 </span><span id="line-90"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#log"><span class="hs-identifier hs-var">log</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;&#128736;  Cleaning up unreachable branches and causals...&quot;</span></span><span>
 </span><span id="line-91"></span><span>  </span><span class="annot"><span class="annottext">Set CausalHashId -&gt; Set BranchObjectId -&gt; Transaction ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#dropUnreachableCausalsAndBranches"><span class="hs-identifier hs-var">dropUnreachableCausalsAndBranches</span></a></span><span> </span><span class="annot"><span class="annottext">Set CausalHashId
-</span><a href="#local-6989586621680855878"><span class="hs-identifier hs-var">reachableCausalHashes</span></a></span><span> </span><span class="annot"><span class="annottext">Set BranchObjectId
-</span><a href="#local-6989586621680855876"><span class="hs-identifier hs-var">reachableBranchObjIds</span></a></span><span>
+</span><a href="#local-6989586621680854035"><span class="hs-identifier hs-var">reachableCausalHashes</span></a></span><span> </span><span class="annot"><span class="annottext">Set BranchObjectId
+</span><a href="#local-6989586621680854033"><span class="hs-identifier hs-var">reachableBranchObjIds</span></a></span><span>
 </span><span id="line-92"></span><span>  </span><span class="annot"><span class="annottext">SchemaVersion -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Q.setSchemaVersion</span></span><span> </span><span class="annot"><span class="annottext">SchemaVersion
 </span><span class="hs-number">4</span></span><span>
 </span><span id="line-93"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-94"></span><span>    </span><span class="annot"><a href="#local-6989586621680855886"><span class="hs-identifier hs-type">causalCount</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
-</span><span id="line-95"></span><span>    </span><span id="local-6989586621680855886"><span class="annot"><span class="annottext">causalCount :: Transaction Int
-</span><a href="#local-6989586621680855886"><span class="hs-identifier hs-var hs-var">causalCount</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-94"></span><span>    </span><span class="annot"><a href="#local-6989586621680854043"><span class="hs-identifier hs-type">causalCount</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-95"></span><span>    </span><span id="local-6989586621680854043"><span class="annot"><span class="annottext">causalCount :: Transaction Int
+</span><a href="#local-6989586621680854043"><span class="hs-identifier hs-var hs-var">causalCount</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-96"></span><span>      </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; Sql -&gt; Transaction a
 </span><span class="hs-identifier hs-var">Sqlite.queryOneCol</span></span><span>
 </span><span id="line-97"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -169,8 +169,8 @@ IndexedTraversal Int (f a) (f b) a b
 </span><span id="line-100"></span><span>
 </span><span id="line-101"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationProgress"><span class="hs-identifier hs-type">migrationProgress</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span>
 </span><span id="line-102"></span><span id="migrationProgress"><span class="annot"><span class="annottext">migrationProgress :: Int -&gt; Progress (StateT MigrationState Transaction) CausalHashId
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationProgress"><span class="hs-identifier hs-var hs-var">migrationProgress</span></a></span></span><span> </span><span id="local-6989586621680855866"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855866"><span class="hs-identifier hs-var">totalCausals</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationProgress"><span class="hs-identifier hs-var hs-var">migrationProgress</span></a></span></span><span> </span><span id="local-6989586621680854023"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680854023"><span class="hs-identifier hs-var">totalCausals</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-103"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Sync.Progress</span></span><span> </span><span class="hs-special">{</span><span class="annot"><span class="annottext">forall {t :: (* -&gt; *) -&gt; * -&gt; *} {a}.
 (MonadTrans t, Show a) =&gt;
 a -&gt; t Transaction ()
@@ -193,9 +193,9 @@ allDone :: StateT MigrationState Transaction ()
 allDone :: StateT MigrationState Transaction ()
 </span><span class="hs-identifier hs-var hs-var">Sync.allDone</span></span><span class="hs-special">}</span><span>
 </span><span id="line-104"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-105"></span><span>    </span><span id="local-6989586621680855864"><span class="annot"><span class="annottext">need :: a -&gt; t Transaction ()
-</span><a href="#local-6989586621680855864"><span class="hs-identifier hs-var hs-var">need</span></a></span></span><span> </span><span id="local-6989586621680855848"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855848"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><span id="line-105"></span><span>    </span><span id="local-6989586621680854021"><span class="annot"><span class="annottext">need :: a -&gt; t Transaction ()
+</span><a href="#local-6989586621680854021"><span class="hs-identifier hs-var hs-var">need</span></a></span></span><span> </span><span id="local-6989586621680854005"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680854005"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -205,13 +205,13 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;Need &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855848"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-106"></span><span>    </span><span id="local-6989586621680855862"><span class="annot"><span class="annottext">done :: CausalHashId -&gt; StateT MigrationState Transaction ()
-</span><a href="#local-6989586621680855862"><span class="hs-identifier hs-var hs-var">done</span></a></span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680854005"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-106"></span><span>    </span><span id="local-6989586621680854019"><span class="annot"><span class="annottext">done :: CausalHashId -&gt; StateT MigrationState Transaction ()
+</span><a href="#local-6989586621680854019"><span class="hs-identifier hs-var hs-var">done</span></a></span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-107"></span><span>      </span><span class="hs-keyword">do</span><span>
-</span><span id="line-108"></span><span>        </span><span id="local-6989586621680855844"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855844"><span class="hs-identifier hs-var">numDone</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Lens' MigrationState Int
+</span><span id="line-108"></span><span>        </span><span id="local-6989586621680854001"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680854001"><span class="hs-identifier hs-var">numDone</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Lens' MigrationState Int
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#numMigrated"><span class="hs-identifier hs-var">numMigrated</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a.
 (MonadState s m, Num a) =&gt;
 LensLike' ((,) a) s a -&gt; a -&gt; m a
@@ -229,17 +229,17 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;\r&#127959;  &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855844"><span class="hs-identifier hs-var">numDone</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680854001"><span class="hs-identifier hs-var">numDone</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; / ~&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855866"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680854023"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; entities migrated. &#128679;&quot;</span></span><span>
-</span><span id="line-110"></span><span>    </span><span id="local-6989586621680855860"><span class="annot"><span class="annottext">error :: a -&gt; t Transaction ()
-</span><a href="#local-6989586621680855860"><span class="hs-identifier hs-var hs-var">error</span></a></span></span><span> </span><span id="local-6989586621680855832"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855832"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><span id="line-110"></span><span>    </span><span id="local-6989586621680854017"><span class="annot"><span class="annottext">error :: a -&gt; t Transaction ()
+</span><a href="#local-6989586621680854017"><span class="hs-identifier hs-var hs-var">error</span></a></span></span><span> </span><span id="local-6989586621680853989"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853989"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -249,9 +249,9 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;Error &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855832"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-111"></span><span>    </span><span id="local-6989586621680855858"><span class="annot"><span class="annottext">allDone :: StateT MigrationState Transaction ()
-</span><a href="#local-6989586621680855858"><span class="hs-identifier hs-var hs-var">allDone</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621680853989"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-111"></span><span>    </span><span id="local-6989586621680854015"><span class="annot"><span class="annottext">allDone :: StateT MigrationState Transaction ()
+</span><a href="#local-6989586621680854015"><span class="hs-identifier hs-var hs-var">allDone</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-112"></span><span>      </span><span class="hs-comment">-- In some corrupted codebases we don't necessarily process every causal, or there may</span><span>
 </span><span id="line-113"></span><span>      </span><span class="hs-comment">-- be unreachable causals. We'll show the final number here just so everything looks</span><span>
 </span><span id="line-114"></span><span>      </span><span class="hs-comment">-- good to users. It's okay since we'll process the other branches and clean them up in</span><span>
@@ -268,12 +268,12 @@ m a -&gt; t m a
 </span><span class="hs-string">&quot;\r&#127959;  &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855866"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680854023"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; / ~&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680855866"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680854023"><span class="hs-identifier hs-var">totalCausals</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; entities migrated. &#128679;&quot;</span></span><span>
 </span><span id="line-117"></span><span>      </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
@@ -292,26 +292,26 @@ m a -&gt; t m a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrationSync"><span class="hs-identifier hs-var hs-var">migrationSync</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-121"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) entity.
 (entity -&gt; m (TrySyncResult entity)) -&gt; Sync m entity
-</span><span class="hs-identifier hs-var">Sync.Sync</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680855829"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855829"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span class="hs-identifier hs-var">Sync.Sync</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680853986"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853986"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-122"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. ExceptT e m a -&gt; m (Either e a)
 </span><span class="hs-identifier hs-var">runExceptT</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrateCausal"><span class="hs-identifier hs-var">migrateCausal</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855829"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621680853986"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-123"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621680855826"><span class="annot"><span class="annottext">TrySyncResult CausalHashId
-</span><a href="#local-6989586621680855826"><span class="hs-identifier hs-var">syncResult</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span id="line-123"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621680853983"><span class="annot"><span class="annottext">TrySyncResult CausalHashId
+</span><a href="#local-6989586621680853983"><span class="hs-identifier hs-var">syncResult</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">TrySyncResult CausalHashId
-</span><a href="#local-6989586621680855826"><span class="hs-identifier hs-var">syncResult</span></a></span><span>
+</span><a href="#local-6989586621680853983"><span class="hs-identifier hs-var">syncResult</span></a></span><span>
 </span><span id="line-124"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="annot"><span class="annottext">()
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall entity. TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Done</span></span><span>
 </span><span id="line-125"></span><span>
-</span><span id="line-126"></span><span id="local-6989586621680856379"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-type">liftT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="annot"><a href="#local-6989586621680856379"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExceptT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621680856379"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-126"></span><span id="local-6989586621680854536"><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-type">liftT</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="annot"><a href="#local-6989586621680854536"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExceptT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621680854536"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-127"></span><span id="liftT"><span class="annot"><span class="annottext">liftT :: forall a.
 Transaction a
 -&gt; ExceptT
@@ -327,34 +327,34 @@ m a -&gt; t m a
 </span><span id="line-128"></span><span>
 </span><span id="line-129"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#dropUnreachableCausalsAndBranches"><span class="hs-identifier hs-type">dropUnreachableCausalsAndBranches</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-130"></span><span id="dropUnreachableCausalsAndBranches"><span class="annot"><span class="annottext">dropUnreachableCausalsAndBranches :: Set CausalHashId -&gt; Set BranchObjectId -&gt; Transaction ()
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#dropUnreachableCausalsAndBranches"><span class="hs-identifier hs-var hs-var">dropUnreachableCausalsAndBranches</span></a></span></span><span> </span><span id="local-6989586621680855818"><span class="annot"><span class="annottext">Set CausalHashId
-</span><a href="#local-6989586621680855818"><span class="hs-identifier hs-var">reachableCausals</span></a></span></span><span> </span><span id="local-6989586621680855817"><span class="annot"><span class="annottext">Set BranchObjectId
-</span><a href="#local-6989586621680855817"><span class="hs-identifier hs-var">reachableBranchObjs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#dropUnreachableCausalsAndBranches"><span class="hs-identifier hs-var hs-var">dropUnreachableCausalsAndBranches</span></a></span></span><span> </span><span id="local-6989586621680853975"><span class="annot"><span class="annottext">Set CausalHashId
+</span><a href="#local-6989586621680853975"><span class="hs-identifier hs-var">reachableCausals</span></a></span></span><span> </span><span id="local-6989586621680853974"><span class="annot"><span class="annottext">Set BranchObjectId
+</span><a href="#local-6989586621680853974"><span class="hs-identifier hs-var">reachableBranchObjs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-131"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
-</span><a href="#local-6989586621680855816"><span class="hs-identifier hs-var">createReachabilityTables</span></a></span><span>
+</span><a href="#local-6989586621680853973"><span class="hs-identifier hs-var">createReachabilityTables</span></a></span><span>
 </span><span id="line-132"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Foldable t, Applicative f) =&gt;
 (a -&gt; f b) -&gt; t a -&gt; f ()
 </span><span class="hs-identifier hs-var">traverse_</span></span><span> </span><span class="annot"><span class="annottext">forall {a}. ToField a =&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855814"><span class="hs-identifier hs-var">insertReachableCausalSql</span></a></span><span> </span><span class="annot"><span class="annottext">Set CausalHashId
-</span><a href="#local-6989586621680855818"><span class="hs-identifier hs-var">reachableCausals</span></a></span><span>
+</span><a href="#local-6989586621680853971"><span class="hs-identifier hs-var">insertReachableCausalSql</span></a></span><span> </span><span class="annot"><span class="annottext">Set CausalHashId
+</span><a href="#local-6989586621680853975"><span class="hs-identifier hs-var">reachableCausals</span></a></span><span>
 </span><span id="line-133"></span><span>  </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Foldable t, Applicative f) =&gt;
 (a -&gt; f b) -&gt; t a -&gt; f ()
 </span><span class="hs-identifier hs-var">traverse_</span></span><span> </span><span class="annot"><span class="annottext">forall {a}. ToField a =&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855813"><span class="hs-identifier hs-var">insertReachableBranchObjectSql</span></a></span><span> </span><span class="annot"><span class="annottext">Set BranchObjectId
-</span><a href="#local-6989586621680855817"><span class="hs-identifier hs-var">reachableBranchObjs</span></a></span><span>
+</span><a href="#local-6989586621680853970"><span class="hs-identifier hs-var">insertReachableBranchObjectSql</span></a></span><span> </span><span class="annot"><span class="annottext">Set BranchObjectId
+</span><a href="#local-6989586621680853974"><span class="hs-identifier hs-var">reachableBranchObjs</span></a></span><span>
 </span><span id="line-134"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
-</span><a href="#local-6989586621680855812"><span class="hs-identifier hs-var">deleteUnreachableHashObjects</span></a></span><span>
+</span><a href="#local-6989586621680853969"><span class="hs-identifier hs-var">deleteUnreachableHashObjects</span></a></span><span>
 </span><span id="line-135"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
-</span><a href="#local-6989586621680855811"><span class="hs-identifier hs-var">deleteUnreachableBranchObjects</span></a></span><span>
+</span><a href="#local-6989586621680853968"><span class="hs-identifier hs-var">deleteUnreachableBranchObjects</span></a></span><span>
 </span><span id="line-136"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
-</span><a href="#local-6989586621680855810"><span class="hs-identifier hs-var">deleteUnreachableCausalParents</span></a></span><span>
+</span><a href="#local-6989586621680853967"><span class="hs-identifier hs-var">deleteUnreachableCausalParents</span></a></span><span>
 </span><span id="line-137"></span><span>  </span><span class="annot"><span class="annottext">Transaction ()
-</span><a href="#local-6989586621680855809"><span class="hs-identifier hs-var">deleteUnreachableCausals</span></a></span><span>
+</span><a href="#local-6989586621680853966"><span class="hs-identifier hs-var">deleteUnreachableCausals</span></a></span><span>
 </span><span id="line-138"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-139"></span><span>    </span><span id="local-6989586621680855812"><span class="annot"><span class="annottext">deleteUnreachableHashObjects :: Transaction ()
-</span><a href="#local-6989586621680855812"><span class="hs-identifier hs-var hs-var">deleteUnreachableHashObjects</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-139"></span><span>    </span><span id="local-6989586621680853969"><span class="annot"><span class="annottext">deleteUnreachableHashObjects :: Transaction ()
+</span><a href="#local-6989586621680853969"><span class="hs-identifier hs-var hs-var">deleteUnreachableHashObjects</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-140"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-141"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -364,8 +364,8 @@ m a -&gt; t m a
             -- Ensure hash objects we're deleting are for branch objects.
             AND EXISTS (SELECT 1 FROM object AS o WHERE o.id = ho.object_id AND type_id = 2)
       |]</span></span><span>
-</span><span id="line-148"></span><span>    </span><span id="local-6989586621680855811"><span class="annot"><span class="annottext">deleteUnreachableBranchObjects :: Transaction ()
-</span><a href="#local-6989586621680855811"><span class="hs-identifier hs-var hs-var">deleteUnreachableBranchObjects</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-148"></span><span>    </span><span id="local-6989586621680853968"><span class="annot"><span class="annottext">deleteUnreachableBranchObjects :: Transaction ()
+</span><a href="#local-6989586621680853968"><span class="hs-identifier hs-var hs-var">deleteUnreachableBranchObjects</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-149"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-150"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -374,16 +374,16 @@ m a -&gt; t m a
             o.type_id = 2 -- Filter for only branches
             AND NOT EXISTS (SELECT 1 FROM reachable_branch_objects AS ro WHERE o.id = ro.object_id)
       |]</span></span><span>
-</span><span id="line-156"></span><span>    </span><span id="local-6989586621680855809"><span class="annot"><span class="annottext">deleteUnreachableCausals :: Transaction ()
-</span><a href="#local-6989586621680855809"><span class="hs-identifier hs-var hs-var">deleteUnreachableCausals</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-156"></span><span>    </span><span id="local-6989586621680853966"><span class="annot"><span class="annottext">deleteUnreachableCausals :: Transaction ()
+</span><a href="#local-6989586621680853966"><span class="hs-identifier hs-var hs-var">deleteUnreachableCausals</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-157"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-158"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
         DELETE FROM causal AS c
           WHERE NOT EXISTS (SELECT 1 FROM reachable_causals AS rc WHERE c.self_hash_id = rc.self_hash_id)
       |]</span></span><span>
-</span><span id="line-162"></span><span>    </span><span id="local-6989586621680855810"><span class="annot"><span class="annottext">deleteUnreachableCausalParents :: Transaction ()
-</span><a href="#local-6989586621680855810"><span class="hs-identifier hs-var hs-var">deleteUnreachableCausalParents</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-162"></span><span>    </span><span id="local-6989586621680853967"><span class="annot"><span class="annottext">deleteUnreachableCausalParents :: Transaction ()
+</span><a href="#local-6989586621680853967"><span class="hs-identifier hs-var hs-var">deleteUnreachableCausalParents</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-163"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-164"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -393,26 +393,26 @@ m a -&gt; t m a
             -- unreachable if the child is reachable. A.k.a. reachable(child) =implies&gt; reachable(parent)
             NOT EXISTS (SELECT 1 FROM reachable_causals AS rc WHERE cp.causal_id = rc.self_hash_id)
       |]</span></span><span>
-</span><span id="line-171"></span><span>    </span><span id="local-6989586621680855814"><span class="annot"><span class="annottext">insertReachableCausalSql :: a -&gt; Transaction ()
-</span><a href="#local-6989586621680855814"><span class="hs-identifier hs-var hs-var">insertReachableCausalSql</span></a></span></span><span> </span><span id="local-6989586621680855790"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855790"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-171"></span><span>    </span><span id="local-6989586621680853971"><span class="annot"><span class="annottext">insertReachableCausalSql :: a -&gt; Transaction ()
+</span><a href="#local-6989586621680853971"><span class="hs-identifier hs-var hs-var">insertReachableCausalSql</span></a></span></span><span> </span><span id="local-6989586621680853947"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853947"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-172"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-173"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
           INSERT INTO reachable_causals (self_hash_id) VALUES (:h)
             ON CONFLICT DO NOTHING
         |]</span></span><span>
-</span><span id="line-177"></span><span>    </span><span id="local-6989586621680855813"><span class="annot"><span class="annottext">insertReachableBranchObjectSql :: a -&gt; Transaction ()
-</span><a href="#local-6989586621680855813"><span class="hs-identifier hs-var hs-var">insertReachableBranchObjectSql</span></a></span></span><span> </span><span id="local-6989586621680855783"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855783"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-177"></span><span>    </span><span id="local-6989586621680853970"><span class="annot"><span class="annottext">insertReachableBranchObjectSql :: a -&gt; Transaction ()
+</span><a href="#local-6989586621680853970"><span class="hs-identifier hs-var hs-var">insertReachableBranchObjectSql</span></a></span></span><span> </span><span id="local-6989586621680853940"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853940"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-178"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-179"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
           INSERT INTO reachable_branch_objects (object_id) VALUES (:o)
             ON CONFLICT DO NOTHING
         |]</span></span><span>
-</span><span id="line-183"></span><span>    </span><span id="local-6989586621680855816"><span class="annot"><span class="annottext">createReachabilityTables :: Transaction ()
-</span><a href="#local-6989586621680855816"><span class="hs-identifier hs-var hs-var">createReachabilityTables</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-183"></span><span>    </span><span id="local-6989586621680853973"><span class="annot"><span class="annottext">createReachabilityTables :: Transaction ()
+</span><a href="#local-6989586621680853973"><span class="hs-identifier hs-var hs-var">createReachabilityTables</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-184"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-185"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -432,8 +432,8 @@ m a -&gt; t m a
 </span><span id="line-198"></span><span id="migrateCausal"><span class="annot"><span class="annottext">migrateCausal :: CausalHashId
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) ()
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrateCausal"><span class="hs-identifier hs-var hs-var">migrateCausal</span></a></span></span><span> </span><span id="local-6989586621680855775"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#migrateCausal"><span class="hs-identifier hs-var hs-var">migrateCausal</span></a></span></span><span> </span><span id="local-6989586621680853932"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-199"></span><span>  </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a.
 MonadState s m =&gt;
 Getting (First a) s a -&gt; m (Maybe a)
@@ -442,7 +442,7 @@ Getting (First a) s a -&gt; m (Maybe a)
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. Ixed m =&gt; Index m -&gt; Traversal' m (IxValue m)
 </span><span class="hs-identifier hs-var">ix</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-200"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="annottext">(BranchHashId, BranchObjectId)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
@@ -450,51 +450,51 @@ Getting (First a) s a -&gt; m (Maybe a)
 </span><span class="hs-identifier hs-var">Sync.PreviouslyDone</span></span><span>
 </span><span id="line-201"></span><span>    </span><span class="annot"><span class="annottext">Maybe (BranchHashId, BranchObjectId)
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-202"></span><span>      </span><span id="local-6989586621680855770"><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855770"><span class="hs-identifier hs-var">causalParents</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
+</span><span id="line-202"></span><span>      </span><span id="local-6989586621680853927"><span class="annot"><span class="annottext">[CausalHashId]
+</span><a href="#local-6989586621680853927"><span class="hs-identifier hs-var">causalParents</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId -&gt; Transaction [CausalHashId]
 </span><span class="hs-identifier hs-var">Q.loadCausalParents</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
-</span><span id="line-203"></span><span>      </span><span id="local-6989586621680855768"><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855768"><span class="hs-identifier hs-var">unmigratedParents</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
+</span><span id="line-203"></span><span>      </span><span id="local-6989586621680853925"><span class="annot"><span class="annottext">[CausalHashId]
+</span><a href="#local-6989586621680853925"><span class="hs-identifier hs-var">unmigratedParents</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><span class="hs-identifier hs-var">flip</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a.
 Applicative m =&gt;
 (a -&gt; m Bool) -&gt; [a] -&gt; m [a]
 </span><span class="hs-identifier hs-var">filterM</span></span><span> </span><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855770"><span class="hs-identifier hs-var">causalParents</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680855766"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855766"><span class="hs-identifier hs-var">parentHashId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) r a.
+</span><a href="#local-6989586621680853927"><span class="hs-identifier hs-var">causalParents</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680853923"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853923"><span class="hs-identifier hs-var">parentHashId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) r a.
 MonadState s m =&gt;
 LensLike' (Const r) s a -&gt; (a -&gt; r) -&gt; m r
 </span><span class="hs-identifier hs-var">uses</span></span><span> </span><span class="annot"><span class="annottext">Lens'
   MigrationState (Map CausalHashId (BranchHashId, BranchObjectId))
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Bool
 </span><span class="hs-identifier hs-var">Map.notMember</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855766"><span class="hs-identifier hs-var">parentHashId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853923"><span class="hs-identifier hs-var">parentHashId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-204"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool
 </span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
 </span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855768"><span class="hs-identifier hs-var">unmigratedParents</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680853925"><span class="hs-identifier hs-var">unmigratedParents</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall entity. [entity] -&gt; TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Missing</span></span><span> </span><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855768"><span class="hs-identifier hs-var">unmigratedParents</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-205"></span><span>      </span><span id="local-6989586621680855759"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855759"><span class="hs-identifier hs-var">valueHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
+</span><a href="#local-6989586621680853925"><span class="hs-identifier hs-var">unmigratedParents</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>      </span><span id="local-6989586621680853916"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853916"><span class="hs-identifier hs-var">valueHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId -&gt; Transaction BranchHashId
 </span><span class="hs-identifier hs-var">Q.expectCausalValueHashId</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
 </span><span id="line-206"></span><span>      </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a.
 MonadState s m =&gt;
 Getting (First a) s a -&gt; m (Maybe a)
@@ -502,24 +502,24 @@ Getting (First a) s a -&gt; m (Maybe a)
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#validBranchHashIds"><span class="hs-identifier hs-var">validBranchHashIds</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. Ixed m =&gt; Index m -&gt; Traversal' m (IxValue m)
 </span><span class="hs-identifier hs-var">ix</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855759"><span class="hs-identifier hs-var">valueHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621680853916"><span class="hs-identifier hs-var">valueHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-207"></span><span>        </span><span class="annot"><span class="annottext">Maybe BranchObjectId
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-208"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680855757"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855757"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-208"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680853914"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853914"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-209"></span><span>          </span><span class="annot"><span class="annottext">Lens'
   MigrationState (Map CausalHashId (BranchHashId, BranchObjectId))
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. At m =&gt; Index m -&gt; Lens' m (Maybe (IxValue m))
 </span><span class="hs-identifier hs-var">at</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
 MonadState s m =&gt;
 ASetter s s a (Maybe b) -&gt; b -&gt; m ()
 </span><span class="hs-operator hs-var">?=</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855759"><span class="hs-identifier hs-var">valueHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855757"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853916"><span class="hs-identifier hs-var">valueHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853914"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-210"></span><span>          </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="annot"><span class="annottext">forall entity. TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Done</span></span><span>
@@ -529,7 +529,7 @@ Transaction a
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CausalHashId -&gt; Transaction (Maybe BranchObjectId)
 </span><span class="hs-identifier hs-var">Q.loadBranchObjectIdByCausalHashId</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-212"></span><span>        </span><span class="annot"><span class="annottext">Maybe BranchObjectId
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
@@ -544,18 +544,18 @@ Transaction a
 </span><span class="hs-string">&quot;Missing object for child branch of causal: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
-</span><span id="line-214"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680855753"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855753"><span class="hs-identifier hs-var">branchObjId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span>
+</span><span id="line-214"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680853910"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853910"><span class="hs-identifier hs-var">branchObjId</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-215"></span><span>          </span><span class="annot"><span class="annottext">CausalHashId
 -&gt; BranchHashId
 -&gt; BranchObjectId
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) ()
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#rehashAndCanonicalizeNamespace"><span class="hs-identifier hs-var">rehashAndCanonicalizeNamespace</span></a></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855775"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855759"><span class="hs-identifier hs-var">valueHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855753"><span class="hs-identifier hs-var">branchObjId</span></a></span><span>
+</span><a href="#local-6989586621680853932"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853916"><span class="hs-identifier hs-var">valueHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853910"><span class="hs-identifier hs-var">branchObjId</span></a></span><span>
 </span><span id="line-216"></span><span>
 </span><span id="line-217"></span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#rehashAndCanonicalizeNamespace"><span class="hs-identifier hs-type">rehashAndCanonicalizeNamespace</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ExceptT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-218"></span><span id="rehashAndCanonicalizeNamespace"><span class="annot"><span class="annottext">rehashAndCanonicalizeNamespace :: CausalHashId
@@ -563,79 +563,79 @@ Transaction a
 -&gt; BranchObjectId
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) ()
-</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#rehashAndCanonicalizeNamespace"><span class="hs-identifier hs-var hs-var">rehashAndCanonicalizeNamespace</span></a></span></span><span> </span><span id="local-6989586621680855751"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855751"><span class="hs-identifier hs-var">causalHashId</span></a></span></span><span> </span><span id="local-6989586621680855750"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855750"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span></span><span> </span><span id="local-6989586621680855749"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-219"></span><span>  </span><span id="local-6989586621680855748"><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855748"><span class="hs-identifier hs-var">dbBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
+</span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#rehashAndCanonicalizeNamespace"><span class="hs-identifier hs-var hs-var">rehashAndCanonicalizeNamespace</span></a></span></span><span> </span><span id="local-6989586621680853908"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853908"><span class="hs-identifier hs-var">causalHashId</span></a></span></span><span> </span><span id="local-6989586621680853907"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853907"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span></span><span> </span><span id="local-6989586621680853906"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-219"></span><span>  </span><span id="local-6989586621680853905"><span class="annot"><span class="annottext">DbBranch
+</span><a href="#local-6989586621680853905"><span class="hs-identifier hs-var">dbBranch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId -&gt; Transaction DbBranch
 </span><span class="hs-identifier hs-var">Ops.expectDbBranch</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
-</span><span id="line-220"></span><span>  </span><span id="local-6989586621680855746"><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="#local-6989586621680855746"><span class="hs-identifier hs-var">canonicalBranchForCausalMap</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a. MonadState s m =&gt; Getting a s a -&gt; m a
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><span id="line-220"></span><span>  </span><span id="local-6989586621680853903"><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
+</span><a href="#local-6989586621680853903"><span class="hs-identifier hs-var">canonicalBranchForCausalMap</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a. MonadState s m =&gt; Getting a s a -&gt; m a
 </span><span class="hs-identifier hs-var">use</span></span><span> </span><span class="annot"><span class="annottext">Lens'
   MigrationState (Map CausalHashId (BranchHashId, BranchObjectId))
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span>
 </span><span id="line-221"></span><span>  </span><span class="hs-comment">-- remap all of the object ID's of the child branches to the correct and canonical objects,</span><span>
 </span><span id="line-222"></span><span>  </span><span class="hs-comment">-- get a list of any unmigrated children, and also track whether any re-mappings actually</span><span>
 </span><span id="line-223"></span><span>  </span><span class="hs-comment">-- occurred, so we don't do extra work when nothing changed.</span><span>
-</span><span id="line-224"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span id="local-6989586621680855744"><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855744"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Any</span></span><span> </span><span id="local-6989586621680855742"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680855742"><span class="hs-identifier hs-var">changes</span></a></span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span id="local-6989586621680855741"><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855741"><span class="hs-identifier hs-var">remappedBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-224"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span id="local-6989586621680853901"><span class="annot"><span class="annottext">[CausalHashId]
+</span><a href="#local-6989586621680853901"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Any</span></span><span> </span><span id="local-6989586621680853899"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680853899"><span class="hs-identifier hs-var">changes</span></a></span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span id="local-6989586621680853898"><span class="annot"><span class="annottext">DbBranch
+</span><a href="#local-6989586621680853898"><span class="hs-identifier hs-var">remappedBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-225"></span><span>        </span><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855748"><span class="hs-identifier hs-var">dbBranch</span></a></span><span>
+</span><a href="#local-6989586621680853905"><span class="hs-identifier hs-var">dbBranch</span></a></span><span>
 </span><span id="line-226"></span><span>          </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall t h p c c'.
 Traversal (Branch' t h p c) (Branch' t h p c') c c'
 </span><span class="hs-identifier hs-var">DBBranch.childrenHashes_</span></span><span> </span><span class="annot"><span class="annottext">forall {k} (f :: k -&gt; *) s (t :: k) a (b :: k).
 LensLike f s t a b -&gt; LensLike f s t a b
-</span><span class="hs-operator hs-var">%%~</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621680855737"><span class="annot"><span class="annottext">ids :: (BranchObjectId, CausalHashId)
-</span><a href="#local-6989586621680855737"><span class="hs-identifier hs-var">ids</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621680855736"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855736"><span class="hs-identifier hs-var">childBranchObjId</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680855735"><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855735"><span class="hs-identifier hs-var">childCausalHashId</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span class="hs-operator hs-var">%%~</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621680853894"><span class="annot"><span class="annottext">ids :: (BranchObjectId, CausalHashId)
+</span><a href="#local-6989586621680853894"><span class="hs-identifier hs-var">ids</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621680853893"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853893"><span class="hs-identifier hs-var">childBranchObjId</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680853892"><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853892"><span class="hs-identifier hs-var">childCausalHashId</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-227"></span><span>            </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855735"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
-</span><a href="#local-6989586621680855746"><span class="hs-identifier hs-var">canonicalBranchForCausalMap</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680853892"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">Map CausalHashId (BranchHashId, BranchObjectId)
+</span><a href="#local-6989586621680853903"><span class="hs-identifier hs-var">canonicalBranchForCausalMap</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-228"></span><span>              </span><span class="annot"><span class="annottext">Maybe (BranchHashId, BranchObjectId)
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">[</span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855735"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Any
+</span><a href="#local-6989586621680853892"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Any
 </span><span class="hs-identifier hs-var">Any</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(BranchObjectId, CausalHashId)
-</span><a href="#local-6989586621680855737"><span class="hs-identifier hs-var">ids</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853894"><span class="hs-identifier hs-var">ids</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-229"></span><span>              </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680855733"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855733"><span class="hs-identifier hs-var">canonicalObjId</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-230"></span><span>                </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680855732"><span class="annot"><span class="annottext">changed :: Bool
-</span><a href="#local-6989586621680855732"><span class="hs-identifier hs-var hs-var">changed</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855733"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680853890"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853890"><span class="hs-identifier hs-var">canonicalObjId</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-230"></span><span>                </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680853889"><span class="annot"><span class="annottext">changed :: Bool
+</span><a href="#local-6989586621680853889"><span class="hs-identifier hs-var hs-var">changed</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853890"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855736"><span class="hs-identifier hs-var">childBranchObjId</span></a></span><span>
+</span><a href="#local-6989586621680853893"><span class="hs-identifier hs-var">childBranchObjId</span></a></span><span>
 </span><span id="line-231"></span><span>                 </span><span class="hs-keyword">in</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Any
 </span><span class="hs-identifier hs-var">Any</span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680855732"><span class="hs-identifier hs-var">changed</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855733"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855735"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853889"><span class="hs-identifier hs-var">changed</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853890"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CausalHashId
+</span><a href="#local-6989586621680853892"><span class="hs-identifier hs-var">childCausalHashId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-232"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool
 </span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Bool
 </span><span class="hs-identifier hs-var">null</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855744"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680853901"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall entity. [entity] -&gt; TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Missing</span></span><span> </span><span class="annot"><span class="annottext">[CausalHashId]
-</span><a href="#local-6989586621680855744"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853901"><span class="hs-identifier hs-var">unmigratedChildren</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-233"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680855742"><span class="hs-identifier hs-var">changes</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680853899"><span class="hs-identifier hs-var">changes</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-234"></span><span>    </span><span class="annot"><span class="annottext">forall a.
 Transaction a
@@ -643,18 +643,18 @@ Transaction a
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId -&gt; DbBranch -&gt; Transaction ()
-</span><a href="#local-6989586621680855730"><span class="hs-identifier hs-var">replaceBranch</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855741"><span class="hs-identifier hs-var">remappedBranch</span></a></span><span>
-</span><span id="line-235"></span><span>  </span><span id="local-6989586621680855729"><span class="annot"><span class="annottext">BranchHash
-</span><a href="#local-6989586621680855729"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
+</span><a href="#local-6989586621680853887"><span class="hs-identifier hs-var">replaceBranch</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="annot"><span class="annottext">DbBranch
+</span><a href="#local-6989586621680853898"><span class="hs-identifier hs-var">remappedBranch</span></a></span><span>
+</span><span id="line-235"></span><span>  </span><span id="local-6989586621680853886"><span class="annot"><span class="annottext">BranchHash
+</span><a href="#local-6989586621680853886"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">DbBranch -&gt; Transaction BranchHash
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema1To2.DbHelpers.html#dbBranchHash"><span class="hs-identifier hs-var">Helpers.dbBranchHash</span></a></span><span> </span><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855741"><span class="hs-identifier hs-var">remappedBranch</span></a></span><span>
+</span><a href="#local-6989586621680853898"><span class="hs-identifier hs-var">remappedBranch</span></a></span><span>
 </span><span id="line-236"></span><span>  </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -666,22 +666,22 @@ Transaction a
 </span><span class="hs-string">&quot;Correct namespace hash: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">BranchHash
-</span><a href="#local-6989586621680855729"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span><span>
-</span><span id="line-237"></span><span>  </span><span id="local-6989586621680855727"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
+</span><a href="#local-6989586621680853886"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span><span>
+</span><span id="line-237"></span><span>  </span><span id="local-6989586621680853884"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">BranchHash -&gt; Transaction BranchHashId
 </span><span class="hs-identifier hs-var">Q.saveBranchHash</span></span><span> </span><span class="annot"><span class="annottext">BranchHash
-</span><a href="#local-6989586621680855729"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span><span>
+</span><a href="#local-6989586621680853886"><span class="hs-identifier hs-var">correctNamespaceHash</span></a></span><span>
 </span><span id="line-238"></span><span>
 </span><span id="line-239"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855750"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680853907"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-240"></span><span>    </span><span class="hs-comment">-- If the existing hash for this namespace was already correct, we don't need to</span><span>
 </span><span id="line-241"></span><span>    </span><span class="hs-comment">-- canonicalize the branch or worry about deleting/updating bad objects.</span><span>
@@ -691,21 +691,21 @@ Transaction a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. At m =&gt; Index m -&gt; Lens' m (Maybe (IxValue m))
 </span><span class="hs-identifier hs-var">at</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855751"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
+</span><a href="#local-6989586621680853908"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
 MonadState s m =&gt;
 ASetter s s a (Maybe b) -&gt; b -&gt; m ()
 </span><span class="hs-operator hs-var">?=</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-244"></span><span>    </span><span class="annot"><span class="annottext">Lens' MigrationState (Map BranchHashId BranchObjectId)
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#validBranchHashIds"><span class="hs-identifier hs-var">validBranchHashIds</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. At m =&gt; Index m -&gt; Lens' m (Maybe (IxValue m))
 </span><span class="hs-identifier hs-var">at</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855750"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
+</span><a href="#local-6989586621680853907"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
 MonadState s m =&gt;
 ASetter s s a (Maybe b) -&gt; b -&gt; m ()
 </span><span class="hs-operator hs-var">?=</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-245"></span><span>    </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="annot"><span class="annottext">forall entity. TrySyncResult entity
 </span><span class="hs-identifier hs-var">Sync.Done</span></span><span>
@@ -717,18 +717,18 @@ Transaction a
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId -&gt; BranchHashId -&gt; Transaction ()
-</span><a href="#local-6989586621680855725"><span class="hs-identifier hs-var">updateCausalValueHash</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855750"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span>
+</span><a href="#local-6989586621680853882"><span class="hs-identifier hs-var">updateCausalValueHash</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853907"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span>
 </span><span id="line-249"></span><span>  </span><span class="hs-comment">-- It's possible that an object already exists for this new hash</span><span>
-</span><span id="line-250"></span><span>  </span><span id="local-6989586621680855724"><span class="annot"><span class="annottext">Maybe BranchObjectId
-</span><a href="#local-6989586621680855724"><span class="hs-identifier hs-var">mayCanonical</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><span id="line-250"></span><span>  </span><span id="local-6989586621680853881"><span class="annot"><span class="annottext">Maybe BranchObjectId
+</span><a href="#local-6989586621680853881"><span class="hs-identifier hs-var">mayCanonical</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">BranchHashId
 -&gt; ExceptT
      (TrySyncResult CausalHashId)
      (StateT MigrationState Transaction)
      (Maybe BranchObjectId)
-</span><a href="#local-6989586621680855723"><span class="hs-identifier hs-var">getCanonicalObjectForHash</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span>
+</span><a href="#local-6989586621680853880"><span class="hs-identifier hs-var">getCanonicalObjectForHash</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span>
 </span><span id="line-251"></span><span>  </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -740,8 +740,8 @@ Transaction a
 </span><span class="hs-string">&quot;(objId, Canonical object ID):&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe BranchObjectId
-</span><a href="#local-6989586621680855724"><span class="hs-identifier hs-var">mayCanonical</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe BranchObjectId
+</span><a href="#local-6989586621680853881"><span class="hs-identifier hs-var">mayCanonical</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-252"></span><span>  </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -753,19 +753,19 @@ Transaction a
 </span><span class="hs-string">&quot;Updating causal value hash (from, to)&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855750"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-253"></span><span>  </span><span id="local-6989586621680855722"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855722"><span class="hs-identifier hs-var">canonicalObjId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe BranchObjectId
-</span><a href="#local-6989586621680855724"><span class="hs-identifier hs-var">mayCanonical</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680853907"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-253"></span><span>  </span><span id="local-6989586621680853879"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853879"><span class="hs-identifier hs-var">canonicalObjId</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe BranchObjectId
+</span><a href="#local-6989586621680853881"><span class="hs-identifier hs-var">mayCanonical</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-254"></span><span>    </span><span class="hs-comment">-- If there's an existing canonical object, record the mapping from this object id to</span><span>
 </span><span id="line-255"></span><span>    </span><span class="hs-comment">-- that one.</span><span>
-</span><span id="line-256"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680855721"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855721"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span></span><span>
+</span><span id="line-256"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680853878"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853878"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span></span><span>
 </span><span id="line-257"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855721"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680853878"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-258"></span><span>          </span><span class="hs-comment">-- Found an existing but different object with this hash, so the current object is a duplicate and</span><span>
 </span><span id="line-259"></span><span>          </span><span class="hs-comment">-- needs to be deleted.</span><span>
 </span><span id="line-260"></span><span>          </span><span class="annot"><span class="annottext">forall a.
@@ -779,12 +779,12 @@ Transaction a
 </span><span class="hs-string">&quot;Mapping objID: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot; to canonical: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855721"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span>
+</span><a href="#local-6989586621680853878"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span>
 </span><span id="line-261"></span><span>          </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -796,7 +796,7 @@ Transaction a
 </span><span class="hs-string">&quot;Unilaterally deleting: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-262"></span><span>          </span><span class="hs-comment">-- Remove possible foreign-key references before deleting the objects themselves</span><span>
 </span><span id="line-263"></span><span>          </span><span class="annot"><span class="annottext">forall a.
 Transaction a
@@ -804,18 +804,18 @@ Transaction a
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {a}. ToField a =&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855720"><span class="hs-identifier hs-var">deleteHashObjectsByObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853877"><span class="hs-identifier hs-var">deleteHashObjectsByObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-264"></span><span>          </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {a}. ToField a =&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855719"><span class="hs-identifier hs-var">deleteObjectById</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853876"><span class="hs-identifier hs-var">deleteObjectById</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-265"></span><span>          </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855721"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span>
+</span><a href="#local-6989586621680853878"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span>
 </span><span id="line-266"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-267"></span><span>          </span><span class="hs-comment">-- This should be impossible.</span><span>
@@ -825,8 +825,8 @@ Transaction a
 </span><span class="hs-string">&quot;We proved that the new hash is different from the existing one, but somehow found the same object for each hash. Please report this as a bug.&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855721"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853878"><span class="hs-identifier hs-var">canonicalObjectId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-269"></span><span>    </span><span class="annot"><span class="annottext">Maybe BranchObjectId
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-270"></span><span>      </span><span class="hs-comment">-- There's no existing canonical object, this object BECOMES the canonical one by</span><span>
@@ -842,24 +842,24 @@ Transaction a
 </span><span class="hs-string">&quot;Updating in place: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-273"></span><span>      </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {a}. ToField a =&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855720"><span class="hs-identifier hs-var">deleteHashObjectsByObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853877"><span class="hs-identifier hs-var">deleteHashObjectsByObjectId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-274"></span><span>      </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
      (TrySyncResult CausalHashId) (StateT MigrationState Transaction) a
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#liftT"><span class="hs-identifier hs-var">liftT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {a} {a}. (ToField a, ToField a) =&gt; a -&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855717"><span class="hs-identifier hs-var">updateHashIdForObject</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853874"><span class="hs-identifier hs-var">updateHashIdForObject</span></a></span><span> </span><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-275"></span><span>      </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -868,30 +868,30 @@ Transaction a
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">HashId -&gt; ObjectId -&gt; HashVersion -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Q.saveHashObject</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId -&gt; HashId
 </span><span class="hs-identifier hs-var">DB.unBranchHashId</span></span><span> </span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId -&gt; ObjectId
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchObjectId -&gt; ObjectId
 </span><span class="hs-identifier hs-var">DB.unBranchObjectId</span></span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">HashVersion
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">HashVersion
 </span><span class="hs-number">2</span></span><span>
 </span><span id="line-276"></span><span>      </span><span class="hs-identifier">pure</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855749"><span class="hs-identifier hs-var">objId</span></a></span><span>
+</span><a href="#local-6989586621680853906"><span class="hs-identifier hs-var">objId</span></a></span><span>
 </span><span id="line-277"></span><span>  </span><span class="hs-comment">-- Save the canonical branch info for the causal for use in remappings.</span><span>
 </span><span id="line-278"></span><span>  </span><span class="annot"><span class="annottext">Lens'
   MigrationState (Map CausalHashId (BranchHashId, BranchObjectId))
 </span><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#canonicalBranchForCausalHashId"><span class="hs-identifier hs-var">canonicalBranchForCausalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall m. At m =&gt; Index m -&gt; Lens' m (Maybe (IxValue m))
 </span><span class="hs-identifier hs-var">at</span></span><span> </span><span class="annot"><span class="annottext">CausalHashId
-</span><a href="#local-6989586621680855751"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
+</span><a href="#local-6989586621680853908"><span class="hs-identifier hs-var">causalHashId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s (m :: * -&gt; *) a b.
 MonadState s m =&gt;
 ASetter s s a (Maybe b) -&gt; b -&gt; m ()
 </span><span class="hs-operator hs-var">?=</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855727"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855722"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680853884"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853879"><span class="hs-identifier hs-var">canonicalObjId</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-279"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-280"></span><span>    </span><span class="annot"><a href="#local-6989586621680855725"><span class="hs-identifier hs-type">updateCausalValueHash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-281"></span><span>    </span><span id="local-6989586621680855725"><span class="annot"><span class="annottext">updateCausalValueHash :: BranchHashId -&gt; BranchHashId -&gt; Transaction ()
-</span><a href="#local-6989586621680855725"><span class="hs-identifier hs-var hs-var">updateCausalValueHash</span></a></span></span><span> </span><span id="local-6989586621680855713"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855713"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span></span><span> </span><span id="local-6989586621680855712"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855712"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-280"></span><span>    </span><span class="annot"><a href="#local-6989586621680853882"><span class="hs-identifier hs-type">updateCausalValueHash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>    </span><span id="local-6989586621680853882"><span class="annot"><span class="annottext">updateCausalValueHash :: BranchHashId -&gt; BranchHashId -&gt; Transaction ()
+</span><a href="#local-6989586621680853882"><span class="hs-identifier hs-var hs-var">updateCausalValueHash</span></a></span></span><span> </span><span id="local-6989586621680853870"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853870"><span class="hs-identifier hs-var">correctNamespaceHashId</span></a></span></span><span> </span><span id="local-6989586621680853869"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853869"><span class="hs-identifier hs-var">possiblyIncorrectNamespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-282"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-283"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -900,19 +900,19 @@ ASetter s s a (Maybe b) -&gt; b -&gt; m ()
             WHERE value_hash_id = :possiblyIncorrectNamespaceHashId
         |]</span></span><span>
 </span><span id="line-288"></span><span>
-</span><span id="line-289"></span><span>    </span><span class="annot"><a href="#local-6989586621680855723"><span class="hs-identifier hs-type">getCanonicalObjectForHash</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-289"></span><span>    </span><span class="annot"><a href="#local-6989586621680853880"><span class="hs-identifier hs-type">getCanonicalObjectForHash</span></a></span><span> </span><span class="hs-glyph">::</span><span>
 </span><span id="line-290"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchHashId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-291"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">ExceptT</span></span><span>
 </span><span id="line-292"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Sync.TrySyncResult</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.CausalHashId</span></span><span class="hs-special">)</span><span>
 </span><span id="line-293"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">StateT</span></span><span> </span><span class="annot"><a href="Unison.Codebase.SqliteCodebase.Migrations.MigrateSchema3To4.html#MigrationState"><span class="hs-identifier hs-type">MigrationState</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span>
 </span><span id="line-294"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span class="hs-special">)</span><span>
-</span><span id="line-295"></span><span>    </span><span id="local-6989586621680855723"><span class="annot"><span class="annottext">getCanonicalObjectForHash :: BranchHashId
+</span><span id="line-295"></span><span>    </span><span id="local-6989586621680853880"><span class="annot"><span class="annottext">getCanonicalObjectForHash :: BranchHashId
 -&gt; ExceptT
      (TrySyncResult CausalHashId)
      (StateT MigrationState Transaction)
      (Maybe BranchObjectId)
-</span><a href="#local-6989586621680855723"><span class="hs-identifier hs-var hs-var">getCanonicalObjectForHash</span></a></span></span><span> </span><span id="local-6989586621680855711"><span class="annot"><span class="annottext">BranchHashId
-</span><a href="#local-6989586621680855711"><span class="hs-identifier hs-var">namespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621680853880"><span class="hs-identifier hs-var hs-var">getCanonicalObjectForHash</span></a></span></span><span> </span><span id="local-6989586621680853868"><span class="annot"><span class="annottext">BranchHashId
+</span><a href="#local-6989586621680853868"><span class="hs-identifier hs-var">namespaceHashId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-296"></span><span>      </span><span class="annot"><span class="annottext">forall a.
 Transaction a
 -&gt; ExceptT
@@ -927,10 +927,10 @@ Transaction a
               WHERE primary_hash_id = :namespaceHashId
           |]</span></span><span>
 </span><span id="line-303"></span><span>
-</span><span id="line-304"></span><span>    </span><span id="local-6989586621680855717"><span class="annot"><span class="annottext">updateHashIdForObject :: a -&gt; a -&gt; Transaction ()
-</span><a href="#local-6989586621680855717"><span class="hs-identifier hs-var hs-var">updateHashIdForObject</span></a></span></span><span> </span><span id="local-6989586621680855702"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855702"><span class="hs-identifier hs-var">hashId</span></a></span></span><span> </span><span id="local-6989586621680855701"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855701"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-304"></span><span>    </span><span id="local-6989586621680853874"><span class="annot"><span class="annottext">updateHashIdForObject :: a -&gt; a -&gt; Transaction ()
+</span><a href="#local-6989586621680853874"><span class="hs-identifier hs-var hs-var">updateHashIdForObject</span></a></span></span><span> </span><span id="local-6989586621680853859"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853859"><span class="hs-identifier hs-var">hashId</span></a></span></span><span> </span><span id="local-6989586621680853858"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853858"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-305"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-306"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -941,24 +941,24 @@ Transaction a
 </span><span id="line-311"></span><span>
 </span><span id="line-312"></span><span>    </span><span class="hs-comment">-- Replace the bytes payload of a given branch in-place.</span><span>
 </span><span id="line-313"></span><span>    </span><span class="hs-comment">-- This does NOT update the hash of the object.</span><span>
-</span><span id="line-314"></span><span>    </span><span class="annot"><a href="#local-6989586621680855730"><span class="hs-identifier hs-type">replaceBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DBBranch.DbBranch</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-315"></span><span>    </span><span id="local-6989586621680855730"><span class="annot"><span class="annottext">replaceBranch :: BranchObjectId -&gt; DbBranch -&gt; Transaction ()
-</span><a href="#local-6989586621680855730"><span class="hs-identifier hs-var hs-var">replaceBranch</span></a></span></span><span> </span><span id="local-6989586621680855700"><span class="annot"><span class="annottext">BranchObjectId
-</span><a href="#local-6989586621680855700"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span id="local-6989586621680855699"><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855699"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-316"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680855698"><span class="annot"><span class="annottext">BranchLocalIds
-</span><a href="#local-6989586621680855698"><span class="hs-identifier hs-var">localBranchIds</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680855697"><span class="annot"><span class="annottext">LocalBranch
-</span><a href="#local-6989586621680855697"><span class="hs-identifier hs-var">localBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DbBranch -&gt; (BranchLocalIds, LocalBranch)
+</span><span id="line-314"></span><span>    </span><span class="annot"><a href="#local-6989586621680853887"><span class="hs-identifier hs-type">replaceBranch</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DB.BranchObjectId</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">DBBranch.DbBranch</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-315"></span><span>    </span><span id="local-6989586621680853887"><span class="annot"><span class="annottext">replaceBranch :: BranchObjectId -&gt; DbBranch -&gt; Transaction ()
+</span><a href="#local-6989586621680853887"><span class="hs-identifier hs-var hs-var">replaceBranch</span></a></span></span><span> </span><span id="local-6989586621680853857"><span class="annot"><span class="annottext">BranchObjectId
+</span><a href="#local-6989586621680853857"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span id="local-6989586621680853856"><span class="annot"><span class="annottext">DbBranch
+</span><a href="#local-6989586621680853856"><span class="hs-identifier hs-var">branch</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-316"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680853855"><span class="annot"><span class="annottext">BranchLocalIds
+</span><a href="#local-6989586621680853855"><span class="hs-identifier hs-var">localBranchIds</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680853854"><span class="annot"><span class="annottext">LocalBranch
+</span><a href="#local-6989586621680853854"><span class="hs-identifier hs-var">localBranch</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DbBranch -&gt; (BranchLocalIds, LocalBranch)
 </span><span class="hs-identifier hs-var">S.LocalizeObject.localizeBranch</span></span><span> </span><span class="annot"><span class="annottext">DbBranch
-</span><a href="#local-6989586621680855699"><span class="hs-identifier hs-var">branch</span></a></span><span>
-</span><span id="line-317"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680855695"><span class="annot"><span class="annottext">bytes :: ByteString
-</span><a href="#local-6989586621680855695"><span class="hs-identifier hs-var hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Put a -&gt; a -&gt; ByteString
+</span><a href="#local-6989586621680853856"><span class="hs-identifier hs-var">branch</span></a></span><span>
+</span><span id="line-317"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680853852"><span class="annot"><span class="annottext">bytes :: ByteString
+</span><a href="#local-6989586621680853852"><span class="hs-identifier hs-var hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Put a -&gt; a -&gt; ByteString
 </span><span class="hs-identifier hs-var">S.putBytes</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). MonadPut m =&gt; BranchFormat -&gt; m ()
 </span><span class="hs-identifier hs-var">S.putBranchFormat</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">BranchLocalIds -&gt; LocalBranch -&gt; BranchFormat
 </span><span class="hs-identifier hs-var">S.BranchFormat.Full</span></span><span> </span><span class="annot"><span class="annottext">BranchLocalIds
-</span><a href="#local-6989586621680855698"><span class="hs-identifier hs-var">localBranchIds</span></a></span><span> </span><span class="annot"><span class="annottext">LocalBranch
-</span><a href="#local-6989586621680855697"><span class="hs-identifier hs-var">localBranch</span></a></span><span>
+</span><a href="#local-6989586621680853855"><span class="hs-identifier hs-var">localBranchIds</span></a></span><span> </span><span class="annot"><span class="annottext">LocalBranch
+</span><a href="#local-6989586621680853854"><span class="hs-identifier hs-var">localBranch</span></a></span><span>
 </span><span id="line-318"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-319"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -967,9 +967,9 @@ Transaction a
           WHERE id = :objId
         |]</span></span><span>
 </span><span id="line-324"></span><span>
-</span><span id="line-325"></span><span>    </span><span id="local-6989586621680855720"><span class="annot"><span class="annottext">deleteHashObjectsByObjectId :: a -&gt; Transaction ()
-</span><a href="#local-6989586621680855720"><span class="hs-identifier hs-var hs-var">deleteHashObjectsByObjectId</span></a></span></span><span> </span><span id="local-6989586621680855684"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855684"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-325"></span><span>    </span><span id="local-6989586621680853877"><span class="annot"><span class="annottext">deleteHashObjectsByObjectId :: a -&gt; Transaction ()
+</span><a href="#local-6989586621680853877"><span class="hs-identifier hs-var hs-var">deleteHashObjectsByObjectId</span></a></span></span><span> </span><span id="local-6989586621680853841"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853841"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-326"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-327"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|
@@ -977,9 +977,9 @@ Transaction a
             WHERE object_id = :objId
         |]</span></span><span>
 </span><span id="line-331"></span><span>
-</span><span id="line-332"></span><span>    </span><span id="local-6989586621680855719"><span class="annot"><span class="annottext">deleteObjectById :: a -&gt; Transaction ()
-</span><a href="#local-6989586621680855719"><span class="hs-identifier hs-var hs-var">deleteObjectById</span></a></span></span><span> </span><span id="local-6989586621680855678"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680855678"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-332"></span><span>    </span><span id="local-6989586621680853876"><span class="annot"><span class="annottext">deleteObjectById :: a -&gt; Transaction ()
+</span><a href="#local-6989586621680853876"><span class="hs-identifier hs-var hs-var">deleteObjectById</span></a></span></span><span> </span><span id="local-6989586621680853835"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680853835"><span class="hs-identifier hs-var">objId</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-333"></span><span>      </span><span class="annot"><span class="annottext">Sql -&gt; Transaction ()
 </span><span class="hs-identifier hs-var">Sqlite.execute</span></span><span>
 </span><span id="line-334"></span><span>        </span><span class="annot"><span class="">[Sqlite.sql|

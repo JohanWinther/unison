@@ -3568,9 +3568,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4J6i loc_a4J6j. Lens' (Env v_a4J6i loc_a4J6j) (TypeLookup v_a4J6i loc_a4J6j)
-termsByShortname :: forall v_a4J6i loc_a4J6j. Lens' (Env v_a4J6i loc_a4J6j) (Map Name [NamedReference v_a4J6i loc_a4J6j])
-ambientAbilities :: forall v_a4J6i loc_a4J6j. Lens' (Env v_a4J6i loc_a4J6j) [Type v_a4J6i loc_a4J6j]
+typeLookup :: forall v_a4ITD loc_a4ITE. Lens' (Env v_a4ITD loc_a4ITE) (TypeLookup v_a4ITD loc_a4ITE)
+termsByShortname :: forall v_a4ITD loc_a4ITE. Lens' (Env v_a4ITD loc_a4ITE) (Map Name [NamedReference v_a4ITD loc_a4ITE])
+ambientAbilities :: forall v_a4ITD loc_a4ITE. Lens' (Env v_a4ITD loc_a4ITE) [Type v_a4ITD loc_a4ITE]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -5111,12 +5111,6 @@ raceIO :: MonadIO m => STM a -> STM b -> m (Either a b)
 tryPeekWhile :: (a -> Bool) -> TQueue a -> STM [a]
 takeWhile :: (a -> Bool) -> TQueue a -> STM [a]
 peekWhile :: (a -> Bool) -> TQueue a -> STM [a]
-
-module Unison.Codebase.Watch
-untilJust :: Monad m => m (Maybe a) -> m a
-watchDirectory' :: forall m. MonadIO m => FilePath -> m (IO (), IO (FilePath, UTCTime))
-collectUntilPause :: forall a. TQueue a -> Int -> IO [a]
-watchDirectory :: forall m. MonadIO m => FilePath -> (FilePath -> Bool) -> m (IO (), IO (FilePath, Text))
 
 module Unison.Util.Text
 newtype Text

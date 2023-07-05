@@ -728,6 +728,12 @@ instance GHC.Show.Show Unison.Codebase.Editor.UriParser.GitProtocol
 instance GHC.Classes.Ord Unison.Codebase.Editor.UriParser.GitProtocol
 instance GHC.Classes.Eq Unison.Codebase.Editor.UriParser.GitProtocol
 
+module Unison.Codebase.Watch
+untilJust :: Monad m => m (Maybe a) -> m a
+watchDirectory' :: forall m. MonadIO m => FilePath -> m (IO (), IO (FilePath, UTCTime))
+collectUntilPause :: forall a. TQueue a -> Int -> IO [a]
+watchDirectory :: forall m. MonadIO m => FilePath -> (FilePath -> Bool) -> m (IO (), IO (FilePath, Text))
+
 
 -- | Command-line fuzzy selection of arbitrary values. Shells out to fzf
 --   for the actual selection.
