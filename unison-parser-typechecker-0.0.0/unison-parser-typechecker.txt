@@ -3568,9 +3568,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4ITE loc_a4ITF. Lens' (Env v_a4ITE loc_a4ITF) (TypeLookup v_a4ITE loc_a4ITF)
-termsByShortname :: forall v_a4ITE loc_a4ITF. Lens' (Env v_a4ITE loc_a4ITF) (Map Name [NamedReference v_a4ITE loc_a4ITF])
-ambientAbilities :: forall v_a4ITE loc_a4ITF. Lens' (Env v_a4ITE loc_a4ITF) [Type v_a4ITE loc_a4ITF]
+typeLookup :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) (TypeLookup v_a4J4H loc_a4J4I)
+termsByShortname :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) (Map Name [NamedReference v_a4J4H loc_a4J4I])
+ambientAbilities :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) [Type v_a4J4H loc_a4J4I]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -5008,10 +5008,10 @@ createCodebase :: MonadIO m => Init m v a -> DebugName -> CodebasePath -> Codeba
 
 -- | try to init a codebase where none exists and then exit regardless
 --   (i.e. `ucm --codebase dir init`)
-initCodebaseAndExit :: MonadIO m => Init m Symbol Ann -> DebugName -> Maybe CodebasePath -> CodebaseLockOption -> m ()
+initCodebaseAndExit :: MonadIO m => Init m Symbol Ann -> Verbosity -> DebugName -> Maybe CodebasePath -> CodebaseLockOption -> m ()
 withOpenOrCreateCodebase :: MonadIO m => Init m v a -> DebugName -> CodebaseInitOptions -> CodebaseLockOption -> MigrationStrategy -> ((InitResult, CodebasePath, Codebase m v a) -> m r) -> m (Either (CodebasePath, InitError) r)
-withNewUcmCodebaseOrExit :: MonadIO m => Init m Symbol Ann -> DebugName -> CodebasePath -> CodebaseLockOption -> (Codebase m Symbol Ann -> m r) -> m r
-withTemporaryUcmCodebase :: MonadUnliftIO m => Init m Symbol Ann -> DebugName -> CodebaseLockOption -> ((CodebasePath, Codebase m Symbol Ann) -> m r) -> m r
+withNewUcmCodebaseOrExit :: MonadIO m => Init m Symbol Ann -> Verbosity -> DebugName -> CodebasePath -> CodebaseLockOption -> (Codebase m Symbol Ann -> m r) -> m r
+withTemporaryUcmCodebase :: MonadUnliftIO m => Init m Symbol Ann -> Verbosity -> DebugName -> CodebaseLockOption -> ((CodebasePath, Codebase m Symbol Ann) -> m r) -> m r
 instance GHC.Classes.Ord Unison.Codebase.Init.BackupStrategy
 instance GHC.Classes.Eq Unison.Codebase.Init.BackupStrategy
 instance GHC.Show.Show Unison.Codebase.Init.BackupStrategy
