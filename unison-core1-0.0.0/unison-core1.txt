@@ -1881,7 +1881,7 @@ lam'' :: Ord v => [(a, v)] -> Term2 vt at ap v a -> Term2 vt at ap v a
 isLam :: Term2 vt at ap v a -> Bool
 arity :: Term2 vt at ap v a -> Int
 unLetRecNamedAnnotated :: Term' vt v a -> Maybe (IsTop, a, [((a, v), Term' vt v a)], Term' vt v a)
-letRec' :: (Ord v, Monoid a) => Bool -> [(v, Term' vt v a)] -> Term' vt v a -> Term' vt v a
+letRec' :: (Ord v, Monoid a) => Bool -> [(v, a, Term' vt v a)] -> Term' vt v a -> Term' vt v a
 consLetRec :: (Ord v, Semigroup a) => Bool -> a -> (a, v, Term' vt v a) -> Term' vt v a -> Term' vt v a
 letRec :: forall v vt a. Ord v => Bool -> a -> [((a, v), Term' vt v a)] -> Term' vt v a -> Term' vt v a
 
@@ -2010,7 +2010,7 @@ labeledDeclDependenciesIncludingSelf :: Ord v => TypeReference -> Decl v a -> Se
 declFields :: Var v => Decl v a -> Either [Int] [Int]
 dependencies :: Ord v => DataDeclaration v a -> Set Reference
 labeledDependencies :: Ord v => DataDeclaration v a -> Set LabeledDependency
-generateRecordAccessors :: (Semigroup a, Var v) => [(v, a)] -> v -> Reference -> [(v, Term v a)]
+generateRecordAccessors :: (Semigroup a, Var v) => [(v, a)] -> v -> Reference -> [(v, a, Term v a)]
 
 -- | This converts <a>Reference</a>s it finds that are in the input
 --   <a>Map</a> back to free variables.

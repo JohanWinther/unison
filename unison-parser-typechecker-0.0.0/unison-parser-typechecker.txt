@@ -2035,23 +2035,23 @@ datas :: Env v a -> Map v (Reference, DataDeclaration v a)
 
 module Unison.UnisonFile.Type
 data UnisonFile v a
-UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, Term v a)] -> Map WatchKind [(v, Term v a)] -> UnisonFile v a
+UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
 [$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, DataDeclaration v a)
 [$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, EffectDeclaration v a)
-[$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, Term v a)]
-[$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, Term v a)]
-pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, Term v a)] -> Map WatchKind [(v, Term v a)] -> UnisonFile v a
+[$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, a, Term v a)]
+[$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, a, Term v a)]
+pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
 
 -- | A UnisonFile after typechecking. Terms are split into groups by cycle
 --   and the type of each term is known.
 data TypecheckedUnisonFile v a
-TypecheckedUnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [[(v, Term v a, Type v a)]] -> [(WatchKind, [(v, Term v a, Type v a)])] -> Map v (TermReferenceId, Maybe WatchKind, Term v a, Type v a) -> TypecheckedUnisonFile v a
+TypecheckedUnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> Map v (a, TermReferenceId, Maybe WatchKind, Term v a, Type v a) -> TypecheckedUnisonFile v a
 [$sel:dataDeclarationsId':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TypeReferenceId, DataDeclaration v a)
 [$sel:effectDeclarationsId':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TypeReferenceId, EffectDeclaration v a)
-[$sel:topLevelComponents':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [[(v, Term v a, Type v a)]]
-[$sel:watchComponents:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [(WatchKind, [(v, Term v a, Type v a)])]
-[$sel:hashTermsId:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TermReferenceId, Maybe WatchKind, Term v a, Type v a)
-pattern TypecheckedUnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [[(v, Term v a, Type v a)]] -> [(WatchKind, [(v, Term v a, Type v a)])] -> Map v (TermReference, Maybe WatchKind, Term (F v a a) v a, Term F v a) -> TypecheckedUnisonFile v a
+[$sel:topLevelComponents':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [[(v, a, Term v a, Type v a)]]
+[$sel:watchComponents:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [(WatchKind, [(v, a, Term v a, Type v a)])]
+[$sel:hashTermsId:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (a, TermReferenceId, Maybe WatchKind, Term v a, Type v a)
+pattern TypecheckedUnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> Map v (a, TermReference, Maybe WatchKind, Term (F v a a) v a, Term F v a) -> TypecheckedUnisonFile v a
 instance (GHC.Show.Show a, GHC.Show.Show v) => GHC.Show.Show (Unison.UnisonFile.Type.UnisonFile v a)
 instance (GHC.Show.Show a, GHC.Show.Show v) => GHC.Show.Show (Unison.UnisonFile.Type.TypecheckedUnisonFile v a)
 instance GHC.Generics.Generic (Unison.UnisonFile.Type.TypecheckedUnisonFile v a)
@@ -2427,7 +2427,7 @@ hashDataDecls :: Var v => Map v (DataDeclaration v a) -> ResolutionResult v a [(
 hashDecls :: Var v => Map v (Decl v a) -> ResolutionResult v a [(v, Id, Decl v a)]
 hashPatch :: Patch -> Hash
 hashClosedTerm :: Var v => Term v a -> Id
-hashTermComponents :: forall v a. Var v => Map v (Term v a, Type v a) -> Map v (Id, Term v a, Type v a)
+hashTermComponents :: forall v a extra. Var v => Map v (Term v a, Type v a, extra) -> Map v (Id, Term v a, Type v a, extra)
 
 -- | This shouldn't be used when storing terms in the codebase, as it
 --   doesn't incorporate the type into the hash. this should only be used
@@ -2598,29 +2598,32 @@ unOptionalRef :: Reference -> Bool
 
 module Unison.UnisonFile
 data UnisonFile v a
-UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, Term v a)] -> Map WatchKind [(v, Term v a)] -> UnisonFile v a
+UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
 [$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, DataDeclaration v a)
 [$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, EffectDeclaration v a)
-[$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, Term v a)]
-[$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, Term v a)]
-pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, Term v a)] -> Map WatchKind [(v, Term v a)] -> UnisonFile v a
-allWatches :: UnisonFile v a -> [(v, Term v a)]
+[$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, a, Term v a)]
+[$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, a, Term v a)]
+pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
+allWatches :: UnisonFile v a -> [(v, a, Term v a)]
 dataDeclarations :: UnisonFile v a -> Map v (Reference, DataDeclaration v a)
 declsToTypeLookup :: Var v => UnisonFile v a -> TypeLookup v a
 dependencies :: (Monoid a, Var v) => UnisonFile v a -> Set Reference
 effectDeclarations :: UnisonFile v a -> Map v (Reference, EffectDeclaration v a)
 typecheckingTerm :: (Var v, Monoid a) => UnisonFile v a -> Term v a
-watchesOfKind :: WatchKind -> UnisonFile v a -> [(v, Term v a)]
+watchesOfKind :: WatchKind -> UnisonFile v a -> [(v, a, Term v a)]
+
+-- | Get the location of a given definition in the file.
+definitionLocation :: Var v => v -> UnisonFile v a -> Maybe a
 
 -- | A UnisonFile after typechecking. Terms are split into groups by cycle
 --   and the type of each term is known.
 data TypecheckedUnisonFile v a
-TypecheckedUnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [[(v, Term v a, Type v a)]] -> [(WatchKind, [(v, Term v a, Type v a)])] -> Map v (TermReferenceId, Maybe WatchKind, Term v a, Type v a) -> TypecheckedUnisonFile v a
+TypecheckedUnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> Map v (a, TermReferenceId, Maybe WatchKind, Term v a, Type v a) -> TypecheckedUnisonFile v a
 [$sel:dataDeclarationsId':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TypeReferenceId, DataDeclaration v a)
 [$sel:effectDeclarationsId':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TypeReferenceId, EffectDeclaration v a)
-[$sel:topLevelComponents':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [[(v, Term v a, Type v a)]]
-[$sel:watchComponents:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [(WatchKind, [(v, Term v a, Type v a)])]
-[$sel:hashTermsId:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (TermReferenceId, Maybe WatchKind, Term v a, Type v a)
+[$sel:topLevelComponents':TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [[(v, a, Term v a, Type v a)]]
+[$sel:watchComponents:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> [(WatchKind, [(v, a, Term v a, Type v a)])]
+[$sel:hashTermsId:TypecheckedUnisonFileId] :: TypecheckedUnisonFile v a -> Map v (a, TermReferenceId, Maybe WatchKind, Term v a, Type v a)
 
 -- | A mapping of all terms in the file by their var name. The returned
 --   terms refer to other definitions in the file by their var, not by
@@ -2634,15 +2637,15 @@ hashConstructors :: forall v a. Ord v => TypecheckedUnisonFile v a -> Map v Id
 -- | Returns the set of constructor names for decls whose names in the
 --   given Set.
 constructorsForDecls :: Ord v => Set v -> TypecheckedUnisonFile v a -> Set v
-hashTerms :: TypecheckedUnisonFile v a -> Map v (Reference, Maybe WatchKind, Term v a, Type v a)
-indexByReference :: TypecheckedUnisonFile v a -> (Map Id (Term v a, Type v a), Map Id (Decl v a))
+hashTerms :: TypecheckedUnisonFile v a -> Map v (a, Reference, Maybe WatchKind, Term v a, Type v a)
+indexByReference :: TypecheckedUnisonFile v a -> (Map Id (a, Term v a, Type v a), Map Id (Decl v a))
 lookupDecl :: Ord v => v -> TypecheckedUnisonFile v a -> Maybe (Id, Decl v a)
 nonEmpty :: TypecheckedUnisonFile v a -> Bool
 termSignatureExternalLabeledDependencies :: Ord v => TypecheckedUnisonFile v a -> Set LabeledDependency
 
 -- | the top level components (no watches) plus test watches.
-topLevelComponents :: TypecheckedUnisonFile v a -> [[(v, Term v a, Type v a)]]
-typecheckedUnisonFile :: forall v a. Var v => Map v (Id, DataDeclaration v a) -> Map v (Id, EffectDeclaration v a) -> [[(v, Term v a, Type v a)]] -> [(WatchKind, [(v, Term v a, Type v a)])] -> TypecheckedUnisonFile v a
+topLevelComponents :: TypecheckedUnisonFile v a -> [[(v, a, Term v a, Type v a)]]
+typecheckedUnisonFile :: forall v a. Var v => Map v (Id, DataDeclaration v a) -> Map v (Id, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> TypecheckedUnisonFile v a
 
 module Unison.UnisonFile.Names
 toNames :: Var v => UnisonFile v a -> Names
@@ -3568,9 +3571,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) (TypeLookup v_a4J4H loc_a4J4I)
-termsByShortname :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) (Map Name [NamedReference v_a4J4H loc_a4J4I])
-ambientAbilities :: forall v_a4J4H loc_a4J4I. Lens' (Env v_a4J4H loc_a4J4I) [Type v_a4J4H loc_a4J4I]
+typeLookup :: forall v_a4JMw loc_a4JMx. Lens' (Env v_a4JMw loc_a4JMx) (TypeLookup v_a4JMw loc_a4JMx)
+termsByShortname :: forall v_a4JMw loc_a4JMx. Lens' (Env v_a4JMw loc_a4JMx) (Map Name [NamedReference v_a4JMw loc_a4JMx])
+ambientAbilities :: forall v_a4JMw loc_a4JMx. Lens' (Env v_a4JMw loc_a4JMx) [Type v_a4JMw loc_a4JMx]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
@@ -3751,7 +3754,7 @@ builtinTest :: Ord v => a -> Type v a
 
 module Unison.Builtin.Terms
 builtinTermsRef :: Map Symbol Id
-builtinTermsSrc :: a -> [(Symbol, Term Symbol a, Type Symbol a)]
+builtinTermsSrc :: a -> [(Symbol, a, Term Symbol a, Type Symbol a)]
 
 module Unison.Builtin
 codeLookup :: Applicative m => CodeLookup Symbol m Ann

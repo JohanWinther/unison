@@ -155,7 +155,7 @@ hashClosedTerm :: Var v => Term v a -> ReferenceId
 --   bomb if not satisfied, or else do local mangling and unmangling to
 --   ensure this doesn't affect the hash.
 hashDecls :: (Eq v, Var v, Show v) => (v -> Name) -> Map v (DataDeclaration v a) -> ResolutionResult v a [(v, ReferenceId, DataDeclaration v a)]
-hashTermComponents :: forall v a. Var v => Map v (Term v a, Type v a) -> Map v (ReferenceId, Term v a, Type v a)
+hashTermComponents :: forall v a extra. Var v => Map v (Term v a, Type v a, extra) -> Map v (ReferenceId, Term v a, Type v a, extra)
 hashTermComponentsWithoutTypes :: Var v => Map v (Term v a) -> Map v (ReferenceId, Term v a)
 typeToReference :: (Ord v, Show v) => Type v a -> Reference
 typeToReferenceMentions :: (Ord v, Show v) => Type v a -> Set Reference
