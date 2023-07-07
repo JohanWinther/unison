@@ -1561,6 +1561,10 @@ fixScopedNameLookupTables :: Transaction ()
 addNameLookupMountTables :: Transaction ()
 addMostRecentNamespaceTable :: Transaction ()
 addSquashResultTable :: Transaction ()
+
+-- | Added as a fix because <a>addSquashResultTable</a> was missed in the
+--   createSchema action for a portion of time.
+addSquashResultTableIfNotExists :: Transaction ()
 currentSchemaVersion :: SchemaVersion
 
 -- | Expect the given schema version.
