@@ -88,22 +88,22 @@ JWSInvalidSignature :: Error
 -- | <tt>AllValidated</tt> policy active, and there were no signatures on
 --   object that matched the allowed algorithms
 JWSNoSignatures :: Error
-class AsError r_ahOT
-_Error :: AsError r_ahOT => Prism' r_ahOT Error
-_AlgorithmNotImplemented :: AsError r_ahOT => Prism' r_ahOT ()
-_AlgorithmMismatch :: AsError r_ahOT => Prism' r_ahOT String
-_KeyMismatch :: AsError r_ahOT => Prism' r_ahOT Text
-_KeySizeTooSmall :: AsError r_ahOT => Prism' r_ahOT ()
-_OtherPrimesNotSupported :: AsError r_ahOT => Prism' r_ahOT ()
-_RSAError :: AsError r_ahOT => Prism' r_ahOT Error
-_CryptoError :: AsError r_ahOT => Prism' r_ahOT CryptoError
-_CompactDecodeError :: AsError r_ahOT => Prism' r_ahOT CompactDecodeError
-_JSONDecodeError :: AsError r_ahOT => Prism' r_ahOT String
-_NoUsableKeys :: AsError r_ahOT => Prism' r_ahOT ()
-_JWSCritUnprotected :: AsError r_ahOT => Prism' r_ahOT ()
-_JWSNoValidSignatures :: AsError r_ahOT => Prism' r_ahOT ()
-_JWSInvalidSignature :: AsError r_ahOT => Prism' r_ahOT ()
-_JWSNoSignatures :: AsError r_ahOT => Prism' r_ahOT ()
+class AsError r_ahP5
+_Error :: AsError r_ahP5 => Prism' r_ahP5 Error
+_AlgorithmNotImplemented :: AsError r_ahP5 => Prism' r_ahP5 ()
+_AlgorithmMismatch :: AsError r_ahP5 => Prism' r_ahP5 String
+_KeyMismatch :: AsError r_ahP5 => Prism' r_ahP5 Text
+_KeySizeTooSmall :: AsError r_ahP5 => Prism' r_ahP5 ()
+_OtherPrimesNotSupported :: AsError r_ahP5 => Prism' r_ahP5 ()
+_RSAError :: AsError r_ahP5 => Prism' r_ahP5 Error
+_CryptoError :: AsError r_ahP5 => Prism' r_ahP5 CryptoError
+_CompactDecodeError :: AsError r_ahP5 => Prism' r_ahP5 CompactDecodeError
+_JSONDecodeError :: AsError r_ahP5 => Prism' r_ahP5 String
+_NoUsableKeys :: AsError r_ahP5 => Prism' r_ahP5 ()
+_JWSCritUnprotected :: AsError r_ahP5 => Prism' r_ahP5 ()
+_JWSNoValidSignatures :: AsError r_ahP5 => Prism' r_ahP5 ()
+_JWSInvalidSignature :: AsError r_ahP5 => Prism' r_ahP5 ()
+_JWSNoSignatures :: AsError r_ahP5 => Prism' r_ahP5 ()
 
 -- | The wrong number of parts were found when decoding a compact JOSE
 --   object.
@@ -1265,13 +1265,13 @@ issuerPredicate :: HasIssuerPredicate s => Lens' s (StringOrURI -> Bool)
 class HasCheckIssuedAt s
 checkIssuedAt :: HasCheckIssuedAt s => Lens' s Bool
 data JWTValidationSettings
-class HasJWTValidationSettings c_a1mJ1
-jWTValidationSettings :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 JWTValidationSettings
-jwtValidationSettingsAllowedSkew :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 NominalDiffTime
-jwtValidationSettingsAudiencePredicate :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 (StringOrURI -> Bool)
-jwtValidationSettingsCheckIssuedAt :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 Bool
-jwtValidationSettingsIssuerPredicate :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 (StringOrURI -> Bool)
-jwtValidationSettingsValidationSettings :: HasJWTValidationSettings c_a1mJ1 => Lens' c_a1mJ1 ValidationSettings
+class HasJWTValidationSettings c_a1mK9
+jWTValidationSettings :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 JWTValidationSettings
+jwtValidationSettingsAllowedSkew :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 NominalDiffTime
+jwtValidationSettingsAudiencePredicate :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 (StringOrURI -> Bool)
+jwtValidationSettingsCheckIssuedAt :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 Bool
+jwtValidationSettingsIssuerPredicate :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 (StringOrURI -> Bool)
+jwtValidationSettingsValidationSettings :: HasJWTValidationSettings c_a1mK9 => Lens' c_a1mK9 ValidationSettings
 
 -- | The JWT Claims Set represents a JSON object whose members are the
 --   registered claims defined by RFC 7519. Unrecognised claims are
@@ -1349,15 +1349,15 @@ JWTNotYetValid :: JWTError
 JWTNotInIssuer :: JWTError
 JWTNotInAudience :: JWTError
 JWTIssuedAtFuture :: JWTError
-class AsJWTError r_a1lY2
-_JWTError :: AsJWTError r_a1lY2 => Prism' r_a1lY2 JWTError
-_JWSError :: AsJWTError r_a1lY2 => Prism' r_a1lY2 Error
-_JWTClaimsSetDecodeError :: AsJWTError r_a1lY2 => Prism' r_a1lY2 String
-_JWTExpired :: AsJWTError r_a1lY2 => Prism' r_a1lY2 ()
-_JWTNotYetValid :: AsJWTError r_a1lY2 => Prism' r_a1lY2 ()
-_JWTNotInIssuer :: AsJWTError r_a1lY2 => Prism' r_a1lY2 ()
-_JWTNotInAudience :: AsJWTError r_a1lY2 => Prism' r_a1lY2 ()
-_JWTIssuedAtFuture :: AsJWTError r_a1lY2 => Prism' r_a1lY2 ()
+class AsJWTError r_a1lZa
+_JWTError :: AsJWTError r_a1lZa => Prism' r_a1lZa JWTError
+_JWSError :: AsJWTError r_a1lZa => Prism' r_a1lZa Error
+_JWTClaimsSetDecodeError :: AsJWTError r_a1lZa => Prism' r_a1lZa String
+_JWTExpired :: AsJWTError r_a1lZa => Prism' r_a1lZa ()
+_JWTNotYetValid :: AsJWTError r_a1lZa => Prism' r_a1lZa ()
+_JWTNotInIssuer :: AsJWTError r_a1lZa => Prism' r_a1lZa ()
+_JWTNotInAudience :: AsJWTError r_a1lZa => Prism' r_a1lZa ()
+_JWTIssuedAtFuture :: AsJWTError r_a1lZa => Prism' r_a1lZa ()
 
 -- | Audience data. In the general case, the <i>aud</i> value is an array
 --   of case-sensitive strings, each containing a <a>StringOrURI</a> value.

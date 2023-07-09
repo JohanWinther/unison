@@ -81,7 +81,7 @@
 </span><span id="line-81"></span><span class="hs-keyword">type</span><span> </span><span id="Part"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span>
 </span><span id="line-82"></span><span>
 </span><span id="line-83"></span><span class="hs-comment">-- | A single part of a multipart message.</span><span>
-</span><span id="line-84"></span><span class="hs-keyword">data</span><span> </span><span id="PartM"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-var">PartM</span></a></span></span><span> </span><span id="local-6989586621679102810"><span class="annot"><a href="#local-6989586621679102810"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Part"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span></span><span>
+</span><span id="line-84"></span><span class="hs-keyword">data</span><span> </span><span id="PartM"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-var">PartM</span></a></span></span><span> </span><span id="local-6989586621679102846"><span class="annot"><a href="#local-6989586621679102846"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Part"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span></span><span>
 </span><span id="line-85"></span><span>    </span><span class="hs-special">{</span><span> </span><span id="partName"><span class="annot"><span class="annottext">forall (m :: * -&gt; *). PartM m -&gt; Text
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partName"><span class="hs-identifier hs-var hs-var">partName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;</span><span>
 </span><span id="line-86"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="partFilename"><span class="annot"><span class="annottext">forall (m :: * -&gt; *). PartM m -&gt; Maybe String
@@ -91,22 +91,22 @@
 </span><span id="line-88"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="partHeaders"><span class="annot"><span class="annottext">forall (m :: * -&gt; *). PartM m -&gt; [Header]
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partHeaders"><span class="hs-identifier hs-var hs-var">partHeaders</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Header</span></span><span class="hs-special">]</span><span> </span><span class="hs-comment">-- ^ List of additional headers</span><span>
 </span><span id="line-89"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="partGetBody"><span class="annot"><span class="annottext">forall (m :: * -&gt; *). PartM m -&gt; m RequestBody
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partGetBody"><span class="hs-identifier hs-var hs-var">partGetBody</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679102810"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span> </span><span class="hs-comment">-- ^ Action in m which returns the body</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partGetBody"><span class="hs-identifier hs-var hs-var">partGetBody</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679102846"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span> </span><span class="hs-comment">-- ^ Action in m which returns the body</span><span>
 </span><span id="line-90"></span><span>                                   </span><span class="hs-comment">-- of a message.</span><span>
 </span><span id="line-91"></span><span>    </span><span class="hs-special">}</span><span>
 </span><span id="line-92"></span><span>
-</span><span id="line-93"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679102629"><span id="local-6989586621679102631"><span id="local-6989586621679102798"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102798"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-94"></span><span>    </span><span id="local-6989586621679102607"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PartM m -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679102605"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102605"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span> </span><span id="local-6989586621679102604"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102604"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102603"><span class="annot"><span class="annottext">Maybe String
-</span><a href="#local-6989586621679102603"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102602"><span class="annot"><span class="annottext">Maybe MimeType
-</span><a href="#local-6989586621679102602"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679102601"><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="annot"><span class="annottext">m RequestBody
+</span><span id="line-93"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679102665"><span id="local-6989586621679102667"><span id="local-6989586621679102834"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102834"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-94"></span><span>    </span><span id="local-6989586621679102643"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PartM m -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679102641"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679102641"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span> </span><span id="local-6989586621679102640"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102640"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102639"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679102639"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102638"><span class="annot"><span class="annottext">Maybe MimeType
+</span><a href="#local-6989586621679102638"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679102637"><span class="annot"><span class="annottext">[Header]
+</span><a href="#local-6989586621679102637"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="annot"><span class="annottext">m RequestBody
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-95"></span><span>        </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
 </span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102605"><span class="hs-identifier hs-var">d</span></a></span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679102641"><span class="hs-identifier hs-var">d</span></a></span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;=</span></span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
@@ -116,7 +116,7 @@
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
 </span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102604"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679102640"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-97"></span><span>            </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 </span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -125,7 +125,7 @@
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
 </span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
-</span><a href="#local-6989586621679102603"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><a href="#local-6989586621679102639"><span class="hs-identifier hs-var">f</span></a></span><span>
 </span><span id="line-99"></span><span>            </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 </span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -134,7 +134,7 @@
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
 </span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Maybe MimeType
-</span><a href="#local-6989586621679102602"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621679102638"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-101"></span><span>            </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 </span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -143,7 +143,7 @@
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
 </span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">h</span></a></span><span>
+</span><a href="#local-6989586621679102637"><span class="hs-identifier hs-var">h</span></a></span><span>
 </span><span id="line-103"></span><span>            </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 </span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="annottext">String
@@ -157,14 +157,14 @@
 </span><span id="line-107"></span><span class="hs-comment">--</span><span>
 </span><span id="line-108"></span><span class="hs-comment">-- The 'Part' does not have a file name or content type associated</span><span>
 </span><span id="line-109"></span><span class="hs-comment">-- with it.</span><span>
-</span><span id="line-110"></span><span id="local-6989586621679102784"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partBS"><span class="hs-identifier hs-type">partBS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102784"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-110"></span><span id="local-6989586621679102820"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partBS"><span class="hs-identifier hs-type">partBS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102820"><span class="hs-identifier hs-type">m</span></a></span><span>
 </span><span id="line-111"></span><span>       </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>              </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;.</span><span>
 </span><span id="line-112"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span>     </span><span class="hs-comment">-- ^ The body for this 'Part'.</span><span>
-</span><span id="line-113"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102784"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-113"></span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102820"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-114"></span><span id="partBS"><span class="annot"><span class="annottext">partBS :: forall (m :: * -&gt; *). Applicative m =&gt; Text -&gt; MimeType -&gt; PartM m
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partBS"><span class="hs-identifier hs-var hs-var">partBS</span></a></span></span><span> </span><span id="local-6989586621679102585"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102585"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102584"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102584"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partBS"><span class="hs-identifier hs-var hs-var">partBS</span></a></span></span><span> </span><span id="local-6989586621679102621"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102621"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102620"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102620"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Text
 -&gt; Maybe String
 -&gt; Maybe MimeType
@@ -172,7 +172,7 @@ Text
 -&gt; m RequestBody
 -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102585"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
+</span><a href="#local-6989586621679102621"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">Data.Monoid.mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -180,22 +180,22 @@ Text
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyBS"><span class="hs-identifier hs-var">RequestBodyBS</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102584"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><a href="#local-6989586621679102620"><span class="hs-identifier hs-var">b</span></a></span><span>
 </span><span id="line-115"></span><span>
 </span><span id="line-116"></span><span class="hs-comment">-- | Make a 'Part' whose content is a lazy 'BL.ByteString'.</span><span>
 </span><span id="line-117"></span><span class="hs-comment">--</span><span>
 </span><span id="line-118"></span><span class="hs-comment">-- The 'Part' does not have a file name or content type associated</span><span>
 </span><span id="line-119"></span><span class="hs-comment">-- with it.</span><span>
-</span><span id="line-120"></span><span id="local-6989586621679102776"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partLBS"><span class="hs-identifier hs-type">partLBS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102776"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-120"></span><span id="local-6989586621679102812"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partLBS"><span class="hs-identifier hs-type">partLBS</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102812"><span class="hs-identifier hs-type">m</span></a></span><span>
 </span><span id="line-121"></span><span>        </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>             </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;.</span><span>
 </span><span id="line-122"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BL.ByteString</span></span><span>    </span><span class="hs-comment">-- ^ The body for this 'Part'.</span><span>
-</span><span id="line-123"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102776"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-123"></span><span>        </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102812"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-124"></span><span id="partLBS"><span class="annot"><span class="annottext">partLBS :: forall (m :: * -&gt; *).
 Applicative m =&gt;
 Text -&gt; ByteString -&gt; PartM m
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partLBS"><span class="hs-identifier hs-var hs-var">partLBS</span></a></span></span><span> </span><span id="local-6989586621679102575"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102575"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102574"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679102574"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partLBS"><span class="hs-identifier hs-var hs-var">partLBS</span></a></span></span><span> </span><span id="local-6989586621679102611"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102611"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102610"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679102610"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Text
 -&gt; Maybe String
 -&gt; Maybe MimeType
@@ -203,7 +203,7 @@ Text
 -&gt; m RequestBody
 -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102575"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
+</span><a href="#local-6989586621679102611"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -211,7 +211,7 @@ Text
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyLBS"><span class="hs-identifier hs-var">RequestBodyLBS</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679102574"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><a href="#local-6989586621679102610"><span class="hs-identifier hs-var">b</span></a></span><span>
 </span><span id="line-125"></span><span>
 </span><span id="line-126"></span><span class="hs-comment">-- | Make a 'Part' from a file.</span><span>
 </span><span id="line-127"></span><span class="hs-comment">--</span><span>
@@ -227,13 +227,13 @@ Text
 </span><span id="line-137"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>        </span><span class="hs-comment">-- ^ The name of the local file to upload.</span><span>
 </span><span id="line-138"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span>
 </span><span id="line-139"></span><span id="partFile"><span class="annot"><span class="annottext">partFile :: Text -&gt; String -&gt; Part
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partFile"><span class="hs-identifier hs-var hs-var">partFile</span></a></span></span><span> </span><span id="local-6989586621679102571"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102571"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102570"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102570"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partFile"><span class="hs-identifier hs-var hs-var">partFile</span></a></span></span><span> </span><span id="local-6989586621679102607"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102607"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102606"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102606"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Text -&gt; String -&gt; m RequestBody -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-var">partFileRequestBodyM</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102571"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102570"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102607"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102606"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-141"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a1 r. Monad m =&gt; (a1 -&gt; r) -&gt; m a1 -&gt; m r
 </span><span class="hs-identifier hs-var">liftM</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
@@ -242,7 +242,7 @@ Text
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; IO MimeType
 </span><span class="hs-identifier hs-var">BS.readFile</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102570"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><a href="#local-6989586621679102606"><span class="hs-identifier hs-var">f</span></a></span><span>
 </span><span id="line-142"></span><span>
 </span><span id="line-143"></span><span class="hs-comment">-- | Stream a 'Part' from a file.</span><span>
 </span><span id="line-144"></span><span class="hs-comment">--</span><span>
@@ -255,20 +255,20 @@ Text
 </span><span id="line-151"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>  </span><span class="hs-comment">-- ^ The name of the local file to upload.</span><span>
 </span><span id="line-152"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span>
 </span><span id="line-153"></span><span id="partFileSource"><span class="annot"><span class="annottext">partFileSource :: Text -&gt; String -&gt; Part
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileSource"><span class="hs-identifier hs-var hs-var">partFileSource</span></a></span></span><span> </span><span id="local-6989586621679102566"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102566"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102565"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102565"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileSource"><span class="hs-identifier hs-var hs-var">partFileSource</span></a></span></span><span> </span><span id="local-6989586621679102602"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102602"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102601"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Text -&gt; String -&gt; m RequestBody -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-var">partFileRequestBodyM</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102566"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102565"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102602"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-155"></span><span>        </span><span id="local-6989586621679102564"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679102564"><span class="hs-identifier hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span id="line-155"></span><span>        </span><span id="local-6989586621679102600"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679102600"><span class="hs-identifier hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall r. String -&gt; IOMode -&gt; (Handle -&gt; IO r) -&gt; IO r
 </span><span class="hs-identifier hs-var">withBinaryFile</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102565"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">IOMode
+</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">IOMode
 </span><span class="hs-identifier hs-var">ReadMode</span></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO Integer
 </span><span class="hs-identifier hs-var">hFileSize</span></span><span>
 </span><span id="line-156"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
@@ -276,30 +276,30 @@ Text
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; GivesPopper () -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyStream"><span class="hs-identifier hs-var">RequestBodyStream</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><span class="hs-identifier hs-var">fromInteger</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679102564"><span class="hs-identifier hs-var">size</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102600"><span class="hs-identifier hs-var">size</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; GivesPopper ()
 </span><a href="Network.HTTP.Client.MultipartFormData.html#streamFile"><span class="hs-identifier hs-var">streamFile</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102565"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><a href="#local-6989586621679102601"><span class="hs-identifier hs-var">f</span></a></span><span>
 </span><span id="line-157"></span><span>
 </span><span id="line-158"></span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#streamFile"><span class="hs-identifier hs-type">streamFile</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#GivesPopper"><span class="hs-identifier hs-type">GivesPopper</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-159"></span><span id="streamFile"><span class="annot"><span class="annottext">streamFile :: String -&gt; GivesPopper ()
-</span><a href="Network.HTTP.Client.MultipartFormData.html#streamFile"><span class="hs-identifier hs-var hs-var">streamFile</span></a></span></span><span> </span><span id="local-6989586621679102558"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102558"><span class="hs-identifier hs-var">fp</span></a></span></span><span> </span><span id="local-6989586621679102557"><span class="annot"><span class="annottext">NeedsPopper ()
-</span><a href="#local-6989586621679102557"><span class="hs-identifier hs-var">np</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#streamFile"><span class="hs-identifier hs-var hs-var">streamFile</span></a></span></span><span> </span><span id="local-6989586621679102594"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102594"><span class="hs-identifier hs-var">fp</span></a></span></span><span> </span><span id="local-6989586621679102593"><span class="annot"><span class="annottext">NeedsPopper ()
+</span><a href="#local-6989586621679102593"><span class="hs-identifier hs-var">np</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-160"></span><span>    </span><span class="annot"><span class="annottext">forall r. String -&gt; IOMode -&gt; (Handle -&gt; IO r) -&gt; IO r
 </span><span class="hs-identifier hs-var">withFile</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102558"><span class="hs-identifier hs-var">fp</span></a></span><span> </span><span class="annot"><span class="annottext">IOMode
+</span><a href="#local-6989586621679102594"><span class="hs-identifier hs-var">fp</span></a></span><span> </span><span class="annot"><span class="annottext">IOMode
 </span><span class="hs-identifier hs-var">ReadMode</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">NeedsPopper ()
-</span><a href="#local-6989586621679102557"><span class="hs-identifier hs-var">np</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679102593"><span class="hs-identifier hs-var">np</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Handle -&gt; IO MimeType
-</span><a href="#local-6989586621679102555"><span class="hs-identifier hs-var">go</span></a></span><span>
+</span><a href="#local-6989586621679102591"><span class="hs-identifier hs-var">go</span></a></span><span>
 </span><span id="line-161"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-162"></span><span>    </span><span id="local-6989586621679102555"><span class="annot"><span class="annottext">go :: Handle -&gt; IO MimeType
-</span><a href="#local-6989586621679102555"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679102554"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679102554"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; Int -&gt; IO MimeType
+</span><span id="line-162"></span><span>    </span><span id="local-6989586621679102591"><span class="annot"><span class="annottext">go :: Handle -&gt; IO MimeType
+</span><a href="#local-6989586621679102591"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679102590"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679102590"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Handle -&gt; Int -&gt; IO MimeType
 </span><span class="hs-identifier hs-var">BS.hGetSome</span></span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679102554"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679102590"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier hs-var">defaultChunkSize</span></span><span>
 </span><span id="line-163"></span><span>
 </span><span id="line-164"></span><span class="hs-comment">-- | 'partFileSourceChunked' will read a file and send it in chunks.</span><span>
@@ -314,21 +314,21 @@ Text
 </span><span id="line-173"></span><span class="hs-comment">-- The 'Part' does not have a content type associated with it.</span><span>
 </span><span id="line-174"></span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partFileSourceChunked"><span class="hs-identifier hs-type">partFileSourceChunked</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span>
 </span><span id="line-175"></span><span id="partFileSourceChunked"><span class="annot"><span class="annottext">partFileSourceChunked :: Text -&gt; String -&gt; Part
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileSourceChunked"><span class="hs-identifier hs-var hs-var">partFileSourceChunked</span></a></span></span><span> </span><span id="local-6989586621679102552"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102552"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102551"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102551"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileSourceChunked"><span class="hs-identifier hs-var hs-var">partFileSourceChunked</span></a></span></span><span> </span><span id="local-6989586621679102588"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102588"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102587"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102587"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-176"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Applicative m =&gt;
 Text -&gt; String -&gt; RequestBody -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBody"><span class="hs-identifier hs-var">partFileRequestBody</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102552"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102551"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102588"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102587"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-177"></span><span>        </span><span class="annot"><span class="annottext">GivesPopper () -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyStreamChunked"><span class="hs-identifier hs-var">RequestBodyStreamChunked</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; GivesPopper ()
 </span><a href="Network.HTTP.Client.MultipartFormData.html#streamFile"><span class="hs-identifier hs-var">streamFile</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102551"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><a href="#local-6989586621679102587"><span class="hs-identifier hs-var">f</span></a></span><span>
 </span><span id="line-178"></span><span>
 </span><span id="line-179"></span><span class="hs-comment">-- | Construct a 'Part' from form name, filepath and a 'RequestBody'</span><span>
 </span><span id="line-180"></span><span class="hs-comment">--</span><span>
@@ -338,25 +338,25 @@ Text -&gt; String -&gt; RequestBody -&gt; PartM m
 </span><span id="line-184"></span><span class="hs-comment">-- &gt; partFileRequestBody &quot;file&quot; mempty mempty</span><span>
 </span><span id="line-185"></span><span class="hs-comment">--</span><span>
 </span><span id="line-186"></span><span class="hs-comment">-- The 'Part' does not have a content type associated with it.</span><span>
-</span><span id="line-187"></span><span id="local-6989586621679102758"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBody"><span class="hs-identifier hs-type">partFileRequestBody</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102758"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-187"></span><span id="local-6989586621679102794"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBody"><span class="hs-identifier hs-type">partFileRequestBody</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102794"><span class="hs-identifier hs-type">m</span></a></span><span>
 </span><span id="line-188"></span><span>                    </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>        </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;.</span><span>
 </span><span id="line-189"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>    </span><span class="hs-comment">-- ^ File name to supply to the server.</span><span>
 </span><span id="line-190"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span> </span><span class="hs-comment">-- ^ Data to upload.</span><span>
-</span><span id="line-191"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102758"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-191"></span><span>                    </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102794"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-192"></span><span id="partFileRequestBody"><span class="annot"><span class="annottext">partFileRequestBody :: forall (m :: * -&gt; *).
 Applicative m =&gt;
 Text -&gt; String -&gt; RequestBody -&gt; PartM m
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBody"><span class="hs-identifier hs-var hs-var">partFileRequestBody</span></a></span></span><span> </span><span id="local-6989586621679102547"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102547"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102546"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102546"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102545"><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102545"><span class="hs-identifier hs-var">rqb</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBody"><span class="hs-identifier hs-var hs-var">partFileRequestBody</span></a></span></span><span> </span><span id="local-6989586621679102583"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102583"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102582"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102582"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102581"><span class="annot"><span class="annottext">RequestBody
+</span><a href="#local-6989586621679102581"><span class="hs-identifier hs-var">rqb</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-193"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Text -&gt; String -&gt; m RequestBody -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-var">partFileRequestBodyM</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102547"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102546"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102583"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102582"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102545"><span class="hs-identifier hs-var">rqb</span></a></span><span>
+</span><a href="#local-6989586621679102581"><span class="hs-identifier hs-var">rqb</span></a></span><span>
 </span><span id="line-194"></span><span>
 </span><span id="line-195"></span><span class="hs-comment">-- | Construct a 'Part' from action returning the 'RequestBody'</span><span>
 </span><span id="line-196"></span><span class="hs-comment">--</span><span>
@@ -365,15 +365,15 @@ Text -&gt; String -&gt; RequestBody -&gt; PartM m
 </span><span id="line-199"></span><span class="hs-comment">-- &gt;     return $ RequestBodySource size $ CB.sourceFile &quot;haskell-the-cat.jpg&quot; $= CL.map fromByteString</span><span>
 </span><span id="line-200"></span><span class="hs-comment">--</span><span>
 </span><span id="line-201"></span><span class="hs-comment">-- The 'Part' does not have a content type associated with it.</span><span>
-</span><span id="line-202"></span><span id="local-6989586621679102772"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-type">partFileRequestBodyM</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>        </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;.</span><span>
+</span><span id="line-202"></span><span id="local-6989586621679102808"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-type">partFileRequestBodyM</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>        </span><span class="hs-comment">-- ^ Name of the corresponding \&lt;input\&gt;.</span><span>
 </span><span id="line-203"></span><span>                     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FilePath</span></span><span>    </span><span class="hs-comment">-- ^ File name to supply to the server.</span><span>
-</span><span id="line-204"></span><span>                     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102772"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span> </span><span class="hs-comment">-- ^ Action that will supply data to upload.</span><span>
-</span><span id="line-205"></span><span>                     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102772"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-204"></span><span>                     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102808"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span> </span><span class="hs-comment">-- ^ Action that will supply data to upload.</span><span>
+</span><span id="line-205"></span><span>                     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102808"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-206"></span><span id="partFileRequestBodyM"><span class="annot"><span class="annottext">partFileRequestBodyM :: forall (m :: * -&gt; *). Text -&gt; String -&gt; m RequestBody -&gt; PartM m
-</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-var hs-var">partFileRequestBodyM</span></a></span></span><span> </span><span id="local-6989586621679102543"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102543"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102542"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102542"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102541"><span class="annot"><span class="annottext">m RequestBody
-</span><a href="#local-6989586621679102541"><span class="hs-identifier hs-var">rqb</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#partFileRequestBodyM"><span class="hs-identifier hs-var hs-var">partFileRequestBodyM</span></a></span></span><span> </span><span id="local-6989586621679102579"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102579"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679102578"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102578"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679102577"><span class="annot"><span class="annottext">m RequestBody
+</span><a href="#local-6989586621679102577"><span class="hs-identifier hs-var">rqb</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-207"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Text
 -&gt; Maybe String
@@ -382,70 +382,70 @@ Text
 -&gt; m RequestBody
 -&gt; PartM m
 </span><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-var">Part</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102543"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679102579"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102542"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679102578"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; MimeType
 </span><span class="hs-identifier hs-var">defaultMimeLookup</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">pack</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102542"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
+</span><a href="#local-6989586621679102578"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span> </span><span class="annot"><span class="annottext">m RequestBody
-</span><a href="#local-6989586621679102541"><span class="hs-identifier hs-var">rqb</span></a></span><span>
+</span><a href="#local-6989586621679102577"><span class="hs-identifier hs-var">rqb</span></a></span><span>
 </span><span id="line-208"></span><span>
 </span><span id="line-209"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-pragma hs-type">cp</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-210"></span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-type">cp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span><span>
 </span><span id="line-211"></span><span id="cp"><span class="annot"><span class="annottext">cp :: MimeType -&gt; RequestBody
-</span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var hs-var">cp</span></a></span></span><span> </span><span id="local-6989586621679102537"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102537"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Builder -&gt; RequestBody
+</span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var hs-var">cp</span></a></span></span><span> </span><span id="local-6989586621679102573"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102573"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Builder -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyBuilder"><span class="hs-identifier hs-var">RequestBodyBuilder</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; Int
 </span><span class="hs-identifier hs-var">BS.length</span></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102537"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102573"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; Builder
 </span><span class="hs-identifier hs-var">copyByteString</span></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102537"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><a href="#local-6989586621679102573"><span class="hs-identifier hs-var">bs</span></a></span><span>
 </span><span id="line-212"></span><span>
 </span><span id="line-213"></span><span class="hs-comment">-- | Add a list of additional headers to this 'Part'.</span><span>
-</span><span id="line-214"></span><span id="local-6989586621679102751"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#addPartHeaders"><span class="hs-identifier hs-type">addPartHeaders</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102751"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Header</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102751"><span class="hs-identifier hs-type">m</span></a></span></span><span>
+</span><span id="line-214"></span><span id="local-6989586621679102787"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#addPartHeaders"><span class="hs-identifier hs-type">addPartHeaders</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102787"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Header</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102787"><span class="hs-identifier hs-type">m</span></a></span></span><span>
 </span><span id="line-215"></span><span id="addPartHeaders"><span class="annot"><span class="annottext">addPartHeaders :: forall (m :: * -&gt; *). PartM m -&gt; [Header] -&gt; PartM m
-</span><a href="Network.HTTP.Client.MultipartFormData.html#addPartHeaders"><span class="hs-identifier hs-var hs-var">addPartHeaders</span></a></span></span><span> </span><span id="local-6989586621679102532"><span class="annot"><span class="annottext">PartM m
-</span><a href="#local-6989586621679102532"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679102531"><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102531"><span class="hs-identifier hs-var">hs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PartM m
-</span><a href="#local-6989586621679102532"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">partHeaders :: [Header]
+</span><a href="Network.HTTP.Client.MultipartFormData.html#addPartHeaders"><span class="hs-identifier hs-var hs-var">addPartHeaders</span></a></span></span><span> </span><span id="local-6989586621679102568"><span class="annot"><span class="annottext">PartM m
+</span><a href="#local-6989586621679102568"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679102567"><span class="annot"><span class="annottext">[Header]
+</span><a href="#local-6989586621679102567"><span class="hs-identifier hs-var">hs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PartM m
+</span><a href="#local-6989586621679102568"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">partHeaders :: [Header]
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partHeaders"><span class="hs-identifier hs-var">partHeaders</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). PartM m -&gt; [Header]
 </span><a href="Network.HTTP.Client.MultipartFormData.html#partHeaders"><span class="hs-identifier hs-var">partHeaders</span></a></span><span> </span><span class="annot"><span class="annottext">PartM m
-</span><a href="#local-6989586621679102532"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102568"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102531"><span class="hs-identifier hs-var">hs</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><a href="#local-6989586621679102567"><span class="hs-identifier hs-var">hs</span></a></span><span> </span><span class="hs-special">}</span><span>
 </span><span id="line-216"></span><span>
-</span><span id="line-217"></span><span id="local-6989586621679102748"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#renderPart"><span class="hs-identifier hs-type">renderPart</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679102748"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-217"></span><span id="local-6989586621679102784"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#renderPart"><span class="hs-identifier hs-type">renderPart</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679102784"><span class="hs-identifier hs-type">m</span></a></span><span>
 </span><span id="line-218"></span><span>           </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span>     </span><span class="hs-comment">-- ^ Boundary between parts.</span><span>
-</span><span id="line-219"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102748"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102748"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span></span><span>
+</span><span id="line-219"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102784"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102784"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span></span><span>
 </span><span id="line-220"></span><span id="renderPart"><span class="annot"><span class="annottext">renderPart :: forall (m :: * -&gt; *).
 Functor m =&gt;
 MimeType -&gt; PartM m -&gt; m RequestBody
-</span><a href="Network.HTTP.Client.MultipartFormData.html#renderPart"><span class="hs-identifier hs-var hs-var">renderPart</span></a></span></span><span> </span><span id="local-6989586621679102528"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102528"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span> </span><span id="local-6989586621679102527"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102527"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679102526"><span class="annot"><span class="annottext">Maybe String
-</span><a href="#local-6989586621679102526"><span class="hs-identifier hs-var">mfilename</span></a></span></span><span> </span><span id="local-6989586621679102525"><span class="annot"><span class="annottext">Maybe MimeType
-</span><a href="#local-6989586621679102525"><span class="hs-identifier hs-var">mcontenttype</span></a></span></span><span> </span><span id="local-6989586621679102524"><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102524"><span class="hs-identifier hs-var">hdrs</span></a></span></span><span> </span><span id="local-6989586621679102523"><span class="annot"><span class="annottext">m RequestBody
-</span><a href="#local-6989586621679102523"><span class="hs-identifier hs-var">get</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RequestBody -&gt; RequestBody
-</span><a href="#local-6989586621679102522"><span class="hs-identifier hs-var">render</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="Network.HTTP.Client.MultipartFormData.html#renderPart"><span class="hs-identifier hs-var hs-var">renderPart</span></a></span></span><span> </span><span id="local-6989586621679102564"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102564"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span> </span><span id="local-6989586621679102563"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679102563"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679102562"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679102562"><span class="hs-identifier hs-var">mfilename</span></a></span></span><span> </span><span id="local-6989586621679102561"><span class="annot"><span class="annottext">Maybe MimeType
+</span><a href="#local-6989586621679102561"><span class="hs-identifier hs-var">mcontenttype</span></a></span></span><span> </span><span id="local-6989586621679102560"><span class="annot"><span class="annottext">[Header]
+</span><a href="#local-6989586621679102560"><span class="hs-identifier hs-var">hdrs</span></a></span></span><span> </span><span id="local-6989586621679102559"><span class="annot"><span class="annottext">m RequestBody
+</span><a href="#local-6989586621679102559"><span class="hs-identifier hs-var">get</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RequestBody -&gt; RequestBody
+</span><a href="#local-6989586621679102558"><span class="hs-identifier hs-var">render</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">m RequestBody
-</span><a href="#local-6989586621679102523"><span class="hs-identifier hs-var">get</span></a></span><span>
-</span><span id="line-221"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679102522"><span class="annot"><span class="annottext">render :: RequestBody -&gt; RequestBody
-</span><a href="#local-6989586621679102522"><span class="hs-identifier hs-var hs-var">render</span></a></span></span><span> </span><span id="local-6989586621679102484"><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102484"><span class="hs-identifier hs-var">renderBody</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679102559"><span class="hs-identifier hs-var">get</span></a></span><span>
+</span><span id="line-221"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679102558"><span class="annot"><span class="annottext">render :: RequestBody -&gt; RequestBody
+</span><a href="#local-6989586621679102558"><span class="hs-identifier hs-var hs-var">render</span></a></span></span><span> </span><span id="local-6989586621679102520"><span class="annot"><span class="annottext">RequestBody
+</span><a href="#local-6989586621679102520"><span class="hs-identifier hs-var">renderBody</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-222"></span><span>            </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;--&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102528"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102564"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\r\n&quot;</span></span><span>
@@ -457,12 +457,12 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.Types.html#RequestBodyBS"><span class="hs-identifier hs-var">RequestBodyBS</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; MimeType
 </span><span class="hs-identifier hs-var">TE.encodeUtf8</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679102527"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679102563"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-225"></span><span>         </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe String
-</span><a href="#local-6989586621679102526"><span class="hs-identifier hs-var">mfilename</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-226"></span><span>                 </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679102482"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102482"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
+</span><a href="#local-6989586621679102562"><span class="hs-identifier hs-var">mfilename</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-226"></span><span>                 </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679102518"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679102518"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\&quot;; filename=\&quot;&quot;</span></span><span>
 </span><span id="line-227"></span><span>                        </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
@@ -473,7 +473,7 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-identifier hs-var">pack</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ShowS
 </span><span class="hs-identifier hs-var">takeFileName</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679102482"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679102518"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-228"></span><span>                 </span><span class="annot"><span class="annottext">Maybe String
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
@@ -483,9 +483,9 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-string">&quot;\&quot;&quot;</span></span><span>
 </span><span id="line-230"></span><span>         </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Maybe MimeType
-</span><a href="#local-6989586621679102525"><span class="hs-identifier hs-var">mcontenttype</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-231"></span><span>                </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679102480"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102480"><span class="hs-identifier hs-var">ct</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
+</span><a href="#local-6989586621679102561"><span class="hs-identifier hs-var">mcontenttype</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-231"></span><span>                </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679102516"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102516"><span class="hs-identifier hs-var">ct</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\r\n&quot;</span></span><span>
 </span><span id="line-232"></span><span>                        </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
@@ -495,7 +495,7 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span id="line-233"></span><span>                        </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102480"><span class="hs-identifier hs-var">ct</span></a></span><span>
+</span><a href="#local-6989586621679102516"><span class="hs-identifier hs-var">ct</span></a></span><span>
 </span><span id="line-234"></span><span>                </span><span class="annot"><span class="annottext">Maybe MimeType
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
@@ -503,9 +503,9 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) m a.
 (Foldable t, Monoid m) =&gt;
 (a -&gt; m) -&gt; t a -&gt; m
-</span><span class="hs-identifier hs-var">Data.Foldable.foldMap</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679102479"><span class="annot"><span class="annottext">CI MimeType
-</span><a href="#local-6989586621679102479"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679102478"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102478"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-identifier hs-var">Data.Foldable.foldMap</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679102515"><span class="annot"><span class="annottext">CI MimeType
+</span><a href="#local-6989586621679102515"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679102514"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102514"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-236"></span><span>               </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\r\n&quot;</span></span><span>
@@ -513,7 +513,7 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. CI s -&gt; s
 </span><span class="hs-identifier hs-var">CI.original</span></span><span> </span><span class="annot"><span class="annottext">CI MimeType
-</span><a href="#local-6989586621679102479"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679102515"><span class="hs-identifier hs-var">k</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-238"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
@@ -521,30 +521,30 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span id="line-239"></span><span>            </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102478"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Header]
-</span><a href="#local-6989586621679102524"><span class="hs-identifier hs-var">hdrs</span></a></span><span>
+</span><a href="#local-6989586621679102514"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Header]
+</span><a href="#local-6989586621679102560"><span class="hs-identifier hs-var">hdrs</span></a></span><span>
 </span><span id="line-240"></span><span>         </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\r\n\r\n&quot;</span></span><span>
 </span><span id="line-241"></span><span>         </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102484"><span class="hs-identifier hs-var">renderBody</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102520"><span class="hs-identifier hs-var">renderBody</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;\r\n&quot;</span></span><span>
 </span><span id="line-242"></span><span>
 </span><span id="line-243"></span><span class="hs-comment">-- | Combine the 'Part's to form multipart/form-data body</span><span>
-</span><span id="line-244"></span><span id="local-6989586621679102739"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#renderParts"><span class="hs-identifier hs-type">renderParts</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102739"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-244"></span><span id="local-6989586621679102775"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#renderParts"><span class="hs-identifier hs-type">renderParts</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102775"><span class="hs-identifier hs-type">m</span></a></span><span>
 </span><span id="line-245"></span><span>            </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span>    </span><span class="hs-comment">-- ^ Boundary between parts.</span><span>
-</span><span id="line-246"></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102739"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102739"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span></span><span>
+</span><span id="line-246"></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102775"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102775"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#RequestBody"><span class="hs-identifier hs-type">RequestBody</span></a></span></span><span>
 </span><span id="line-247"></span><span id="renderParts"><span class="annot"><span class="annottext">renderParts :: forall (m :: * -&gt; *).
 Applicative m =&gt;
 MimeType -&gt; [PartM m] -&gt; m RequestBody
-</span><a href="Network.HTTP.Client.MultipartFormData.html#renderParts"><span class="hs-identifier hs-var hs-var">renderParts</span></a></span></span><span> </span><span id="local-6989586621679102467"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102467"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span id="local-6989586621679102466"><span class="annot"><span class="annottext">[PartM m]
-</span><a href="#local-6989586621679102466"><span class="hs-identifier hs-var">parts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">RequestBody -&gt; RequestBody
-</span><a href="#local-6989586621679102465"><span class="hs-identifier hs-var">fin</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Network.HTTP.Client.MultipartFormData.html#renderParts"><span class="hs-identifier hs-var hs-var">renderParts</span></a></span></span><span> </span><span id="local-6989586621679102503"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102503"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span id="local-6989586621679102502"><span class="annot"><span class="annottext">[PartM m]
+</span><a href="#local-6989586621679102502"><span class="hs-identifier hs-var">parts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">RequestBody -&gt; RequestBody
+</span><a href="#local-6989586621679102501"><span class="hs-identifier hs-var">fin</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; [a] -&gt; a
 </span><span class="hs-identifier hs-var">mconcat</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
@@ -554,16 +554,16 @@ MimeType -&gt; [PartM m] -&gt; m RequestBody
 Functor m =&gt;
 MimeType -&gt; PartM m -&gt; m RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#renderPart"><span class="hs-identifier hs-var">renderPart</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102467"><span class="hs-identifier hs-var">boundary</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[PartM m]
-</span><a href="#local-6989586621679102466"><span class="hs-identifier hs-var">parts</span></a></span><span>
-</span><span id="line-248"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679102465"><span class="annot"><span class="annottext">fin :: RequestBody -&gt; RequestBody
-</span><a href="#local-6989586621679102465"><span class="hs-identifier hs-var hs-var">fin</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102503"><span class="hs-identifier hs-var">boundary</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[PartM m]
+</span><a href="#local-6989586621679102502"><span class="hs-identifier hs-var">parts</span></a></span><span>
+</span><span id="line-248"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679102501"><span class="annot"><span class="annottext">fin :: RequestBody -&gt; RequestBody
+</span><a href="#local-6989586621679102501"><span class="hs-identifier hs-var hs-var">fin</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;--&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102467"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102503"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType -&gt; RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#cp"><span class="hs-identifier hs-var">cp</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;--\r\n&quot;</span></span><span class="hs-special">)</span><span>
@@ -575,17 +575,17 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-identifier hs-var">getStdRandom</span></span><span> </span><span class="annot"><span class="annottext">forall g. RandomGen g =&gt; g -&gt; (MimeType, g)
 </span><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundaryPure"><span class="hs-identifier hs-var">webkitBoundaryPure</span></a></span><span>
 </span><span id="line-253"></span><span>
-</span><span id="line-254"></span><span id="local-6989586621679102731"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundaryPure"><span class="hs-identifier hs-type">webkitBoundaryPure</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">RandomGen</span></span><span> </span><span class="annot"><a href="#local-6989586621679102731"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102731"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679102731"><span class="hs-identifier hs-type">g</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-254"></span><span id="local-6989586621679102767"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundaryPure"><span class="hs-identifier hs-type">webkitBoundaryPure</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">RandomGen</span></span><span> </span><span class="annot"><a href="#local-6989586621679102767"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102767"><span class="hs-identifier hs-type">g</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="#local-6989586621679102767"><span class="hs-identifier hs-type">g</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-255"></span><span id="webkitBoundaryPure"><span class="annot"><span class="annottext">webkitBoundaryPure :: forall g. RandomGen g =&gt; g -&gt; (MimeType, g)
-</span><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundaryPure"><span class="hs-identifier hs-var hs-var">webkitBoundaryPure</span></a></span></span><span> </span><span id="local-6989586621679102349"><span class="annot"><span class="annottext">g
-</span><a href="#local-6989586621679102349"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s a. State s a -&gt; s -&gt; (a, s)
+</span><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundaryPure"><span class="hs-identifier hs-var hs-var">webkitBoundaryPure</span></a></span></span><span> </span><span id="local-6989586621679102385"><span class="annot"><span class="annottext">g
+</span><a href="#local-6989586621679102385"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s a. State s a -&gt; s -&gt; (a, s)
 </span><span class="hs-operator hs-var">`runState`</span></span><span> </span><span class="annot"><span class="annottext">g
-</span><a href="#local-6989586621679102349"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102385"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-256"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MimeType -&gt; MimeType -&gt; MimeType
 </span><span class="hs-identifier hs-var">BS.append</span></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102347"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679102383"><span class="hs-identifier hs-var">prefix</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Word8] -&gt; MimeType
 </span><span class="hs-identifier hs-var">BS.pack</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
@@ -594,8 +594,8 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 </span><span class="hs-identifier hs-var">replicateM</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-257"></span><span>        </span><span id="local-6989586621679102343"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102343"><span class="hs-identifier hs-var">randomness</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a. Monad m =&gt; (s -&gt; (a, s)) -&gt; StateT s m a
+</span><span id="line-257"></span><span>        </span><span id="local-6989586621679102379"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679102379"><span class="hs-identifier hs-var">randomness</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a. Monad m =&gt; (s -&gt; (a, s)) -&gt; StateT s m a
 </span><span class="hs-identifier hs-var">state</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a g. (Random a, RandomGen g) =&gt; g -&gt; (a, g)
 </span><span class="hs-identifier hs-var">random</span></span><span>
@@ -604,9 +604,9 @@ MimeType -&gt; PartM m -&gt; m RequestBody
 (IArray a e, Ix i) =&gt;
 a i e -&gt; Int -&gt; e
 </span><span class="hs-identifier hs-var">unsafeAt</span></span><span> </span><span class="annot"><span class="annottext">UArray Int Word8
-</span><a href="#local-6989586621679102340"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102376"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102343"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><a href="#local-6989586621679102379"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -615,9 +615,9 @@ a i e -&gt; Int -&gt; e
 (IArray a e, Ix i) =&gt;
 a i e -&gt; Int -&gt; e
 </span><span class="hs-identifier hs-var">unsafeAt</span></span><span> </span><span class="annot"><span class="annottext">UArray Int Word8
-</span><a href="#local-6989586621679102340"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102376"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102343"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><a href="#local-6989586621679102379"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -626,9 +626,9 @@ a i e -&gt; Int -&gt; e
 (IArray a e, Ix i) =&gt;
 a i e -&gt; Int -&gt; e
 </span><span class="hs-identifier hs-var">unsafeAt</span></span><span> </span><span class="annot"><span class="annottext">UArray Int Word8
-</span><a href="#local-6989586621679102340"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102376"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102343"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><a href="#local-6989586621679102379"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -637,18 +637,18 @@ a i e -&gt; Int -&gt; e
 (IArray a e, Ix i) =&gt;
 a i e -&gt; Int -&gt; e
 </span><span class="hs-identifier hs-var">unsafeAt</span></span><span> </span><span class="annot"><span class="annottext">UArray Int Word8
-</span><a href="#local-6989586621679102340"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679102376"><span class="hs-identifier hs-var">alphaNumericEncodingMap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679102343"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679102379"><span class="hs-identifier hs-var">randomness</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">.&amp;.</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0x3F</span></span><span class="hs-special">]</span><span>
 </span><span id="line-262"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-263"></span><span>    </span><span id="local-6989586621679102347"><span class="annot"><span class="annottext">prefix :: MimeType
-</span><a href="#local-6989586621679102347"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MimeType
+</span><span id="line-263"></span><span>    </span><span id="local-6989586621679102383"><span class="annot"><span class="annottext">prefix :: MimeType
+</span><a href="#local-6989586621679102383"><span class="hs-identifier hs-var hs-var">prefix</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;----WebKitFormBoundary&quot;</span></span><span>
-</span><span id="line-264"></span><span>    </span><span class="annot"><a href="#local-6989586621679102340"><span class="hs-identifier hs-type">alphaNumericEncodingMap</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">UArray</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
-</span><span id="line-265"></span><span>    </span><span id="local-6989586621679102340"><span class="annot"><span class="annottext">alphaNumericEncodingMap :: UArray Int Word8
-</span><a href="#local-6989586621679102340"><span class="hs-identifier hs-var hs-var">alphaNumericEncodingMap</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (a :: * -&gt; * -&gt; *) e i.
+</span><span id="line-264"></span><span>    </span><span class="annot"><a href="#local-6989586621679102376"><span class="hs-identifier hs-type">alphaNumericEncodingMap</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">UArray</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
+</span><span id="line-265"></span><span>    </span><span id="local-6989586621679102376"><span class="annot"><span class="annottext">alphaNumericEncodingMap :: UArray Int Word8
+</span><a href="#local-6989586621679102376"><span class="hs-identifier hs-var hs-var">alphaNumericEncodingMap</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (a :: * -&gt; * -&gt; *) e i.
 (IArray a e, Ix i) =&gt;
 (i, i) -&gt; [e] -&gt; a i e
 </span><span class="hs-identifier hs-var">listArray</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
@@ -730,36 +730,36 @@ a i e -&gt; Int -&gt; e
 </span><span id="line-275"></span><span class="hs-comment">-- | Add form data to the 'Request'.</span><span>
 </span><span id="line-276"></span><span class="hs-comment">--</span><span>
 </span><span id="line-277"></span><span class="hs-comment">-- This sets a new 'requestBody', adds a content-type request header and changes the method to POST.</span><span>
-</span><span id="line-278"></span><span id="local-6989586621679102688"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#formDataBody"><span class="hs-identifier hs-type">formDataBody</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679102688"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102688"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span></span><span>
+</span><span id="line-278"></span><span id="local-6989586621679102724"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#formDataBody"><span class="hs-identifier hs-type">formDataBody</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679102724"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#Part"><span class="hs-identifier hs-type">Part</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102724"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span></span><span>
 </span><span id="line-279"></span><span id="formDataBody"><span class="annot"><span class="annottext">formDataBody :: forall (m :: * -&gt; *). MonadIO m =&gt; [Part] -&gt; Request -&gt; m Request
-</span><a href="Network.HTTP.Client.MultipartFormData.html#formDataBody"><span class="hs-identifier hs-var hs-var">formDataBody</span></a></span></span><span> </span><span id="local-6989586621679102331"><span class="annot"><span class="annottext">[Part]
-</span><a href="#local-6989586621679102331"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621679102330"><span class="annot"><span class="annottext">Request
-</span><a href="#local-6989586621679102330"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><a href="Network.HTTP.Client.MultipartFormData.html#formDataBody"><span class="hs-identifier hs-var hs-var">formDataBody</span></a></span></span><span> </span><span id="local-6989586621679102367"><span class="annot"><span class="annottext">[Part]
+</span><a href="#local-6989586621679102367"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621679102366"><span class="annot"><span class="annottext">Request
+</span><a href="#local-6989586621679102366"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-280"></span><span>    </span><span id="local-6989586621679102329"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102329"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MimeType
+</span><span id="line-280"></span><span>    </span><span id="local-6989586621679102365"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102365"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MimeType
 </span><a href="Network.HTTP.Client.MultipartFormData.html#webkitBoundary"><span class="hs-identifier hs-var">webkitBoundary</span></a></span><span>
 </span><span id="line-281"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Applicative m =&gt;
 MimeType -&gt; [PartM m] -&gt; Request -&gt; m Request
 </span><a href="Network.HTTP.Client.MultipartFormData.html#formDataBodyWithBoundary"><span class="hs-identifier hs-var">formDataBodyWithBoundary</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102329"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">[Part]
-</span><a href="#local-6989586621679102331"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Request
-</span><a href="#local-6989586621679102330"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><a href="#local-6989586621679102365"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">[Part]
+</span><a href="#local-6989586621679102367"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Request
+</span><a href="#local-6989586621679102366"><span class="hs-identifier hs-var">b</span></a></span><span>
 </span><span id="line-282"></span><span>
 </span><span id="line-283"></span><span class="hs-comment">-- | Add form data with supplied boundary</span><span>
-</span><span id="line-284"></span><span id="local-6989586621679102685"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#formDataBodyWithBoundary"><span class="hs-identifier hs-type">formDataBodyWithBoundary</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102685"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102685"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102685"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span></span><span>
+</span><span id="line-284"></span><span id="local-6989586621679102721"><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#formDataBodyWithBoundary"><span class="hs-identifier hs-type">formDataBodyWithBoundary</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Applicative</span></span><span> </span><span class="annot"><a href="#local-6989586621679102721"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">BS.ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Network.HTTP.Client.MultipartFormData.html#PartM"><span class="hs-identifier hs-type">PartM</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679102721"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679102721"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="Network.HTTP.Client.Types.html#Request"><span class="hs-identifier hs-type">Request</span></a></span></span><span>
 </span><span id="line-285"></span><span id="formDataBodyWithBoundary"><span class="annot"><span class="annottext">formDataBodyWithBoundary :: forall (m :: * -&gt; *).
 Applicative m =&gt;
 MimeType -&gt; [PartM m] -&gt; Request -&gt; m Request
-</span><a href="Network.HTTP.Client.MultipartFormData.html#formDataBodyWithBoundary"><span class="hs-identifier hs-var hs-var">formDataBodyWithBoundary</span></a></span></span><span> </span><span id="local-6989586621679102318"><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102318"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span id="local-6989586621679102317"><span class="annot"><span class="annottext">[PartM m]
-</span><a href="#local-6989586621679102317"><span class="hs-identifier hs-var">parts</span></a></span></span><span> </span><span id="local-6989586621679102316"><span class="annot"><span class="annottext">Request
-</span><a href="#local-6989586621679102316"><span class="hs-identifier hs-var">req</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-286"></span><span>    </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679102315"><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102315"><span class="hs-identifier hs-var">body</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Request
-</span><a href="#local-6989586621679102316"><span class="hs-identifier hs-var">req</span></a></span><span>
+</span><a href="Network.HTTP.Client.MultipartFormData.html#formDataBodyWithBoundary"><span class="hs-identifier hs-var hs-var">formDataBodyWithBoundary</span></a></span></span><span> </span><span id="local-6989586621679102354"><span class="annot"><span class="annottext">MimeType
+</span><a href="#local-6989586621679102354"><span class="hs-identifier hs-var">boundary</span></a></span></span><span> </span><span id="local-6989586621679102353"><span class="annot"><span class="annottext">[PartM m]
+</span><a href="#local-6989586621679102353"><span class="hs-identifier hs-var">parts</span></a></span></span><span> </span><span id="local-6989586621679102352"><span class="annot"><span class="annottext">Request
+</span><a href="#local-6989586621679102352"><span class="hs-identifier hs-var">req</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-286"></span><span>    </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679102351"><span class="annot"><span class="annottext">RequestBody
+</span><a href="#local-6989586621679102351"><span class="hs-identifier hs-var">body</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Request
+</span><a href="#local-6989586621679102352"><span class="hs-identifier hs-var">req</span></a></span><span>
 </span><span id="line-287"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">method :: MimeType
 </span><a href="Network.HTTP.Client.Types.html#method"><span class="hs-identifier hs-var">method</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-identifier hs-var">methodPost</span></span><span>
@@ -769,25 +769,25 @@ MimeType -&gt; [PartM m] -&gt; Request -&gt; m Request
 </span><span class="hs-identifier hs-var">hContentType</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-string">&quot;multipart/form-data; boundary=&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102318"><span class="hs-identifier hs-var">boundary</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679102354"><span class="hs-identifier hs-var">boundary</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-290"></span><span>          </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
-</span><span class="hs-identifier hs-var">Prelude.filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679102312"><span class="annot"><span class="annottext">CI MimeType
-</span><a href="#local-6989586621679102312"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MimeType
+</span><span class="hs-identifier hs-var">Prelude.filter</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679102348"><span class="annot"><span class="annottext">CI MimeType
+</span><a href="#local-6989586621679102348"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MimeType
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">CI MimeType
-</span><a href="#local-6989586621679102312"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679102348"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">CI MimeType
 </span><span class="hs-identifier hs-var">hContentType</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Request -&gt; [Header]
 </span><a href="Network.HTTP.Client.Types.html#requestHeaders"><span class="hs-identifier hs-var">requestHeaders</span></a></span><span> </span><span class="annot"><span class="annottext">Request
-</span><a href="#local-6989586621679102316"><span class="hs-identifier hs-var">req</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679102352"><span class="hs-identifier hs-var">req</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-291"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">requestBody :: RequestBody
 </span><a href="Network.HTTP.Client.Types.html#requestBody"><span class="hs-identifier hs-var">requestBody</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RequestBody
-</span><a href="#local-6989586621679102315"><span class="hs-identifier hs-var">body</span></a></span><span>
+</span><a href="#local-6989586621679102351"><span class="hs-identifier hs-var">body</span></a></span><span>
 </span><span id="line-292"></span><span>        </span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 Applicative m =&gt;
 MimeType -&gt; [PartM m] -&gt; m RequestBody
 </span><a href="Network.HTTP.Client.MultipartFormData.html#renderParts"><span class="hs-identifier hs-var">renderParts</span></a></span><span> </span><span class="annot"><span class="annottext">MimeType
-</span><a href="#local-6989586621679102318"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">[PartM m]
-</span><a href="#local-6989586621679102317"><span class="hs-identifier hs-var">parts</span></a></span><span>
+</span><a href="#local-6989586621679102354"><span class="hs-identifier hs-var">boundary</span></a></span><span> </span><span class="annot"><span class="annottext">[PartM m]
+</span><a href="#local-6989586621679102353"><span class="hs-identifier hs-var">parts</span></a></span><span>
 </span><span id="line-293"></span></pre></body></html>

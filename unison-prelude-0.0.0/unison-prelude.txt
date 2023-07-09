@@ -2475,6 +2475,28 @@ encodeUtf8 :: Text -> ByteString
 --   <a>decodeUtf8With</a>.
 decodeUtf8 :: ByteString -> Text
 
+-- | Capture the current monadic context, providing the ability to run
+--   monadic actions in <a>IO</a>.
+--   
+--   See <a>UnliftIO</a> for an explanation of why we need a helper
+--   datatype here.
+--   
+--   Prior to version 0.2.0.0 of this library, this was a method in the
+--   <a>MonadUnliftIO</a> type class. It was moved out due to
+--   <a>https://github.com/fpco/unliftio/issues/55</a>.
+askUnliftIO :: MonadUnliftIO m => m (UnliftIO m)
+
+-- | Same as <a>askUnliftIO</a>, but returns a monomorphic function instead
+--   of a polymorphic newtype wrapper. If you only need to apply the
+--   transformation on one concrete type, this function can be more
+--   convenient.
+askRunInIO :: MonadUnliftIO m => m (m a -> IO a)
+
+-- | Convenience function for capturing the monadic context and running an
+--   <a>IO</a> action. The <a>UnliftIO</a> newtype wrapper is rarely
+--   needed, so prefer <a>withRunInIO</a> to this function.
+withUnliftIO :: MonadUnliftIO m => (UnliftIO m -> IO a) -> m a
+
 -- | Monads which allow their actions to be run in <a>IO</a>.
 --   
 --   While <a>MonadIO</a> allows an <a>IO</a> action to be lifted into
@@ -2522,28 +2544,6 @@ class MonadIO m => MonadUnliftIO (m :: Type -> Type)
 --   <a>IO</a> action with a runner function. The runner function is used
 --   to run a monadic action <tt>m</tt> in <tt>IO</tt>.
 withRunInIO :: MonadUnliftIO m => ((forall a. () => m a -> IO a) -> IO b) -> m b
-
--- | Capture the current monadic context, providing the ability to run
---   monadic actions in <a>IO</a>.
---   
---   See <a>UnliftIO</a> for an explanation of why we need a helper
---   datatype here.
---   
---   Prior to version 0.2.0.0 of this library, this was a method in the
---   <a>MonadUnliftIO</a> type class. It was moved out due to
---   <a>https://github.com/fpco/unliftio/issues/55</a>.
-askUnliftIO :: MonadUnliftIO m => m (UnliftIO m)
-
--- | Same as <a>askUnliftIO</a>, but returns a monomorphic function instead
---   of a polymorphic newtype wrapper. If you only need to apply the
---   transformation on one concrete type, this function can be more
---   convenient.
-askRunInIO :: MonadUnliftIO m => m (m a -> IO a)
-
--- | Convenience function for capturing the monadic context and running an
---   <a>IO</a> action. The <a>UnliftIO</a> newtype wrapper is rarely
---   needed, so prefer <a>withRunInIO</a> to this function.
-withUnliftIO :: MonadUnliftIO m => (UnliftIO m -> IO a) -> m a
 
 -- | Run the given action and catch any synchronous exceptions as a
 --   <a>Left</a> value.

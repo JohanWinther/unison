@@ -32,7 +32,7 @@
 </span><span id="line-32"></span><span class="hs-keyword">type</span><span> </span><span id="Size"><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-var">Size</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-33"></span><span>
 </span><span id="line-34"></span><span class="hs-comment">-- | Type for table entry. Size includes the 32 bytes magic number.</span><span>
-</span><span id="line-35"></span><span class="hs-keyword">data</span><span> </span><span id="Entry"><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Entry"><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span> </span><span class="annot"><a href="Network.HPACK.Token.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderValue"><span class="hs-identifier hs-type">HeaderValue</span></a></span><span> </span><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679093554"><span id="local-6989586621679093556"><span id="local-6989586621679093566"><span class="annot"><span class="annottext">Size -&gt; Entry -&gt; ShowS
+</span><span id="line-35"></span><span class="hs-keyword">data</span><span> </span><span id="Entry"><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Entry"><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span> </span><span class="annot"><a href="Network.HPACK.Token.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderValue"><span class="hs-identifier hs-type">HeaderValue</span></a></span><span> </span><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679093590"><span id="local-6989586621679093592"><span id="local-6989586621679093602"><span class="annot"><span class="annottext">Size -&gt; Entry -&gt; ShowS
 [Entry] -&gt; ShowS
 Entry -&gt; String
 forall a.
@@ -54,31 +54,31 @@ $cshowsPrec :: Size -&gt; Entry -&gt; ShowS
 </span><span id="line-41"></span><span>
 </span><span id="line-42"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#headerSize"><span class="hs-identifier hs-type">headerSize</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#Header"><span class="hs-identifier hs-type">Header</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span>
 </span><span id="line-43"></span><span id="headerSize"><span class="annot"><span class="annottext">headerSize :: Header -&gt; Size
-</span><a href="Network.HPACK.Table.Entry.html#headerSize"><span class="hs-identifier hs-var hs-var">headerSize</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679093550"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093550"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679093549"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093549"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
+</span><a href="Network.HPACK.Table.Entry.html#headerSize"><span class="hs-identifier hs-var hs-var">headerSize</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679093586"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093586"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679093585"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093585"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
 </span><span class="hs-identifier hs-var">BS.length</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093550"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><a href="#local-6989586621679093586"><span class="hs-identifier hs-var">k</span></a></span><span>
 </span><span id="line-44"></span><span>                 </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
 </span><span class="hs-identifier hs-var">BS.length</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093549"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679093585"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-45"></span><span>                 </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Size
 </span><a href="Network.HPACK.Table.Entry.html#headerSizeMagicNumber"><span class="hs-identifier hs-var">headerSizeMagicNumber</span></a></span><span>
 </span><span id="line-46"></span><span>
 </span><span id="line-47"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#headerSize%27"><span class="hs-identifier hs-type">headerSize'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Token.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderValue"><span class="hs-identifier hs-type">HeaderValue</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span>
 </span><span id="line-48"></span><span id="headerSize%27"><span class="annot"><span class="annottext">headerSize' :: Token -&gt; HeaderValue -&gt; Size
-</span><a href="Network.HPACK.Table.Entry.html#headerSize%27"><span class="hs-identifier hs-var hs-var">headerSize'</span></a></span></span><span> </span><span id="local-6989586621679093545"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093545"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093544"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093544"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
+</span><a href="Network.HPACK.Table.Entry.html#headerSize%27"><span class="hs-identifier hs-var hs-var">headerSize'</span></a></span></span><span> </span><span id="local-6989586621679093581"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093581"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093580"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093580"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
 </span><span class="hs-identifier hs-var">BS.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Token -&gt; HeaderValue
 </span><a href="Network.HPACK.Token.html#tokenFoldedKey"><span class="hs-identifier hs-var">tokenFoldedKey</span></a></span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093545"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679093581"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-49"></span><span>                </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Size
 </span><span class="hs-identifier hs-var">BS.length</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093544"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679093580"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-50"></span><span>                </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Size
 </span><a href="Network.HPACK.Table.Entry.html#headerSizeMagicNumber"><span class="hs-identifier hs-var">headerSizeMagicNumber</span></a></span><span>
@@ -88,88 +88,88 @@ $cshowsPrec :: Size -&gt; Entry -&gt; ShowS
 </span><span id="line-54"></span><span class="hs-comment">-- | From 'Header' to 'Entry'.</span><span>
 </span><span id="line-55"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#toEntry"><span class="hs-identifier hs-type">toEntry</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#Header"><span class="hs-identifier hs-type">Header</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span>
 </span><span id="line-56"></span><span id="toEntry"><span class="annot"><span class="annottext">toEntry :: Header -&gt; Entry
-</span><a href="Network.HPACK.Table.Entry.html#toEntry"><span class="hs-identifier hs-var hs-var">toEntry</span></a></span></span><span> </span><span id="local-6989586621679093542"><span class="annot"><span class="annottext">kv :: Header
-</span><a href="#local-6989586621679093542"><span class="hs-identifier hs-var">kv</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621679093541"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093541"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679093540"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093540"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size -&gt; Token -&gt; HeaderValue -&gt; Entry
+</span><a href="Network.HPACK.Table.Entry.html#toEntry"><span class="hs-identifier hs-var hs-var">toEntry</span></a></span></span><span> </span><span id="local-6989586621679093578"><span class="annot"><span class="annottext">kv :: Header
+</span><a href="#local-6989586621679093578"><span class="hs-identifier hs-var">kv</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span id="local-6989586621679093577"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093577"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679093576"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093576"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size -&gt; Token -&gt; HeaderValue -&gt; Entry
 </span><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093539"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093538"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093540"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679093575"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093574"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093576"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-57"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-58"></span><span>    </span><span id="local-6989586621679093538"><span class="annot"><span class="annottext">t :: Token
-</span><a href="#local-6989586621679093538"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Token
+</span><span id="line-58"></span><span>    </span><span id="local-6989586621679093574"><span class="annot"><span class="annottext">t :: Token
+</span><a href="#local-6989586621679093574"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue -&gt; Token
 </span><a href="Network.HPACK.Token.html#toToken"><span class="hs-identifier hs-var">toToken</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093541"><span class="hs-identifier hs-var">k</span></a></span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679093539"><span class="annot"><span class="annottext">siz :: Size
-</span><a href="#local-6989586621679093539"><span class="hs-identifier hs-var hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Header -&gt; Size
+</span><a href="#local-6989586621679093577"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679093575"><span class="annot"><span class="annottext">siz :: Size
+</span><a href="#local-6989586621679093575"><span class="hs-identifier hs-var hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Header -&gt; Size
 </span><a href="Network.HPACK.Table.Entry.html#headerSize"><span class="hs-identifier hs-var">headerSize</span></a></span><span> </span><span class="annot"><span class="annottext">Header
-</span><a href="#local-6989586621679093542"><span class="hs-identifier hs-var">kv</span></a></span><span>
+</span><a href="#local-6989586621679093578"><span class="hs-identifier hs-var">kv</span></a></span><span>
 </span><span id="line-60"></span><span>
 </span><span id="line-61"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#toEntryToken"><span class="hs-identifier hs-type">toEntryToken</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Token.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderValue"><span class="hs-identifier hs-type">HeaderValue</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span>
 </span><span id="line-62"></span><span id="toEntryToken"><span class="annot"><span class="annottext">toEntryToken :: Token -&gt; HeaderValue -&gt; Entry
-</span><a href="Network.HPACK.Table.Entry.html#toEntryToken"><span class="hs-identifier hs-var hs-var">toEntryToken</span></a></span></span><span> </span><span id="local-6989586621679093536"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093536"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093535"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093535"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size -&gt; Token -&gt; HeaderValue -&gt; Entry
+</span><a href="Network.HPACK.Table.Entry.html#toEntryToken"><span class="hs-identifier hs-var hs-var">toEntryToken</span></a></span></span><span> </span><span id="local-6989586621679093572"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093572"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093571"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093571"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size -&gt; Token -&gt; HeaderValue -&gt; Entry
 </span><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093534"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093536"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093535"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679093570"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093572"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093571"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-63"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-64"></span><span>    </span><span id="local-6989586621679093534"><span class="annot"><span class="annottext">siz :: Size
-</span><a href="#local-6989586621679093534"><span class="hs-identifier hs-var hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; HeaderValue -&gt; Size
+</span><span id="line-64"></span><span>    </span><span id="local-6989586621679093570"><span class="annot"><span class="annottext">siz :: Size
+</span><a href="#local-6989586621679093570"><span class="hs-identifier hs-var hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; HeaderValue -&gt; Size
 </span><a href="Network.HPACK.Table.Entry.html#headerSize%27"><span class="hs-identifier hs-var">headerSize'</span></a></span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093536"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093535"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679093572"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093571"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-65"></span><span>
 </span><span id="line-66"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
 </span><span id="line-67"></span><span>
 </span><span id="line-68"></span><span class="hs-comment">-- | Getting the size of 'Entry'.</span><span>
 </span><span id="line-69"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#entrySize"><span class="hs-identifier hs-type">entrySize</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span>
 </span><span id="line-70"></span><span id="entrySize"><span class="annot"><span class="annottext">entrySize :: Entry -&gt; Size
-</span><a href="Network.HPACK.Table.Entry.html#entrySize"><span class="hs-identifier hs-var hs-var">entrySize</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span id="local-6989586621679093533"><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093533"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="annot"><span class="annottext">Token
+</span><a href="Network.HPACK.Table.Entry.html#entrySize"><span class="hs-identifier hs-var hs-var">entrySize</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span id="local-6989586621679093569"><span class="annot"><span class="annottext">Size
+</span><a href="#local-6989586621679093569"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="annot"><span class="annottext">Token
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093533"><span class="hs-identifier hs-var">siz</span></a></span><span>
+</span><a href="#local-6989586621679093569"><span class="hs-identifier hs-var">siz</span></a></span><span>
 </span><span id="line-71"></span><span>
 </span><span id="line-72"></span><span class="hs-comment">-- | Getting 'TokenHeader'.</span><span>
 </span><span id="line-73"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#entryTokenHeader"><span class="hs-identifier hs-type">entryTokenHeader</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#TokenHeader"><span class="hs-identifier hs-type">TokenHeader</span></a></span><span>
 </span><span id="line-74"></span><span id="entryTokenHeader"><span class="annot"><span class="annottext">entryTokenHeader :: Entry -&gt; TokenHeader
 </span><a href="Network.HPACK.Table.Entry.html#entryTokenHeader"><span class="hs-identifier hs-var hs-var">entryTokenHeader</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093532"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093532"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093531"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093531"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093532"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093531"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093568"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093568"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679093567"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093567"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093568"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093567"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-75"></span><span>
 </span><span id="line-76"></span><span class="hs-comment">-- | Getting 'Token'.</span><span>
 </span><span id="line-77"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#entryToken"><span class="hs-identifier hs-type">entryToken</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Token.html#Token"><span class="hs-identifier hs-type">Token</span></a></span><span>
 </span><span id="line-78"></span><span id="entryToken"><span class="annot"><span class="annottext">entryToken :: Entry -&gt; Token
 </span><a href="Network.HPACK.Table.Entry.html#entryToken"><span class="hs-identifier hs-var hs-var">entryToken</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093530"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093530"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093566"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093566"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093530"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679093566"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-79"></span><span>
 </span><span id="line-80"></span><span class="hs-comment">-- | Getting 'HeaderName'.</span><span>
 </span><span id="line-81"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#entryHeaderName"><span class="hs-identifier hs-type">entryHeaderName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderName"><span class="hs-identifier hs-type">HeaderName</span></a></span><span>
 </span><span id="line-82"></span><span id="entryHeaderName"><span class="annot"><span class="annottext">entryHeaderName :: Entry -&gt; HeaderValue
 </span><a href="Network.HPACK.Table.Entry.html#entryHeaderName"><span class="hs-identifier hs-var hs-var">entryHeaderName</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093529"><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093529"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093565"><span class="annot"><span class="annottext">Token
+</span><a href="#local-6989586621679093565"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">HeaderValue
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Token -&gt; HeaderValue
 </span><a href="Network.HPACK.Token.html#tokenFoldedKey"><span class="hs-identifier hs-var">tokenFoldedKey</span></a></span><span> </span><span class="annot"><span class="annottext">Token
-</span><a href="#local-6989586621679093529"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679093565"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-83"></span><span>
 </span><span id="line-84"></span><span class="hs-comment">-- | Getting 'HeaderValue'.</span><span>
 </span><span id="line-85"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#entryHeaderValue"><span class="hs-identifier hs-type">entryHeaderValue</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Network.HPACK.Types.html#HeaderValue"><span class="hs-identifier hs-type">HeaderValue</span></a></span><span>
 </span><span id="line-86"></span><span id="entryHeaderValue"><span class="annot"><span class="annottext">entryHeaderValue :: Entry -&gt; HeaderValue
 </span><a href="Network.HPACK.Table.Entry.html#entryHeaderValue"><span class="hs-identifier hs-var hs-var">entryHeaderValue</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">Size
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Token
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093528"><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093528"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue
-</span><a href="#local-6989586621679093528"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679093564"><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093564"><span class="hs-identifier hs-var">v</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">HeaderValue
+</span><a href="#local-6989586621679093564"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-87"></span><span>
 </span><span id="line-88"></span><span class="hs-comment">----------------------------------------------------------------</span><span>
 </span><span id="line-89"></span><span>
@@ -185,9 +185,9 @@ $cshowsPrec :: Size -&gt; Entry -&gt; ShowS
 </span><span id="line-94"></span><span class="hs-comment">-- | How many entries can be stored in a dynamic table?</span><span>
 </span><span id="line-95"></span><span class="annot"><a href="Network.HPACK.Table.Entry.html#maxNumbers"><span class="hs-identifier hs-type">maxNumbers</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Network.HPACK.Table.Entry.html#Size"><span class="hs-identifier hs-type">Size</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-96"></span><span id="maxNumbers"><span class="annot"><span class="annottext">maxNumbers :: Size -&gt; Size
-</span><a href="Network.HPACK.Table.Entry.html#maxNumbers"><span class="hs-identifier hs-var hs-var">maxNumbers</span></a></span></span><span> </span><span id="local-6989586621679093526"><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093526"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size
-</span><a href="#local-6989586621679093526"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; a -&gt; a -&gt; a
+</span><a href="Network.HPACK.Table.Entry.html#maxNumbers"><span class="hs-identifier hs-var hs-var">maxNumbers</span></a></span></span><span> </span><span id="local-6989586621679093562"><span class="annot"><span class="annottext">Size
+</span><a href="#local-6989586621679093562"><span class="hs-identifier hs-var">siz</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Size
+</span><a href="#local-6989586621679093562"><span class="hs-identifier hs-var">siz</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">`div`</span></span><span> </span><span class="annot"><span class="annottext">Size
 </span><a href="Network.HPACK.Table.Entry.html#headerSizeMagicNumber"><span class="hs-identifier hs-var">headerSizeMagicNumber</span></a></span><span>
 </span><span id="line-97"></span></pre></body></html>

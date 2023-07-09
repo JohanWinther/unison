@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679210313"><span id="local-6989586621679210314"><span id="local-6989586621679210315"><span id="local-6989586621679210316"></span></span></span></span><span class="hs-comment">-- |</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679210311"><span id="local-6989586621679210312"><span id="local-6989586621679210313"><span id="local-6989586621679210314"></span></span></span></span><span class="hs-comment">-- |</span><span>
 </span><span id="line-2"></span><span class="hs-comment">-- Module      : Crypto.KDF.Argon2</span><span>
 </span><span id="line-3"></span><span class="hs-comment">-- License     : BSD-style</span><span>
 </span><span id="line-4"></span><span class="hs-comment">-- Maintainer  : Vincent Hanquez &lt;vincent@snarc.org&gt;</span><span>
@@ -47,13 +47,13 @@
 </span><span id="line-47"></span><span>               </span><span class="hs-comment">-- of data-depending and data-independent memory accesses, which gives</span><span>
 </span><span id="line-48"></span><span>               </span><span class="hs-comment">-- some of Argon2i's resistance to side-channel cache timing attacks</span><span>
 </span><span id="line-49"></span><span>               </span><span class="hs-comment">-- and much of Argon2d's resistance to GPU cracking attacks</span><span>
-</span><span id="line-50"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210285"><span id="local-6989586621679210287"><span class="annot"><span class="annottext">Variant -&gt; Variant -&gt; Bool
+</span><span id="line-50"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210283"><span id="local-6989586621679210285"><span class="annot"><span class="annottext">Variant -&gt; Variant -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Variant -&gt; Variant -&gt; Bool
 $c/= :: Variant -&gt; Variant -&gt; Bool
 == :: Variant -&gt; Variant -&gt; Bool
 $c== :: Variant -&gt; Variant -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210265"><span id="local-6989586621679210267"><span id="local-6989586621679210270"><span id="local-6989586621679210273"><span id="local-6989586621679210276"><span id="local-6989586621679210278"><span id="local-6989586621679210280"><span class="annot"><span class="annottext">Eq Variant
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210263"><span id="local-6989586621679210265"><span id="local-6989586621679210268"><span id="local-6989586621679210271"><span id="local-6989586621679210274"><span id="local-6989586621679210276"><span id="local-6989586621679210278"><span class="annot"><span class="annottext">Eq Variant
 Variant -&gt; Variant -&gt; Bool
 Variant -&gt; Variant -&gt; Ordering
 Variant -&gt; Variant -&gt; Variant
@@ -81,7 +81,7 @@ $c&lt;= :: Variant -&gt; Variant -&gt; Bool
 $c&lt; :: Variant -&gt; Variant -&gt; Bool
 compare :: Variant -&gt; Variant -&gt; Ordering
 $ccompare :: Variant -&gt; Variant -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210251"><span id="local-6989586621679210257"><span id="local-6989586621679210260"><span id="local-6989586621679210262"><span class="annot"><span class="annottext">ReadPrec [Variant]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210249"><span id="local-6989586621679210255"><span id="local-6989586621679210258"><span id="local-6989586621679210260"><span class="annot"><span class="annottext">ReadPrec [Variant]
 ReadPrec Variant
 Int -&gt; ReadS Variant
 ReadS [Variant]
@@ -96,7 +96,7 @@ readList :: ReadS [Variant]
 $creadList :: ReadS [Variant]
 readsPrec :: Int -&gt; ReadS Variant
 $creadsPrec :: Int -&gt; ReadS Variant
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210243"><span id="local-6989586621679210245"><span id="local-6989586621679210247"><span class="annot"><span class="annottext">Int -&gt; Variant -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210241"><span id="local-6989586621679210243"><span id="local-6989586621679210245"><span class="annot"><span class="annottext">Int -&gt; Variant -&gt; ShowS
 [Variant] -&gt; ShowS
 Variant -&gt; String
 forall a.
@@ -107,7 +107,7 @@ show :: Variant -&gt; String
 $cshow :: Variant -&gt; String
 showsPrec :: Int -&gt; Variant -&gt; ShowS
 $cshowsPrec :: Int -&gt; Variant -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210204"><span id="local-6989586621679210206"><span id="local-6989586621679210210"><span id="local-6989586621679210214"><span id="local-6989586621679210216"><span id="local-6989586621679210226"><span id="local-6989586621679210232"><span id="local-6989586621679210240"><span class="annot"><span class="annottext">Int -&gt; Variant
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210202"><span id="local-6989586621679210204"><span id="local-6989586621679210208"><span id="local-6989586621679210212"><span id="local-6989586621679210214"><span id="local-6989586621679210224"><span id="local-6989586621679210230"><span id="local-6989586621679210238"><span class="annot"><span class="annottext">Int -&gt; Variant
 Variant -&gt; Int
 Variant -&gt; [Variant]
 Variant -&gt; Variant
@@ -139,7 +139,7 @@ pred :: Variant -&gt; Variant
 $cpred :: Variant -&gt; Variant
 succ :: Variant -&gt; Variant
 $csucc :: Variant -&gt; Variant
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210199"><span id="local-6989586621679210201"><span class="annot"><span class="annottext">Variant
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210197"><span id="local-6989586621679210199"><span class="annot"><span class="annottext">Variant
 forall a. a -&gt; a -&gt; Bounded a
 maxBound :: Variant
 $cmaxBound :: Variant
@@ -149,13 +149,13 @@ $cminBound :: Variant
 </span><span id="line-51"></span><span>
 </span><span id="line-52"></span><span class="hs-comment">-- | Which version of Argon2 to use</span><span>
 </span><span id="line-53"></span><span class="hs-keyword">data</span><span> </span><span id="Version"><span class="annot"><a href="Crypto.KDF.Argon2.html#Version"><span class="hs-identifier hs-var">Version</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Version10"><span class="annot"><a href="Crypto.KDF.Argon2.html#Version10"><span class="hs-identifier hs-var">Version10</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Version13"><span class="annot"><a href="Crypto.KDF.Argon2.html#Version13"><span class="hs-identifier hs-var">Version13</span></a></span></span><span>
-</span><span id="line-54"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210191"><span id="local-6989586621679210193"><span class="annot"><span class="annottext">Version -&gt; Version -&gt; Bool
+</span><span id="line-54"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210189"><span id="local-6989586621679210191"><span class="annot"><span class="annottext">Version -&gt; Version -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Version -&gt; Version -&gt; Bool
 $c/= :: Version -&gt; Version -&gt; Bool
 == :: Version -&gt; Version -&gt; Bool
 $c== :: Version -&gt; Version -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210172"><span id="local-6989586621679210174"><span id="local-6989586621679210177"><span id="local-6989586621679210180"><span id="local-6989586621679210183"><span id="local-6989586621679210185"><span id="local-6989586621679210187"><span class="annot"><span class="annottext">Eq Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210170"><span id="local-6989586621679210172"><span id="local-6989586621679210175"><span id="local-6989586621679210178"><span id="local-6989586621679210181"><span id="local-6989586621679210183"><span id="local-6989586621679210185"><span class="annot"><span class="annottext">Eq Version
 Version -&gt; Version -&gt; Bool
 Version -&gt; Version -&gt; Ordering
 Version -&gt; Version -&gt; Version
@@ -183,7 +183,7 @@ $c&lt;= :: Version -&gt; Version -&gt; Bool
 $c&lt; :: Version -&gt; Version -&gt; Bool
 compare :: Version -&gt; Version -&gt; Ordering
 $ccompare :: Version -&gt; Version -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210161"><span id="local-6989586621679210165"><span id="local-6989586621679210168"><span id="local-6989586621679210170"><span class="annot"><span class="annottext">ReadPrec [Version]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210159"><span id="local-6989586621679210163"><span id="local-6989586621679210166"><span id="local-6989586621679210168"><span class="annot"><span class="annottext">ReadPrec [Version]
 ReadPrec Version
 Int -&gt; ReadS Version
 ReadS [Version]
@@ -198,7 +198,7 @@ readList :: ReadS [Version]
 $creadList :: ReadS [Version]
 readsPrec :: Int -&gt; ReadS Version
 $creadsPrec :: Int -&gt; ReadS Version
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210154"><span id="local-6989586621679210156"><span id="local-6989586621679210158"><span class="annot"><span class="annottext">Int -&gt; Version -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210152"><span id="local-6989586621679210154"><span id="local-6989586621679210156"><span class="annot"><span class="annottext">Int -&gt; Version -&gt; ShowS
 [Version] -&gt; ShowS
 Version -&gt; String
 forall a.
@@ -209,7 +209,7 @@ show :: Version -&gt; String
 $cshow :: Version -&gt; String
 showsPrec :: Int -&gt; Version -&gt; ShowS
 $cshowsPrec :: Int -&gt; Version -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210121"><span id="local-6989586621679210123"><span id="local-6989586621679210127"><span id="local-6989586621679210130"><span id="local-6989586621679210132"><span id="local-6989586621679210140"><span id="local-6989586621679210146"><span id="local-6989586621679210152"><span class="annot"><span class="annottext">Int -&gt; Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210119"><span id="local-6989586621679210121"><span id="local-6989586621679210125"><span id="local-6989586621679210128"><span id="local-6989586621679210130"><span id="local-6989586621679210138"><span id="local-6989586621679210144"><span id="local-6989586621679210150"><span class="annot"><span class="annottext">Int -&gt; Version
 Version -&gt; Int
 Version -&gt; [Version]
 Version -&gt; Version
@@ -241,7 +241,7 @@ pred :: Version -&gt; Version
 $cpred :: Version -&gt; Version
 succ :: Version -&gt; Version
 $csucc :: Version -&gt; Version
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210117"><span id="local-6989586621679210119"><span class="annot"><span class="annottext">Version
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Enum</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210115"><span id="local-6989586621679210117"><span class="annot"><span class="annottext">Version
 forall a. a -&gt; a -&gt; Bounded a
 maxBound :: Version
 $cmaxBound :: Version
@@ -278,13 +278,13 @@ $cminBound :: Version
 </span><span id="line-78"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="version"><span class="annot"><span class="annottext">Options -&gt; Version
 </span><a href="Crypto.KDF.Argon2.html#version"><span class="hs-identifier hs-var hs-var">version</span></a></span></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="Crypto.KDF.Argon2.html#Version"><span class="hs-identifier hs-type">Version</span></a></span><span>     </span><span class="hs-comment">-- ^ Which version of Argon2 to use.</span><span>
 </span><span id="line-79"></span><span>    </span><span class="hs-special">}</span><span>
-</span><span id="line-80"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210100"><span id="local-6989586621679210108"><span class="annot"><span class="annottext">Options -&gt; Options -&gt; Bool
+</span><span id="line-80"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679210098"><span id="local-6989586621679210106"><span class="annot"><span class="annottext">Options -&gt; Options -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Options -&gt; Options -&gt; Bool
 $c/= :: Options -&gt; Options -&gt; Bool
 == :: Options -&gt; Options -&gt; Bool
 $c== :: Options -&gt; Options -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210070"><span id="local-6989586621679210072"><span id="local-6989586621679210075"><span id="local-6989586621679210078"><span id="local-6989586621679210081"><span id="local-6989586621679210088"><span id="local-6989586621679210096"><span class="annot"><span class="annottext">Eq Options
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210068"><span id="local-6989586621679210070"><span id="local-6989586621679210073"><span id="local-6989586621679210076"><span id="local-6989586621679210079"><span id="local-6989586621679210086"><span id="local-6989586621679210094"><span class="annot"><span class="annottext">Eq Options
 Options -&gt; Options -&gt; Bool
 Options -&gt; Options -&gt; Ordering
 Options -&gt; Options -&gt; Options
@@ -312,7 +312,7 @@ $c&lt;= :: Options -&gt; Options -&gt; Bool
 $c&lt; :: Options -&gt; Options -&gt; Bool
 compare :: Options -&gt; Options -&gt; Ordering
 $ccompare :: Options -&gt; Options -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210042"><span id="local-6989586621679210063"><span id="local-6989586621679210066"><span id="local-6989586621679210068"><span class="annot"><span class="annottext">ReadPrec [Options]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210040"><span id="local-6989586621679210061"><span id="local-6989586621679210064"><span id="local-6989586621679210066"><span class="annot"><span class="annottext">ReadPrec [Options]
 ReadPrec Options
 Int -&gt; ReadS Options
 ReadS [Options]
@@ -327,7 +327,7 @@ readList :: ReadS [Options]
 $creadList :: ReadS [Options]
 readsPrec :: Int -&gt; ReadS Options
 $creadsPrec :: Int -&gt; ReadS Options
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210028"><span id="local-6989586621679210030"><span id="local-6989586621679210039"><span class="annot"><span class="annottext">Int -&gt; Options -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679210026"><span id="local-6989586621679210028"><span id="local-6989586621679210037"><span class="annot"><span class="annottext">Int -&gt; Options -&gt; ShowS
 [Options] -&gt; ShowS
 Options -&gt; String
 forall a.
@@ -379,34 +379,34 @@ $cshowsPrec :: Int -&gt; Options -&gt; ShowS
 </span><a href="Crypto.KDF.Argon2.html#Version13"><span class="hs-identifier hs-var">Version13</span></a></span><span>
 </span><span id="line-100"></span><span>            </span><span class="hs-special">}</span><span>
 </span><span id="line-101"></span><span>
-</span><span id="line-102"></span><span id="local-6989586621679210376"><span id="local-6989586621679210377"><span id="local-6989586621679210379"><span class="annot"><a href="Crypto.KDF.Argon2.html#hash"><span class="hs-identifier hs-type">hash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ByteArrayAccess</span></span><span> </span><span class="annot"><a href="#local-6989586621679210379"><span class="hs-identifier hs-type">password</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteArrayAccess</span></span><span> </span><span class="annot"><a href="#local-6989586621679210377"><span class="hs-identifier hs-type">salt</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679210376"><span class="hs-identifier hs-type">out</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-102"></span><span id="local-6989586621679210374"><span id="local-6989586621679210375"><span id="local-6989586621679210377"><span class="annot"><a href="Crypto.KDF.Argon2.html#hash"><span class="hs-identifier hs-type">hash</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ByteArrayAccess</span></span><span> </span><span class="annot"><a href="#local-6989586621679210377"><span class="hs-identifier hs-type">password</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteArrayAccess</span></span><span> </span><span class="annot"><a href="#local-6989586621679210375"><span class="hs-identifier hs-type">salt</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679210374"><span class="hs-identifier hs-type">out</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-103"></span><span>     </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Crypto.KDF.Argon2.html#Options"><span class="hs-identifier hs-type">Options</span></a></span><span>
-</span><span id="line-104"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679210379"><span class="hs-identifier hs-type">password</span></a></span><span>
-</span><span id="line-105"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679210377"><span class="hs-identifier hs-type">salt</span></a></span><span>
+</span><span id="line-104"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679210377"><span class="hs-identifier hs-type">password</span></a></span><span>
+</span><span id="line-105"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679210375"><span class="hs-identifier hs-type">salt</span></a></span><span>
 </span><span id="line-106"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
-</span><span id="line-107"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Crypto.Error.Types.html#CryptoFailable"><span class="hs-identifier hs-type">CryptoFailable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679210376"><span class="hs-identifier hs-type">out</span></a></span></span></span></span><span>
+</span><span id="line-107"></span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Crypto.Error.Types.html#CryptoFailable"><span class="hs-identifier hs-type">CryptoFailable</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679210374"><span class="hs-identifier hs-type">out</span></a></span></span></span></span><span>
 </span><span id="line-108"></span><span id="hash"><span class="annot"><span class="annottext">hash :: forall password salt out.
 (ByteArrayAccess password, ByteArrayAccess salt, ByteArray out) =&gt;
 Options -&gt; password -&gt; salt -&gt; Int -&gt; CryptoFailable out
-</span><a href="Crypto.KDF.Argon2.html#hash"><span class="hs-identifier hs-var hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679210005"><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span></span><span> </span><span id="local-6989586621679210004"><span class="annot"><span class="annottext">password
-</span><a href="#local-6989586621679210004"><span class="hs-identifier hs-var">password</span></a></span></span><span> </span><span id="local-6989586621679210003"><span class="annot"><span class="annottext">salt
-</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">salt</span></a></span></span><span> </span><span id="local-6989586621679210002"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">outLen</span></a></span></span><span>
+</span><a href="Crypto.KDF.Argon2.html#hash"><span class="hs-identifier hs-var hs-var">hash</span></a></span></span><span> </span><span id="local-6989586621679210003"><span class="annot"><span class="annottext">Options
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span></span><span> </span><span id="local-6989586621679210002"><span class="annot"><span class="annottext">password
+</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">password</span></a></span></span><span> </span><span id="local-6989586621679210001"><span class="annot"><span class="annottext">salt
+</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var">salt</span></a></span></span><span> </span><span id="local-6989586621679210000"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679210000"><span class="hs-identifier hs-var">outLen</span></a></span></span><span>
 </span><span id="line-109"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var">saltLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679209999"><span class="hs-identifier hs-var">saltLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Crypto.KDF.Argon2.html#saltMinLength"><span class="hs-identifier hs-var">saltMinLength</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. CryptoError -&gt; CryptoFailable a
 </span><a href="Crypto.Error.Types.html#CryptoFailed"><span class="hs-identifier hs-var">CryptoFailed</span></a></span><span> </span><span class="annot"><span class="annottext">CryptoError
 </span><a href="Crypto.Error.Types.html#CryptoError_SaltTooSmall"><span class="hs-identifier hs-var">CryptoError_SaltTooSmall</span></a></span><span>
 </span><span id="line-110"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679210000"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Crypto.KDF.Argon2.html#outputMinLength"><span class="hs-identifier hs-var">outputMinLength</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. CryptoError -&gt; CryptoFailable a
 </span><a href="Crypto.Error.Types.html#CryptoFailed"><span class="hs-identifier hs-var">CryptoFailed</span></a></span><span> </span><span class="annot"><span class="annottext">CryptoError
 </span><a href="Crypto.Error.Types.html#CryptoError_OutputLengthTooSmall"><span class="hs-identifier hs-var">CryptoError_OutputLengthTooSmall</span></a></span><span>
 </span><span id="line-111"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679210000"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="Crypto.KDF.Argon2.html#outputMaxLength"><span class="hs-identifier hs-var">outputMaxLength</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. CryptoError -&gt; CryptoFailable a
 </span><a href="Crypto.Error.Types.html#CryptoFailed"><span class="hs-identifier hs-var">CryptoFailed</span></a></span><span> </span><span class="annot"><span class="annottext">CryptoError
@@ -416,20 +416,20 @@ Options -&gt; password -&gt; salt -&gt; Int -&gt; CryptoFailable out
 </span><a href="Crypto.Error.Types.html#CryptoPassed"><span class="hs-identifier hs-var">CryptoPassed</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a p. ByteArray a =&gt; Int -&gt; (Ptr p -&gt; IO ()) -&gt; a
 </span><span class="hs-identifier hs-var">B.allocAndFreeze</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209992"><span class="annot"><span class="annottext">Ptr HashOut
-</span><a href="#local-6989586621679209992"><span class="hs-identifier hs-var">out</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-113"></span><span>        </span><span id="local-6989586621679209991"><span class="annot"><span class="annottext">CVariant
-</span><a href="#local-6989586621679209991"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall ba p a. ByteArrayAccess ba =&gt; ba -&gt; (Ptr p -&gt; IO a) -&gt; IO a
+</span><a href="#local-6989586621679210000"><span class="hs-identifier hs-var">outLen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209990"><span class="annot"><span class="annottext">Ptr HashOut
+</span><a href="#local-6989586621679209990"><span class="hs-identifier hs-var">out</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-113"></span><span>        </span><span id="local-6989586621679209989"><span class="annot"><span class="annottext">CVariant
+</span><a href="#local-6989586621679209989"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall ba p a. ByteArrayAccess ba =&gt; ba -&gt; (Ptr p -&gt; IO a) -&gt; IO a
 </span><span class="hs-identifier hs-var">B.withByteArray</span></span><span> </span><span class="annot"><span class="annottext">password
-</span><a href="#local-6989586621679210004"><span class="hs-identifier hs-var">password</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209989"><span class="annot"><span class="annottext">Ptr Pass
-</span><a href="#local-6989586621679209989"><span class="hs-identifier hs-var">pPass</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">password</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209987"><span class="annot"><span class="annottext">Ptr Pass
+</span><a href="#local-6989586621679209987"><span class="hs-identifier hs-var">pPass</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-114"></span><span>               </span><span class="annot"><span class="annottext">forall ba p a. ByteArrayAccess ba =&gt; ba -&gt; (Ptr p -&gt; IO a) -&gt; IO a
 </span><span class="hs-identifier hs-var">B.withByteArray</span></span><span> </span><span class="annot"><span class="annottext">salt
-</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">salt</span></a></span><span>     </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209988"><span class="annot"><span class="annottext">Ptr Salt
-</span><a href="#local-6989586621679209988"><span class="hs-identifier hs-var">pSalt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var">salt</span></a></span><span>     </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679209986"><span class="annot"><span class="annottext">Ptr Salt
+</span><a href="#local-6989586621679209986"><span class="hs-identifier hs-var">pSalt</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-115"></span><span>                    </span><span class="annot"><span class="annottext">TimeCost
 -&gt; TimeCost
 -&gt; TimeCost
@@ -444,55 +444,55 @@ Options -&gt; password -&gt; salt -&gt; Int -&gt; CryptoFailable out
 -&gt; IO CVariant
 </span><a href="Crypto.KDF.Argon2.html#argon2_hash"><span class="hs-identifier hs-var">argon2_hash</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Options -&gt; TimeCost
 </span><a href="Crypto.KDF.Argon2.html#iterations"><span class="hs-identifier hs-var">iterations</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-116"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Options -&gt; TimeCost
 </span><a href="Crypto.KDF.Argon2.html#memory"><span class="hs-identifier hs-var">memory</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-117"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Options -&gt; TimeCost
 </span><a href="Crypto.KDF.Argon2.html#parallelism"><span class="hs-identifier hs-var">parallelism</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-118"></span><span>                                </span><span class="annot"><span class="annottext">Ptr Pass
-</span><a href="#local-6989586621679209989"><span class="hs-identifier hs-var">pPass</span></a></span><span>
+</span><a href="#local-6989586621679209987"><span class="hs-identifier hs-var">pPass</span></a></span><span>
 </span><span id="line-119"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
 </span><a href="Crypto.KDF.Argon2.html#csizeOfInt"><span class="hs-identifier hs-var">csizeOfInt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679209985"><span class="hs-identifier hs-var">passwordLen</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679209983"><span class="hs-identifier hs-var">passwordLen</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-120"></span><span>                                </span><span class="annot"><span class="annottext">Ptr Salt
-</span><a href="#local-6989586621679209988"><span class="hs-identifier hs-var">pSalt</span></a></span><span>
+</span><a href="#local-6989586621679209986"><span class="hs-identifier hs-var">pSalt</span></a></span><span>
 </span><span id="line-121"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
 </span><a href="Crypto.KDF.Argon2.html#csizeOfInt"><span class="hs-identifier hs-var">csizeOfInt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var">saltLen</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679209999"><span class="hs-identifier hs-var">saltLen</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-122"></span><span>                                </span><span class="annot"><span class="annottext">Ptr HashOut
-</span><a href="#local-6989586621679209992"><span class="hs-identifier hs-var">out</span></a></span><span>
+</span><a href="#local-6989586621679209990"><span class="hs-identifier hs-var">out</span></a></span><span>
 </span><span id="line-123"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
 </span><a href="Crypto.KDF.Argon2.html#csizeOfInt"><span class="hs-identifier hs-var">csizeOfInt</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">outLen</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210000"><span class="hs-identifier hs-var">outLen</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-124"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Variant -&gt; CVariant
 </span><a href="Crypto.KDF.Argon2.html#cOfVariant"><span class="hs-identifier hs-var">cOfVariant</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Options -&gt; Variant
 </span><a href="Crypto.KDF.Argon2.html#variant"><span class="hs-identifier hs-var">variant</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-125"></span><span>                                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Version -&gt; CVariant
 </span><a href="Crypto.KDF.Argon2.html#cOfVersion"><span class="hs-identifier hs-var">cOfVersion</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Options -&gt; Version
 </span><a href="Crypto.KDF.Argon2.html#version"><span class="hs-identifier hs-var">version</span></a></span><span> </span><span class="annot"><span class="annottext">Options
-</span><a href="#local-6989586621679210005"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">options</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-126"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CVariant
-</span><a href="#local-6989586621679209991"><span class="hs-identifier hs-var">res</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679209989"><span class="hs-identifier hs-var">res</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">CVariant
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a. HasCallStack =&gt; String -&gt; a
 </span><span class="hs-identifier hs-var">error</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;argon2: hash: internal error&quot;</span></span><span>
 </span><span id="line-127"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-128"></span><span>    </span><span id="local-6989586621679210001"><span class="annot"><span class="annottext">saltLen :: Int
-</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var hs-var">saltLen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall ba. ByteArrayAccess ba =&gt; ba -&gt; Int
+</span><span id="line-128"></span><span>    </span><span id="local-6989586621679209999"><span class="annot"><span class="annottext">saltLen :: Int
+</span><a href="#local-6989586621679209999"><span class="hs-identifier hs-var hs-var">saltLen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall ba. ByteArrayAccess ba =&gt; ba -&gt; Int
 </span><span class="hs-identifier hs-var">B.length</span></span><span> </span><span class="annot"><span class="annottext">salt
-</span><a href="#local-6989586621679210003"><span class="hs-identifier hs-var">salt</span></a></span><span>
-</span><span id="line-129"></span><span>    </span><span id="local-6989586621679209985"><span class="annot"><span class="annottext">passwordLen :: Int
-</span><a href="#local-6989586621679209985"><span class="hs-identifier hs-var hs-var">passwordLen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall ba. ByteArrayAccess ba =&gt; ba -&gt; Int
+</span><a href="#local-6989586621679210001"><span class="hs-identifier hs-var">salt</span></a></span><span>
+</span><span id="line-129"></span><span>    </span><span id="local-6989586621679209983"><span class="annot"><span class="annottext">passwordLen :: Int
+</span><a href="#local-6989586621679209983"><span class="hs-identifier hs-var hs-var">passwordLen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall ba. ByteArrayAccess ba =&gt; ba -&gt; Int
 </span><span class="hs-identifier hs-var">B.length</span></span><span> </span><span class="annot"><span class="annottext">password
-</span><a href="#local-6989586621679210004"><span class="hs-identifier hs-var">password</span></a></span><span>
+</span><a href="#local-6989586621679210002"><span class="hs-identifier hs-var">password</span></a></span><span>
 </span><span id="line-130"></span><span>
 </span><span id="line-131"></span><span class="hs-keyword">data</span><span> </span><span id="Pass"><span class="annot"><a href="Crypto.KDF.Argon2.html#Pass"><span class="hs-identifier hs-var">Pass</span></a></span></span><span>
 </span><span id="line-132"></span><span class="hs-keyword">data</span><span> </span><span id="Salt"><span class="annot"><a href="Crypto.KDF.Argon2.html#Salt"><span class="hs-identifier hs-var">Salt</span></a></span></span><span>
