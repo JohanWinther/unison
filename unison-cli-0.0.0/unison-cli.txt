@@ -275,6 +275,8 @@ DocsI :: [HQSplit'] -> Input
 FindI :: Bool -> FindScope -> [String] -> Input
 FindShallowI :: Path' -> Input
 FindPatchI :: Input
+StructuredFindI :: FindScope -> HashQualified Name -> Input
+StructuredFindReplaceI :: HashQualified Name -> Input
 ShowDefinitionI :: OutputLocation -> ShowDefinitionScope -> [HashQualified Name] -> Input
 ShowDefinitionByPrefixI :: OutputLocation -> [HashQualified Name] -> Input
 ShowReflogI :: Input
@@ -1155,7 +1157,7 @@ TermAlreadyExists :: Split' -> Set Referent -> Output
 LabeledReferenceAmbiguous :: Int -> HashQualified Name -> Set LabeledDependency -> Output
 LabeledReferenceNotFound :: HashQualified Name -> Output
 DeleteNameAmbiguous :: Int -> HQSplit' -> Set Referent -> Set Reference -> Output
-TermAmbiguous :: HashQualified Name -> Set Referent -> Output
+TermAmbiguous :: PrettyPrintEnv -> HashQualified Name -> Set Referent -> Output
 HashAmbiguous :: ShortHash -> Set Referent -> Output
 BranchHashAmbiguous :: ShortCausalHash -> Set ShortCausalHash -> Output
 BadNamespace :: String -> String -> Output
@@ -1184,6 +1186,7 @@ ListOfDefinitions :: FindScope -> PrettyPrintEnv -> ListDetailed -> [SearchResul
 ListOfLinks :: PrettyPrintEnv -> [(HashQualified Name, Reference, Maybe (Type Symbol Ann))] -> Output
 ListShallow :: IO PrettyPrintEnv -> [ShallowListEntry Symbol Ann] -> Output
 ListOfPatches :: Set Name -> Output
+ListStructuredFind :: [HashQualified Name] -> Output
 SlurpOutput :: Input -> PrettyPrintEnv -> SlurpResult -> Output
 ParseErrors :: Text -> [Err Symbol] -> Output
 TypeErrors :: Absolute -> Text -> PrettyPrintEnv -> [ErrorNote Symbol Ann] -> Output
@@ -1266,6 +1269,8 @@ CreatedRemoteProjectBranch :: URI -> ProjectAndBranch ProjectName ProjectBranchN
 RemoteProjectBranchIsUpToDate :: URI -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 InvalidProjectName :: Text -> Output
 InvalidProjectBranchName :: Text -> Output
+InvalidStructuredFindReplace :: HashQualified Name -> Output
+InvalidStructuredFind :: HashQualified Name -> Output
 ProjectNameAlreadyExists :: ProjectName -> Output
 ProjectNameRequiresUserSlug :: ProjectName -> Output
 ProjectAndBranchNameAlreadyExists :: ProjectAndBranch ProjectName ProjectBranchName -> Output
@@ -1297,6 +1302,7 @@ AmbiguousCloneLocal :: ProjectAndBranch ProjectName ProjectBranchName -> Project
 AmbiguousCloneRemote :: ProjectName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 ClonedProjectBranch :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectAndBranch ProjectName ProjectBranchName -> Output
 RenamedProject :: ProjectName -> ProjectName -> Output
+OutputRewrittenFile :: PrettyPrintEnvDecl -> FilePath -> String -> ([Symbol], UnisonFile Symbol Ann) -> Output
 RenamedProjectBranch :: ProjectName -> ProjectBranchName -> ProjectBranchName -> Output
 CantRenameBranchTo :: ProjectBranchName -> Output
 FetchingLatestReleaseOfBase :: Output
@@ -1491,12 +1497,12 @@ Env :: AuthenticatedHttpClient -> Codebase IO Symbol Ann -> Config -> Credential
 --   There's an additional pseudo <tt>"currentPath"</tt> field lens, for
 --   convenience.
 data LoopState
-LoopState :: TMVar (Branch IO) -> CausalHash -> NonEmpty Absolute -> Maybe (FilePath, Bool) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Maybe Input -> NumberedArgs -> Maybe (Term Symbol Ann, Type Symbol Ann, TypecheckedUnisonFile Symbol Ann) -> LoopState
+LoopState :: TMVar (Branch IO) -> CausalHash -> NonEmpty Absolute -> Maybe (FilePath, Bool) -> Maybe (Either (UnisonFile Symbol Ann) (TypecheckedUnisonFile Symbol Ann)) -> Maybe Input -> NumberedArgs -> Maybe (Term Symbol Ann, Type Symbol Ann, TypecheckedUnisonFile Symbol Ann) -> LoopState
 [$sel:root:LoopState] :: LoopState -> TMVar (Branch IO)
 [$sel:lastSavedRootHash:LoopState] :: LoopState -> CausalHash
 [$sel:currentPathStack:LoopState] :: LoopState -> NonEmpty Absolute
 [$sel:latestFile:LoopState] :: LoopState -> Maybe (FilePath, Bool)
-[$sel:latestTypecheckedFile:LoopState] :: LoopState -> Maybe (TypecheckedUnisonFile Symbol Ann)
+[$sel:latestTypecheckedFile:LoopState] :: LoopState -> Maybe (Either (UnisonFile Symbol Ann) (TypecheckedUnisonFile Symbol Ann))
 [$sel:lastInput:LoopState] :: LoopState -> Maybe Input
 [$sel:numberedArgs:LoopState] :: LoopState -> NumberedArgs
 [$sel:lastRunResult:LoopState] :: LoopState -> Maybe (Term Symbol Ann, Type Symbol Ann, TypecheckedUnisonFile Symbol Ann)
@@ -2075,7 +2081,17 @@ expectPatchAt :: Split' -> Cli Patch
 --   one.
 assertNoPatchAt :: Split' -> Cli ()
 getLatestFile :: Cli (Maybe (FilePath, Bool))
+
+-- | Get the latest parsed unison file.
+getLatestParsedFile :: Cli (Maybe (UnisonFile Symbol Ann))
+
+-- | Returns a parsed term (potentially with free variables) from the
+--   latest file. This term will refer to other terms in the file by vars,
+--   not by hash. Used to implement rewriting and other refactorings on the
+--   current file.
+getTermFromLatestParsedFile :: HashQualified Name -> Cli (Maybe (Term Symbol Ann))
 expectLatestFile :: Cli (FilePath, Bool)
+expectLatestParsedFile :: Cli (UnisonFile Symbol Ann)
 
 -- | Get the latest typechecked unison file.
 getLatestTypecheckedFile :: Cli (Maybe (TypecheckedUnisonFile Symbol Ann))
@@ -2368,7 +2384,7 @@ makeExample :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
 makeExampleNoBackticks :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
 makeExample' :: InputPattern -> Pretty ColorText
 makeExampleEOS :: InputPattern -> [Pretty ColorText] -> Pretty ColorText
-helpFor :: InputPattern -> Either (Pretty ColorText) Input
+helpFor :: InputPattern -> Pretty ColorText
 mergeBuiltins :: InputPattern
 mergeIOBuiltins :: InputPattern
 updateBuiltins :: InputPattern
@@ -2390,6 +2406,8 @@ api :: InputPattern
 ui :: InputPattern
 undo :: InputPattern
 viewByPrefix :: InputPattern
+sfind :: InputPattern
+sfindReplace :: InputPattern
 find :: InputPattern
 findAll :: InputPattern
 findGlobal :: InputPattern
@@ -2580,8 +2598,12 @@ shareProjectNotFound :: Text -> Pretty
 shareUserNotFound :: RepoInfo -> Pretty
 sharePathToWriteRemotePathShare :: Path -> WriteRemoteNamespace void
 formatMissingStuff :: (Show tm, Show typ) => [(HashQualified Name, tm)] -> [(HashQualified Name, typ)] -> Pretty
+displayOutputRewrittenFile :: (Ord a, Var v) => PrettyPrintEnvDecl -> FilePath -> String -> ([v], UnisonFile v a) -> IO Pretty
+foldLine :: IsString s => Pretty s
+prettyUnisonFile :: forall v a. (Var v, Ord a) => PrettyPrintEnvDecl -> UnisonFile v a -> Pretty
 displayDefinitions' :: Var v => Ord a1 => PrettyPrintEnvDecl -> Map Reference (DisplayObject () (Decl v a1)) -> Map Reference (DisplayObject (Type v a1) (Term v a1)) -> Pretty
 displayRendered :: Maybe FilePath -> Pretty -> IO Pretty
+prependToFile :: Pretty -> FilePath -> IO FilePath
 displayDefinitions :: DisplayDefinitionsOutput -> IO Pretty
 displayTestResults :: Bool -> PrettyPrintEnv -> [(Reference, Text)] -> [(Reference, Text)] -> Pretty
 unsafePrettyTermResultSig' :: Var v => PrettyPrintEnv -> TermResult' v a -> Pretty
@@ -2615,7 +2637,8 @@ numberedArgsForEndangerments :: PrettyPrintEnvDecl -> Map LabeledDependency (NES
 -- | Format and render all dependents which are endangered by references
 --   going extinct.
 endangeredDependentsTable :: PrettyPrintEnvDecl -> Map LabeledDependency (NESet LabeledDependency) -> Pretty ColorText
-listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty ColorText
+listStructuredFind :: [HashQualified Name] -> Pretty
+listDependentsOrDependencies :: PrettyPrintEnv -> Text -> Text -> Set LabeledDependency -> [HashQualified Name] -> [HashQualified Name] -> Pretty
 
 module Unison.CommandLine.DisplayValues
 type Pretty = Pretty ColorText

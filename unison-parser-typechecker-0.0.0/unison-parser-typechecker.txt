@@ -2035,9 +2035,9 @@ datas :: Env v a -> Map v (Reference, DataDeclaration v a)
 
 module Unison.UnisonFile.Type
 data UnisonFile v a
-UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
-[$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, DataDeclaration v a)
-[$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, EffectDeclaration v a)
+UnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
+[$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TypeReferenceId, DataDeclaration v a)
+[$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TypeReferenceId, EffectDeclaration v a)
 [$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, a, Term v a)]
 [$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, a, Term v a)]
 pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
@@ -2531,6 +2531,22 @@ seqViewEmpty :: ConstructorId
 seqViewElem :: ConstructorId
 okConstructorReferent :: Referent
 failConstructorReferent :: Referent
+rewriteTermRef :: Reference
+pattern RewriteTerm' :: Term2 vt at ap v a -> Term2 vt at ap v a -> Term2 vt at ap v a
+unRewriteTerm :: Term2 vt at ap v a -> Maybe (Term2 vt at ap v a, Term2 vt at ap v a)
+rewriteCaseRef :: Reference
+pattern RewriteCase' :: Term2 vt at ap v a -> Term2 vt at ap v a -> Term2 vt at ap v a
+rewriteCase :: Ord v => a -> Term2 vt at ap v a -> Term2 vt at ap v a -> Term2 vt at ap v a
+rewriteTerm :: Ord v => a -> Term2 vt at ap v a -> Term2 vt at ap v a -> Term2 vt at ap v a
+unRewriteCase :: Term2 vt at ap v a -> Maybe (Term2 vt at ap v a, Term2 vt at ap v a)
+rewriteTypeRef :: Reference
+pattern RewriteSignature' :: forall vt at ap v a. [vt] -> Type vt at -> Type vt at -> Term2 vt at ap v a
+rewriteType :: (Var v, Semigroup a) => a -> [v] -> Type v a -> Type v a -> Term2 v a a v a
+unRewriteSignature :: Term2 vt at ap v a -> Maybe ([vt], Type vt at, Type vt at)
+rewritesRef :: Reference
+pattern Rewrites' :: [Term2 vt at ap v a] -> Term2 vt at ap v a
+rewrites :: (Var v, Monoid a) => a -> [Term2 vt at ap v a] -> Term2 vt at ap v a
+unRewrites :: Term2 vt at ap v a -> Maybe [Term2 vt at ap v a]
 
 -- | parse some builtin data types, and resolve their free variables using
 --   | builtinTypes' and those types defined herein
@@ -2584,9 +2600,9 @@ stdHandleType :: Ord v => a -> Type v a
 failureType :: Ord v => a -> Type v a
 exceptionType :: Ord v => a -> Type v a
 tlsSignedCertType :: Var v => a -> Type v a
-unitTerm :: Var v => a -> Term v a
+unitTerm :: Var v => a -> Term2 vt at ap v a
 tupleConsTerm :: (Ord v, Semigroup a) => Term2 vt at ap v a -> Term2 vt at ap v a -> Term2 vt at ap v a
-tupleTerm :: (Var v, Monoid a) => [Term v a] -> Term v a
+tupleTerm :: (Var v, Monoid a) => [Term2 vt at ap v a] -> Term2 vt at ap v a
 forceTerm :: Var v => a -> a -> Term v a -> Term v a
 delayTerm :: Var v => a -> Term v a -> Term v a
 unTupleTerm :: Term2 vt at ap v a -> Maybe [Term2 vt at ap v a]
@@ -2598,9 +2614,9 @@ unOptionalRef :: Reference -> Bool
 
 module Unison.UnisonFile
 data UnisonFile v a
-UnisonFileId :: Map v (TermReferenceId, DataDeclaration v a) -> Map v (TermReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
-[$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, DataDeclaration v a)
-[$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TermReferenceId, EffectDeclaration v a)
+UnisonFileId :: Map v (TypeReferenceId, DataDeclaration v a) -> Map v (TypeReferenceId, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
+[$sel:dataDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TypeReferenceId, DataDeclaration v a)
+[$sel:effectDeclarationsId:UnisonFileId] :: UnisonFile v a -> Map v (TypeReferenceId, EffectDeclaration v a)
 [$sel:terms:UnisonFileId] :: UnisonFile v a -> [(v, a, Term v a)]
 [$sel:watches:UnisonFileId] :: UnisonFile v a -> Map WatchKind [(v, a, Term v a)]
 pattern UnisonFile :: Map v (TypeReference, DataDeclaration v a) -> Map v (TypeReference, EffectDeclaration v a) -> [(v, a, Term v a)] -> Map WatchKind [(v, a, Term v a)] -> UnisonFile v a
@@ -2646,6 +2662,7 @@ termSignatureExternalLabeledDependencies :: Ord v => TypecheckedUnisonFile v a -
 -- | the top level components (no watches) plus test watches.
 topLevelComponents :: TypecheckedUnisonFile v a -> [[(v, a, Term v a, Type v a)]]
 typecheckedUnisonFile :: forall v a. Var v => Map v (Id, DataDeclaration v a) -> Map v (Id, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> TypecheckedUnisonFile v a
+rewrite :: (Var v, Eq a) => Set v -> (Term v a -> Maybe (Term v a)) -> UnisonFile v a -> ([v], UnisonFile v a)
 
 module Unison.UnisonFile.Names
 toNames :: Var v => UnisonFile v a -> Names
@@ -2975,6 +2992,7 @@ term :: Var v => TermP v
 term2 :: Var v => TermP v
 term3 :: Var v => TermP v
 keywordBlock :: Var v => TermP v
+rewriteBlock :: Var v => TermP v
 typeLink' :: Var v => P v (Token Reference)
 termLink' :: Var v => P v (Token Referent)
 link' :: Var v => P v (Either (Token Reference) (Token Referent))
@@ -2997,6 +3015,7 @@ list :: Var v => TermP v -> TermP v
 hashQualifiedPrefixTerm :: Var v => TermP v
 hashQualifiedInfixTerm :: Var v => TermP v
 quasikeyword :: Ord v => String -> P v (Token ())
+symbolyQuasikeyword :: Ord v => String -> P v (Token ())
 resolveHashQualified :: Var v => Token (HashQualified Name) -> TermP v
 termLeaf :: forall v. Var v => TermP v
 doc2Block :: forall v. Var v => TermP v
@@ -3571,9 +3590,9 @@ Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> En
 [$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
 [$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
 [$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4JN1 loc_a4JN2. Lens' (Env v_a4JN1 loc_a4JN2) (TypeLookup v_a4JN1 loc_a4JN2)
-termsByShortname :: forall v_a4JN1 loc_a4JN2. Lens' (Env v_a4JN1 loc_a4JN2) (Map Name [NamedReference v_a4JN1 loc_a4JN2])
-ambientAbilities :: forall v_a4JN1 loc_a4JN2. Lens' (Env v_a4JN1 loc_a4JN2) [Type v_a4JN1 loc_a4JN2]
+typeLookup :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) (TypeLookup v_a4NS0 loc_a4NS1)
+termsByShortname :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) (Map Name [NamedReference v_a4NS0 loc_a4NS1])
+ambientAbilities :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) [Type v_a4NS0 loc_a4NS1]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.

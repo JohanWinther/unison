@@ -1219,6 +1219,7 @@ freshenS :: (Var v, MonadState (Set v) m) => v -> m v
 
 -- | Produce a variable which is free in both terms
 freshInBoth :: forall v (f :: Type -> Type) a. Var v => Term f v a -> Term f v a -> v -> v
+freshenBothWrt :: (Var v, Traversable f) => Term f v a -> Term f v a -> Term f v a -> (Term f v a, Term f v a)
 
 -- | `visit f t` applies an effectful function to each subtree of
 --   <tt>t</tt> and sequences the results. When <tt>f</tt> returns
@@ -1243,6 +1244,7 @@ allVars :: Foldable f => Term f v a -> [v]
 subterms :: forall v (f :: Type -> Type) a. (Ord v, Traversable f) => Term f v a -> [Term f v a]
 annotateBound :: (Ord v, Foldable f, Functor f) => Term f v a -> Term f v (a, Set v)
 rebuildUp :: (Ord v, Foldable f, Functor f) => (f (Term f v a) -> f (Term f v a)) -> Term f v a -> Term f v a
+rebuildMaybeUp :: (Ord v, Foldable f, Functor f) => (Term f v a -> Maybe (Term f v a)) -> Term f v a -> Maybe (Term f v a)
 rebuildUp' :: (Ord v, Foldable f, Functor f) => (Term f v a -> Term f v a) -> Term f v a -> Term f v a
 reannotateUp :: (Ord v, Foldable f, Functor f, Monoid b) => (Term f v a -> b) -> Term f v a -> Term f v (a, b)
 rewriteDown :: (Traversable f, Ord v) => (Term f v a -> Term f v a) -> Term f v a -> Term f v a
@@ -1283,6 +1285,15 @@ data FindAction x
 Found :: x -> FindAction x
 Prune :: FindAction x
 Continue :: FindAction x
+
+-- | Core logic of structured find. Works for any base functor. Returns
+--   <a>True</a> if there's a subexpression of <a>tm</a> which matches
+--   <tt>query0</tt> for some assignment of variables.
+containsExpression :: forall f v a. (Var v, forall a. Eq a => Eq (f a), Traversable f) => Term f v a -> Term f v a -> Bool
+
+-- | Core logic of structured find and replace. Works for any base functor.
+--   Returns <a>Nothing</a> if no replacements.
+rewriteExpression :: forall f v a. (Var v, Show v, forall a. Eq a => Eq (f a), forall a. Show a => Show (f a), Traversable f) => Term f v a -> Term f v a -> Term f v a -> Maybe (Term f v a)
 baseFunctor_ :: Applicative m => (f (Term f v a) -> m (f (Term f v a))) -> Term f v a -> m (Term f v a)
 
 -- | Setter' (Term f v a) (Term f v a)
@@ -1300,14 +1311,17 @@ absChain' :: Ord v => [(a, v)] -> Term f v a -> Term f v a
 abs' :: Ord v => a -> v -> Term f v a -> Term f v a
 absr :: (Functor f, Foldable f, Var v) => v -> Term f (V v) () -> Term f (V v) ()
 unabs :: forall (f :: Type -> Type) v a. Term f v a -> ([v], Term f v a)
+unabsA :: Term f v a -> ([(a, v)], Term f v a)
 cycle :: Term f v () -> Term f v ()
 cycle' :: a -> Term f v a -> Term f v a
 cycler :: (Functor f, Foldable f, Var v) => [v] -> Term f (V v) () -> Term f (V v) ()
 pattern Abs' :: (Foldable f, Functor f, Var v) => Subst f v a -> Term f v a
 pattern Abs'' :: v -> Term f v a -> Term f v a
 pattern AbsN' :: [v] -> Term f v a -> Term f v a
+pattern AbsNA' :: [(a, v)] -> Term f v a -> Term f v a
 pattern Var' :: v -> Term f v a
 pattern Cycle' :: [v] -> f (Term f v a) -> Term f v a
+pattern Cycle'' :: Term f v a -> Term f v a
 pattern CycleA' :: a -> [(a, v)] -> Term f v a -> Term f v a
 pattern Tm' :: f (Term f v a) -> Term f v a
 components :: Var v => [(v, Term f v a)] -> [[(v, Term f v a)]]
@@ -1485,6 +1499,8 @@ pattern Forall' :: Var v => Subst F v a -> Term F v a
 pattern IntroOuter' :: Var v => Subst F v a -> Term F v a
 pattern IntroOuterNamed' :: v -> Term F v a -> Term F v a
 pattern ForallsNamed' :: [v] -> Type v a -> Type v a
+pattern ForallsNamedOpt' :: [v] -> Type v a -> Type v a
+unForallsOpt :: Type v a -> ([v], Type v a)
 pattern ForallNamed' :: v -> Term F v a -> Term F v a
 pattern Var' :: v -> Term f v a
 pattern Cycle' :: [v] -> f (Term f v a) -> Term f v a
@@ -1677,6 +1693,7 @@ Cons :: SeqOp
 Snoc :: SeqOp
 Concat :: SeqOp
 updateDependencies :: Map Referent Referent -> Pattern loc -> Pattern loc
+hasSubpattern :: Pattern loc -> Pattern loc -> Bool
 application :: Pattern loc -> Bool
 loc :: Pattern loc -> loc
 setLoc :: Pattern loc -> loc -> Pattern loc
@@ -1941,6 +1958,15 @@ etaNormalForm :: Ord v => Term0 v -> Term0 v
 etaReduceEtaVars :: Var v => Term0 v -> Term0 v
 unhashComponent :: forall v a. Var v => Map Id (Term v a) -> Map Id (v, Term v a)
 fromReferent :: Ord v => a -> Referent -> Term2 vt at ap v a
+containsExpression :: (Var v, Var typeVar, Eq typeAnn) => Term2 typeVar typeAnn loc v a -> Term2 typeVar typeAnn loc v a -> Bool
+containsCaseTerm :: Var v1 => Term2 tv ta tb v1 loc -> Term2 typeVar typeAnn loc v2 a -> Maybe Bool
+containsCase :: Pattern loc -> Term2 typeVar typeAnn loc v a -> Bool
+containsSignature :: (Ord v, Var vt, Show vt) => Type vt at -> Term2 vt at ap v a -> Bool
+rewriteSignatures :: (Ord v, Var vt, Show vt) => Type vt at -> Type vt at -> Term2 vt at ap v a -> Maybe (Term2 vt at ap v a)
+rewriteCasesLHS :: forall v typeVar typeAnn a. (Var v, Var typeVar, Ord v, Show typeVar, Eq typeAnn, Semigroup a) => Term2 typeVar typeAnn a v a -> Term2 typeVar typeAnn a v a -> Term2 typeVar typeAnn a v a -> Maybe (Term2 typeVar typeAnn a v a)
+toPattern :: Var v => Term2 tv ta tb v loc -> Maybe (Pattern loc)
+matchCaseFromTerm :: Var v => Term2 typeVar typeAnn a v a -> Maybe (MatchCase a (Term2 typeVar typeAnn a v a))
+matchCaseToTerm :: (Semigroup a, Ord v) => MatchCase a (Term2 typeVar typeAnn a v a) -> Term2 typeVar typeAnn a v a
 instance Data.Traversable.Traversable (Unison.Term.MatchCase loc)
 instance GHC.Generics.Generic1 (Unison.Term.MatchCase loc)
 instance GHC.Generics.Generic (Unison.Term.MatchCase loc a)
