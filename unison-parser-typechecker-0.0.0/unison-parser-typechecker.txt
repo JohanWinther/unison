@@ -3186,7 +3186,7 @@ checkMatch :: forall vt v loc m. Pmc vt v loc m => loc -> Type vt loc -> [MatchC
 module Unison.Typechecker.Context
 
 -- | public interface to the typechecker
-synthesizeClosed :: (Var v, Ord loc) => PrettyPrintEnv -> [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
+synthesizeClosed :: (Var v, Ord loc) => PrettyPrintEnv -> PatternMatchCoverageCheckSwitch -> [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
 data ErrorNote v loc
 ErrorNote :: Cause v loc -> Seq (PathElement v loc) -> ErrorNote v loc
 [$sel:cause:ErrorNote] :: ErrorNote v loc -> Cause v loc
@@ -3272,6 +3272,9 @@ data Result v loc a
 Success :: !Seq (InfoNote v loc) -> !a -> Result v loc a
 TypeError :: !NESeq (ErrorNote v loc) -> !Seq (InfoNote v loc) -> Result v loc a
 CompilerBug :: !CompilerBug v loc -> !Seq (ErrorNote v loc) -> !Seq (InfoNote v loc) -> Result v loc a
+data PatternMatchCoverageCheckSwitch
+PatternMatchCoverageCheckSwitch'Enabled :: PatternMatchCoverageCheckSwitch
+PatternMatchCoverageCheckSwitch'Disabled :: PatternMatchCoverageCheckSwitch
 errorTerms :: ErrorNote v loc -> [Term v loc]
 innermostErrorTerm :: ErrorNote v loc -> Maybe (Term v loc)
 lookupAnn :: Ord v => Context v loc -> v -> Maybe (Type v loc)
@@ -3573,62 +3576,14 @@ instance (GHC.Show.Show loc, Unison.Var.Var v, GHC.Classes.Ord loc) => GHC.Show.
 --   equals, locals, subtype, isSubtype, synthesize, synthesize', typeAt,
 --   wellTyped) where
 module Unison.Typechecker
-type Name = Text
-data Notes v loc
-Notes :: Seq (CompilerBug v loc) -> Seq (ErrorNote v loc) -> Seq (InfoNote v loc) -> Notes v loc
-[$sel:bugs:Notes] :: Notes v loc -> Seq (CompilerBug v loc)
-[$sel:errors:Notes] :: Notes v loc -> Seq (ErrorNote v loc)
-[$sel:infos:Notes] :: Notes v loc -> Seq (InfoNote v loc)
-convertResult :: Result v loc a -> Result (Notes v loc) a
-data NamedReference v loc
-NamedReference :: Name -> Type v loc -> Either v Referent -> NamedReference v loc
-[$sel:fqn:NamedReference] :: NamedReference v loc -> Name
-[$sel:fqnType:NamedReference] :: NamedReference v loc -> Type v loc
-[$sel:replacement:NamedReference] :: NamedReference v loc -> Either v Referent
-data Env v loc
-Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> Env v loc
-[$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
-[$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
-[$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
-typeLookup :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) (TypeLookup v_a4NS0 loc_a4NS1)
-termsByShortname :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) (Map Name [NamedReference v_a4NS0 loc_a4NS1])
-ambientAbilities :: forall v_a4NS0 loc_a4NS1. Lens' (Env v_a4NS0 loc_a4NS1) [Type v_a4NS0 loc_a4NS1]
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
-synthesize :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
-isSubtype :: Var v => Type v loc -> Type v loc -> Bool
-handleCompilerBug :: Var v => Either (CompilerBug v ()) a -> a
-
--- | Similar to <a>isSubtype</a> but treats <tt>t2</tt> as a scheme where
---   the outermost variables are existential rather than universal.
---   
---   For example: <tt> let lhs = Unison.Type.ref ()
---   (Unison.Builtin.Decls.unitRef) rhs = Unison.Type.forall ()
---   (Unison.Var.named "x") (Unison.Type.var () (Unison.Var.named "x")) in
---   fitsScheme </tt>Symbol lhs rhs <tt> is </tt>True@ although the lhs is
---   not a subtype of the rhs.
---   
---   <a>fitsScheme</a> is used to check that runnable types are a subtype
---   of <tt> exists x. '{IO, Exception} x </tt>
-fitsScheme :: Var v => Type v loc -> Type v loc -> Bool
-isEqual :: Var v => Type v loc -> Type v loc -> Bool
-type TDNR f v loc a = StateT (Term v loc) (ResultT (Notes v loc) f) a
-data Resolution v loc
-Resolution :: Text -> Type v loc -> loc -> [Suggestion v loc] -> Resolution v loc
-[$sel:resolvedName:Resolution] :: Resolution v loc -> Text
-[$sel:inferredType:Resolution] :: Resolution v loc -> Type v loc
-[$sel:resolvedLoc:Resolution] :: Resolution v loc -> loc
-[$sel:suggestions:Resolution] :: Resolution v loc -> [Suggestion v loc]
+synthesize :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> PatternMatchCoverageCheckSwitch -> Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
 
 -- | Infer the type of a <a>Term</a>, using type-directed name resolution
 --   to attempt to resolve unknown symbols.
 synthesizeAndResolve :: (Monad f, Var v, Monoid loc, Ord loc) => PrettyPrintEnv -> Env v loc -> TDNR f v loc (Type v loc)
-compilerBug :: CompilerBug v loc -> Result (Notes v loc) ()
-typeError :: ErrorNote v loc -> Result (Notes v loc) ()
-btw :: Monad f => InfoNote v loc -> ResultT (Notes v loc) f ()
-liftResult :: Monad f => Result (Notes v loc) a -> TDNR f v loc a
-typeDirectedNameResolution :: forall v loc f. (Monad f, Var v, Ord loc, Monoid loc) => PrettyPrintEnv -> Notes v loc -> Type v loc -> Env v loc -> TDNR f v loc (Type v loc)
 
 -- | Check whether a term matches a type, using a function to resolve the
 --   type of <tt>Ref</tt> constructors contained in the term. Returns
@@ -3646,6 +3601,46 @@ check :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc 
 --   Type.arrow() t t | Returns <a>True</a> if the expression is
 --   well-typed, <a>False</a> otherwise
 wellTyped :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> f Bool
+isEqual :: Var v => Type v loc -> Type v loc -> Bool
+isSubtype :: Var v => Type v loc -> Type v loc -> Bool
+
+-- | Similar to <a>isSubtype</a> but treats <tt>t2</tt> as a scheme where
+--   the outermost variables are existential rather than universal.
+--   
+--   For example: <tt> let lhs = Unison.Type.ref ()
+--   (Unison.Builtin.Decls.unitRef) rhs = Unison.Type.forall ()
+--   (Unison.Var.named "x") (Unison.Type.var () (Unison.Var.named "x")) in
+--   fitsScheme </tt>Symbol lhs rhs <tt> is </tt>True@ although the lhs is
+--   not a subtype of the rhs.
+--   
+--   <a>fitsScheme</a> is used to check that runnable types are a subtype
+--   of <tt> exists x. '{IO, Exception} x </tt>
+fitsScheme :: Var v => Type v loc -> Type v loc -> Bool
+data Env v loc
+Env :: [Type v loc] -> TypeLookup v loc -> Map Name [NamedReference v loc] -> Env v loc
+[$sel:_ambientAbilities:Env] :: Env v loc -> [Type v loc]
+[$sel:_typeLookup:Env] :: Env v loc -> TypeLookup v loc
+[$sel:_termsByShortname:Env] :: Env v loc -> Map Name [NamedReference v loc]
+data Notes v loc
+Notes :: Seq (CompilerBug v loc) -> Seq (ErrorNote v loc) -> Seq (InfoNote v loc) -> Notes v loc
+[$sel:bugs:Notes] :: Notes v loc -> Seq (CompilerBug v loc)
+[$sel:errors:Notes] :: Notes v loc -> Seq (ErrorNote v loc)
+[$sel:infos:Notes] :: Notes v loc -> Seq (InfoNote v loc)
+data Resolution v loc
+Resolution :: Text -> Type v loc -> loc -> [Suggestion v loc] -> Resolution v loc
+[$sel:resolvedName:Resolution] :: Resolution v loc -> Text
+[$sel:inferredType:Resolution] :: Resolution v loc -> Type v loc
+[$sel:resolvedLoc:Resolution] :: Resolution v loc -> loc
+[$sel:suggestions:Resolution] :: Resolution v loc -> [Suggestion v loc]
+type Name = Text
+data NamedReference v loc
+NamedReference :: Name -> Type v loc -> Either v Referent -> NamedReference v loc
+[$sel:fqn:NamedReference] :: NamedReference v loc -> Name
+[$sel:fqnType:NamedReference] :: NamedReference v loc -> Type v loc
+[$sel:replacement:NamedReference] :: NamedReference v loc -> Either v Referent
+data PatternMatchCoverageCheckSwitch
+PatternMatchCoverageCheckSwitch'Enabled :: PatternMatchCoverageCheckSwitch
+PatternMatchCoverageCheckSwitch'Disabled :: PatternMatchCoverageCheckSwitch
 instance (Unison.Var.Var v, GHC.Show.Show loc, GHC.Classes.Ord loc) => GHC.Show.Show (Unison.Typechecker.Notes v loc)
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Typechecker.NamedReference v loc)
 instance GHC.Base.Semigroup (Unison.Typechecker.Notes v loc)
