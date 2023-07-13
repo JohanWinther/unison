@@ -57,8 +57,9 @@ FailedToFetchUserInfo :: URI -> Text -> CredentialFailure
 
 -- | Credentials for a specific codeserver
 data CodeserverCredentials
-CodeserverCredentials :: Tokens -> URI -> UserInfo -> CodeserverCredentials
+CodeserverCredentials :: Tokens -> UTCTime -> URI -> UserInfo -> CodeserverCredentials
 [$sel:tokens:CodeserverCredentials] :: CodeserverCredentials -> Tokens
+[$sel:fetchTime:CodeserverCredentials] :: CodeserverCredentials -> UTCTime
 [$sel:discoveryURI:CodeserverCredentials] :: CodeserverCredentials -> URI
 [$sel:userInfo:CodeserverCredentials] :: CodeserverCredentials -> UserInfo
 data UserInfo
@@ -68,7 +69,7 @@ UserInfo :: Text -> Maybe Text -> Text -> UserInfo
 [$sel:handle:UserInfo] :: UserInfo -> Text
 getCodeserverCredentials :: CodeserverId -> Credentials -> Either CredentialFailure CodeserverCredentials
 setCodeserverCredentials :: CodeserverId -> CodeserverCredentials -> Credentials -> Credentials
-codeserverCredentials :: URI -> Tokens -> UserInfo -> CodeserverCredentials
+codeserverCredentials :: URI -> Tokens -> UTCTime -> UserInfo -> CodeserverCredentials
 emptyCredentials :: Credentials
 instance GHC.Exception.Type.Exception Unison.Auth.Types.CredentialFailure
 instance GHC.Classes.Eq Unison.Auth.Types.CredentialFailure
@@ -122,6 +123,9 @@ data CredentialManager
 newCredentialManager :: MonadIO m => m CredentialManager
 getCredentials :: MonadIO m => CredentialManager -> CodeserverId -> m (Either CredentialFailure CodeserverCredentials)
 
+-- | Checks whether CodeserverCredentials are expired.
+isExpired :: MonadIO m => CodeserverCredentials -> m Bool
+
 module Unison.Auth.UserInfo
 
 -- | Get user info for an authenticated user.
@@ -129,9 +133,6 @@ getUserInfo :: MonadIO m => DiscoveryDoc -> AccessToken -> m (Either CredentialF
 decodeUserInfo :: ByteString -> Either String UserInfo
 
 module Unison.Auth.Tokens
-
--- | Checks whether a JWT access token is expired.
-isExpired :: MonadIO m => AccessToken -> m Bool
 
 -- | Given a <a>CodeserverId</a>, provide a valid <a>AccessToken</a> for
 --   the associated host. The TokenProvider may automatically refresh
