@@ -2664,6 +2664,33 @@ topLevelComponents :: TypecheckedUnisonFile v a -> [[(v, a, Term v a, Type v a)]
 typecheckedUnisonFile :: forall v a. Var v => Map v (Id, DataDeclaration v a) -> Map v (Id, EffectDeclaration v a) -> [[(v, a, Term v a, Type v a)]] -> [(WatchKind, [(v, a, Term v a, Type v a)])] -> TypecheckedUnisonFile v a
 rewrite :: (Var v, Eq a) => Set v -> (Term v a -> Maybe (Term v a)) -> UnisonFile v a -> ([v], UnisonFile v a)
 
+-- | This function should be called in preparation for a call to
+--   UnisonFile.rewrite. It prevents the possibility of accidental variable
+--   capture while still allowing the rules to capture variables where
+--   that's the intent. For example:
+--   
+--   f x = x + 42 ex = List.map (x -&gt; Nat.increment x) [1,2,3]
+--   
+--   rule1 f = <tt>rewrite term (x -&gt; f x) ==&gt; f rule2 = </tt>rewrite
+--   term (x -&gt; f x) ==&gt; f
+--   
+--   Here, <tt>rule1</tt> introduces a variable <tt>f</tt>, which can stand
+--   for any definition. Whereas <tt>rule2</tt> refers to the the top-level
+--   <tt>f</tt> function in the file.
+--   
+--   This function returns a tuple of: (prepareRule, preparedFile, finish)
+--   <tt>prepareRule</tt> should be called on any `@rewrite` block to do
+--   prevent accidental capture. It receives the [v] of variables bound
+--   locally by the rule (<tt>rule1</tt> above binds <tt>f</tt>).
+--   <tt>preparedFile</tt> should be passed to <a>rewrite</a>
+--   <tt>finish</tt> should be called on the result of <a>rewrite</a>
+--   
+--   Internally, the function works by replacing all free variables in the
+--   file with a unique reference, performing the rewrite using the ABT
+--   machinery, then converting back to a "regular" UnisonFile with free
+--   variables in the terms.
+prepareRewrite :: (Monoid a, Var v) => UnisonFile v a -> ([v] -> Term v a -> Term v a, UnisonFile v a, UnisonFile v a -> UnisonFile v a)
+
 module Unison.UnisonFile.Names
 toNames :: Var v => UnisonFile v a -> Names
 typecheckedToNames :: Var v => TypecheckedUnisonFile v a -> Names
