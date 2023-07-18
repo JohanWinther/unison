@@ -4946,7 +4946,11 @@ componentReferencesForReference :: Reference -> Transaction (Set Reference)
 --   namespace) into the codebase
 installUcmDependencies :: Codebase m Symbol Ann -> Transaction ()
 toCodeLookup :: MonadIO m => Codebase m Symbol Ann -> CodeLookup Symbol m Ann
-typeLookupForDependencies :: forall m a. BuiltinAnnotation a => Codebase m Symbol a -> Set Reference -> Transaction (TypeLookup Symbol a)
+
+-- | Make a <tt>TypeLookup</tt> that is suitable for looking up information
+--   about all of the given type-or-term references, and all of their type
+--   dependencies, including builtins.
+typeLookupForDependencies :: Codebase IO Symbol Ann -> Set Reference -> Transaction (TypeLookup Symbol Ann)
 unsafeGetComponentLength :: HasCallStack => Hash -> Transaction CycleSize
 
 module Unison.PrettyPrintEnvDecl.Sqlite

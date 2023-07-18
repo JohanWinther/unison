@@ -1673,7 +1673,7 @@ ensureAuthenticatedWithCodeserver :: CodeserverURI -> Cli UserInfo
 module Unison.Cli.TypeCheck
 typecheck :: [Type Symbol Ann] -> NamesWithHistory -> Text -> (Text, [Token Lexeme]) -> Cli (Result (Seq (Note Symbol Ann)) (Either (UnisonFile Symbol Ann) (TypecheckedUnisonFile Symbol Ann)))
 typecheckHelper :: MonadIO m => Codebase IO Symbol Ann -> IO UniqueName -> [Type Symbol Ann] -> NamesWithHistory -> Text -> (Text, [Token Lexeme]) -> m (Result (Seq (Note Symbol Ann)) (Either (UnisonFile Symbol Ann) (TypecheckedUnisonFile Symbol Ann)))
-typecheckFile :: Codebase m Symbol Ann -> [Type Symbol Ann] -> UnisonFile Symbol Ann -> Transaction (Result (Seq (Note Symbol Ann)) (TypecheckedUnisonFile Symbol Ann))
+typecheckFile :: Codebase IO Symbol Ann -> [Type Symbol Ann] -> UnisonFile Symbol Ann -> Transaction (Result (Seq (Note Symbol Ann)) (TypecheckedUnisonFile Symbol Ann))
 typecheckTerm :: Term Symbol Ann -> Cli (Result (Seq (Note Symbol Ann)) (Type Symbol Ann))
 
 module Unison.LSP.FileAnalysis
