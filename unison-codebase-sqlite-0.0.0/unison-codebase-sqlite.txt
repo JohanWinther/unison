@@ -1671,11 +1671,13 @@ expectRootCausalHash :: Transaction CausalHash
 expectRootCausal :: Transaction (CausalBranch Transaction)
 expectRootBranchHash :: Transaction BranchHash
 
--- | Load the causal hash at the given path from the root.
-loadCausalHashAtPath :: TextPathSegments -> Transaction (Maybe CausalHash)
+-- | Load the causal hash at the given path from the provided root, if
+--   Nothing, use the codebase root.
+loadCausalHashAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (Maybe CausalHash)
 
--- | Expect the causal hash at the given path from the root.
-expectCausalHashAtPath :: TextPathSegments -> Transaction CausalHash
+-- | Expect the causal hash at the given path from the provided root, if
+--   Nothing, use the codebase root.
+expectCausalHashAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction CausalHash
 saveBranch :: HashHandle -> CausalBranch Transaction -> Transaction (BranchObjectId, CausalHashId)
 loadCausalBranchByCausalHash :: CausalHash -> Transaction (Maybe (CausalBranch Transaction))
 expectCausalBranchByCausalHash :: CausalHash -> Transaction (CausalBranch Transaction)
