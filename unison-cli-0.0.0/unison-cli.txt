@@ -879,15 +879,15 @@ FileAnalysis :: Uri -> FileVersion -> LexedSource -> IntervalMap Position Lexeme
 --   If the file typechecked then all the Ref Ids and types will be filled
 --   in, otherwise they will be Nothing.
 data FileSummary
-FileSummary :: Map Symbol (Id, DataDeclaration Symbol Ann) -> Map Id (Map Symbol (DataDeclaration Symbol Ann)) -> Map Symbol (Id, EffectDeclaration Symbol Ann) -> Map Id (Map Symbol (EffectDeclaration Symbol Ann)) -> Map Symbol (Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann)) -> Map (Maybe Id) (Map Symbol (Term Symbol Ann, Maybe (Type Symbol Ann))) -> [(Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))] -> [(Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))] -> Names -> FileSummary
+FileSummary :: Map Symbol (Id, DataDeclaration Symbol Ann) -> Map Id (Map Symbol (DataDeclaration Symbol Ann)) -> Map Symbol (Id, EffectDeclaration Symbol Ann) -> Map Id (Map Symbol (EffectDeclaration Symbol Ann)) -> Map Symbol (Ann, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann)) -> Map (Maybe Id) (Map Symbol (Ann, Term Symbol Ann, Maybe (Type Symbol Ann))) -> [(Ann, Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))] -> [(Ann, Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))] -> Names -> FileSummary
 [$sel:dataDeclsBySymbol:FileSummary] :: FileSummary -> Map Symbol (Id, DataDeclaration Symbol Ann)
 [$sel:dataDeclsByReference:FileSummary] :: FileSummary -> Map Id (Map Symbol (DataDeclaration Symbol Ann))
 [$sel:effectDeclsBySymbol:FileSummary] :: FileSummary -> Map Symbol (Id, EffectDeclaration Symbol Ann)
 [$sel:effectDeclsByReference:FileSummary] :: FileSummary -> Map Id (Map Symbol (EffectDeclaration Symbol Ann))
-[$sel:termsBySymbol:FileSummary] :: FileSummary -> Map Symbol (Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))
-[$sel:termsByReference:FileSummary] :: FileSummary -> Map (Maybe Id) (Map Symbol (Term Symbol Ann, Maybe (Type Symbol Ann)))
-[$sel:testWatchSummary:FileSummary] :: FileSummary -> [(Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))]
-[$sel:exprWatchSummary:FileSummary] :: FileSummary -> [(Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))]
+[$sel:termsBySymbol:FileSummary] :: FileSummary -> Map Symbol (Ann, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))
+[$sel:termsByReference:FileSummary] :: FileSummary -> Map (Maybe Id) (Map Symbol (Ann, Term Symbol Ann, Maybe (Type Symbol Ann)))
+[$sel:testWatchSummary:FileSummary] :: FileSummary -> [(Ann, Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))]
+[$sel:exprWatchSummary:FileSummary] :: FileSummary -> [(Ann, Maybe Symbol, Maybe Id, Term Symbol Ann, Maybe (Type Symbol Ann))]
 [$sel:fileNames:FileSummary] :: FileSummary -> Names
 getCurrentPath :: Lsp Absolute
 getCodebaseCompletions :: Lsp CompletionTree
@@ -951,6 +951,19 @@ uToLspPos :: Pos -> Position
 uToLspRange :: Range -> Range
 reportDiagnostics :: Foldable f => Uri -> Maybe FileVersion -> f Diagnostic -> Lsp ()
 mkDiagnostic :: Uri -> Range -> DiagnosticSeverity -> Text -> [(Text, Range)] -> Diagnostic
+data DiagnosticSeverity
+
+-- | Error = 1,
+DsError :: DiagnosticSeverity
+
+-- | Warning = 2,
+DsWarning :: DiagnosticSeverity
+
+-- | Info = 3,
+DsInfo :: DiagnosticSeverity
+
+-- | Hint = 4
+DsHint :: DiagnosticSeverity
 
 module Unison.LSP.Configuration
 
@@ -1687,8 +1700,18 @@ assertUserSym :: Symbol -> Maybe Symbol
 -- | Summarize the information available to us from the current state of
 --   the file. See <a>FileSummary</a> for more information.
 mkFileSummary :: Maybe (UnisonFile Symbol Ann) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Maybe FileSummary
+
+-- | Get the location of user defined definitions within the file
+getFileDefLocations :: Uri -> MaybeT Lsp (Map Symbol (Set Ann))
+
+-- | Compute the location of user defined definitions within the file
+fileDefLocations :: FileSummary -> Map Symbol (Set Ann)
 fileAnalysisWorker :: Lsp ()
 analyseFile :: Foldable f => Uri -> Text -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
+
+-- | Returns diagnostics which show a warning diagnostic when editing a
+--   term that's conflicted in the codebase.
+computeConflictWarningDiagnostics :: Uri -> FileSummary -> Lsp [Diagnostic]
 getTokenMap :: [Token Lexeme] -> IntervalMap Position Lexeme
 analyseNotes :: Foldable f => Uri -> PrettyPrintEnv -> String -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
 toRangeMap :: Foldable f => f (Range, a) -> IntervalMap Position [a]
