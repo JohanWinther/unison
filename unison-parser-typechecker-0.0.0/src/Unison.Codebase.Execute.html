@@ -31,93 +31,93 @@
 </span><span id="line-31"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Runtime.Error</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-32"></span><span id="execute"><span class="annot"><span class="annottext">execute :: Codebase IO Symbol Ann
 -&gt; Runtime Symbol -&gt; String -&gt; IO (Either Error ())
-</span><a href="Unison.Codebase.Execute.html#execute"><span class="hs-identifier hs-var hs-var">execute</span></a></span></span><span> </span><span id="local-6989586621680944359"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621680944359"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621680944358"><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621680944358"><span class="hs-identifier hs-var">runtime</span></a></span></span><span> </span><span id="local-6989586621680944357"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944357"><span class="hs-identifier hs-var">mainName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.Codebase.Execute.html#execute"><span class="hs-identifier hs-var hs-var">execute</span></a></span></span><span> </span><span id="local-6989586621680944347"><span class="annot"><span class="annottext">Codebase IO Symbol Ann
+</span><a href="#local-6989586621680944347"><span class="hs-identifier hs-var">codebase</span></a></span></span><span> </span><span id="local-6989586621680944346"><span class="annot"><span class="annottext">Runtime Symbol
+</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var">runtime</span></a></span></span><span> </span><span id="local-6989586621680944345"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680944345"><span class="hs-identifier hs-var">mainName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-33"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. IO a -&gt; IO b -&gt; IO a
 </span><span class="hs-operator hs-var">`finally`</span></span><span> </span><span class="annot"><span class="annottext">forall v. Runtime v -&gt; IO ()
 </span><a href="Unison.Codebase.Runtime.html#%24sel%3Aterminate%3ARuntime"><span class="hs-identifier hs-var">Runtime.terminate</span></a></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621680944358"><span class="hs-identifier hs-var">runtime</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var">runtime</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. ExceptT e m a -&gt; m (Either e a)
 </span><span class="hs-identifier hs-var">runExceptT</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-34"></span><span>    </span><span id="local-6989586621680944353"><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621680944353"><span class="hs-identifier hs-var">root</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span id="line-34"></span><span>    </span><span id="local-6989586621680944341"><span class="annot"><span class="annottext">Branch IO
+</span><a href="#local-6989586621680944341"><span class="hs-identifier hs-var">root</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a. Codebase m v a -&gt; m (Branch m)
 </span><a href="Unison.Codebase.Type.html#%24sel%3AgetRootBranch%3ACodebase"><span class="hs-identifier hs-var">Codebase.getRootBranch</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621680944359"><span class="hs-identifier hs-var">codebase</span></a></span><span>
-</span><span id="line-35"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944350"><span class="annot"><span class="annottext">parseNames :: Names
-</span><a href="#local-6989586621680944350"><span class="hs-identifier hs-var hs-var">parseNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Names -&gt; Names
+</span><a href="#local-6989586621680944347"><span class="hs-identifier hs-var">codebase</span></a></span><span>
+</span><span id="line-35"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944338"><span class="annot"><span class="annottext">parseNames :: Names
+</span><a href="#local-6989586621680944338"><span class="hs-identifier hs-var hs-var">parseNames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Names -&gt; Names
 </span><span class="hs-identifier hs-var">Names.makeAbsolute</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Branch0 m -&gt; Names
 </span><a href="Unison.Codebase.Branch.Names.html#toNames"><span class="hs-identifier hs-var">Branch.toNames</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Branch m -&gt; Branch0 m
 </span><a href="Unison.Codebase.Branch.Type.html#head"><span class="hs-identifier hs-var">Branch.head</span></a></span><span> </span><span class="annot"><span class="annottext">Branch IO
-</span><a href="#local-6989586621680944353"><span class="hs-identifier hs-var">root</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-36"></span><span>        </span><span id="local-6989586621680944346"><span class="annot"><span class="annottext">loadTypeOfTerm :: Reference -&gt; Transaction (Maybe (Type Symbol Ann))
-</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var hs-var">loadTypeOfTerm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a (m :: * -&gt; *).
+</span><a href="#local-6989586621680944341"><span class="hs-identifier hs-var">root</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>        </span><span id="local-6989586621680944334"><span class="annot"><span class="annottext">loadTypeOfTerm :: Reference -&gt; Transaction (Maybe (Type Symbol Ann))
+</span><a href="#local-6989586621680944334"><span class="hs-identifier hs-var hs-var">loadTypeOfTerm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a (m :: * -&gt; *).
 BuiltinAnnotation a =&gt;
 Codebase m Symbol a
 -&gt; Reference -&gt; Transaction (Maybe (Type Symbol a))
 </span><a href="Unison.Codebase.html#getTypeOfTerm"><span class="hs-identifier hs-var">Codebase.getTypeOfTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621680944359"><span class="hs-identifier hs-var">codebase</span></a></span><span>
-</span><span id="line-37"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944344"><span class="annot"><span class="annottext">mainType :: Type Symbol Ann
-</span><a href="#local-6989586621680944344"><span class="hs-identifier hs-var hs-var">mainType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v. Runtime v -&gt; Type v Ann
+</span><a href="#local-6989586621680944347"><span class="hs-identifier hs-var">codebase</span></a></span><span>
+</span><span id="line-37"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944332"><span class="annot"><span class="annottext">mainType :: Type Symbol Ann
+</span><a href="#local-6989586621680944332"><span class="hs-identifier hs-var hs-var">mainType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v. Runtime v -&gt; Type v Ann
 </span><a href="Unison.Codebase.Runtime.html#%24sel%3AmainType%3ARuntime"><span class="hs-identifier hs-var">Runtime.mainType</span></a></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621680944358"><span class="hs-identifier hs-var">runtime</span></a></span><span>
-</span><span id="line-38"></span><span>    </span><span id="local-6989586621680944342"><span class="annot"><span class="annottext">MainTerm Symbol
-</span><a href="#local-6989586621680944342"><span class="hs-identifier hs-var">mt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var">runtime</span></a></span><span>
+</span><span id="line-38"></span><span>    </span><span id="local-6989586621680944330"><span class="annot"><span class="annottext">MainTerm Symbol
+</span><a href="#local-6989586621680944330"><span class="hs-identifier hs-var">mt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v a b.
 MonadIO m =&gt;
 Codebase m v a -&gt; Transaction b -&gt; m b
 </span><a href="Unison.Codebase.html#runTransaction"><span class="hs-identifier hs-var">Codebase.runTransaction</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621680944359"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680944347"><span class="hs-identifier hs-var">codebase</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) v.
 (Monad m, Var v) =&gt;
 (Reference -&gt; m (Maybe (Type v Ann)))
 -&gt; Names -&gt; String -&gt; Type v Ann -&gt; m (MainTerm v)
 </span><a href="Unison.Codebase.MainTerm.html#getMainTerm"><span class="hs-identifier hs-var">getMainTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Transaction (Maybe (Type Symbol Ann))
-</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var">loadTypeOfTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Names
-</span><a href="#local-6989586621680944350"><span class="hs-identifier hs-var">parseNames</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944357"><span class="hs-identifier hs-var">mainName</span></a></span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
-</span><a href="#local-6989586621680944344"><span class="hs-identifier hs-var">mainType</span></a></span><span>
+</span><a href="#local-6989586621680944334"><span class="hs-identifier hs-var">loadTypeOfTerm</span></a></span><span> </span><span class="annot"><span class="annottext">Names
+</span><a href="#local-6989586621680944338"><span class="hs-identifier hs-var">parseNames</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680944345"><span class="hs-identifier hs-var">mainName</span></a></span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
+</span><a href="#local-6989586621680944332"><span class="hs-identifier hs-var">mainType</span></a></span><span>
 </span><span id="line-39"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">MainTerm Symbol
-</span><a href="#local-6989586621680944342"><span class="hs-identifier hs-var">mt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-40"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#NotAFunctionName"><span class="hs-identifier hs-type">MainTerm.NotAFunctionName</span></a></span><span> </span><span id="local-6989586621680944339"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944339"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
+</span><a href="#local-6989586621680944330"><span class="hs-identifier hs-var">mt</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-40"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#NotAFunctionName"><span class="hs-identifier hs-type">MainTerm.NotAFunctionName</span></a></span><span> </span><span id="local-6989586621680944327"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680944327"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Error
 </span><span class="hs-string">&quot;Not a function name: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; String -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.string</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944339"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-41"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#NotFound"><span class="hs-identifier hs-type">MainTerm.NotFound</span></a></span><span> </span><span id="local-6989586621680944335"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944335"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
+</span><a href="#local-6989586621680944327"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#NotFound"><span class="hs-identifier hs-type">MainTerm.NotFound</span></a></span><span> </span><span id="local-6989586621680944323"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680944323"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Error
 </span><span class="hs-string">&quot;Not found: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall s. IsString s =&gt; String -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.string</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944335"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-42"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#BadType"><span class="hs-identifier hs-type">MainTerm.BadType</span></a></span><span> </span><span id="local-6989586621680944333"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944333"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="annot"><span class="annottext">Maybe (Type Symbol Ann)
+</span><a href="#local-6989586621680944323"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#BadType"><span class="hs-identifier hs-type">MainTerm.BadType</span></a></span><span> </span><span id="local-6989586621680944321"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680944321"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="annot"><span class="annottext">Maybe (Type Symbol Ann)
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. IsString s =&gt; String -&gt; Pretty s
 </span><span class="hs-identifier hs-var">P.string</span></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680944333"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680944321"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Error
 </span><span class="hs-string">&quot; is not of type '{IO} ()&quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-43"></span><span>      </span><span class="annot"><a href="Unison.Codebase.MainTerm.html#Success"><span class="hs-identifier hs-type">MainTerm.Success</span></a></span><span> </span><span class="annot"><span class="annottext">HashQualified Name
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680944331"><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621680944331"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680944319"><span class="annot"><span class="annottext">Term Symbol Ann
+</span><a href="#local-6989586621680944319"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-44"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944330"><span class="annot"><span class="annottext">codeLookup :: CodeLookup Symbol IO Ann
-</span><a href="#local-6989586621680944330"><span class="hs-identifier hs-var hs-var">codeLookup</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
+</span><span id="line-44"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680944318"><span class="annot"><span class="annottext">codeLookup :: CodeLookup Symbol IO Ann
+</span><a href="#local-6989586621680944318"><span class="hs-identifier hs-var hs-var">codeLookup</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *).
 MonadIO m =&gt;
 Codebase m Symbol Ann -&gt; CodeLookup Symbol m Ann
 </span><a href="Unison.Codebase.html#toCodeLookup"><span class="hs-identifier hs-var">Codebase.toCodeLookup</span></a></span><span> </span><span class="annot"><span class="annottext">Codebase IO Symbol Ann
-</span><a href="#local-6989586621680944359"><span class="hs-identifier hs-var">codebase</span></a></span><span>
-</span><span id="line-45"></span><span>            </span><span id="local-6989586621680944328"><span class="annot"><span class="annottext">ppe :: PrettyPrintEnv
-</span><a href="#local-6989586621680944328"><span class="hs-identifier hs-var hs-var">ppe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621680944347"><span class="hs-identifier hs-var">codebase</span></a></span><span>
+</span><span id="line-45"></span><span>            </span><span id="local-6989586621680944316"><span class="annot"><span class="annottext">ppe :: PrettyPrintEnv
+</span><a href="#local-6989586621680944316"><span class="hs-identifier hs-var hs-var">ppe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
 </span><a href="Unison.PrettyPrintEnv.html#empty"><span class="hs-identifier hs-var">PPE.empty</span></a></span><span>
 </span><span id="line-46"></span><span>        </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -129,15 +129,15 @@ CodeLookup v IO a
 -&gt; Term v a
 -&gt; IO (Either Error (Term v))
 </span><a href="Unison.Codebase.Runtime.html#evaluateTerm"><span class="hs-identifier hs-var">Runtime.evaluateTerm</span></a></span><span> </span><span class="annot"><span class="annottext">CodeLookup Symbol IO Ann
-</span><a href="#local-6989586621680944330"><span class="hs-identifier hs-var">codeLookup</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621680944328"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
-</span><a href="#local-6989586621680944358"><span class="hs-identifier hs-var">runtime</span></a></span><span> </span><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621680944331"><span class="hs-identifier hs-var">tm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621680944318"><span class="hs-identifier hs-var">codeLookup</span></a></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
+</span><a href="#local-6989586621680944316"><span class="hs-identifier hs-var">ppe</span></a></span><span> </span><span class="annot"><span class="annottext">Runtime Symbol
+</span><a href="#local-6989586621680944346"><span class="hs-identifier hs-var">runtime</span></a></span><span> </span><span class="annot"><span class="annottext">Term Symbol Ann
+</span><a href="#local-6989586621680944319"><span class="hs-identifier hs-var">tm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-47"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621680944325"><span class="annot"><span class="annottext">Error
-</span><a href="#local-6989586621680944325"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
+</span><span id="line-47"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">Left</span></span><span> </span><span id="local-6989586621680944313"><span class="annot"><span class="annottext">Error
+</span><a href="#local-6989586621680944313"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall e (m :: * -&gt; *) a. MonadError e m =&gt; e -&gt; m a
 </span><span class="hs-identifier hs-var">throwError</span></span><span> </span><span class="annot"><span class="annottext">Error
-</span><a href="#local-6989586621680944325"><span class="hs-identifier hs-var">err</span></a></span><span>
+</span><a href="#local-6989586621680944313"><span class="hs-identifier hs-var">err</span></a></span><span>
 </span><span id="line-48"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">Right</span></span><span> </span><span class="annot"><span class="annottext">Term Symbol
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>

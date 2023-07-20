@@ -245,18 +245,9 @@ instance (GHC.Classes.Ord v, GHC.Classes.Ord a) => GHC.Classes.Ord (Unison.Uniso
 instance (GHC.Classes.Eq v, GHC.Classes.Eq a) => GHC.Classes.Eq (Unison.UnisonFile.Error.Error v a)
 
 module Unison.Syntax.Parser
-debug :: Bool
-type P v = ParsecT (Error v) Input ((->) ParsingEnv)
-type Token s = Token s
+class Annotated a
+ann :: Annotated a => a -> Ann
 type Err v = ParseError Input (Error v)
-data ParsingEnv
-ParsingEnv :: UniqueName -> NamesWithHistory -> ParsingEnv
-[$sel:uniqueNames:ParsingEnv] :: ParsingEnv -> UniqueName
-[$sel:names:ParsingEnv] :: ParsingEnv -> NamesWithHistory
-newtype UniqueName
-UniqueName :: (Pos -> Int -> Maybe Text) -> UniqueName
-uniqueBase32Namegen :: forall gen. DRG gen => gen -> UniqueName
-uniqueName :: Var v => Int -> P v Text
 data Error v
 SignatureNeedsAccompanyingBody :: Token v -> Error v
 DisallowedAbsoluteName :: Token Name -> Error v
@@ -279,63 +270,57 @@ DuplicateTypeNames :: [(v, [Ann])] -> Error v
 DuplicateTermNames :: [(v, [Ann])] -> Error v
 PatternArityMismatch :: Int -> Int -> Ann -> Error v
 FloatPattern :: Ann -> Error v
-tokenToPair :: Token a -> (Ann, a)
-newtype Input
-Input :: [Token Lexeme] -> Input
-[$sel:inputStream:Input] :: Input -> [Token Lexeme]
-setPos :: SourcePos -> Pos -> SourcePos
-class Annotated a
-ann :: Annotated a => a -> Ann
-label :: (Ord v, Show a) => String -> P v a -> P v a
-traceRemainingTokens :: Ord v => String -> P v ()
-mkAnn :: (Annotated a, Annotated b) => a -> b -> Ann
-tok :: (Ann -> a -> b) -> Token a -> b
-peekAny :: Ord v => P v (Token Lexeme)
-lookAhead :: Ord v => P v a -> P v a
+data Input
+type P v = ParsecT (Error v) Input ((->) ParsingEnv)
+data ParsingEnv
+ParsingEnv :: UniqueName -> NamesWithHistory -> ParsingEnv
+[$sel:uniqueNames:ParsingEnv] :: ParsingEnv -> UniqueName
+[$sel:names:ParsingEnv] :: ParsingEnv -> NamesWithHistory
+data UniqueName
 anyToken :: Ord v => P v (Token Lexeme)
+blank :: Ord v => P v (Token String)
+bytesToken :: Ord v => P v (Token Bytes)
+chainl1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
+chainr1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
+character :: Ord v => P v (Token Char)
+closeBlock :: Ord v => P v (Token ())
 failCommitted :: Ord v => Error v -> P v x
-proxy :: Proxy Input
+failureIf :: Ord v => P v (P v b) -> P v a -> P v b
+hqInfixId :: Ord v => P v (Token (HashQualified Name))
+hqPrefixId :: Ord v => P v (Token (HashQualified Name))
+importDotId :: Ord v => P v (Token Name)
+importSymbolyId :: Ord v => P v (Token Name)
+importWordyId :: Ord v => P v (Token Name)
+label :: (Ord v, Show a) => String -> P v a -> P v a
+matchToken :: Ord v => Lexeme -> P v (Token Lexeme)
+mkAnn :: (Annotated a, Annotated b) => a -> b -> Ann
+numeric :: Ord v => P v (Token String)
+openBlock :: Ord v => P v (Token String)
+openBlockWith :: Ord v => String -> P v (Token ())
+peekAny :: Ord v => P v (Token Lexeme)
+positionalVar :: (Annotated a, Var v) => a -> v -> v
+prefixDefinitionName :: Var v => P v (Token v)
+queryToken :: Ord v => (Lexeme -> Maybe a) -> P v (Token a)
+reserved :: Ord v => String -> P v (Token String)
 root :: Ord v => P v a -> P v a
 rootFile :: Ord v => P v a -> P v a
 run' :: Ord v => P v a -> String -> String -> ParsingEnv -> Either (Err v) a
 run :: Ord v => P v a -> String -> ParsingEnv -> Either (Err v) a
-queryToken :: Ord v => (Lexeme -> Maybe a) -> P v (Token a)
-openBlock :: Ord v => P v (Token String)
-openBlockWith :: Ord v => String -> P v (Token ())
-matchToken :: Ord v => Lexeme -> P v (Token Lexeme)
-importDotId :: Ord v => P v (Token Name)
 semi :: Ord v => P v (Token ())
-closeBlock :: Ord v => P v (Token ())
-wordyPatternName :: Var v => P v (Token v)
-prefixDefinitionName :: Var v => P v (Token v)
-wordyDefinitionName :: Var v => P v (Token v)
-wordyIdString :: Ord v => P v (Token String)
-importWordyId :: Ord v => P v (Token Name)
-importSymbolyId :: Ord v => P v (Token Name)
-symbolyIdString :: Ord v => P v (Token String)
-infixDefinitionName :: Var v => P v (Token v)
-symbolyDefinitionName :: Var v => P v (Token v)
-parenthesize :: Ord v => P v a -> P v a
-hqPrefixId :: Ord v => P v (Token (HashQualified Name))
-hqInfixId :: Ord v => P v (Token (HashQualified Name))
-hqWordyId_ :: Ord v => P v (Token (HashQualified Name))
-hqSymbolyId_ :: Ord v => P v (Token (HashQualified Name))
-reserved :: Ord v => String -> P v (Token String)
-blank :: Ord v => P v (Token String)
-numeric :: Ord v => P v (Token String)
-bytesToken :: Ord v => P v (Token Bytes)
+seq :: Ord v => (Ann -> [a] -> a) -> P v a -> P v a
 sepBy :: Ord v => P v a -> P v b -> P v [b]
 sepBy1 :: Ord v => P v a -> P v b -> P v [b]
-sepEndBy :: Ord v => P v a -> P v b -> P v [b]
-character :: Ord v => P v (Token Char)
 string :: Ord v => P v (Token Text)
+symbolyDefinitionName :: Var v => P v (Token v)
+symbolyIdString :: Ord v => P v (Token String)
+tok :: (Ann -> a -> b) -> Token a -> b
+tokenToPair :: Token a -> (Ann, a)
 tupleOrParenthesized :: Ord v => P v a -> (Ann -> a) -> (a -> a -> a) -> P v a
-seq :: Ord v => (Ann -> [a] -> a) -> P v a -> P v a
-seq' :: Ord v => String -> (Ann -> [a] -> a) -> P v a -> P v a
-chainr1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
-chainl1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
-failureIf :: Ord v => P v (P v b) -> P v a -> P v b
-positionalVar :: (Annotated a, Var v) => a -> v -> v
+uniqueBase32Namegen :: forall gen. DRG gen => gen -> UniqueName
+uniqueName :: Var v => Int -> P v Text
+wordyDefinitionName :: Var v => P v (Token v)
+wordyIdString :: Ord v => P v (Token String)
+wordyPatternName :: Var v => P v (Token v)
 instance GHC.Classes.Ord v => GHC.Classes.Ord (Unison.Syntax.Parser.Error v)
 instance GHC.Classes.Eq v => GHC.Classes.Eq (Unison.Syntax.Parser.Error v)
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Syntax.Parser.Error v)
