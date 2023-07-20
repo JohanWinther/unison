@@ -859,8 +859,14 @@ CompletionTree :: Cofree (Map NameSegment) (Set (Name, LabeledDependency)) -> Co
 -- | A monotonically increasing file version tracked by the lsp client.
 type FileVersion = Int32
 type LexedSource = (Text, [Token Lexeme])
+data TypeSignatureHint
+TypeSignatureHint :: Name -> Referent -> Range -> Type Symbol Ann -> TypeSignatureHint
+[$sel:name:TypeSignatureHint] :: TypeSignatureHint -> Name
+[$sel:referent:TypeSignatureHint] :: TypeSignatureHint -> Referent
+[$sel:bindingLocation:TypeSignatureHint] :: TypeSignatureHint -> Range
+[$sel:signature:TypeSignatureHint] :: TypeSignatureHint -> Type Symbol Ann
 data FileAnalysis
-FileAnalysis :: Uri -> FileVersion -> LexedSource -> IntervalMap Position Lexeme -> Maybe (UnisonFile Symbol Ann) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Seq (Note Symbol Ann) -> IntervalMap Position [Diagnostic] -> IntervalMap Position [CodeAction] -> Maybe FileSummary -> FileAnalysis
+FileAnalysis :: Uri -> FileVersion -> LexedSource -> IntervalMap Position Lexeme -> Maybe (UnisonFile Symbol Ann) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Seq (Note Symbol Ann) -> IntervalMap Position [Diagnostic] -> IntervalMap Position [CodeAction] -> Map Symbol TypeSignatureHint -> Maybe FileSummary -> FileAnalysis
 [$sel:fileUri:FileAnalysis] :: FileAnalysis -> Uri
 [$sel:fileVersion:FileAnalysis] :: FileAnalysis -> FileVersion
 [$sel:lexedSource:FileAnalysis] :: FileAnalysis -> LexedSource
@@ -870,6 +876,7 @@ FileAnalysis :: Uri -> FileVersion -> LexedSource -> IntervalMap Position Lexeme
 [$sel:notes:FileAnalysis] :: FileAnalysis -> Seq (Note Symbol Ann)
 [$sel:diagnostics:FileAnalysis] :: FileAnalysis -> IntervalMap Position [Diagnostic]
 [$sel:codeActions:FileAnalysis] :: FileAnalysis -> IntervalMap Position [CodeAction]
+[$sel:typeSignatureHints:FileAnalysis] :: FileAnalysis -> Map Symbol TypeSignatureHint
 [$sel:fileSummary:FileAnalysis] :: FileAnalysis -> Maybe FileSummary
 
 -- | A file that parses might not always type-check, but often we just want
@@ -913,6 +920,7 @@ includeEdits :: Uri -> Text -> [Range] -> RangedCodeAction -> RangedCodeAction
 getConfig :: Lsp Config
 setConfig :: Config -> Lsp ()
 instance GHC.Show.Show Unison.LSP.Types.CompletionTree
+instance GHC.Show.Show Unison.LSP.Types.TypeSignatureHint
 instance GHC.Show.Show Unison.LSP.Types.FileSummary
 instance GHC.Show.Show Unison.LSP.Types.FileAnalysis
 instance GHC.Show.Show Unison.LSP.Types.Config
@@ -974,6 +982,21 @@ updateConfig :: Config -> Value -> Either Text Config
 --   we don't actually need to update the config here, that's handled by
 --   the lsp library automatically.
 workspaceConfigurationChanged :: NotificationMessage 'WorkspaceDidChangeConfiguration -> Lsp ()
+
+module Unison.LSP.Commands
+supportedCommands :: [Text]
+replaceText :: Text -> TextReplacement -> Command
+data TextReplacement
+TextReplacement :: Range -> Text -> Text -> Uri -> TextReplacement
+[$sel:range:TextReplacement] :: TextReplacement -> Range
+[$sel:description:TextReplacement] :: TextReplacement -> Text
+[$sel:replacementText:TextReplacement] :: TextReplacement -> Text
+[$sel:fileUri:TextReplacement] :: TextReplacement -> Uri
+
+-- | Computes code actions for a document.
+executeCommandHandler :: RequestMessage 'WorkspaceExecuteCommand -> (Either ResponseError Value -> Lsp ()) -> Lsp ()
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.Commands.TextReplacement
+instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.Commands.TextReplacement
 
 module Unison.LSP.CancelRequest
 
@@ -1719,6 +1742,7 @@ getFileAnalysis :: Uri -> MaybeT Lsp FileAnalysis
 getFileSummary :: Uri -> MaybeT Lsp FileSummary
 ppedForFile :: Uri -> Lsp PrettyPrintEnvDecl
 ppedForFileHelper :: Maybe (UnisonFile Symbol a) -> Maybe (TypecheckedUnisonFile Symbol a) -> Lsp PrettyPrintEnvDecl
+mkTypeSignatureHints :: UnisonFile Symbol Ann -> TypecheckedUnisonFile Symbol Ann -> Map Symbol TypeSignatureHint
 
 
 -- | Rewrites of some codebase queries, but which check the scratch file
@@ -1855,6 +1879,18 @@ module Unison.LSP.UCMWorker
 -- | Watches for state changes in UCM and updates cached LSP state
 --   accordingly
 ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar (NameSearch Transaction) -> STM (Branch IO) -> STM Absolute -> Lsp ()
+
+module Unison.LSP.CodeLens
+data TypeSigInsertion
+TypeSigInsertion :: Range -> Text -> Uri -> TypeSigInsertion
+[$sel:range:TypeSigInsertion] :: TypeSigInsertion -> Range
+[$sel:typeSignature:TypeSigInsertion] :: TypeSigInsertion -> Text
+[$sel:fileUri:TypeSigInsertion] :: TypeSigInsertion -> Uri
+
+-- | Computes code actions for a document.
+codeLensHandler :: RequestMessage 'TextDocumentCodeLens -> (Either ResponseError (List CodeLens) -> Lsp ()) -> Lsp ()
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.CodeLens.TypeSigInsertion
+instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.CodeLens.TypeSigInsertion
 
 module Unison.LSP.CodeAction
 
