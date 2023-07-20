@@ -1678,6 +1678,8 @@ loadCausalHashAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (May
 -- | Expect the causal hash at the given path from the provided root, if
 --   Nothing, use the codebase root.
 expectCausalHashAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction CausalHash
+loadCausalBranchAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (Maybe (CausalBranch Transaction))
+loadBranchAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (Maybe (Branch Transaction))
 saveBranch :: HashHandle -> CausalBranch Transaction -> Transaction (BranchObjectId, CausalHashId)
 loadCausalBranchByCausalHash :: CausalHash -> Transaction (Maybe (CausalBranch Transaction))
 expectCausalBranchByCausalHash :: CausalHash -> Transaction (CausalBranch Transaction)
@@ -1706,6 +1708,7 @@ loadTypeOfTermByTermReference :: Id -> MaybeT Transaction (Type Symbol)
 saveDeclComponent :: HashHandle -> Maybe ByteString -> Hash -> [Decl Symbol] -> Transaction ObjectId
 loadDeclComponent :: Hash -> MaybeT Transaction [Decl Symbol]
 loadDeclByReference :: Id -> MaybeT Transaction (Decl Symbol)
+expectDeclByReference :: Id -> Transaction (Decl Symbol)
 
 -- | Get the <a>DeclType</a> of a <a>Id'</a>.
 expectDeclTypeById :: Id -> Transaction DeclType

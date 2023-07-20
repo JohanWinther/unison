@@ -271,56 +271,66 @@ DuplicateTermNames :: [(v, [Ann])] -> Error v
 PatternArityMismatch :: Int -> Int -> Ann -> Error v
 FloatPattern :: Ann -> Error v
 data Input
-type P v = ParsecT (Error v) Input ((->) ParsingEnv)
-data ParsingEnv
-ParsingEnv :: UniqueName -> NamesWithHistory -> ParsingEnv
-[$sel:uniqueNames:ParsingEnv] :: ParsingEnv -> UniqueName
-[$sel:names:ParsingEnv] :: ParsingEnv -> NamesWithHistory
+type P v m = ParsecT (Error v) Input (ReaderT (ParsingEnv m) m)
+data ParsingEnv (m :: Type -> Type)
+ParsingEnv :: UniqueName -> (Name -> m (Maybe Text)) -> NamesWithHistory -> ParsingEnv (m :: Type -> Type)
+[$sel:uniqueNames:ParsingEnv] :: ParsingEnv (m :: Type -> Type) -> UniqueName
+
+-- | Return a GUID to reuse for a unique type of the given name, if any.
+--   
+--   This callback is called for every `unique type` declaration that does
+--   not explicitly specify a GUID.
+--   
+--   The name (e.g. <tt>Foo</tt> in `unique type Foo`) is passed in, and if
+--   the function returns a Just, that GUID is used; otherwise, a random
+--   one is generated from <a>$sel:uniqueNames:ParsingEnv</a>.
+[$sel:uniqueTypeGuid:ParsingEnv] :: ParsingEnv (m :: Type -> Type) -> Name -> m (Maybe Text)
+[$sel:names:ParsingEnv] :: ParsingEnv (m :: Type -> Type) -> NamesWithHistory
 data UniqueName
-anyToken :: Ord v => P v (Token Lexeme)
-blank :: Ord v => P v (Token String)
-bytesToken :: Ord v => P v (Token Bytes)
-chainl1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
-chainr1 :: Ord v => P v a -> P v (a -> a -> a) -> P v a
-character :: Ord v => P v (Token Char)
-closeBlock :: Ord v => P v (Token ())
-failCommitted :: Ord v => Error v -> P v x
-failureIf :: Ord v => P v (P v b) -> P v a -> P v b
-hqInfixId :: Ord v => P v (Token (HashQualified Name))
-hqPrefixId :: Ord v => P v (Token (HashQualified Name))
-importDotId :: Ord v => P v (Token Name)
-importSymbolyId :: Ord v => P v (Token Name)
-importWordyId :: Ord v => P v (Token Name)
-label :: (Ord v, Show a) => String -> P v a -> P v a
-matchToken :: Ord v => Lexeme -> P v (Token Lexeme)
+anyToken :: Ord v => P v m (Token Lexeme)
+blank :: Ord v => P v m (Token String)
+bytesToken :: Ord v => P v m (Token Bytes)
+chainl1 :: Ord v => P v m a -> P v m (a -> a -> a) -> P v m a
+chainr1 :: Ord v => P v m a -> P v m (a -> a -> a) -> P v m a
+character :: Ord v => P v m (Token Char)
+closeBlock :: Ord v => P v m (Token ())
+failCommitted :: Ord v => Error v -> P v m x
+failureIf :: Ord v => P v m (P v m b) -> P v m a -> P v m b
+hqInfixId :: Ord v => P v m (Token (HashQualified Name))
+hqPrefixId :: Ord v => P v m (Token (HashQualified Name))
+importDotId :: Ord v => P v m (Token Name)
+importSymbolyId :: Ord v => P v m (Token Name)
+importWordyId :: Ord v => P v m (Token Name)
+label :: (Ord v, Show a) => String -> P v m a -> P v m a
+matchToken :: Ord v => Lexeme -> P v m (Token Lexeme)
 mkAnn :: (Annotated a, Annotated b) => a -> b -> Ann
-numeric :: Ord v => P v (Token String)
-openBlock :: Ord v => P v (Token String)
-openBlockWith :: Ord v => String -> P v (Token ())
-peekAny :: Ord v => P v (Token Lexeme)
+numeric :: Ord v => P v m (Token String)
+openBlock :: Ord v => P v m (Token String)
+openBlockWith :: Ord v => String -> P v m (Token ())
+peekAny :: Ord v => P v m (Token Lexeme)
 positionalVar :: (Annotated a, Var v) => a -> v -> v
-prefixDefinitionName :: Var v => P v (Token v)
-queryToken :: Ord v => (Lexeme -> Maybe a) -> P v (Token a)
-reserved :: Ord v => String -> P v (Token String)
-root :: Ord v => P v a -> P v a
-rootFile :: Ord v => P v a -> P v a
-run' :: Ord v => P v a -> String -> String -> ParsingEnv -> Either (Err v) a
-run :: Ord v => P v a -> String -> ParsingEnv -> Either (Err v) a
-semi :: Ord v => P v (Token ())
-seq :: Ord v => (Ann -> [a] -> a) -> P v a -> P v a
-sepBy :: Ord v => P v a -> P v b -> P v [b]
-sepBy1 :: Ord v => P v a -> P v b -> P v [b]
-string :: Ord v => P v (Token Text)
-symbolyDefinitionName :: Var v => P v (Token v)
-symbolyIdString :: Ord v => P v (Token String)
+prefixDefinitionName :: Var v => P v m (Token v)
+queryToken :: Ord v => (Lexeme -> Maybe a) -> P v m (Token a)
+reserved :: Ord v => String -> P v m (Token String)
+root :: Ord v => P v m a -> P v m a
+rootFile :: Ord v => P v m a -> P v m a
+run' :: (Monad m, Ord v) => P v m a -> String -> String -> ParsingEnv m -> m (Either (Err v) a)
+run :: (Monad m, Ord v) => P v m a -> String -> ParsingEnv m -> m (Either (Err v) a)
+semi :: Ord v => P v m (Token ())
+seq :: Ord v => (Ann -> [a] -> a) -> P v m a -> P v m a
+sepBy :: Ord v => P v m a -> P v m b -> P v m [b]
+sepBy1 :: Ord v => P v m a -> P v m b -> P v m [b]
+string :: Ord v => P v m (Token Text)
+symbolyDefinitionName :: Var v => P v m (Token v)
+symbolyIdString :: Ord v => P v m (Token String)
 tok :: (Ann -> a -> b) -> Token a -> b
 tokenToPair :: Token a -> (Ann, a)
-tupleOrParenthesized :: Ord v => P v a -> (Ann -> a) -> (a -> a -> a) -> P v a
+tupleOrParenthesized :: Ord v => P v m a -> (Ann -> a) -> (a -> a -> a) -> P v m a
 uniqueBase32Namegen :: forall gen. DRG gen => gen -> UniqueName
-uniqueName :: Var v => Int -> P v Text
-wordyDefinitionName :: Var v => P v (Token v)
-wordyIdString :: Ord v => P v (Token String)
-wordyPatternName :: Var v => P v (Token v)
+uniqueName :: (Monad m, Var v) => Int -> P v m Text
+wordyDefinitionName :: Var v => P v m (Token v)
+wordyIdString :: Ord v => P v m (Token String)
+wordyPatternName :: Var v => P v m (Token v)
 instance GHC.Classes.Ord v => GHC.Classes.Ord (Unison.Syntax.Parser.Error v)
 instance GHC.Classes.Eq v => GHC.Classes.Eq (Unison.Syntax.Parser.Error v)
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Syntax.Parser.Error v)

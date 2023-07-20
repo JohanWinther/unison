@@ -191,6 +191,17 @@ instance GHC.Generics.Generic Unison.Cli.Share.Projects.Types.RemoteProjectBranc
 instance GHC.Show.Show Unison.Cli.Share.Projects.Types.RemoteProjectBranch
 instance GHC.Classes.Eq Unison.Cli.Share.Projects.Types.RemoteProjectBranch
 
+module Unison.Cli.TypeCheck
+computeTypecheckingEnvironment :: ShouldUseTndr Transaction -> Codebase IO Symbol Ann -> [Type Symbol Ann] -> UnisonFile Symbol Ann -> Transaction (Env Symbol Ann)
+typecheckTerm :: Codebase IO Symbol Ann -> Term Symbol Ann -> Transaction (Result (Seq (Note Symbol Ann)) (Type Symbol Ann))
+
+
+-- | This module contains functionality related to computing a "unique type
+--   guid lookup" function, which resolves a name to a unique type's GUID
+--   to reuse.
+module Unison.Cli.UniqueTypeGuidLookup
+loadUniqueTypeGuid :: Absolute -> Name -> Transaction (Maybe Text)
+
 module Unison.Codebase.Editor.AuthorInfo
 data AuthorInfo v a
 AuthorInfo :: (Id, Term v a, Type v a) -> AuthorInfo v a
@@ -1036,6 +1047,215 @@ lspOpenFile :: NotificationMessage 'TextDocumentDidOpen -> Lsp ()
 lspCloseFile :: NotificationMessage 'TextDocumentDidClose -> Lsp ()
 lspChangeFile :: NotificationMessage 'TextDocumentDidChange -> Lsp ()
 
+module Unison.LSP.FileAnalysis
+
+-- | Lex, parse, and typecheck a file.
+checkFile :: HasUri d Uri => d -> Lsp (Maybe FileAnalysis)
+
+-- | If a symbol is a <tt>User</tt> symbol, return (Just sym), otherwise
+--   return Nothing.
+assertUserSym :: Symbol -> Maybe Symbol
+
+-- | Summarize the information available to us from the current state of
+--   the file. See <a>FileSummary</a> for more information.
+mkFileSummary :: Maybe (UnisonFile Symbol Ann) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Maybe FileSummary
+
+-- | Get the location of user defined definitions within the file
+getFileDefLocations :: Uri -> MaybeT Lsp (Map Symbol (Set Ann))
+
+-- | Compute the location of user defined definitions within the file
+fileDefLocations :: FileSummary -> Map Symbol (Set Ann)
+fileAnalysisWorker :: Lsp ()
+analyseFile :: Foldable f => Uri -> Text -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
+
+-- | Returns diagnostics which show a warning diagnostic when editing a
+--   term that's conflicted in the codebase.
+computeConflictWarningDiagnostics :: Uri -> FileSummary -> Lsp [Diagnostic]
+getTokenMap :: [Token Lexeme] -> IntervalMap Position Lexeme
+analyseNotes :: Foldable f => Uri -> PrettyPrintEnv -> String -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
+toRangeMap :: Foldable f => f (Range, a) -> IntervalMap Position [a]
+getFileAnalysis :: Uri -> MaybeT Lsp FileAnalysis
+getFileSummary :: Uri -> MaybeT Lsp FileSummary
+ppedForFile :: Uri -> Lsp PrettyPrintEnvDecl
+ppedForFileHelper :: Maybe (UnisonFile Symbol a) -> Maybe (TypecheckedUnisonFile Symbol a) -> Lsp PrettyPrintEnvDecl
+mkTypeSignatureHints :: UnisonFile Symbol Ann -> TypecheckedUnisonFile Symbol Ann -> Map Symbol TypeSignatureHint
+
+
+-- | Rewrites of some codebase queries, but which check the scratch file
+--   for info first.
+module Unison.LSP.Queries
+
+-- | Renders all docs for a given FQN to markdown.
+markdownDocsForFQN :: Uri -> HashQualified Name -> Lsp [Text]
+
+-- | Gets the type of a reference from either the parsed file or the
+--   codebase.
+getTypeOfReferent :: Uri -> Referent -> MaybeT Lsp (Type Symbol Ann)
+
+-- | Gets a decl from either the parsed file or the codebase.
+getTypeDeclaration :: Uri -> Id -> MaybeT Lsp (Decl Symbol Ann)
+
+-- | Returns a reference to whatever the symbol at the given position
+--   refers to.
+refAtPosition :: Uri -> Position -> MaybeT Lsp LabeledDependency
+
+-- | Returns the ABT node at the provided position. Does not return Decl
+--   nodes.
+nodeAtPosition :: Uri -> Position -> MaybeT Lsp (SourceNode Ann)
+
+-- | Returns the reference a given term node refers to, if any.
+refInTerm :: Term v a -> Maybe LabeledDependency
+refInType :: Type v a -> Maybe TypeReference
+
+-- | Find the the node in a term which contains the specified position, but
+--   none of its children contain that position.
+findSmallestEnclosingNode :: Pos -> Term Symbol Ann -> Maybe (SourceNode Ann)
+
+-- | Find the the node in a type which contains the specified position, but
+--   none of its children contain that position. This is helpful for
+--   finding the specific type reference of a given argument within a type
+--   arrow that a position references.
+findSmallestEnclosingType :: Pos -> Type Symbol Ann -> Maybe (Type Symbol Ann)
+
+-- | Returns the type reference the given position applies to within a
+--   Decl, if any.
+--   
+--   I.e. if the cursor is over a type reference within a constructor
+--   signature or ability request signature, that type reference will be
+--   returned.
+refInDecl :: Pos -> Decl Symbol Ann -> Maybe TypeReference
+data SourceNode a
+TermNode :: Term Symbol a -> SourceNode a
+TypeNode :: Type Symbol a -> SourceNode a
+PatternNode :: Pattern a -> SourceNode a
+instance GHC.Show.Show (Unison.LSP.Queries.SourceNode a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (Unison.LSP.Queries.SourceNode a)
+instance GHC.Base.Functor Unison.LSP.Queries.SourceNode
+
+module Unison.LSP.Hover
+
+-- | Hover help handler
+--   
+--   TODO: * Add docs * Resolve fqn on hover
+hoverHandler :: RequestMessage 'TextDocumentHover -> (Either ResponseError (ResponseResult 'TextDocumentHover) -> Lsp ()) -> Lsp ()
+hoverInfo :: Uri -> Position -> MaybeT Lsp Text
+
+-- | Get the type for term literals.
+builtinTypeForTermLiterals :: Term Symbol Ann -> Maybe Text
+builtinTypeForPatternLiterals :: Pattern Ann -> Maybe Text
+
+module Unison.LSP.FoldingRange
+foldingRangeRequest :: RequestMessage 'TextDocumentFoldingRange -> (Either ResponseError (ResponseResult 'TextDocumentFoldingRange) -> Lsp ()) -> Lsp ()
+
+-- | Return a folding range for each top-level definition
+foldingRangesForFile :: Uri -> Lsp [FoldingRange]
+
+module Unison.LSP.CodeLens
+data TypeSigInsertion
+TypeSigInsertion :: Range -> Text -> Uri -> TypeSigInsertion
+[$sel:range:TypeSigInsertion] :: TypeSigInsertion -> Range
+[$sel:typeSignature:TypeSigInsertion] :: TypeSigInsertion -> Text
+[$sel:fileUri:TypeSigInsertion] :: TypeSigInsertion -> Uri
+
+-- | Computes code actions for a document.
+codeLensHandler :: RequestMessage 'TextDocumentCodeLens -> (Either ResponseError (List CodeLens) -> Lsp ()) -> Lsp ()
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.CodeLens.TypeSigInsertion
+instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.CodeLens.TypeSigInsertion
+
+module Unison.LSP.CodeAction
+
+-- | Computes code actions for a document.
+codeActionHandler :: RequestMessage 'TextDocumentCodeAction -> (Either ResponseError (ResponseResult 'TextDocumentCodeAction) -> Lsp ()) -> Lsp ()
+
+module Unison.LSP.Completion
+completionHandler :: RequestMessage 'TextDocumentCompletion -> (Either ResponseError (ResponseResult 'TextDocumentCompletion) -> Lsp ()) -> Lsp ()
+mkDefCompletionItem :: Uri -> Range -> Name -> Name -> Text -> Text -> LabeledDependency -> CompletionItem
+
+-- | Generate a completion tree from a set of names. A completion tree is a
+--   suffix tree over the path segments of each name it contains. The goal
+--   is to allow fast completion of names by any partial path suffix.
+--   
+--   The tree is generated by building a trie where all possible suffixes
+--   of a name are reachable from the root of the trie, with sharing over
+--   subtrees to improve memory residency.
+--   
+--   Currently we don't "summarize" all of the children of a node in the
+--   node itself, and instead you have to crawl all the children to get the
+--   actual completions.
+--   
+--   TODO: Would it be worthwhile to perform compression or include child
+--   summaries on the suffix tree? I suspect most namespace trees won't
+--   actually compress very well since each node is likely to have
+--   terms/types at it.
+--   
+--   E.g. From the names: * alpha.beta.Nat * alpha.Text * foxtrot.Text
+--   
+--   It will generate a tree like the following, where each bullet is a
+--   possible completion:
+--   
+--   . ├── foxtrot │ └── Text │ └── * foxtrot.Text (##Text) ├── beta │ └──
+--   Nat │ └── * alpha.beta.Nat (##Nat) ├── alpha │ ├── beta │ │ └── Nat │
+--   │ └── * alpha.beta.Nat (##Nat) │ └── Text │ └── * alpha.Text (##Text)
+--   ├── Text │ ├── * foxtrot.Text (##Text) │ └── * alpha.Text (##Text) └──
+--   Nat └── * alpha.beta.Nat (##Nat)
+namesToCompletionTree :: Names -> CompletionTree
+nameToCompletionTree :: Name -> LabeledDependency -> CompletionTree
+
+-- | Crawl the completion tree and return all valid prefix-based
+--   completions alongside their Path from the provided prefix, and their
+--   full name.
+--   
+--   E.g. if the term "alpha.beta.gamma.map (#abc)" exists in the
+--   completion map, and the query is "beta" the result would be:
+--   
+--   @<tt> [(["beta", "gamma", "map"], "alpha.beta.gamma.map", TermReferent
+--   #abc)] </tt>@
+matchCompletions :: CompletionTree -> Text -> [(Path, Name, LabeledDependency)]
+
+-- | Called to resolve additional details for a completion item that the
+--   user is considering.
+completionItemResolveHandler :: RequestMessage 'CompletionItemResolve -> (Either ResponseError CompletionItem -> Lsp ()) -> Lsp ()
+
+-- | Data which will be provided back to us in the completion resolve
+--   handler when the user considers this completion.
+data CompletionItemDetails
+CompletionItemDetails :: LabeledDependency -> Name -> Name -> Uri -> CompletionItemDetails
+[$sel:dep:CompletionItemDetails] :: CompletionItemDetails -> LabeledDependency
+[$sel:relativeName:CompletionItemDetails] :: CompletionItemDetails -> Name
+[$sel:fullyQualifiedName:CompletionItemDetails] :: CompletionItemDetails -> Name
+[$sel:fileUri:CompletionItemDetails] :: CompletionItemDetails -> Uri
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.Completion.CompletionItemDetails
+instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.Completion.CompletionItemDetails
+
+module Unison.LSP.UCMWorker
+
+-- | Watches for state changes in UCM and updates cached LSP state
+--   accordingly
+ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar (NameSearch Transaction) -> STM (Branch IO) -> STM Absolute -> Lsp ()
+
+module Unison.LSP
+getLspPort :: IO String
+
+-- | Spawn an LSP server on the configured port.
+spawnLsp :: Codebase IO Symbol Ann -> Runtime Symbol -> STM (Branch IO) -> STM Absolute -> IO ()
+serverDefinition :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> ServerDefinition Config
+
+-- | Initialize any context needed by the LSP server
+lspDoInitialize :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> LanguageContextEnv Config -> Message 'Initialize -> IO (Either ResponseError Env)
+
+-- | LSP request handlers that don't register/unregister dynamically
+lspStaticHandlers :: Handlers Lsp
+
+-- | LSP request handlers
+lspRequestHandlers :: SMethodMap (ClientMessageHandler Lsp 'Request)
+
+-- | LSP notification handlers
+lspNotificationHandlers :: SMethodMap (ClientMessageHandler Lsp 'Notification)
+
+-- | A natural transformation into IO, required by the LSP lib.
+lspInterpretHandler :: Env -> Lsp <~> IO
+lspOptions :: Options
+
 module Unison.Share.Codeserver
 
 -- | This is the URI where the share API is based.
@@ -1705,220 +1925,6 @@ authLogin :: CodeserverURI -> Cli UserInfo
 -- | Checks if the user has valid auth for the given codeserver, and runs
 --   through an authentication flow if not.
 ensureAuthenticatedWithCodeserver :: CodeserverURI -> Cli UserInfo
-
-module Unison.Cli.TypeCheck
-typecheck :: MonadIO m => Codebase IO Symbol Ann -> IO UniqueName -> [Type Symbol Ann] -> NamesWithHistory -> Text -> (Text, [Token Lexeme]) -> m (Result (Seq (Note Symbol Ann)) (Either (UnisonFile Symbol Ann) (TypecheckedUnisonFile Symbol Ann)))
-typecheckFile :: Codebase IO Symbol Ann -> [Type Symbol Ann] -> UnisonFile Symbol Ann -> Transaction (Result (Seq (Note Symbol Ann)) (TypecheckedUnisonFile Symbol Ann))
-typecheckTerm :: Term Symbol Ann -> Cli (Result (Seq (Note Symbol Ann)) (Type Symbol Ann))
-
-module Unison.LSP.FileAnalysis
-
--- | Lex, parse, and typecheck a file.
-checkFile :: HasUri d Uri => d -> Lsp (Maybe FileAnalysis)
-
--- | If a symbol is a <tt>User</tt> symbol, return (Just sym), otherwise
---   return Nothing.
-assertUserSym :: Symbol -> Maybe Symbol
-
--- | Summarize the information available to us from the current state of
---   the file. See <a>FileSummary</a> for more information.
-mkFileSummary :: Maybe (UnisonFile Symbol Ann) -> Maybe (TypecheckedUnisonFile Symbol Ann) -> Maybe FileSummary
-
--- | Get the location of user defined definitions within the file
-getFileDefLocations :: Uri -> MaybeT Lsp (Map Symbol (Set Ann))
-
--- | Compute the location of user defined definitions within the file
-fileDefLocations :: FileSummary -> Map Symbol (Set Ann)
-fileAnalysisWorker :: Lsp ()
-analyseFile :: Foldable f => Uri -> Text -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
-
--- | Returns diagnostics which show a warning diagnostic when editing a
---   term that's conflicted in the codebase.
-computeConflictWarningDiagnostics :: Uri -> FileSummary -> Lsp [Diagnostic]
-getTokenMap :: [Token Lexeme] -> IntervalMap Position Lexeme
-analyseNotes :: Foldable f => Uri -> PrettyPrintEnv -> String -> f (Note Symbol Ann) -> Lsp ([Diagnostic], [RangedCodeAction])
-toRangeMap :: Foldable f => f (Range, a) -> IntervalMap Position [a]
-getFileAnalysis :: Uri -> MaybeT Lsp FileAnalysis
-getFileSummary :: Uri -> MaybeT Lsp FileSummary
-ppedForFile :: Uri -> Lsp PrettyPrintEnvDecl
-ppedForFileHelper :: Maybe (UnisonFile Symbol a) -> Maybe (TypecheckedUnisonFile Symbol a) -> Lsp PrettyPrintEnvDecl
-mkTypeSignatureHints :: UnisonFile Symbol Ann -> TypecheckedUnisonFile Symbol Ann -> Map Symbol TypeSignatureHint
-
-
--- | Rewrites of some codebase queries, but which check the scratch file
---   for info first.
-module Unison.LSP.Queries
-
--- | Renders all docs for a given FQN to markdown.
-markdownDocsForFQN :: Uri -> HashQualified Name -> Lsp [Text]
-
--- | Gets the type of a reference from either the parsed file or the
---   codebase.
-getTypeOfReferent :: Uri -> Referent -> MaybeT Lsp (Type Symbol Ann)
-
--- | Gets a decl from either the parsed file or the codebase.
-getTypeDeclaration :: Uri -> Id -> MaybeT Lsp (Decl Symbol Ann)
-
--- | Returns a reference to whatever the symbol at the given position
---   refers to.
-refAtPosition :: Uri -> Position -> MaybeT Lsp LabeledDependency
-
--- | Returns the ABT node at the provided position. Does not return Decl
---   nodes.
-nodeAtPosition :: Uri -> Position -> MaybeT Lsp (SourceNode Ann)
-
--- | Returns the reference a given term node refers to, if any.
-refInTerm :: Term v a -> Maybe LabeledDependency
-refInType :: Type v a -> Maybe TypeReference
-
--- | Find the the node in a term which contains the specified position, but
---   none of its children contain that position.
-findSmallestEnclosingNode :: Pos -> Term Symbol Ann -> Maybe (SourceNode Ann)
-
--- | Find the the node in a type which contains the specified position, but
---   none of its children contain that position. This is helpful for
---   finding the specific type reference of a given argument within a type
---   arrow that a position references.
-findSmallestEnclosingType :: Pos -> Type Symbol Ann -> Maybe (Type Symbol Ann)
-
--- | Returns the type reference the given position applies to within a
---   Decl, if any.
---   
---   I.e. if the cursor is over a type reference within a constructor
---   signature or ability request signature, that type reference will be
---   returned.
-refInDecl :: Pos -> Decl Symbol Ann -> Maybe TypeReference
-data SourceNode a
-TermNode :: Term Symbol a -> SourceNode a
-TypeNode :: Type Symbol a -> SourceNode a
-PatternNode :: Pattern a -> SourceNode a
-instance GHC.Show.Show (Unison.LSP.Queries.SourceNode a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (Unison.LSP.Queries.SourceNode a)
-instance GHC.Base.Functor Unison.LSP.Queries.SourceNode
-
-module Unison.LSP.Hover
-
--- | Hover help handler
---   
---   TODO: * Add docs * Resolve fqn on hover
-hoverHandler :: RequestMessage 'TextDocumentHover -> (Either ResponseError (ResponseResult 'TextDocumentHover) -> Lsp ()) -> Lsp ()
-hoverInfo :: Uri -> Position -> MaybeT Lsp Text
-
--- | Get the type for term literals.
-builtinTypeForTermLiterals :: Term Symbol Ann -> Maybe Text
-builtinTypeForPatternLiterals :: Pattern Ann -> Maybe Text
-
-module Unison.LSP.FoldingRange
-foldingRangeRequest :: RequestMessage 'TextDocumentFoldingRange -> (Either ResponseError (ResponseResult 'TextDocumentFoldingRange) -> Lsp ()) -> Lsp ()
-
--- | Return a folding range for each top-level definition
-foldingRangesForFile :: Uri -> Lsp [FoldingRange]
-
-module Unison.LSP.Completion
-completionHandler :: RequestMessage 'TextDocumentCompletion -> (Either ResponseError (ResponseResult 'TextDocumentCompletion) -> Lsp ()) -> Lsp ()
-mkDefCompletionItem :: Uri -> Range -> Name -> Name -> Text -> Text -> LabeledDependency -> CompletionItem
-
--- | Generate a completion tree from a set of names. A completion tree is a
---   suffix tree over the path segments of each name it contains. The goal
---   is to allow fast completion of names by any partial path suffix.
---   
---   The tree is generated by building a trie where all possible suffixes
---   of a name are reachable from the root of the trie, with sharing over
---   subtrees to improve memory residency.
---   
---   Currently we don't "summarize" all of the children of a node in the
---   node itself, and instead you have to crawl all the children to get the
---   actual completions.
---   
---   TODO: Would it be worthwhile to perform compression or include child
---   summaries on the suffix tree? I suspect most namespace trees won't
---   actually compress very well since each node is likely to have
---   terms/types at it.
---   
---   E.g. From the names: * alpha.beta.Nat * alpha.Text * foxtrot.Text
---   
---   It will generate a tree like the following, where each bullet is a
---   possible completion:
---   
---   . ├── foxtrot │ └── Text │ └── * foxtrot.Text (##Text) ├── beta │ └──
---   Nat │ └── * alpha.beta.Nat (##Nat) ├── alpha │ ├── beta │ │ └── Nat │
---   │ └── * alpha.beta.Nat (##Nat) │ └── Text │ └── * alpha.Text (##Text)
---   ├── Text │ ├── * foxtrot.Text (##Text) │ └── * alpha.Text (##Text) └──
---   Nat └── * alpha.beta.Nat (##Nat)
-namesToCompletionTree :: Names -> CompletionTree
-nameToCompletionTree :: Name -> LabeledDependency -> CompletionTree
-
--- | Crawl the completion tree and return all valid prefix-based
---   completions alongside their Path from the provided prefix, and their
---   full name.
---   
---   E.g. if the term "alpha.beta.gamma.map (#abc)" exists in the
---   completion map, and the query is "beta" the result would be:
---   
---   @<tt> [(["beta", "gamma", "map"], "alpha.beta.gamma.map", TermReferent
---   #abc)] </tt>@
-matchCompletions :: CompletionTree -> Text -> [(Path, Name, LabeledDependency)]
-
--- | Called to resolve additional details for a completion item that the
---   user is considering.
-completionItemResolveHandler :: RequestMessage 'CompletionItemResolve -> (Either ResponseError CompletionItem -> Lsp ()) -> Lsp ()
-
--- | Data which will be provided back to us in the completion resolve
---   handler when the user considers this completion.
-data CompletionItemDetails
-CompletionItemDetails :: LabeledDependency -> Name -> Name -> Uri -> CompletionItemDetails
-[$sel:dep:CompletionItemDetails] :: CompletionItemDetails -> LabeledDependency
-[$sel:relativeName:CompletionItemDetails] :: CompletionItemDetails -> Name
-[$sel:fullyQualifiedName:CompletionItemDetails] :: CompletionItemDetails -> Name
-[$sel:fileUri:CompletionItemDetails] :: CompletionItemDetails -> Uri
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.Completion.CompletionItemDetails
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.Completion.CompletionItemDetails
-
-module Unison.LSP.UCMWorker
-
--- | Watches for state changes in UCM and updates cached LSP state
---   accordingly
-ucmWorker :: TVar PrettyPrintEnvDecl -> TVar NamesWithHistory -> TVar (NameSearch Transaction) -> STM (Branch IO) -> STM Absolute -> Lsp ()
-
-module Unison.LSP.CodeLens
-data TypeSigInsertion
-TypeSigInsertion :: Range -> Text -> Uri -> TypeSigInsertion
-[$sel:range:TypeSigInsertion] :: TypeSigInsertion -> Range
-[$sel:typeSignature:TypeSigInsertion] :: TypeSigInsertion -> Text
-[$sel:fileUri:TypeSigInsertion] :: TypeSigInsertion -> Uri
-
--- | Computes code actions for a document.
-codeLensHandler :: RequestMessage 'TextDocumentCodeLens -> (Either ResponseError (List CodeLens) -> Lsp ()) -> Lsp ()
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.CodeLens.TypeSigInsertion
-instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.CodeLens.TypeSigInsertion
-
-module Unison.LSP.CodeAction
-
--- | Computes code actions for a document.
-codeActionHandler :: RequestMessage 'TextDocumentCodeAction -> (Either ResponseError (ResponseResult 'TextDocumentCodeAction) -> Lsp ()) -> Lsp ()
-
-module Unison.LSP
-getLspPort :: IO String
-
--- | Spawn an LSP server on the configured port.
-spawnLsp :: Codebase IO Symbol Ann -> Runtime Symbol -> STM (Branch IO) -> STM Absolute -> IO ()
-serverDefinition :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> ServerDefinition Config
-
--- | Initialize any context needed by the LSP server
-lspDoInitialize :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> LanguageContextEnv Config -> Message 'Initialize -> IO (Either ResponseError Env)
-
--- | LSP request handlers that don't register/unregister dynamically
-lspStaticHandlers :: Handlers Lsp
-
--- | LSP request handlers
-lspRequestHandlers :: SMethodMap (ClientMessageHandler Lsp 'Request)
-
--- | LSP notification handlers
-lspNotificationHandlers :: SMethodMap (ClientMessageHandler Lsp 'Notification)
-
--- | A natural transformation into IO, required by the LSP lib.
-lspInterpretHandler :: Env -> Lsp <~> IO
-lspOptions :: Options
 
 
 -- | This module contains Share API calls related to projects, wrapped in

@@ -621,6 +621,21 @@ instance GHC.Show.Show Unison.Codebase.Patch.PatchDiff
 instance GHC.Classes.Ord Unison.Codebase.Patch.PatchDiff
 instance GHC.Classes.Eq Unison.Codebase.Patch.PatchDiff
 
+
+-- | This module contains functionality related to computing a "unique type
+--   guid lookup" function, which resolves a name to a unique type's GUID
+--   to reuse.
+module Unison.Codebase.UniqueTypeGuidLookup
+
+-- | <tt>loadUniqueTypeGuid loadNamespaceAtPath path name</tt> looks up the
+--   GUID associated with the unique type named <tt>name</tt> at child
+--   namespace <tt>path</tt> in the root namespace. If there are multiple
+--   such types, an arbitrary one is chosen.
+--   
+--   For (potential) efficiency, this function accepts an argument that
+--   loads a namespace at a path, which may be backed by a cache.
+loadUniqueTypeGuid :: ([NameSegment] -> Transaction (Maybe (Branch Transaction))) -> [NameSegment] -> NameSegment -> Transaction (Maybe Text)
+
 module Unison.Codebase.Verbosity
 data Verbosity
 Verbose :: Verbosity
@@ -2715,21 +2730,21 @@ prettySignaturesAlt' :: Var v => PrettyPrintEnv -> [([HashQualified Name], Type 
 runPretty :: Var v => PrettyPrintEnv -> Reader (PrettyPrintEnv, Set v) a -> a
 
 module Unison.Syntax.TypeParser
-type TypeP v = P v (Type v Ann)
-valueType :: Var v => TypeP v
-computationType :: Var v => TypeP v
-valueTypeLeaf :: Var v => TypeP v
-typeAtom :: Var v => TypeP v
-type1 :: Var v => TypeP v
-type2a :: Var v => TypeP v
-delayed :: Var v => TypeP v
-type2 :: Var v => TypeP v
-effect :: Var v => TypeP v
-effectList :: Var v => TypeP v
-sequenceTyp :: Var v => TypeP v
-tupleOrParenthesizedType :: Var v => TypeP v -> TypeP v
-arrow :: Var v => TypeP v -> TypeP v
-forall :: Var v => TypeP v -> TypeP v
+type TypeP v m = P v m (Type v Ann)
+valueType :: (Monad m, Var v) => TypeP v m
+computationType :: (Monad m, Var v) => TypeP v m
+valueTypeLeaf :: (Monad m, Var v) => TypeP v m
+typeAtom :: (Monad m, Var v) => TypeP v m
+type1 :: (Monad m, Var v) => TypeP v m
+type2a :: (Monad m, Var v) => TypeP v m
+delayed :: (Monad m, Var v) => TypeP v m
+type2 :: (Monad m, Var v) => TypeP v m
+effect :: (Monad m, Var v) => TypeP v m
+effectList :: (Monad m, Var v) => TypeP v m
+sequenceTyp :: (Monad m, Var v) => TypeP v m
+tupleOrParenthesizedType :: Var v => TypeP v m -> TypeP v m
+arrow :: (Monad m, Var v) => TypeP v m -> TypeP v m
+forall :: Var v => TypeP v m -> TypeP v m
 
 module Unison.Syntax.TermPrinter
 emptyAc :: AmbientContext
@@ -3013,57 +3028,6 @@ prettyLiteral :: Var v => Literal (TypeVar b v) v loc -> Pretty ColorText
 instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.Literal.Literal vt v loc)
 
 module Unison.Syntax.TermParser
-watch :: Show a => String -> a -> a
-type TermP v = P v (Term v Ann)
-term :: Var v => TermP v
-term2 :: Var v => TermP v
-term3 :: Var v => TermP v
-keywordBlock :: Var v => TermP v
-rewriteBlock :: Var v => TermP v
-typeLink' :: Var v => P v (Token Reference)
-termLink' :: Var v => P v (Token Referent)
-link' :: Var v => P v (Either (Token Reference) (Token Referent))
-link :: Var v => TermP v
-blockTerm :: Var v => TermP v
-match :: Var v => TermP v
-matchCases1 :: Var v => Token () -> P v (NonEmpty (Int, MatchCase Ann (Term v Ann)))
-matchCase :: Var v => P v (Int, [MatchCase Ann (Term v Ann)])
-parsePattern :: forall v. Var v => P v (Pattern Ann, [(Ann, v)])
-lam :: Var v => TermP v -> TermP v
-letBlock :: Var v => TermP v
-handle :: Var v => TermP v
-ifthen :: Var v => TermP v
-checkCasesArities :: (Ord v, Annotated a) => NonEmpty (Int, a) -> P v (Int, NonEmpty a)
-lamCase :: Var v => TermP v
-text :: Var v => TermP v
-char :: Var v => TermP v
-boolean :: Var v => TermP v
-list :: Var v => TermP v -> TermP v
-hashQualifiedPrefixTerm :: Var v => TermP v
-hashQualifiedInfixTerm :: Var v => TermP v
-quasikeyword :: Ord v => String -> P v (Token ())
-symbolyQuasikeyword :: Ord v => String -> P v (Token ())
-resolveHashQualified :: Var v => Token (HashQualified Name) -> TermP v
-termLeaf :: forall v. Var v => TermP v
-doc2Block :: forall v. Var v => TermP v
-docBlock :: Var v => TermP v
-data UnbreakCase
-LineEnds :: UnbreakCase
-StartsIndented :: UnbreakCase
-StartsUnindented :: UnbreakCase
-docNormalize :: (Ord v, Show v) => Term v a -> Term v a
-delayQuote :: Var v => TermP v
-delayBlock :: Var v => TermP v
-bang :: Var v => TermP v
-var :: Var v => Token v -> Term v Ann
-seqOp :: Ord v => P v SeqOp
-term4 :: Var v => TermP v
-infixAppOrBooleanOp :: Var v => TermP v
-typedecl :: Var v => P v (Token v, Type v Ann)
-verifyRelativeVarName :: Var v => P v (Token v) -> P v (Token v)
-verifyRelativeName :: Ord v => P v (Token Name) -> P v (Token Name)
-verifyRelativeName' :: Ord v => Token Name -> P v ()
-destructuringBind :: forall v. Var v => P v (Ann, Term v Ann -> Term v Ann)
 
 -- | Rules for the annotation of the resulting binding is as follows: * If
 --   the binding has a type signature, the top level scope of the
@@ -3072,53 +3036,42 @@ destructuringBind :: forall v. Var v => P v (Ann, Term v Ann -> Term v Ann)
 --   contains the entire lhs (including the name of the binding) and the
 --   entire body. * If the binding is a lambda, the lambda node includes
 --   the entire LHS of the binding, including the name as well.
-binding :: forall v. Var v => P v ((Ann, v), Term v Ann)
-customFailure :: MonadParsec e s m => e -> m a
-block :: forall v. Var v => String -> TermP v
-importp :: Ord v => P v [(Name, Name)]
-data BlockElement v
-Binding :: ((Ann, v), Term v Ann) -> BlockElement v
-DestructuringBind :: (Ann, Term v Ann -> Term v Ann) -> BlockElement v
-Action :: Term v Ann -> BlockElement v
-imports :: Var v => P v (NamesWithHistory, [(v, v)])
+binding :: forall m v. (Monad m, Var v) => P v m ((Ann, v), Term v Ann)
+blockTerm :: (Monad m, Var v) => TermP v m
+doc2Block :: forall m v. (Monad m, Var v) => TermP v m
+imports :: (Monad m, Var v) => P v m (NamesWithHistory, [(v, v)])
+lam :: Var v => TermP v m -> TermP v m
 substImports :: Var v => NamesWithHistory -> [(v, v)] -> Term v Ann -> Term v Ann
-block' :: Var v => IsTop -> String -> P v (Token ()) -> P v (Token ()) -> TermP v
-block'' :: forall v b. Var v => IsTop -> Bool -> String -> P v (Token ()) -> P v b -> TermP v
-number :: Var v => TermP v
-bytes :: Var v => TermP v
-number' :: Ord v => (Token Int64 -> a) -> (Token Word64 -> a) -> (Token Double -> a) -> P v a
-tupleOrParenthesizedTerm :: Var v => TermP v
+term :: (Monad m, Var v) => TermP v m
+verifyRelativeVarName :: Var v => P v m (Token v) -> P v m (Token v)
 instance GHC.Show.Show Unison.Syntax.TermParser.UnbreakCase
 instance GHC.Classes.Eq Unison.Syntax.TermParser.UnbreakCase
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Syntax.TermParser.BlockElement v)
 
+module Unison.Syntax.DeclParser
+declarations :: (Monad m, Var v) => P v m (Map v (DataDeclaration v Ann), Map v (EffectDeclaration v Ann), Accessors v)
+
 module Unison.Syntax.FileParser
-resolutionFailures :: Ord v => [ResolutionFailure v Ann] -> P v x
-file :: forall v. Var v => P v (UnisonFile v Ann)
+resolutionFailures :: Ord v => [ResolutionFailure v Ann] -> P v m x
+file :: forall m v. (Monad m, Var v) => P v m (UnisonFile v Ann)
 
 -- | Final validations and sanity checks to perform before finishing
 --   parsing.
-validateUnisonFile :: forall v. Var v => UnisonFile v Ann -> P v ()
+validateUnisonFile :: Var v => UnisonFile v Ann -> P v m ()
 
 -- | Because types and abilities can introduce their own constructors and
 --   fields it's difficult to detect all duplicate terms during parsing
 --   itself. Here we collect all terms and constructors and verify that no
 --   duplicates exist in the file, triggering an error if needed.
-checkForDuplicateTermsAndConstructors :: forall v. Ord v => UnisonFile v Ann -> P v ()
+checkForDuplicateTermsAndConstructors :: forall m v. Ord v => UnisonFile v Ann -> P v m ()
 data Stanza v term
 WatchBinding :: WatchKind -> Ann -> ((Ann, v), term) -> Stanza v term
 WatchExpression :: WatchKind -> Text -> Ann -> term -> Stanza v term
 Binding :: ((Ann, v), term) -> Stanza v term
 Bindings :: [((Ann, v), term)] -> Stanza v term
 getVars :: Var v => Stanza v term -> [v]
-stanza :: Var v => P v (Stanza v (Term v Ann))
-watched :: Var v => P v (WatchKind, Text, Ann)
-type Accessors v = [(Token v, [(Token v, Type v Ann)])]
-declarations :: Var v => P v (Map v (DataDeclaration v Ann), Map v (EffectDeclaration v Ann), Accessors v)
-modifier :: Var v => P v (Maybe (Token Modifier))
-declaration :: Var v => P v (Either (v, DataDeclaration v Ann, Accessors v) (v, EffectDeclaration v Ann))
-dataDeclaration :: forall v. Var v => Maybe (Token Modifier) -> P v (v, DataDeclaration v Ann, Accessors v)
-effectDeclaration :: Var v => Maybe (Token Modifier) -> P v (v, EffectDeclaration v Ann)
+stanza :: (Monad m, Var v) => P v m (Stanza v (Term v Ann))
+watched :: (Monad m, Var v) => P v m (WatchKind, Text, Ann)
 instance GHC.Base.Functor (Unison.Syntax.FileParser.Stanza v)
 instance Data.Traversable.Traversable (Unison.Syntax.FileParser.Stanza v)
 instance Data.Foldable.Foldable (Unison.Syntax.FileParser.Stanza v)
@@ -3583,6 +3536,7 @@ ResolvedNameNotFound :: v -> loc -> Name -> CompilerBug v loc
 TypecheckerBug :: CompilerBug v loc -> CompilerBug v loc
 result :: Result notes a -> Maybe a
 pattern Result :: w -> Maybe a -> MaybeT (WriterT w Identity) a
+makeResult :: Applicative m => notes -> Maybe a -> ResultT notes m a
 isSuccess :: Functor f => ResultT note f a -> f Bool
 isFailure :: Functor f => ResultT note f a -> f Bool
 toMaybe :: Functor f => ResultT note f a -> f (Maybe a)
@@ -3820,22 +3774,45 @@ instance GHC.Show.Show Unison.Builtin.BuiltinDSL
 
 module Unison.Parsers
 unsafeGetRightFrom :: (Var v, Show v) => String -> Either (Err v) a -> a
-parse :: Var v => P v a -> String -> ParsingEnv -> Either (Err v) a
-parseTerm :: Var v => String -> ParsingEnv -> Either (Err v) (Term v Ann)
-parseType :: Var v => String -> ParsingEnv -> Either (Err v) (Type v Ann)
-parseFile :: Var v => FilePath -> String -> ParsingEnv -> Either (Err v) (UnisonFile v Ann)
-readAndParseFile :: Var v => ParsingEnv -> FilePath -> IO (Either (Err v) (UnisonFile v Ann))
-unsafeParseTerm :: Var v => String -> ParsingEnv -> Term v Ann
-unsafeReadAndParseFile :: ParsingEnv -> FilePath -> IO (UnisonFile Symbol Ann)
+parse :: (Monad m, Var v) => P v m a -> String -> ParsingEnv m -> m (Either (Err v) a)
+parseTerm :: (Monad m, Var v) => String -> ParsingEnv m -> m (Either (Err v) (Term v Ann))
+parseType :: (Monad m, Var v) => String -> ParsingEnv m -> m (Either (Err v) (Type v Ann))
+parseFile :: (Monad m, Var v) => FilePath -> String -> ParsingEnv m -> m (Either (Err v) (UnisonFile v Ann))
+readAndParseFile :: (MonadIO m, Var v) => ParsingEnv m -> FilePath -> m (Either (Err v) (UnisonFile v Ann))
+unsafeParseTerm :: (Monad m, Var v) => String -> ParsingEnv m -> m (Term v Ann)
+unsafeReadAndParseFile :: ParsingEnv IO -> FilePath -> IO (UnisonFile Symbol Ann)
 unsafeParseFileBuiltinsOnly :: FilePath -> IO (UnisonFile Symbol Ann)
-unsafeParseFile :: String -> ParsingEnv -> UnisonFile Symbol Ann
+unsafeParseFile :: Monad m => String -> ParsingEnv m -> m (UnisonFile Symbol Ann)
 
 module Unison.FileParsers
-parseAndSynthesizeFile :: (Var v, Monad m) => [Type v] -> (Set Reference -> m (TypeLookup v Ann)) -> ParsingEnv -> FilePath -> Text -> ResultT (Seq (Note v Ann)) m (Either (UnisonFile v Ann) (TypecheckedUnisonFile v Ann))
-synthesizeFile' :: forall v. Var v => [Type v] -> TypeLookup v Ann -> UnisonFile v -> Result (Seq (Note v Ann)) (TypecheckedUnisonFile v Ann)
+
+-- | Should we use type-directed name resolution?
+data ShouldUseTndr m
+ShouldUseTndr'No :: ShouldUseTndr m
+ShouldUseTndr'Yes :: ParsingEnv m -> ShouldUseTndr m
+
+-- | Compute a typechecking environment, given:
+--   
+--   <ul>
+--   <li>Whether or not to use type-directed name resolution during type
+--   checking.</li>
+--   <li>The abilities that are considered to already have ambient
+--   handlers.</li>
+--   <li>A function to compute a <tt>TypeLookup</tt> for the given set of
+--   type- or term-references.</li>
+--   <li>The parsing environment that was used to parse the parsed Unison
+--   file.</li>
+--   <li>The parsed Unison file for which the typechecking environment is
+--   applicable.</li>
+--   </ul>
+computeTypecheckingEnvironment :: (Var v, Monad m) => ShouldUseTndr m -> [Type v] -> (Set Reference -> m (TypeLookup v Ann)) -> UnisonFile v -> m (Env v Ann)
+synthesizeFile :: forall m v. (Monad m, Var v) => Env v Ann -> UnisonFile v -> ResultT (Seq (Note v Ann)) m (TypecheckedUnisonFile v Ann)
 
 module Unison.Runtime.IOSource
 debug :: Bool
+parsingEnv :: ParsingEnv Identity
+typecheckingEnv :: Env Symbol Ann
+parsedFile :: UnisonFile Symbol Ann
 typecheckedFile :: TypecheckedUnisonFile Symbol Ann
 typecheckedFile' :: TypecheckedUnisonFile Symbol Ann
 typecheckedFileTerms :: Map Symbol Reference
@@ -4017,13 +3994,13 @@ pattern ConsoleTextUnderline :: Term (F typeVar typeAnn patternAnn) v a -> Term 
 pattern ConsoleTextInvert :: Term (F typeVar typeAnn patternAnn) v a -> Term (F typeVar typeAnn patternAnn) v a
 constructorNamed :: Reference -> Text -> ConstructorId
 constructorName :: Reference -> ConstructorId -> Text
+sourceString :: String
 source :: Text
 type Note = Note Symbol Ann
 type TFile = TypecheckedUnisonFile Symbol Ann
 type SynthResult = Result (Seq Note) (Either (UnisonFile Symbol Ann) TFile)
 type EitherResult = Either String TFile
 showNotes :: Foldable f => String -> Env -> f Note -> String
-decodeResult :: String -> SynthResult -> EitherResult
 ppEnv :: PrettyPrintEnv
 
 module Unison.Codebase.SqliteCodebase.Branch.Dependencies
