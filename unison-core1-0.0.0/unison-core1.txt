@@ -203,6 +203,7 @@ isPrefixOf :: Name -> Name -> Bool
 --   
 --   <i>O(n)</i>, where <i>n</i> is the number of name segments.
 beginsWithSegment :: Name -> NameSegment -> Bool
+endsWith :: Name -> Name -> Bool
 
 -- | Like <a>endsWithSegments</a>, but accepts a list of name segments in
 --   reverse order.
@@ -1404,6 +1405,7 @@ ANFBlank :: Type
 Float :: Type
 Pattern :: Type
 Irrelevant :: Type
+Delay :: Type
 data InferenceType
 Ability :: InferenceType
 Input :: InferenceType
@@ -1840,8 +1842,8 @@ pattern OverappliedBinaryAppPred' :: Term2 vt at ap v a -> Term2 vt at ap v a ->
 pattern Ann' :: Term (F typeVar typeAnn patternAnn) v a -> Type typeVar typeAnn -> Term (F typeVar typeAnn patternAnn) v a
 pattern List' :: Seq (Term (F typeVar typeAnn patternAnn) v a) -> Term (F typeVar typeAnn patternAnn) v a
 pattern Lam' :: Var v => Subst (F typeVar typeAnn patternAnn) v a -> Term (F typeVar typeAnn patternAnn) v a
-pattern Delay' :: Ord v => Term2 vt at ap v a -> Term2 vt at ap v a
-unDelay :: Ord v => Term2 vt at ap v a -> Maybe (Term2 vt at ap v a)
+pattern Delay' :: Var v => Term2 vt at ap v a -> Term2 vt at ap v a
+unDelay :: Var v => Term2 vt at ap v a -> Maybe (Term2 vt at ap v a)
 pattern LamNamed' :: v -> Term (F typeVar typeAnn patternAnn) v a -> Term (F typeVar typeAnn patternAnn) v a
 pattern LamsNamed' :: [v] -> Term2 vt at ap v a -> Term2 vt at ap v a
 pattern LamsNamedOpt' :: [v] -> Term2 vt at ap v a -> Term2 vt at ap v a
