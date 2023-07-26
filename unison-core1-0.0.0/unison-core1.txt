@@ -2032,15 +2032,19 @@ constructorVars :: DataDeclaration v a -> [v]
 -- | The constructor ids for the given data declaration.
 constructorIds :: DataDeclaration v a -> [ConstructorId]
 declConstructorReferents :: Id -> Decl v a -> [Id]
-declDependencies :: Ord v => Decl v a -> Set Reference
-labeledDeclDependencies :: Ord v => Decl v a -> Set LabeledDependency
+declTypeDependencies :: Ord v => Decl v a -> Set Reference
+labeledDeclTypeDependencies :: Ord v => Decl v a -> Set LabeledDependency
 
 -- | Compute the dependencies of a data declaration, including the type
 --   itself and references for each of its constructors.
 labeledDeclDependenciesIncludingSelf :: Ord v => TypeReference -> Decl v a -> Set LabeledDependency
 declFields :: Var v => Decl v a -> Either [Int] [Int]
-dependencies :: Ord v => DataDeclaration v a -> Set Reference
-labeledDependencies :: Ord v => DataDeclaration v a -> Set LabeledDependency
+
+-- | All references to types mentioned in the given data declaration's
+--   fields/constructors Note: does not include references to the
+--   constructors or the decl itself (unless the decl is self-referential)
+typeDependencies :: Ord v => DataDeclaration v a -> Set Reference
+labeledTypeDependencies :: Ord v => DataDeclaration v a -> Set LabeledDependency
 generateRecordAccessors :: (Semigroup a, Var v) => [(v, a)] -> v -> Reference -> [(v, a, Term v a)]
 
 -- | This converts <a>Reference</a>s it finds that are in the input
