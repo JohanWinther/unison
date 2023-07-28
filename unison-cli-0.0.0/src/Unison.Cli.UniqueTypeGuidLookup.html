@@ -20,23 +20,23 @@
 </span><span id="line-20"></span><span>
 </span><span id="line-21"></span><span class="annot"><a href="Unison.Cli.UniqueTypeGuidLookup.html#loadUniqueTypeGuid"><span class="hs-identifier hs-type">loadUniqueTypeGuid</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Path.Absolute</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Name</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span class="hs-special">)</span><span>
 </span><span id="line-22"></span><span id="loadUniqueTypeGuid"><span class="annot"><span class="annottext">loadUniqueTypeGuid :: Absolute -&gt; Name -&gt; Transaction (Maybe Text)
-</span><a href="Unison.Cli.UniqueTypeGuidLookup.html#loadUniqueTypeGuid"><span class="hs-identifier hs-var hs-var">loadUniqueTypeGuid</span></a></span></span><span> </span><span id="local-6989586621679563601"><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679563601"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span id="local-6989586621679563600"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679563600"><span class="hs-identifier hs-var">name0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="Unison.Cli.UniqueTypeGuidLookup.html#loadUniqueTypeGuid"><span class="hs-identifier hs-var hs-var">loadUniqueTypeGuid</span></a></span></span><span> </span><span id="local-6989586621679560985"><span class="annot"><span class="annottext">Absolute
+</span><a href="#local-6989586621679560985"><span class="hs-identifier hs-var">currentPath</span></a></span></span><span> </span><span id="local-6989586621679560984"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679560984"><span class="hs-identifier hs-var">name0</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-23"></span><span>  </span><span class="hs-comment">-- First, resolve the current path and the (probably/hopefully relative) name of the unique type to the full path</span><span>
 </span><span id="line-24"></span><span>  </span><span class="hs-comment">-- to the unique type, plus its final distinguished name segment.</span><span>
-</span><span id="line-25"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679563599"><span class="annot"><span class="annottext">Seq NameSegment
-</span><a href="#local-6989586621679563599"><span class="hs-identifier hs-var">branchPath</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679563598"><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679563598"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679560983"><span class="annot"><span class="annottext">Seq NameSegment
+</span><a href="#local-6989586621679560983"><span class="hs-identifier hs-var">branchPath</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679560982"><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679560982"><span class="hs-identifier hs-var">name</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-26"></span><span>        </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679563600"><span class="hs-identifier hs-var">name0</span></a></span><span>
+</span><a href="#local-6989586621679560984"><span class="hs-identifier hs-var">name0</span></a></span><span>
 </span><span id="line-27"></span><span>          </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Path'
 </span><span class="hs-identifier hs-var">Path.fromName'</span></span><span>
 </span><span id="line-28"></span><span>          </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall l r o. Resolve l r o =&gt; l -&gt; r -&gt; o
 </span><span class="hs-identifier hs-var">Path.resolve</span></span><span> </span><span class="annot"><span class="annottext">Absolute
-</span><a href="#local-6989586621679563601"><span class="hs-identifier hs-var">currentPath</span></a></span><span>
+</span><a href="#local-6989586621679560985"><span class="hs-identifier hs-var">currentPath</span></a></span><span>
 </span><span id="line-29"></span><span>          </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">Absolute -&gt; Path
 </span><span class="hs-identifier hs-var">Path.unabsolute</span></span><span>
@@ -55,23 +55,23 @@
 </span><span id="line-36"></span><span>  </span><span class="hs-comment">--</span><span>
 </span><span id="line-37"></span><span>  </span><span class="hs-comment">-- This ought to probably lean somewhat on a cache (so long as the caller is aware of the cache, and discrads it at</span><span>
 </span><span id="line-38"></span><span>  </span><span class="hs-comment">-- an appropriate time, such as after the current unison file finishes parsing).</span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679563592"><span class="hs-identifier hs-type">loadBranchAtPath</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Codebase.Branch.Branch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-40"></span><span>      </span><span id="local-6989586621679563592"><span class="annot"><span class="annottext">loadBranchAtPath :: [NameSegment] -&gt; Transaction (Maybe (Branch Transaction))
-</span><a href="#local-6989586621679563592"><span class="hs-identifier hs-var hs-var">loadBranchAtPath</span></a></span></span><span> </span><span id="local-6989586621679563591"><span class="annot"><span class="annottext">[NameSegment]
-</span><a href="#local-6989586621679563591"><span class="hs-identifier hs-var">segments</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-39"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="#local-6989586621679560976"><span class="hs-identifier hs-type">loadBranchAtPath</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">NameSegment</span></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Codebase.Branch.Branch</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Sqlite.Transaction</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>      </span><span id="local-6989586621679560976"><span class="annot"><span class="annottext">loadBranchAtPath :: [NameSegment] -&gt; Transaction (Maybe (Branch Transaction))
+</span><a href="#local-6989586621679560976"><span class="hs-identifier hs-var hs-var">loadBranchAtPath</span></a></span></span><span> </span><span id="local-6989586621679560975"><span class="annot"><span class="annottext">[NameSegment]
+</span><a href="#local-6989586621679560975"><span class="hs-identifier hs-var">segments</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-41"></span><span>        </span><span class="annot"><span class="annottext">Maybe CausalHash
 -&gt; TextPathSegments -&gt; Transaction (Maybe (Branch Transaction))
 </span><span class="hs-identifier hs-var">Operations.loadBranchAtPath</span></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
 </span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">NameSegment -&gt; Text
 </span><span class="hs-identifier hs-var">NameSegment.toText</span></span><span> </span><span class="annot"><span class="annottext">[NameSegment]
-</span><a href="#local-6989586621679563591"><span class="hs-identifier hs-var">segments</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679560975"><span class="hs-identifier hs-var">segments</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-42"></span><span>
 </span><span id="line-43"></span><span>  </span><span class="annot"><span class="annottext">([NameSegment] -&gt; Transaction (Maybe (Branch Transaction)))
 -&gt; [NameSegment] -&gt; NameSegment -&gt; Transaction (Maybe Text)
 </span><span class="hs-identifier hs-var">Codebase.loadUniqueTypeGuid</span></span><span> </span><span class="annot"><span class="annottext">[NameSegment] -&gt; Transaction (Maybe (Branch Transaction))
-</span><a href="#local-6989586621679563592"><span class="hs-identifier hs-var">loadBranchAtPath</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
+</span><a href="#local-6989586621679560976"><span class="hs-identifier hs-var">loadBranchAtPath</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; [a]
 </span><span class="hs-identifier hs-var">Foldable.toList</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Seq</span></span><span> </span><span class="annot"><span class="annottext">Seq NameSegment
-</span><a href="#local-6989586621679563599"><span class="hs-identifier hs-var">branchPath</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">NameSegment
-</span><a href="#local-6989586621679563598"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><a href="#local-6989586621679560983"><span class="hs-identifier hs-var">branchPath</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">NameSegment
+</span><a href="#local-6989586621679560982"><span class="hs-identifier hs-var">name</span></a></span><span>
 </span><span id="line-44"></span></pre></body></html>
