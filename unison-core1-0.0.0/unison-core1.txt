@@ -11,6 +11,7 @@ nameb :: Blank loc -> Maybe String
 data Recorded loc
 Placeholder :: loc -> String -> Recorded loc
 Resolve :: loc -> String -> Recorded loc
+MissingResultPlaceholder :: loc -> Recorded loc
 data Blank loc
 Blank :: Blank loc
 Recorded :: Recorded loc -> Blank loc
@@ -1881,6 +1882,7 @@ watchMaybe :: (Var v, Semigroup a) => Maybe String -> Term v a -> Term v a
 blank :: Ord v => a -> Term2 vt at ap v a
 placeholder :: Ord v => a -> String -> Term2 vt a ap v a
 resolve :: Ord v => at -> ab -> String -> Term2 vt ab ap v at
+missingResult :: Ord v => at -> ab -> Term2 vt ab ap v at
 constructor :: Ord v => a -> ConstructorReference -> Term2 vt at ap v a
 request :: Ord v => a -> ConstructorReference -> Term2 vt at ap v a
 app_ :: Ord v => Term0' vt v -> Term0' vt v -> Term0' vt v
