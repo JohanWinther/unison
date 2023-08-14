@@ -11,125 +11,132 @@
 </span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.ConstructorReference</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">GConstructorReference</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
 </span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Reference</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Reference</span></span><span class="hs-special">)</span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.ANF.html"><span class="hs-identifier">Unison.Runtime.ANF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier">maskTags</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html"><span class="hs-identifier">Unison.Runtime.Foreign</span></a></span><span>
-</span><span id="line-16"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier">Foreign</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-17"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier">HashAlgorithm</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-18"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#maybeUnwrapBuiltin"><span class="hs-identifier">maybeUnwrapBuiltin</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-19"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#maybeUnwrapForeign"><span class="hs-identifier">maybeUnwrapForeign</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.MCode.html"><span class="hs-identifier">Unison.Runtime.MCode</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.MCode.html#CombIx"><span class="hs-identifier">CombIx</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html"><span class="hs-identifier">Unison.Runtime.Stack</span></a></span><span>
-</span><span id="line-23"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier">Closure</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-24"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier">DataC</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-25"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#PApV"><span class="hs-identifier">PApV</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-26"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Term</span></span><span>
-</span><span id="line-28"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">Term</span></span><span class="hs-special">,</span><span>
-</span><span id="line-29"></span><span>    </span><span class="annot"><span class="hs-identifier">app</span></span><span class="hs-special">,</span><span>
-</span><span id="line-30"></span><span>    </span><span class="annot"><span class="hs-identifier">apps'</span></span><span class="hs-special">,</span><span>
-</span><span id="line-31"></span><span>    </span><span class="annot"><span class="hs-identifier">boolean</span></span><span class="hs-special">,</span><span>
-</span><span id="line-32"></span><span>    </span><span class="annot"><span class="hs-identifier">builtin</span></span><span class="hs-special">,</span><span>
-</span><span id="line-33"></span><span>    </span><span class="annot"><span class="hs-identifier">char</span></span><span class="hs-special">,</span><span>
-</span><span id="line-34"></span><span>    </span><span class="annot"><span class="hs-identifier">constructor</span></span><span class="hs-special">,</span><span>
-</span><span id="line-35"></span><span>    </span><span class="annot"><span class="hs-identifier">float</span></span><span class="hs-special">,</span><span>
-</span><span id="line-36"></span><span>    </span><span class="annot"><span class="hs-identifier">int</span></span><span class="hs-special">,</span><span>
-</span><span id="line-37"></span><span>    </span><span class="annot"><span class="hs-identifier">list</span></span><span class="hs-special">,</span><span>
-</span><span id="line-38"></span><span>    </span><span class="annot"><span class="hs-identifier">list'</span></span><span class="hs-special">,</span><span>
-</span><span id="line-39"></span><span>    </span><span class="annot"><span class="hs-identifier">nat</span></span><span class="hs-special">,</span><span>
-</span><span id="line-40"></span><span>    </span><span class="annot"><span class="hs-identifier">ref</span></span><span class="hs-special">,</span><span>
-</span><span id="line-41"></span><span>    </span><span class="annot"><span class="hs-identifier">termLink</span></span><span class="hs-special">,</span><span>
-</span><span id="line-42"></span><span>    </span><span class="annot"><span class="hs-identifier">text</span></span><span class="hs-special">,</span><span>
-</span><span id="line-43"></span><span>    </span><span class="annot"><span class="hs-identifier">typeLink</span></span><span class="hs-special">,</span><span>
-</span><span id="line-44"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">LamNamed'</span></span><span class="hs-special">,</span><span>
-</span><span id="line-45"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Term</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Term</span></span><span>
-</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Type</span></span><span>
-</span><span id="line-48"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">anyRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-49"></span><span>    </span><span class="annot"><span class="hs-identifier">booleanRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-50"></span><span>    </span><span class="annot"><span class="hs-identifier">charRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-51"></span><span>    </span><span class="annot"><span class="hs-identifier">floatRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-52"></span><span>    </span><span class="annot"><span class="hs-identifier">intRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-53"></span><span>    </span><span class="annot"><span class="hs-identifier">listRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-54"></span><span>    </span><span class="annot"><span class="hs-identifier">natRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-55"></span><span>    </span><span class="annot"><span class="hs-identifier">termLinkRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-56"></span><span>    </span><span class="annot"><span class="hs-identifier">typeLinkRef</span></span><span class="hs-special">,</span><span>
-</span><span id="line-57"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Bytes</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">By</span></span><span>
-</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lit</span></span><span class="hs-special">)</span><span>
-</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Util.Text.html"><span class="hs-identifier">Unison.Util.Text</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Text</span></span><span>
-</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Var</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Var</span></span><span class="hs-special">)</span><span>
-</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unsafe.Coerce</span></span><span> </span><span class="hs-comment">-- for Int -&gt; Double</span><span>
-</span><span id="line-63"></span><span>
-</span><span id="line-64"></span><span id="local-6989586621680971195"><span class="annot"><a href="Unison.Runtime.Decompile.html#con"><span class="hs-identifier hs-type">con</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971195"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971195"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
-</span><span id="line-65"></span><span id="con"><span class="annot"><span class="annottext">con :: forall v. Var v =&gt; Reference -&gt; Word64 -&gt; Term v ()
-</span><a href="Unison.Runtime.Decompile.html#con"><span class="hs-identifier hs-var hs-var">con</span></a></span></span><span> </span><span id="local-6989586621680970978"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970978"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span id="local-6989586621680970977"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970977"><span class="hs-identifier hs-var">ct</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap.
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Referent</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">Ref</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.ANF.html"><span class="hs-identifier">Unison.Runtime.ANF</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier">maskTags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html"><span class="hs-identifier">Unison.Runtime.Foreign</span></a></span><span>
+</span><span id="line-17"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier">Foreign</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-18"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier">HashAlgorithm</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-19"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#maybeUnwrapBuiltin"><span class="hs-identifier">maybeUnwrapBuiltin</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-20"></span><span>    </span><span class="annot"><a href="Unison.Runtime.Foreign.html#maybeUnwrapForeign"><span class="hs-identifier">maybeUnwrapForeign</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.MCode.html"><span class="hs-identifier">Unison.Runtime.MCode</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.MCode.html#CombIx"><span class="hs-identifier">CombIx</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html"><span class="hs-identifier">Unison.Runtime.Stack</span></a></span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier">Closure</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-25"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier">DataC</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-26"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#PApV"><span class="hs-identifier">PApV</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Term</span></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">Term</span></span><span class="hs-special">,</span><span>
+</span><span id="line-30"></span><span>    </span><span class="annot"><span class="hs-identifier">app</span></span><span class="hs-special">,</span><span>
+</span><span id="line-31"></span><span>    </span><span class="annot"><span class="hs-identifier">apps'</span></span><span class="hs-special">,</span><span>
+</span><span id="line-32"></span><span>    </span><span class="annot"><span class="hs-identifier">boolean</span></span><span class="hs-special">,</span><span>
+</span><span id="line-33"></span><span>    </span><span class="annot"><span class="hs-identifier">builtin</span></span><span class="hs-special">,</span><span>
+</span><span id="line-34"></span><span>    </span><span class="annot"><span class="hs-identifier">char</span></span><span class="hs-special">,</span><span>
+</span><span id="line-35"></span><span>    </span><span class="annot"><span class="hs-identifier">constructor</span></span><span class="hs-special">,</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><span class="hs-identifier">float</span></span><span class="hs-special">,</span><span>
+</span><span id="line-37"></span><span>    </span><span class="annot"><span class="hs-identifier">int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-38"></span><span>    </span><span class="annot"><span class="hs-identifier">list</span></span><span class="hs-special">,</span><span>
+</span><span id="line-39"></span><span>    </span><span class="annot"><span class="hs-identifier">list'</span></span><span class="hs-special">,</span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><span class="hs-identifier">nat</span></span><span class="hs-special">,</span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><span class="hs-identifier">ref</span></span><span class="hs-special">,</span><span>
+</span><span id="line-42"></span><span>    </span><span class="annot"><span class="hs-identifier">termLink</span></span><span class="hs-special">,</span><span>
+</span><span id="line-43"></span><span>    </span><span class="annot"><span class="hs-identifier">text</span></span><span class="hs-special">,</span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><span class="hs-identifier">typeLink</span></span><span class="hs-special">,</span><span>
+</span><span id="line-45"></span><span>    </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><span class="hs-identifier">LamNamed'</span></span><span class="hs-special">,</span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Term</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Term</span></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Type</span></span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="hs-identifier">anyRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><span class="hs-identifier">booleanRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><span class="hs-identifier">charRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-52"></span><span>    </span><span class="annot"><span class="hs-identifier">floatRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-53"></span><span>    </span><span class="annot"><span class="hs-identifier">intRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-54"></span><span>    </span><span class="annot"><span class="hs-identifier">listRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-55"></span><span>    </span><span class="annot"><span class="hs-identifier">natRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-56"></span><span>    </span><span class="annot"><span class="hs-identifier">termLinkRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-57"></span><span>    </span><span class="annot"><span class="hs-identifier">typeLinkRef</span></span><span class="hs-special">,</span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Bytes</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">By</span></span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Util.Pretty</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lit</span></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Unison.Util.Text.html"><span class="hs-identifier">Unison.Util.Text</span></a></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Text</span></span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Var</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Var</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unsafe.Coerce</span></span><span> </span><span class="hs-comment">-- for Int -&gt; Double</span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span id="local-6989586621680976104"><span class="annot"><a href="Unison.Runtime.Decompile.html#con"><span class="hs-identifier hs-type">con</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680976104"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976104"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-66"></span><span id="con"><span class="annot"><span class="annottext">con :: forall v. Var v =&gt; Reference -&gt; Word64 -&gt; Term v ()
+</span><a href="Unison.Runtime.Decompile.html#con"><span class="hs-identifier hs-var hs-var">con</span></a></span></span><span> </span><span id="local-6989586621680975884"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975884"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span id="local-6989586621680975883"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975883"><span class="hs-identifier hs-var">ct</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap.
 Ord v =&gt;
 a -&gt; ConstructorReference -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">constructor</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall r. r -&gt; Word64 -&gt; GConstructorReference r
 </span><span class="hs-identifier hs-var">ConstructorReference</span></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970978"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680975884"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970977"><span class="hs-identifier hs-var">ct</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-66"></span><span>
-</span><span id="line-67"></span><span id="local-6989586621680971172"><span class="annot"><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-type">err</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680971172"><span class="hs-identifier hs-type">a</span></a></span></span><span>
-</span><span id="line-68"></span><span id="err"><span class="annot"><span class="annottext">err :: forall a. String -&gt; Either Error a
+</span><a href="#local-6989586621680975883"><span class="hs-identifier hs-var">ct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>
+</span><span id="line-68"></span><span id="local-6989586621680976081"><span class="annot"><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-type">err</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680976081"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-69"></span><span id="err"><span class="annot"><span class="annottext">err :: forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><span class="hs-identifier hs-var">Left</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s. (IsString s, ListLike s Char) =&gt; s -&gt; Pretty s
 </span><span class="hs-identifier hs-var">lit</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a. IsString a =&gt; String -&gt; a
 </span><span class="hs-identifier hs-var">fromString</span></span><span>
-</span><span id="line-69"></span><span>
-</span><span id="line-70"></span><span id="local-6989586621680971157"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-type">decompile</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-71"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971157"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
-</span><span id="line-72"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971157"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-73"></span><span>  </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier hs-type">Closure</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-74"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971157"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
-</span><span id="line-75"></span><span id="decompile"><span class="annot"><span class="annottext">decompile :: forall v.
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span id="local-6989586621680976066"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-type">decompile</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-72"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680976066"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976066"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-75"></span><span>  </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier hs-type">Closure</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-76"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976066"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
+</span><span id="line-77"></span><span id="decompile"><span class="annot"><span class="annottext">decompile :: forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Closure -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var hs-var">decompile</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680970923"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970923"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
-</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680970922"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970922"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-76"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970923"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Closure
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var hs-var">decompile</span></a></span></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680975829"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975829"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
+</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680975828"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975828"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975829"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">booleanRef</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-77"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Bool -&gt; Term2 vt at ap v a
+</span><span id="line-79"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Bool -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">boolean</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Either Error Bool
 </span><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var">tag2bool</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970922"><span class="hs-identifier hs-var">ct</span></a></span><span>
-</span><span id="line-78"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680970919"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970919"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
-</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680970918"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970918"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span id="local-6989586621680970917"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970917"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-79"></span><span>  </span><span class="annot"><span class="annottext">forall v.
+</span><a href="#local-6989586621680975828"><span class="hs-identifier hs-var">ct</span></a></span><span>
+</span><span id="line-80"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680975825"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975825"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
+</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680975824"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975824"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span id="local-6989586621680975823"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680975823"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-81"></span><span>  </span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
 Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
 </span><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-var">decompileUnboxed</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970919"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970918"><span class="hs-identifier hs-var">ct</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970917"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-80"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680970915"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970915"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680970914"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970914"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span id="local-6989586621680970913"><span class="annot"><span class="annottext">Closure
-</span><a href="#local-6989586621680970913"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-81"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970914"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680975825"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975824"><span class="hs-identifier hs-var">ct</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680975823"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-82"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680975821"><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975821"><span class="hs-identifier hs-var">backref</span></a></span></span><span> </span><span id="local-6989586621680975820"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975820"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680975819"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975819"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-special">[</span><span id="local-6989586621680975818"><span class="annot"><span class="annottext">Closure
+</span><a href="#local-6989586621680975818"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975819"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">anyRef</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-82"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap.
+</span><span id="line-84"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap.
 Ord v =&gt;
 a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">app</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Text -&gt; Term2 vt at ap v a
@@ -137,199 +144,220 @@ a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a
 </span><span class="hs-string">&quot;Any.Any&quot;</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Closure -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970915"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Closure
-</span><a href="#local-6989586621680970913"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-83"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680970912"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970912"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680970911"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970911"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
-</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680970910"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970910"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621680970909"><span class="annot"><span class="annottext">[Closure]
-</span><a href="#local-6989586621680970909"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-84"></span><span>  </span><span class="annot"><span class="annottext">forall v a vt at ap.
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Closure
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975821"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975820"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Closure
+</span><a href="#local-6989586621680975818"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-85"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680975817"><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975817"><span class="hs-identifier hs-var">backref</span></a></span></span><span> </span><span id="local-6989586621680975816"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975816"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span id="local-6989586621680975815"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975815"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word64 -&gt; Word64
+</span><a href="Unison.Runtime.ANF.html#maskTags"><span class="hs-identifier hs-var">maskTags</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span id="local-6989586621680975814"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975814"><span class="hs-identifier hs-var">ct</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621680975813"><span class="annot"><span class="annottext">[Closure]
+</span><a href="#local-6989586621680975813"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-86"></span><span>  </span><span class="annot"><span class="annottext">forall v a vt at ap.
 (Ord v, Semigroup a) =&gt;
 Term2 vt at ap v a -&gt; [Term2 vt at ap v a] -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">apps'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v. Var v =&gt; Reference -&gt; Word64 -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#con"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970911"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970910"><span class="hs-identifier hs-var">ct</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621680975815"><span class="hs-identifier hs-var">rf</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975814"><span class="hs-identifier hs-var">ct</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Traversable t, Applicative f) =&gt;
 (a -&gt; f b) -&gt; t a -&gt; f (t b)
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Closure -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970912"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Closure]
-</span><a href="#local-6989586621680970909"><span class="hs-identifier hs-var">bs</span></a></span><span>
-</span><span id="line-85"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680970907"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970907"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#PApV"><span class="hs-identifier hs-type">PApV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.MCode.html#CIx"><span class="hs-identifier hs-type">CIx</span></a></span><span> </span><span id="local-6989586621680970905"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970905"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span id="local-6989586621680970904"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970904"><span class="hs-identifier hs-var">rt</span></a></span></span><span> </span><span id="local-6989586621680970903"><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970903"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621680970902"><span class="annot"><span class="annottext">[Closure]
-</span><a href="#local-6989586621680970902"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span>
-</span><span id="line-86"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970901"><span class="annot"><span class="annottext">Term v ()
-</span><a href="#local-6989586621680970901"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970907"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970904"><span class="hs-identifier hs-var">rt</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970903"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-87"></span><span>      </span><span class="annot"><span class="annottext">forall v. Var v =&gt; Term0 v -&gt; Term0 v
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Closure
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975817"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975816"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Closure]
+</span><a href="#local-6989586621680975813"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><span id="line-87"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680975811"><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975811"><span class="hs-identifier hs-var">backref</span></a></span></span><span> </span><span id="local-6989586621680975810"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975810"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#PApV"><span class="hs-identifier hs-type">PApV</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.MCode.html#CIx"><span class="hs-identifier hs-type">CIx</span></a></span><span> </span><span id="local-6989586621680975808"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975808"><span class="hs-identifier hs-var">rf</span></a></span></span><span> </span><span id="local-6989586621680975807"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975807"><span class="hs-identifier hs-var">rt</span></a></span></span><span> </span><span id="local-6989586621680975806"><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975806"><span class="hs-identifier hs-var">k</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span id="local-6989586621680975805"><span class="annot"><span class="annottext">[Closure]
+</span><a href="#local-6989586621680975805"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975804"><span class="annot"><span class="annottext">Term v ()
+</span><a href="#local-6989586621680975804"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975810"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975807"><span class="hs-identifier hs-var">rt</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975806"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-89"></span><span>      </span><span class="annot"><span class="annottext">forall v. Var v =&gt; Term0 v -&gt; Term0 v
 </span><span class="hs-identifier hs-var">Term.etaReduceEtaVars</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v. Var v =&gt; Term v () -&gt; [Term v ()] -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#substitute"><span class="hs-identifier hs-var">substitute</span></a></span><span> </span><span class="annot"><span class="annottext">Term v ()
-</span><a href="#local-6989586621680970901"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621680975804"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><span id="line-90"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) (f :: * -&gt; *) a b.
 (Traversable t, Applicative f) =&gt;
 (a -&gt; f b) -&gt; t a -&gt; f (t b)
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Closure -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970907"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Closure]
-</span><a href="#local-6989586621680970902"><span class="hs-identifier hs-var">bs</span></a></span><span>
-</span><span id="line-88"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970903"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Closure
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975811"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975810"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Closure]
+</span><a href="#local-6989586621680975805"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><span id="line-91"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975806"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-number">0</span></span><span class="hs-special">,</span><span>
-</span><span id="line-89"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="annottext">Term v ()
+</span><span id="line-92"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="annottext">Term v ()
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970907"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><a href="#local-6989586621680970904"><span class="hs-identifier hs-var">rt</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975810"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975807"><span class="hs-identifier hs-var">rt</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-90"></span><span>      </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+</span><span id="line-93"></span><span>      </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;cannot decompile an application to a local recursive binding&quot;</span></span><span>
-</span><span id="line-91"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span id="line-94"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-92"></span><span>      </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+</span><span id="line-95"></span><span>      </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;reference to unknown combinator: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970905"><span class="hs-identifier hs-var">rf</span></a></span><span>
-</span><span id="line-93"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680970896"><span class="annot"><span class="annottext">cl :: Closure
-</span><a href="#local-6989586621680970896"><span class="hs-identifier hs-var">cl</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#PAp"><span class="hs-identifier hs-type">PAp</span></a></span><span> </span><span class="annot"><span class="annottext">CombIx
+</span><a href="#local-6989586621680975808"><span class="hs-identifier hs-var">rf</span></a></span><span>
+</span><span id="line-96"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680975799"><span class="annot"><span class="annottext">cl :: Closure
+</span><a href="#local-6989586621680975799"><span class="hs-identifier hs-var">cl</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#PAp"><span class="hs-identifier hs-type">PAp</span></a></span><span> </span><span class="annot"><span class="annottext">CombIx
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Seg 'UN
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Seg 'BX
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-94"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+</span><span id="line-97"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
-</span><span id="line-95"></span><span>    </span><span class="annot"><span class="annottext">String
+</span><span id="line-98"></span><span>    </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;cannot decompile a partial application to unboxed values: &quot;</span></span><span>
-</span><span id="line-96"></span><span>      </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
+</span><span id="line-99"></span><span>      </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Closure
-</span><a href="#local-6989586621680970896"><span class="hs-identifier hs-var">cl</span></a></span><span>
-</span><span id="line-97"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975799"><span class="hs-identifier hs-var">cl</span></a></span><span>
+</span><span id="line-100"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#DataC"><span class="hs-identifier hs-type">DataC</span></a></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-98"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+</span><span id="line-101"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;cannot decompile data type with multiple unboxed fields&quot;</span></span><span>
-</span><span id="line-99"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span id="line-102"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Closure
 </span><a href="Unison.Runtime.Stack.html#BlackHole"><span class="hs-identifier hs-var">BlackHole</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;exception&quot;</span></span><span>
-</span><span id="line-100"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span id="line-103"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#Captured"><span class="hs-identifier hs-type">Captured</span></a></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;decompiling a captured continuation&quot;</span></span><span>
-</span><span id="line-101"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680970892"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970892"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span id="local-6989586621680970890"><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970890"><span class="hs-identifier hs-var">f</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v.
+</span><span id="line-104"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span id="local-6989586621680975795"><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975795"><span class="hs-identifier hs-var">backref</span></a></span></span><span> </span><span id="local-6989586621680975794"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975794"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Stack.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span id="local-6989586621680975792"><span class="annot"><span class="annottext">Foreign
+</span><a href="#local-6989586621680975792"><span class="hs-identifier hs-var">f</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-105"></span><span>  </span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Foreign -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var">decompileForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970892"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970890"><span class="hs-identifier hs-var">f</span></a></span><span>
-</span><span id="line-102"></span><span>
-</span><span id="line-103"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-type">tag2bool</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
-</span><span id="line-104"></span><span id="tag2bool"><span class="annot"><span class="annottext">tag2bool :: Word64 -&gt; Either Error Bool
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Foreign
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var">decompileForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975795"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975794"><span class="hs-identifier hs-var">topTerms</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
+</span><a href="#local-6989586621680975792"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-type">tag2bool</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-108"></span><span id="tag2bool"><span class="annot"><span class="annottext">tag2bool :: Word64 -&gt; Either Error Bool
 </span><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var hs-var">tag2bool</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span>
-</span><span id="line-105"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var">tag2bool</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><span id="line-109"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var">tag2bool</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-number">1</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span>
-</span><span id="line-106"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var">tag2bool</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><span id="line-110"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#tag2bool"><span class="hs-identifier hs-var">tag2bool</span></a></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;bad boolean tag&quot;</span></span><span>
-</span><span id="line-107"></span><span>
-</span><span id="line-108"></span><span id="local-6989586621680971118"><span class="annot"><a href="Unison.Runtime.Decompile.html#substitute"><span class="hs-identifier hs-type">substitute</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971118"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971118"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971118"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971118"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
-</span><span id="line-109"></span><span id="substitute"><span class="annot"><span class="annottext">substitute :: forall v. Var v =&gt; Term v () -&gt; [Term v ()] -&gt; Term v ()
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span id="local-6989586621680976027"><span class="annot"><a href="Unison.Runtime.Decompile.html#substitute"><span class="hs-identifier hs-type">substitute</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680976027"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976027"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976027"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976027"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-113"></span><span id="substitute"><span class="annot"><span class="annottext">substitute :: forall v. Var v =&gt; Term v () -&gt; [Term v ()] -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#substitute"><span class="hs-identifier hs-var hs-var">substitute</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {v} {a} {typeVar} {typeAnn} {patternAnn}.
 (Var v, Semigroup a) =&gt;
 [(v, Term (F typeVar typeAnn patternAnn) v a)]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
 -&gt; [Term (F typeVar typeAnn patternAnn) v a]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970884"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
-</span><span id="line-110"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-111"></span><span>    </span><span id="local-6989586621680970884"><span class="annot"><span class="annottext">align :: [(v, Term (F typeVar typeAnn patternAnn) v a)]
+</span><a href="#local-6989586621680975786"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-114"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-115"></span><span>    </span><span id="local-6989586621680975786"><span class="annot"><span class="annottext">align :: [(v, Term (F typeVar typeAnn patternAnn) v a)]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
 -&gt; [Term (F typeVar typeAnn patternAnn) v a]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970884"><span class="hs-identifier hs-var hs-var">align</span></a></span></span><span> </span><span id="local-6989586621680970870"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970870"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">LamNamed'</span></span><span> </span><span id="local-6989586621680970869"><span class="annot"><span class="annottext">v
-</span><a href="#local-6989586621680970869"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span id="local-6989586621680970868"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970868"><span class="hs-identifier hs-var">bd</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680970867"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970867"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621680970866"><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
-</span><a href="#local-6989586621680970866"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
+</span><a href="#local-6989586621680975786"><span class="hs-identifier hs-var hs-var">align</span></a></span></span><span> </span><span id="local-6989586621680975772"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
+</span><a href="#local-6989586621680975772"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">LamNamed'</span></span><span> </span><span id="local-6989586621680975771"><span class="annot"><span class="annottext">v
+</span><a href="#local-6989586621680975771"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span id="local-6989586621680975770"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975770"><span class="hs-identifier hs-var">bd</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680975769"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975769"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span id="local-6989586621680975768"><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
+</span><a href="#local-6989586621680975768"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
 -&gt; [Term (F typeVar typeAnn patternAnn) v a]
 -&gt; Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970884"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">v
-</span><a href="#local-6989586621680970869"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970867"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621680975786"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">v
+</span><a href="#local-6989586621680975771"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975769"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970870"><span class="hs-identifier hs-var">vts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970868"><span class="hs-identifier hs-var">bd</span></a></span><span> </span><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
-</span><a href="#local-6989586621680970866"><span class="hs-identifier hs-var">ts</span></a></span><span>
-</span><span id="line-112"></span><span>    </span><span class="annot"><a href="#local-6989586621680970884"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span id="local-6989586621680970865"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970865"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span id="local-6989586621680970864"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970864"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a.
+</span><a href="#local-6989586621680975772"><span class="hs-identifier hs-var">vts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975770"><span class="hs-identifier hs-var">bd</span></a></span><span> </span><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
+</span><a href="#local-6989586621680975768"><span class="hs-identifier hs-var">ts</span></a></span><span>
+</span><span id="line-116"></span><span>    </span><span class="annot"><a href="#local-6989586621680975786"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span id="local-6989586621680975767"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
+</span><a href="#local-6989586621680975767"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span id="local-6989586621680975766"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975766"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a.
 (Foldable f, Functor f, Var v) =&gt;
 [(v, Term f v a)] -&gt; Term f v a -&gt; Term f v a
 </span><span class="hs-identifier hs-var">substs</span></span><span> </span><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970865"><span class="hs-identifier hs-var">vts</span></a></span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970864"><span class="hs-identifier hs-var">tm</span></a></span><span>
-</span><span id="line-113"></span><span>    </span><span class="hs-comment">-- this should not happen</span><span>
-</span><span id="line-114"></span><span>    </span><span class="annot"><a href="#local-6989586621680970884"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span id="local-6989586621680970863"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970863"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span id="local-6989586621680970862"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970862"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span id="local-6989586621680970861"><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
-</span><a href="#local-6989586621680970861"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap.
+</span><a href="#local-6989586621680975767"><span class="hs-identifier hs-var">vts</span></a></span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975766"><span class="hs-identifier hs-var">tm</span></a></span><span>
+</span><span id="line-117"></span><span>    </span><span class="hs-comment">-- this should not happen</span><span>
+</span><span id="line-118"></span><span>    </span><span class="annot"><a href="#local-6989586621680975786"><span class="hs-identifier hs-var">align</span></a></span><span> </span><span id="local-6989586621680975765"><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
+</span><a href="#local-6989586621680975765"><span class="hs-identifier hs-var">vts</span></a></span></span><span> </span><span id="local-6989586621680975764"><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975764"><span class="hs-identifier hs-var">tm</span></a></span></span><span> </span><span id="local-6989586621680975763"><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
+</span><a href="#local-6989586621680975763"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap.
 (Ord v, Semigroup a) =&gt;
 Term2 vt at ap v a -&gt; [Term2 vt at ap v a] -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">apps'</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a.
 (Foldable f, Functor f, Var v) =&gt;
 [(v, Term f v a)] -&gt; Term f v a -&gt; Term f v a
 </span><span class="hs-identifier hs-var">substs</span></span><span> </span><span class="annot"><span class="annottext">[(v, Term (F typeVar typeAnn patternAnn) v a)]
-</span><a href="#local-6989586621680970863"><span class="hs-identifier hs-var">vts</span></a></span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
-</span><a href="#local-6989586621680970862"><span class="hs-identifier hs-var">tm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
-</span><a href="#local-6989586621680970861"><span class="hs-identifier hs-var">ts</span></a></span><span>
-</span><span id="line-115"></span><span>
-</span><span id="line-116"></span><span id="local-6989586621680971141"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-type">decompileUnboxed</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-117"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971141"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971141"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
-</span><span id="line-118"></span><span id="decompileUnboxed"><span class="annot"><span class="annottext">decompileUnboxed :: forall v.
+</span><a href="#local-6989586621680975765"><span class="hs-identifier hs-var">vts</span></a></span><span> </span><span class="annot"><span class="annottext">Term (F typeVar typeAnn patternAnn) v a
+</span><a href="#local-6989586621680975764"><span class="hs-identifier hs-var">tm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[Term (F typeVar typeAnn patternAnn) v a]
+</span><a href="#local-6989586621680975763"><span class="hs-identifier hs-var">ts</span></a></span><span>
+</span><span id="line-119"></span><span>
+</span><span id="line-120"></span><span id="local-6989586621680976050"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-type">decompileUnboxed</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-121"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680976050"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976050"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
+</span><span id="line-122"></span><span id="decompileUnboxed"><span class="annot"><span class="annottext">decompileUnboxed :: forall v.
 Var v =&gt;
 Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-var hs-var">decompileUnboxed</span></a></span></span><span> </span><span id="local-6989586621680970834"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970834"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680970833"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970833"><span class="hs-identifier hs-var">i</span></a></span></span><span>
-</span><span id="line-119"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970834"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-var hs-var">decompileUnboxed</span></a></span></span><span> </span><span id="local-6989586621680975736"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975736"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680975735"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680975735"><span class="hs-identifier hs-var">i</span></a></span></span><span>
+</span><span id="line-123"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975736"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">natRef</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -337,9 +365,9 @@ Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
 </span><span class="hs-identifier hs-var">nat</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970833"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-120"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970834"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680975735"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-124"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975736"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">intRef</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -347,9 +375,9 @@ Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
 </span><span class="hs-identifier hs-var">int</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970833"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-121"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970834"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680975735"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-125"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975736"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">floatRef</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -357,9 +385,9 @@ Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
 </span><span class="hs-identifier hs-var">float</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; b
 </span><span class="hs-identifier hs-var">unsafeCoerce</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970833"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-122"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970834"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621680975735"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-126"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975736"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">charRef</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -367,81 +395,97 @@ Reference -&gt; Word64 -&gt; Int -&gt; Either Error (Term v ())
 </span><span class="hs-identifier hs-var">char</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a. Enum a =&gt; Int -&gt; a
 </span><span class="hs-identifier hs-var">toEnum</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621680970833"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-123"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-var">decompileUnboxed</span></a></span><span> </span><span id="local-6989586621680970830"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970830"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
+</span><a href="#local-6989586621680975735"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-127"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileUnboxed"><span class="hs-identifier hs-var">decompileUnboxed</span></a></span><span> </span><span id="local-6989586621680975732"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975732"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">Word64
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-124"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+</span><span id="line-128"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;cannot decompile unboxed data type with reference: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970830"><span class="hs-identifier hs-var">r</span></a></span><span>
-</span><span id="line-125"></span><span>
-</span><span id="line-126"></span><span id="local-6989586621680971110"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-type">decompileForeign</span></a></span><span> </span><span class="hs-glyph">::</span><span>
-</span><span id="line-127"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971110"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
-</span><span id="line-128"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971110"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-129"></span><span>  </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-130"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971110"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
-</span><span id="line-131"></span><span id="decompileForeign"><span class="annot"><span class="annottext">decompileForeign :: forall v.
+</span><a href="#local-6989586621680975732"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-129"></span><span>
+</span><span id="line-130"></span><span id="local-6989586621680976019"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-type">decompileForeign</span></a></span><span> </span><span class="hs-glyph">::</span><span>
+</span><span id="line-131"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680976019"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span>
+</span><span id="line-132"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Reference</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-133"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word64</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976019"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-134"></span><span>  </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-135"></span><span>  </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="annot"><a href="Unison.Codebase.Runtime.html#Error"><span class="hs-identifier hs-type">Error</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680976019"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span></span><span>
+</span><span id="line-136"></span><span id="decompileForeign"><span class="annot"><span class="annottext">decompileForeign :: forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Foreign -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var hs-var">decompileForeign</span></a></span></span><span> </span><span id="local-6989586621680970805"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970805"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span id="local-6989586621680970804"><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span></span><span>
-</span><span id="line-132"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970803"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680970803"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Foreign
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var hs-var">decompileForeign</span></a></span></span><span> </span><span id="local-6989586621680975707"><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975707"><span class="hs-identifier hs-var">backref</span></a></span></span><span> </span><span id="local-6989586621680975706"><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975706"><span class="hs-identifier hs-var">topTerms</span></a></span></span><span> </span><span id="local-6989586621680975705"><span class="annot"><span class="annottext">Foreign
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span></span><span>
+</span><span id="line-137"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975704"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680975704"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapBuiltin"><span class="hs-identifier hs-var">maybeUnwrapBuiltin</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Text -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">text</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Text
 </span><a href="Unison.Util.Text.html#toText"><span class="hs-identifier hs-var">Text.toText</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680970803"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-133"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970801"><span class="annot"><span class="annottext">Bytes
-</span><a href="#local-6989586621680970801"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
+</span><a href="#local-6989586621680975704"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975702"><span class="annot"><span class="annottext">Bytes
+</span><a href="#local-6989586621680975702"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapBuiltin"><span class="hs-identifier hs-var">maybeUnwrapBuiltin</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v. Var v =&gt; Bytes -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#decompileBytes"><span class="hs-identifier hs-var">decompileBytes</span></a></span><span> </span><span class="annot"><span class="annottext">Bytes
-</span><a href="#local-6989586621680970801"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-134"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970799"><span class="annot"><span class="annottext">HashAlgorithm
-</span><a href="#local-6989586621680970799"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
+</span><a href="#local-6989586621680975702"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975700"><span class="annot"><span class="annottext">HashAlgorithm
+</span><a href="#local-6989586621680975700"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall f. BuiltinForeign f =&gt; Foreign -&gt; Maybe f
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapBuiltin"><span class="hs-identifier hs-var">maybeUnwrapBuiltin</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v. Var v =&gt; HashAlgorithm -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#decompileHashAlgorithm"><span class="hs-identifier hs-var">decompileHashAlgorithm</span></a></span><span> </span><span class="annot"><span class="annottext">HashAlgorithm
-</span><a href="#local-6989586621680970799"><span class="hs-identifier hs-var">h</span></a></span><span>
-</span><span id="line-135"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970797"><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621680970797"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Reference -&gt; Foreign -&gt; Maybe a
+</span><a href="#local-6989586621680975700"><span class="hs-identifier hs-var">h</span></a></span><span>
+</span><span id="line-140"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975698"><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621680975698"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Reference -&gt; Foreign -&gt; Maybe a
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapForeign"><span class="hs-identifier hs-var">maybeUnwrapForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">termLinkRef</span></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-136"></span><span>      </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
-</span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Referent -&gt; Term2 vt at ap v a
-</span><span class="hs-identifier hs-var">termLink</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621680970797"><span class="hs-identifier hs-var">l</span></a></span><span>
-</span><span id="line-137"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970796"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970796"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Reference -&gt; Foreign -&gt; Maybe a
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-141"></span><span>      </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Referent -&gt; Term2 vt at ap v a
+</span><span class="hs-identifier hs-var">termLink</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621680975698"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-142"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">Ref</span></span><span> </span><span id="local-6989586621680975697"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975697"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621680975698"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Referent
+</span><span class="hs-identifier hs-var">Ref</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975707"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975697"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-143"></span><span>        </span><span class="annot"><span class="annottext">Referent
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621680975698"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><span id="line-144"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975695"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975695"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Reference -&gt; Foreign -&gt; Maybe a
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapForeign"><span class="hs-identifier hs-var">maybeUnwrapForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">typeLinkRef</span></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-138"></span><span>      </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-145"></span><span>      </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Reference -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">typeLink</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970796"><span class="hs-identifier hs-var">l</span></a></span><span>
-</span><span id="line-139"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680970795"><span class="annot"><span class="annottext">Seq Closure
-</span><a href="#local-6989586621680970795"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Foreign -&gt; Maybe (Seq Closure)
+</span><a href="#local-6989586621680975695"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><span id="line-146"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680975694"><span class="annot"><span class="annottext">Seq Closure
+</span><a href="#local-6989586621680975694"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Foreign -&gt; Maybe (Seq Closure)
 </span><a href="Unison.Runtime.Decompile.html#unwrapSeq"><span class="hs-identifier hs-var">unwrapSeq</span></a></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970804"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-140"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap.
+</span><a href="#local-6989586621680975705"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-147"></span><span>      </span><span class="annot"><span class="annottext">forall v a vt at ap.
 Ord v =&gt;
 a -&gt; Seq (Term2 vt at ap v a) -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">list'</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
@@ -450,26 +494,30 @@ a -&gt; Seq (Term2 vt at ap v a) -&gt; Term2 vt at ap v a
 (a -&gt; f b) -&gt; t a -&gt; f (t b)
 </span><span class="hs-identifier hs-var">traverse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v.
 Var v =&gt;
-(Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
--&gt; Closure -&gt; Either Error (Term v ())
-</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><a href="#local-6989586621680970805"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Seq Closure
-</span><a href="#local-6989586621680970795"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-141"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var">decompileForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680970793"><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970793"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-142"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
+(Reference -&gt; Maybe Reference)
+-&gt; (Word64 -&gt; Word64 -&gt; Maybe (Term v ()))
+-&gt; Closure
+-&gt; Either Error (Term v ())
+</span><a href="Unison.Runtime.Decompile.html#decompile"><span class="hs-identifier hs-var">decompile</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><a href="#local-6989586621680975707"><span class="hs-identifier hs-var">backref</span></a></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><a href="#local-6989586621680975706"><span class="hs-identifier hs-var">topTerms</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Seq Closure
+</span><a href="#local-6989586621680975694"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-148"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileForeign"><span class="hs-identifier hs-var">decompileForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Reference -&gt; Maybe Reference
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Word64 -&gt; Word64 -&gt; Maybe (Term v ())
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680975692"><span class="annot"><span class="annottext">Foreign
+</span><a href="#local-6989586621680975692"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-149"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; Either Error a
 </span><a href="Unison.Runtime.Decompile.html#err"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;cannot decompile Foreign: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Foreign
-</span><a href="#local-6989586621680970793"><span class="hs-identifier hs-var">f</span></a></span><span>
-</span><span id="line-143"></span><span>
-</span><span id="line-144"></span><span id="local-6989586621680971058"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileBytes"><span class="hs-identifier hs-type">decompileBytes</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971058"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">By.Bytes</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971058"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
-</span><span id="line-145"></span><span id="decompileBytes"><span class="annot"><span class="annottext">decompileBytes :: forall v. Var v =&gt; Bytes -&gt; Term v ()
+</span><a href="#local-6989586621680975692"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span id="local-6989586621680975967"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileBytes"><span class="hs-identifier hs-type">decompileBytes</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680975967"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">By.Bytes</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680975967"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-152"></span><span id="decompileBytes"><span class="annot"><span class="annottext">decompileBytes :: forall v. Var v =&gt; Bytes -&gt; Term v ()
 </span><a href="Unison.Runtime.Decompile.html#decompileBytes"><span class="hs-identifier hs-var hs-var">decompileBytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-146"></span><span>  </span><span class="annot"><span class="annottext">forall v a vt at ap.
+</span><span id="line-153"></span><span>  </span><span class="annot"><span class="annottext">forall v a vt at ap.
 Ord v =&gt;
 a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">app</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Text -&gt; Term2 vt at ap v a
@@ -477,32 +525,32 @@ a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a -&gt; Term2 vt at ap v a
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a. IsString a =&gt; String -&gt; a
 </span><span class="hs-identifier hs-var">fromString</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Bytes.fromList&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-147"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap.
 Ord v =&gt;
 a -&gt; [Term2 vt at ap v a] -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">list</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-148"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Word64 -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">nat</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span class="hs-special">)</span><span>
-</span><span id="line-149"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span id="line-156"></span><span>    </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Bytes -&gt; [Word8]
 </span><span class="hs-identifier hs-var">By.toWord8s</span></span><span>
-</span><span id="line-150"></span><span>
-</span><span id="line-151"></span><span id="local-6989586621680971057"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileHashAlgorithm"><span class="hs-identifier hs-type">decompileHashAlgorithm</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680971057"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier hs-type">HashAlgorithm</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680971057"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
-</span><span id="line-152"></span><span id="decompileHashAlgorithm"><span class="annot"><span class="annottext">decompileHashAlgorithm :: forall v. Var v =&gt; HashAlgorithm -&gt; Term v ()
-</span><a href="Unison.Runtime.Decompile.html#decompileHashAlgorithm"><span class="hs-identifier hs-var hs-var">decompileHashAlgorithm</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier hs-type">HashAlgorithm</span></a></span><span> </span><span id="local-6989586621680970772"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970772"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span><span id="local-6989586621680975966"><span class="annot"><a href="Unison.Runtime.Decompile.html#decompileHashAlgorithm"><span class="hs-identifier hs-type">decompileHashAlgorithm</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Var</span></span><span> </span><span class="annot"><a href="#local-6989586621680975966"><span class="hs-identifier hs-type">v</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier hs-type">HashAlgorithm</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term</span></span><span> </span><span class="annot"><a href="#local-6989586621680975966"><span class="hs-identifier hs-type">v</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-159"></span><span id="decompileHashAlgorithm"><span class="annot"><span class="annottext">decompileHashAlgorithm :: forall v. Var v =&gt; HashAlgorithm -&gt; Term v ()
+</span><a href="Unison.Runtime.Decompile.html#decompileHashAlgorithm"><span class="hs-identifier hs-var hs-var">decompileHashAlgorithm</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Unison.Runtime.Foreign.html#HashAlgorithm"><span class="hs-identifier hs-type">HashAlgorithm</span></a></span><span> </span><span id="local-6989586621680975671"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621680975671"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall v a vt at ap. Ord v =&gt; a -&gt; Reference -&gt; Term2 vt at ap v a
 </span><span class="hs-identifier hs-var">ref</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621680970772"><span class="hs-identifier hs-var">r</span></a></span><span>
-</span><span id="line-153"></span><span>
-</span><span id="line-154"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#unwrapSeq"><span class="hs-identifier hs-type">unwrapSeq</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Seq</span></span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier hs-type">Closure</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-155"></span><span id="unwrapSeq"><span class="annot"><span class="annottext">unwrapSeq :: Foreign -&gt; Maybe (Seq Closure)
+</span><a href="#local-6989586621680975671"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-160"></span><span>
+</span><span id="line-161"></span><span class="annot"><a href="Unison.Runtime.Decompile.html#unwrapSeq"><span class="hs-identifier hs-type">unwrapSeq</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Unison.Runtime.Foreign.html#Foreign"><span class="hs-identifier hs-type">Foreign</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Seq</span></span><span> </span><span class="annot"><a href="Unison.Runtime.Stack.html#Closure"><span class="hs-identifier hs-type">Closure</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span id="unwrapSeq"><span class="annot"><span class="annottext">unwrapSeq :: Foreign -&gt; Maybe (Seq Closure)
 </span><a href="Unison.Runtime.Decompile.html#unwrapSeq"><span class="hs-identifier hs-var hs-var">unwrapSeq</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Reference -&gt; Foreign -&gt; Maybe a
 </span><a href="Unison.Runtime.Foreign.html#maybeUnwrapForeign"><span class="hs-identifier hs-var">maybeUnwrapForeign</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
 </span><span class="hs-identifier hs-var">listRef</span></span><span>
-</span><span id="line-156"></span></pre></body></html>
+</span><span id="line-163"></span></pre></body></html>

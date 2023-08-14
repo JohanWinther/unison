@@ -5364,8 +5364,10 @@ TFRC :: POp
 type FOp = Word64
 close :: (Var v, Monoid a) => Set v -> Term v a -> Term v a
 saturate :: (Var v, Monoid a) => Map ConstructorReference Int -> Term v a -> Term v a
-float :: Var v => Monoid a => Term v a -> (Term v a, [(Reference, Term v a)], [(Reference, Term v a)])
-lamLift :: Var v => Monoid a => Term v a -> (Term v a, [(Reference, Term v a)], [(Reference, Term v a)])
+float :: Var v => Monoid a => Map v Reference -> Term v a -> (Term v a, Map Reference Reference, [(Reference, Term v a)], [(Reference, Term v a)])
+floatGroup :: Var v => Monoid a => Map v Reference -> [(v, Term v a)] -> ([(v, Id)], [(Reference, Term v a)], [(Reference, Term v a)])
+lamLift :: Var v => Monoid a => Map v Reference -> Term v a -> (Term v a, Map Reference Reference, [(Reference, Term v a)], [(Reference, Term v a)])
+lamLiftGroup :: Var v => Monoid a => Map v Reference -> [(v, Term v a)] -> ([(v, Id)], [(Reference, Term v a)], [(Reference, Term v a)])
 inlineAlias :: Var v => Monoid a => Term v a -> Term v a
 addDefaultCases :: Var v => Monoid a => String -> Term v a -> Term v a
 data ANormalF v e
@@ -5438,9 +5440,11 @@ superNormalize :: Var v => Term v a -> SuperGroup v
 anfTerm :: Var v => Term v a -> ANFM v (DNormal v)
 valueTermLinks :: Value -> [Reference]
 valueLinks :: Monoid a => (Bool -> Reference -> a) -> Value -> a
-groupTermLinks :: SuperGroup v -> [Reference]
-groupLinks :: Monoid a => (Bool -> Reference -> a) -> SuperGroup v -> a
-normalLinks :: Monoid a => (Bool -> Reference -> a) -> SuperNormal v -> a
+groupTermLinks :: Var v => SuperGroup v -> [Reference]
+foldGroupLinks :: (Monoid r, Var v) => (Bool -> Reference -> r) -> SuperGroup v -> r
+overGroupLinks :: Var v => (Bool -> Reference -> Reference) -> SuperGroup v -> SuperGroup v
+traverseGroupLinks :: (Applicative f, Var v) => (Bool -> Reference -> f Reference) -> SuperGroup v -> f (SuperGroup v)
+normalLinks :: (Applicative f, Var v) => (Bool -> Reference -> f Reference) -> SuperNormal v -> f (SuperNormal v)
 prettyGroup :: Var v => String -> SuperGroup v -> ShowS
 prettySuperNormal :: Var v => Int -> SuperNormal v -> ShowS
 prettyANF :: Var v => Bool -> Int -> ANormal v -> ShowS
@@ -5861,6 +5865,7 @@ instance Unison.Runtime.Foreign.BuiltinForeign Unison.Util.Text.Text
 instance Unison.Runtime.Foreign.BuiltinForeign Unison.Util.Bytes.Bytes
 instance Unison.Runtime.Foreign.BuiltinForeign GHC.IO.Handle.Types.Handle
 instance Unison.Runtime.Foreign.BuiltinForeign System.Process.Common.ProcessHandle
+instance Unison.Runtime.Foreign.BuiltinForeign Unison.Referent.Referent
 instance Unison.Runtime.Foreign.BuiltinForeign Network.Socket.Types.Socket
 instance Unison.Runtime.Foreign.BuiltinForeign GHC.Conc.Sync.ThreadId
 instance Unison.Runtime.Foreign.BuiltinForeign Network.TLS.Parameters.ClientParams
@@ -6113,14 +6118,14 @@ putArgs :: MonadPut m => Eq v => [v] -> [v] -> m ()
 getArgs :: MonadGet m => [v] -> m [v]
 putCCs :: MonadPut m => [Mem] -> m ()
 getCCs :: MonadGet m => m [Mem]
-putGroup :: MonadPut m => Var v => EnumMap FOp Text -> SuperGroup v -> m ()
+putGroup :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> SuperGroup v -> m ()
 getGroup :: MonadGet m => Var v => m (SuperGroup v)
-putComb :: MonadPut m => Var v => EnumMap FOp Text -> [v] -> SuperNormal v -> m ()
+putComb :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> [v] -> SuperNormal v -> m ()
 getFresh :: Var v => Word64 -> v
 getComb :: MonadGet m => Var v => [v] -> Word64 -> m (SuperNormal v)
-putNormal :: MonadPut m => Var v => EnumMap FOp Text -> [v] -> ANormal v -> m ()
+putNormal :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> [v] -> ANormal v -> m ()
 getNormal :: MonadGet m => Var v => [v] -> Word64 -> m (ANormal v)
-putFunc :: MonadPut m => Var v => EnumMap FOp Text -> [v] -> Func v -> m ()
+putFunc :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> [v] -> Func v -> m ()
 getFunc :: MonadGet m => Var v => [v] -> m (Func v)
 putPOp :: MonadPut m => POp -> m ()
 getPOp :: MonadGet m => m POp
@@ -6134,9 +6139,9 @@ putBLit :: MonadPut m => BLit -> m ()
 getBLit :: MonadGet m => Version -> m BLit
 putRefs :: MonadPut m => [Reference] -> m ()
 getRefs :: MonadGet m => m [Reference]
-putBranches :: MonadPut m => Var v => EnumMap FOp Text -> [v] -> Branched (ANormal v) -> m ()
+putBranches :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> [v] -> Branched (ANormal v) -> m ()
 getBranches :: MonadGet m => Var v => [v] -> Word64 -> m (Branched (ANormal v))
-putCase :: MonadPut m => Var v => EnumMap FOp Text -> [v] -> ([Mem], ANormal v) -> m ()
+putCase :: MonadPut m => Var v => Map Reference Word64 -> EnumMap FOp Text -> [v] -> ([Mem], ANormal v) -> m ()
 getCase :: MonadGet m => Var v => [v] -> Word64 -> m ([Mem], ANormal v)
 putCTag :: MonadPut m => CTag -> m ()
 getCTag :: MonadGet m => m CTag
@@ -6148,6 +6153,27 @@ putCont :: MonadPut m => Cont -> m ()
 getCont :: MonadGet m => Version -> m Cont
 deserializeGroup :: Var v => ByteString -> Either String (SuperGroup v)
 serializeGroup :: Var v => EnumMap FOp Text -> SuperGroup v -> ByteString
+
+-- | Serializes a <a>SuperGroup</a> for rehashing.
+--   
+--   Expected as arguments are some code, and the <a>Reference</a> that
+--   refers to it. In particular, if the code refers to itself by
+--   reference, or if the code is part of a mututally-recursive set of
+--   definitions (which have a common hash), the reference used as part of
+--   that (mutual) recursion must be supplied.
+--   
+--   Using that reference, we find all references in the code to that
+--   connected component. In the resulting byte string, those references
+--   are instead replaced by positions in a listing of the connected
+--   component. This means that the byte string is independent of the hash
+--   used for the self reference. Only the order matters (which is
+--   determined by the <a>Reference</a>). Then the bytes can be re-hashed
+--   to establish a new hash for the connected component. This operation
+--   should be idempotent as long as the indexing is preserved.
+--   
+--   Supplying a <a>Builtin</a> reference is not supported. Such code
+--   shouldn't be subject to rehashing.
+serializeGroupForRehash :: Var v => EnumMap FOp Text -> Reference -> SuperGroup v -> ByteString
 deserializeValue :: ByteString -> Either String Value
 serializeValue :: Value -> ByteString
 serializeValueLazy :: Value -> ByteString
@@ -6160,6 +6186,13 @@ instance Unison.Runtime.Serialize.Tag Unison.Runtime.ANF.Serialize.LtTag
 instance Unison.Runtime.Serialize.Tag Unison.Runtime.ANF.Serialize.MtTag
 instance Unison.Runtime.Serialize.Tag Unison.Runtime.ANF.Serialize.FnTag
 instance Unison.Runtime.Serialize.Tag Unison.Runtime.ANF.Serialize.TmTag
+
+module Unison.Runtime.ANF.Rehash
+checkGroupHashes :: Var v => [(Referent, SuperGroup v)] -> Either (Text, [Referent]) (Either [Referent] [Referent])
+rehashGroups :: Var v => Map Reference (SuperGroup v) -> Either (Text, [Referent]) (Map Reference Reference, Map Reference (SuperGroup v))
+checkMissing :: Var v => [(Referent, SuperGroup v)] -> Either (Text, [Referent]) [Reference]
+rehashSCC :: Var v => SCC (Reference, SuperGroup v) -> (Map Reference Reference, Map Reference (SuperGroup v))
+checkSCC :: SCC (Reference, SuperGroup v) -> Bool
 
 module Unison.Runtime.Foreign.Function
 data ForeignFunc
@@ -6211,13 +6244,14 @@ instance Unison.Runtime.Foreign.Function.ForeignConvention (Data.Primitive.ByteA
 instance Unison.Runtime.Foreign.Function.ForeignConvention (Data.Primitive.Array.Array Unison.Runtime.Stack.Closure)
 instance Unison.Runtime.Foreign.Function.ForeignConvention Data.Primitive.ByteArray.ByteArray
 instance Unison.Runtime.Foreign.BuiltinForeign b => Unison.Runtime.Foreign.Function.ForeignConvention b
+instance (Unison.Runtime.Foreign.BuiltinForeign a, Unison.Runtime.Foreign.BuiltinForeign b) => Unison.Runtime.Foreign.Function.ForeignConvention [(a, b)]
 instance Unison.Runtime.Foreign.BuiltinForeign b => Unison.Runtime.Foreign.Function.ForeignConvention [b]
 instance GHC.Show.Show Unison.Runtime.Foreign.Function.ForeignFunc
 instance GHC.Classes.Eq Unison.Runtime.Foreign.Function.ForeignFunc
 instance GHC.Classes.Ord Unison.Runtime.Foreign.Function.ForeignFunc
 
 module Unison.Runtime.Decompile
-decompile :: Var v => (Word64 -> Word64 -> Maybe (Term v ())) -> Closure -> Either Error (Term v ())
+decompile :: Var v => (Reference -> Maybe Reference) -> (Word64 -> Word64 -> Maybe (Term v ())) -> Closure -> Either Error (Term v ())
 
 module Unison.Runtime.Builtin
 builtinLookup :: Map Reference (Sandbox, SuperNormal Symbol)
@@ -6372,6 +6406,8 @@ Runtime :: IO () -> (CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Eithe
 [$sel:mainType:Runtime] :: Runtime v -> Type v Ann
 [$sel:ioTestType:Runtime] :: Runtime v -> Type v Ann
 instance GHC.Show.Show Unison.Runtime.Interface.StoredCache
+instance GHC.Base.Semigroup Unison.Runtime.Interface.Remapping
+instance GHC.Base.Monoid Unison.Runtime.Interface.Remapping
 
 module Unison.Util.TransitiveClosure
 transitiveClosure :: forall m a. (Monad m, Ord a) => (a -> m (Set a)) -> Set a -> m (Set a)
