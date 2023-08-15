@@ -2718,6 +2718,9 @@ altSum :: (Alternative f, Foldable t) => t (f a) -> f a
 
 -- | Like <a>foldMap</a> but for Alternative.
 altMap :: (Alternative f, Foldable t) => (a -> f b) -> t a -> f b
+
+-- | Can be removed when we upgrade transformers to a more recent version.
+hoistMaybe :: Applicative m => Maybe a -> MaybeT m a
 onLeft :: Applicative m => (a -> m b) -> Either a b -> m b
 onLeftM :: Monad m => (a -> m b) -> m (Either a b) -> m b
 whenLeft :: Applicative m => Either a b -> (a -> m b) -> m b

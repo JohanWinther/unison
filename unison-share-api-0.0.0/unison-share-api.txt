@@ -102,6 +102,12 @@ instance Web.Internal.HttpApiData.FromHttpApiData (Unison.HashQualified'.HashQua
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema (Unison.HashQualified.HashQualified n)
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema (Unison.HashQualified'.HashQualified n)
 instance Web.Internal.HttpApiData.ToHttpApiData Unison.Name.Internal.Name
+instance Web.Internal.HttpApiData.FromHttpApiData Unison.Core.Project.ProjectName
+instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Core.Project.ProjectName
+instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "project-name" Unison.Core.Project.ProjectName)
+instance Web.Internal.HttpApiData.FromHttpApiData Unison.Core.Project.ProjectBranchName
+instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Core.Project.ProjectBranchName
+instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "branch-name" Unison.Core.Project.ProjectBranchName)
 
 module Unison.Server.SearchResult
 data SearchResult
@@ -615,6 +621,9 @@ mayDefaultWidth :: Maybe Width -> Width
 setCacheControl :: v -> APIHeaders v
 branchToUnisonHash :: Branch m -> UnisonHash
 v2CausalBranchToUnisonHash :: CausalBranch m -> UnisonHash
+newtype ProjectBranchNameParam
+ProjectBranchNameParam :: ProjectAndBranch ProjectName ProjectBranchName -> ProjectBranchNameParam
+[$sel:unProjectBranchNameParam:ProjectBranchNameParam] :: ProjectBranchNameParam -> ProjectAndBranch ProjectName ProjectBranchName
 instance GHC.Show.Show Unison.Server.Types.NamespaceDetails
 instance GHC.Generics.Generic Unison.Server.Types.NamespaceDetails
 instance (GHC.Classes.Ord name, GHC.Classes.Ord ref) => GHC.Classes.Ord (Unison.Server.Types.ExactName name ref)
@@ -651,6 +660,9 @@ instance GHC.Classes.Eq Unison.Server.Types.NamedTerm
 instance GHC.Show.Show Unison.Server.Types.NamedType
 instance GHC.Generics.Generic Unison.Server.Types.NamedType
 instance GHC.Classes.Eq Unison.Server.Types.NamedType
+instance GHC.Generics.Generic Unison.Server.Types.ProjectBranchNameParam
+instance GHC.Show.Show Unison.Server.Types.ProjectBranchNameParam
+instance GHC.Classes.Eq Unison.Server.Types.ProjectBranchNameParam
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamespaceDetails
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Types.Suffixify
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Types.Suffixify
@@ -661,6 +673,10 @@ instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamedTerm
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.NamedType
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TermTag
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Types.TypeTag
+instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Types.ProjectBranchNameParam
+instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Types.ProjectBranchNameParam
+instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "project-and-branch" Unison.Server.Types.ProjectBranchNameParam)
+instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "project-and-branch" Unison.Server.Types.ProjectBranchNameParam)
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.NamedType
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.Server.Types.NamedType
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Types.NamedTerm
@@ -697,6 +713,7 @@ MissingSignatureForTerm :: Reference -> BackendError
 NoSuchDefinition :: HashQualified Name -> BackendError
 ExpectedNameLookup :: BranchHash -> BackendError
 DisjointProjectAndPerspective :: Path -> Path -> BackendError
+ProjectBranchNameNotFound :: ProjectName -> ProjectBranchName -> BackendError
 newtype Backend m a
 Backend :: ReaderT BackendEnv (ExceptT BackendError m) a -> Backend m a
 [$sel:runBackend:Backend] :: Backend m a -> ReaderT BackendEnv (ExceptT BackendError m) a
@@ -843,6 +860,9 @@ renderDocRefs :: Traversable t => PrettyPrintEnvDecl -> Width -> Codebase IO Sym
 --   '<a>name</a>.doc'.
 docsForDefinitionName :: Codebase IO Symbol Ann -> NameSearch Transaction -> Name -> IO [TermReference]
 normaliseRootCausalHash :: Maybe (Either ShortCausalHash CausalHash) -> Backend Transaction (CausalBranch Transaction)
+
+-- | Get the causal hash a given project branch points to
+causalHashForProjectBranchName :: MonadIO m => ProjectAndBranch ProjectName ProjectBranchName -> Transaction (Maybe CausalHash)
 resolveRootBranchHash :: MonadIO m => Maybe ShortCausalHash -> Codebase m v a -> Backend m (Branch m)
 shallowPPE :: MonadIO m => Codebase m v a -> Branch m -> m PrettyPrintEnv
 isTestResultList :: forall v a. (Var v, Monoid a) => Maybe (Type v a) -> Bool
@@ -1180,6 +1200,7 @@ noSuchDefinition :: HashQualified Name -> ServerError
 ambiguousHashForDefinition :: ShortHash -> ServerError
 expectedNameLookup :: BranchHash -> ServerError
 disjointProjectAndPerspective :: Path -> Path -> ServerError
+projectBranchNameNotFound :: ProjectName -> ProjectBranchName -> ServerError
 
 module Unison.Server.CodebaseServer
 data HTML
@@ -1188,8 +1209,11 @@ newtype RawHtml
 RawHtml :: ByteString -> RawHtml
 [$sel:unRaw:RawHtml] :: RawHtml -> ByteString
 type OpenApiJSON = "openapi.json" :> Get '[JSON] OpenApi
-type UnisonAndDocsAPI = UnisonAPI :<|> OpenApiJSON :<|> Raw
-type UnisonAPI = NamespaceListingAPI :<|> NamespaceDetailsAPI :<|> ProjectsAPI :<|> DefinitionsAPI :<|> FuzzyFindAPI :<|> TermSummaryAPI :<|> TypeSummaryAPI
+type UnisonAndDocsAPI = UnisonLocalAPI :<|> OpenApiJSON :<|> Raw
+type LooseCodeAPI = "non-project-code" :> CodebaseServerAPI
+type UnisonLocalAPI = ProjectsAPI :<|> LooseCodeAPI
+type CodebaseServerAPI = NamespaceListingAPI :<|> NamespaceDetailsAPI :<|> ProjectsAPI :<|> DefinitionsAPI :<|> FuzzyFindAPI :<|> TermSummaryAPI :<|> TypeSummaryAPI
+type ProjectsAPI = "projects" :> Capture "project-name" ProjectName :> "branches" :> Capture "branch-name" ProjectBranchName :> CodebaseServerAPI
 type WebUI = CaptureAll "route" Text :> Get '[HTML] RawHtml
 type ServerAPI = ("ui" :> WebUI) :<|> ("api" :> UnisonAndDocsAPI)
 type StaticAPI = "static" :> Raw
@@ -1206,46 +1230,80 @@ TypeReference :: HashQualified Name -> DefinitionReference
 AbilityConstructorReference :: HashQualified Name -> DefinitionReference
 DataConstructorReference :: HashQualified Name -> DefinitionReference
 data Service
-UI :: Absolute -> Maybe DefinitionReference -> Service
+LooseCodeUI :: Absolute -> Maybe DefinitionReference -> Service
+ProjectBranchUI :: ProjectAndBranch ProjectName ProjectBranchName -> Path -> Maybe DefinitionReference -> Service
 Api :: Service
+data URISegment
+EscapeMe :: Text -> URISegment
+DontEscape :: Text -> URISegment
 
 -- | Create a Service URL, either for the UI or the API
 --   
 --   Examples:
 --   
 --   <pre>
---   &gt;&gt;&gt; urlFor Api (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
---   "https://localhost:1234/asdf/api"
+--   &gt;&gt;&gt; urlFor Api (BaseUrl{ urlHost = "http://localhost", urlToken = "asdf", urlPort = 1234 })
+--   "http://localhost:1234/asdf/api"
 --   </pre>
 --   
---   <pre>
---   &gt;&gt;&gt; import qualified Unison.Syntax.Name as Name
+--   Loose code with definition but no perspective &gt;&gt;&gt; import
+--   qualified Unison.Syntax.Name as Name &gt;&gt;&gt; let service =
+--   LooseCodeUI (Path.absoluteEmpty) (Just (TermReference (NameOnly
+--   (Name.unsafeFromText "base.data.List.map")))) &gt;&gt;&gt; let baseUrl
+--   = (BaseUrl{ urlHost = "<a>http://localhost"</a>, urlToken = "asdf",
+--   urlPort = 1234 }) &gt;&gt;&gt; urlFor service baseUrl
+--   "<a>http://localhost:1234/asdf/ui/non-project-code/latest/terms/base/data/List/map"</a>
 --   
---   &gt;&gt;&gt; let service = UI (Path.absoluteEmpty) (Just (TermReference (NameOnly (Name.unsafeFromText "base.data.List.map"))))
---   
---   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
---   
+--   Loose code with definition and perspective &gt;&gt;&gt; import
+--   qualified Unison.Syntax.Name as Name &gt;&gt;&gt; let service =
+--   LooseCodeUI (Path.Absolute (Path.fromText "base.data")) (Just
+--   (TermReference (NameOnly (Name.unsafeFromText "List.map"))))
+--   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost =
+--   "<a>http://localhost"</a>, urlToken = "asdf", urlPort = 1234 })
 --   &gt;&gt;&gt; urlFor service baseUrl
---   "https://localhost:1234/asdf/ui/latest/;/terms/base/data/List/map"
---   </pre>
+--   "<a>http://localhost:1234/asdf/ui/non-project-code/latest/namespaces/base/data/;/terms/List/map"</a>
 --   
---   <pre>
---   &gt;&gt;&gt; import qualified Unison.Syntax.Name as Name
+--   Project with definition but no perspective &gt;&gt;&gt; import
+--   qualified Unison.Syntax.Name as Name &gt;&gt;&gt; import
+--   Unison.Core.Project (ProjectName (..), ProjectBranchName (..),
+--   ProjectAndBranch (..)) &gt;&gt;&gt; let service = ProjectBranchUI
+--   (ProjectAndBranch (UnsafeProjectName "base") (UnsafeProjectBranchName
+--   "main")) (Path.empty) (Just (TermReference (NameOnly
+--   (Name.unsafeFromText "List.map")))) &gt;&gt;&gt; let baseUrl =
+--   (BaseUrl{ urlHost = "<a>http://localhost"</a>, urlToken = "asdf",
+--   urlPort = 1234 }) &gt;&gt;&gt; urlFor service baseUrl
+--   "<a>http://localhost:1234/asdf/ui/projects/base/main/latest/terms/List/map"</a>
 --   
---   &gt;&gt;&gt; let service = UI (Path.Absolute (Path.fromText "base.data")) (Just (TermReference (NameOnly (Name.unsafeFromText "List.map"))))
---   
---   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost = "https://localhost", urlToken = "asdf", urlPort = 1234 })
---   
+--   Project with definition but no perspective, contributor branch
+--   &gt;&gt;&gt; import qualified Unison.Syntax.Name as Name &gt;&gt;&gt;
+--   import Unison.Core.Project (ProjectName (..), ProjectBranchName (..),
+--   ProjectAndBranch (..)) &gt;&gt;&gt; let service = ProjectBranchUI
+--   (ProjectAndBranch (UnsafeProjectName "<tt>unison/base")
+--   (UnsafeProjectBranchName "</tt>runarorama/contribution")) (Path.empty)
+--   (Just (TermReference (NameOnly (Name.unsafeFromText "List.map"))))
+--   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost =
+--   "<a>http://localhost"</a>, urlToken = "asdf", urlPort = 1234 })
 --   &gt;&gt;&gt; urlFor service baseUrl
---   "https://localhost:1234/asdf/ui/latest/namespaces/base/data/;/terms/List/map"
---   </pre>
-urlFor :: Service -> BaseUrl -> String
+--   "<a>http://localhost:1234/asdf/ui/projects/@unison/base/@runarorama/contribution/latest/terms/List/map"</a>
+--   
+--   Project with definition and perspective &gt;&gt;&gt; import qualified
+--   Unison.Syntax.Name as Name &gt;&gt;&gt; import Unison.Core.Project
+--   (ProjectName (..), ProjectBranchName (..), ProjectAndBranch (..))
+--   &gt;&gt;&gt; let service = ProjectBranchUI (ProjectAndBranch
+--   (UnsafeProjectName "<tt>unison/base") (UnsafeProjectBranchName
+--   "</tt>runarorama/contribution")) (Path.fromList ["data"]) (Just
+--   (TermReference (NameOnly (Name.unsafeFromText "List.map"))))
+--   &gt;&gt;&gt; let baseUrl = (BaseUrl{ urlHost =
+--   "<a>http://localhost"</a>, urlToken = "asdf", urlPort = 1234 })
+--   &gt;&gt;&gt; urlFor service baseUrl
+--   "<a>http://localhost:1234/asdf/ui/projects/@unison/base/@runarorama/contribution/latest/namespaces/data/;/terms/List/map"</a>
+urlFor :: Service -> BaseUrl -> Text
 handleAuth :: ByteString -> Text -> Handler ()
 openAPI :: OpenApi
 infoObject :: Info
 docsBS :: ByteString
 unisonAndDocsAPI :: Proxy UnisonAndDocsAPI
-api :: Proxy UnisonAPI
+api :: Proxy UnisonLocalAPI
 serverAPI :: Proxy ServerAPI
 appAPI :: Proxy AppAPI
 app :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> FilePath -> ByteString -> Maybe String -> Application
@@ -1280,8 +1338,13 @@ serveUnisonAndDocs :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> 
 serveDocs :: Application
 serveOpenAPI :: Handler OpenApi
 hoistWithAuth :: forall api. HasServer api '[] => Proxy api -> ByteString -> ServerT api Handler -> ServerT (Authed api) Handler
-serveUnison :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> Server UnisonAPI
+serveLooseCode :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> Server LooseCodeAPI
+serveProjectsAPI :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> ProjectName -> ProjectBranchName -> Server LooseCodeAPI
+serveUnisonLocal :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> Server UnisonLocalAPI
 backendHandler :: BackendEnv -> Backend IO a -> Handler a
+instance GHC.Show.Show Unison.Server.CodebaseServer.DefinitionReference
+instance GHC.Show.Show Unison.Server.CodebaseServer.Service
+instance GHC.Show.Show Unison.Server.CodebaseServer.URISegment
 instance GHC.Classes.Eq Unison.Server.CodebaseServer.CodebaseServerOpts
 instance GHC.Show.Show Unison.Server.CodebaseServer.CodebaseServerOpts
 instance GHC.Show.Show Unison.Server.CodebaseServer.BaseUrl

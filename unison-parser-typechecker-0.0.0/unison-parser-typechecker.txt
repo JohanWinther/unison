@@ -914,6 +914,69 @@ declarationPPEDecl :: PrettyPrintEnvDecl -> Reference -> PrettyPrintEnvDecl
 module Unison.PrettyPrintEnvDecl.Names
 fromNamesDecl :: Int -> NamesWithHistory -> PrettyPrintEnvDecl
 
+module Unison.Project.Util
+
+-- | Get the path that a project is stored at. Users aren't supposed to go
+--   here.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectPath "ABCD"
+--   .__projects._ABCD
+--   </pre>
+projectPath :: ProjectId -> Absolute
+
+-- | Get the path that a project's branches are stored at. Users aren't
+--   supposed to go here.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchesPath "ABCD"
+--   .__projects._ABCD.branches
+--   </pre>
+projectBranchesPath :: ProjectId -> Absolute
+
+-- | Get the path that a branch is stored at. Users aren't supposed to go
+--   here.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchPath ProjectAndBranch { project = "ABCD", branch = "DEFG" }
+--   .__projects._ABCD.branches._DEFG
+--   </pre>
+projectBranchPath :: ProjectAndBranch ProjectId ProjectBranchId -> Absolute
+
+-- | Get the name segment that a branch is stored at.
+--   
+--   <pre>
+--   &gt;&gt;&gt; projectBranchSegment "DEFG"
+--   "_DEFG"
+--   </pre>
+projectBranchSegment :: ProjectBranchId -> NameSegment
+
+-- | The prism between paths like
+--   
+--   <pre>
+--   .__projects._XX_XX
+--   </pre>
+--   
+--   and the project id
+--   
+--   <pre>
+--   XX-XX
+--   </pre>
+projectPathPrism :: Prism' Absolute ProjectId
+
+-- | The prism between paths like
+--   
+--   <pre>
+--   .__projects._XX_XX.branches._YY_YY.foo.bar
+--   </pre>
+--   
+--   and the <tt>(project id, branch id, path)</tt> triple
+--   
+--   <pre>
+--   (XX-XX, YY-YY, foo.bar)
+--   </pre>
+projectBranchPathPrism :: Prism' Absolute (ProjectAndBranch ProjectId ProjectBranchId, Path)
+
 module Unison.Runtime.Array
 
 -- | The <a>fromList</a> function constructs the structure <tt>l</tt> from

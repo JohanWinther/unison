@@ -2191,6 +2191,7 @@ getCurrentProjectIds :: Cli (Maybe (ProjectAndBranch ProjectId ProjectBranchId))
 
 -- | Get the current project+branch+branch path that a user is on.
 getCurrentProjectBranch :: Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
+getProjectBranchForPath :: Absolute -> Cli (Maybe (ProjectAndBranch Project ProjectBranch, Path))
 
 -- | Like <a>getCurrentProjectBranch</a>, but fails with a message if the
 --   user is not on a project branch.
@@ -2268,6 +2269,9 @@ expectRemoteProjectBranchByName :: ProjectAndBranch (RemoteProjectId, ProjectNam
 loadRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
 expectRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 expectRemoteProjectBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
+
+module Unison.Codebase.Editor.HandleInput.UI
+openUI :: Path' -> Cli ()
 
 
 -- | <tt>push</tt> input handler
