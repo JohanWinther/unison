@@ -816,10 +816,9 @@ currentRelease :: String
 
 -- | Instances for LSP types which are strangely missing.
 module Unison.LSP.Orphans
-instance GHC.Classes.Ord Language.LSP.Types.TextDocument.TextDocumentIdentifier
-instance Language.LSP.Types.Lens.HasTextDocument Language.LSP.Types.TextDocument.TextDocumentIdentifier Language.LSP.Types.TextDocument.TextDocumentIdentifier
-instance Language.LSP.Types.Lens.HasTextDocument Language.LSP.Types.TextDocument.VersionedTextDocumentIdentifier Language.LSP.Types.TextDocument.VersionedTextDocumentIdentifier
-instance Language.LSP.Types.Lens.HasUri Language.LSP.Types.Uri.NormalizedUri Language.LSP.Types.Uri.Uri
+instance Language.LSP.Protocol.Internal.Lens.HasTextDocument Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier.TextDocumentIdentifier Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier.TextDocumentIdentifier
+instance Language.LSP.Protocol.Internal.Lens.HasTextDocument Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier.VersionedTextDocumentIdentifier Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier.VersionedTextDocumentIdentifier
+instance Language.LSP.Protocol.Internal.Lens.HasUri Language.LSP.Protocol.Types.Uri.NormalizedUri Language.LSP.Protocol.Types.Uri.Uri
 
 module Unison.LSP.Conversions
 rangeToInterval :: Range -> Interval Position
@@ -845,7 +844,7 @@ logError :: Text -> Lsp ()
 
 -- | Environment for the Lsp monad.
 data Env
-Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO (NameSearch Transaction) -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri (TMVar FileAnalysis)) -> TVar (Set Uri) -> TVar (Map SomeLspId (IO ())) -> TVar CompletionTree -> Scope -> Env
+Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistory -> IO PrettyPrintEnvDecl -> IO (NameSearch Transaction) -> IO Absolute -> MVar VFS -> Runtime Symbol -> TVar (Map Uri (TMVar FileAnalysis)) -> TVar (Set Uri) -> TVar (Map (Int32 |? Text) (IO ())) -> TVar CompletionTree -> Scope -> Env
 [$sel:lspContext:Env] :: Env -> LanguageContextEnv Config
 [$sel:codebase:Env] :: Env -> Codebase IO Symbol Ann
 [$sel:parseNamesCache:Env] :: Env -> IO NamesWithHistory
@@ -856,7 +855,7 @@ Env :: LanguageContextEnv Config -> Codebase IO Symbol Ann -> IO NamesWithHistor
 [$sel:runtime:Env] :: Env -> Runtime Symbol
 [$sel:checkedFilesVar:Env] :: Env -> TVar (Map Uri (TMVar FileAnalysis))
 [$sel:dirtyFilesVar:Env] :: Env -> TVar (Set Uri)
-[$sel:cancellationMapVar:Env] :: Env -> TVar (Map SomeLspId (IO ()))
+[$sel:cancellationMapVar:Env] :: Env -> TVar (Map (Int32 |? Text) (IO ()))
 [$sel:completionsVar:Env] :: Env -> TVar CompletionTree
 [$sel:scope:Env] :: Env -> Scope
 
@@ -919,7 +918,7 @@ defaultLSPConfig :: Config
 
 -- | Lift a backend computation into the Lsp monad.
 lspBackend :: Backend IO a -> Lsp (Either BackendError a)
-sendNotification :: forall (m :: Method 'FromServer 'Notification). Message m ~ NotificationMessage m => NotificationMessage m -> Lsp ()
+sendNotification :: forall (m :: Method 'ServerToClient 'Notification). TMessage m ~ TNotificationMessage m => TNotificationMessage m -> Lsp ()
 data RangedCodeAction
 RangedCodeAction :: [Range] -> CodeAction -> RangedCodeAction
 [$sel:_codeActionRanges:RangedCodeAction] :: RangedCodeAction -> [Range]
@@ -944,25 +943,25 @@ instance GHC.Base.Applicative Unison.LSP.Types.Lsp
 instance GHC.Base.Functor Unison.LSP.Types.Lsp
 instance GHC.Show.Show Unison.LSP.Types.RangedCodeAction
 instance GHC.Classes.Eq Unison.LSP.Types.RangedCodeAction
-instance Language.LSP.Types.Lens.HasCodeAction Unison.LSP.Types.RangedCodeAction Language.LSP.Types.CodeAction.CodeAction
+instance Language.LSP.Protocol.Internal.Lens.HasCodeAction Unison.LSP.Types.RangedCodeAction Language.LSP.Protocol.Internal.Types.CodeAction.CodeAction
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.Types.Config
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.Types.Config
 instance GHC.Base.Semigroup Unison.LSP.Types.CompletionTree
 instance GHC.Base.Monoid Unison.LSP.Types.CompletionTree
 
 module Unison.LSP.NotificationHandlers
-initializedHandler :: NotificationMessage 'Initialized -> Lsp ()
+initializedHandler :: TNotificationMessage 'Method_Initialized -> Lsp ()
 withDebugging :: Show m => (m -> Lsp ()) -> m -> Lsp ()
 
 module Unison.LSP.HandlerUtils
 
 -- | Cancels an in-flight request
-cancelRequest :: SomeLspId -> Lsp ()
-withDebugging :: (Show (RequestMessage message), Show (ResponseResult message)) => (RequestMessage message -> (Either ResponseError (ResponseResult message) -> Lsp ()) -> Lsp ()) -> RequestMessage message -> (Either ResponseError (ResponseResult message) -> Lsp ()) -> Lsp ()
+cancelRequest :: (Int32 |? Text) -> Lsp ()
+withDebugging :: (Show (TRequestMessage message), Show (MessageResult message)) => (TRequestMessage message -> (Either ResponseError (MessageResult message) -> Lsp ()) -> Lsp ()) -> TRequestMessage message -> (Either ResponseError (MessageResult message) -> Lsp ()) -> Lsp ()
 
 -- | Handler middleware to add the ability for the client to cancel
 --   long-running in-flight requests.
-withCancellation :: forall message. Maybe Int -> (RequestMessage message -> (Either ResponseError (ResponseResult message) -> Lsp ()) -> Lsp ()) -> RequestMessage message -> (Either ResponseError (ResponseResult message) -> Lsp ()) -> Lsp ()
+withCancellation :: forall message. Maybe Int -> (TRequestMessage message -> (Either ResponseError (MessageResult message) -> Lsp ()) -> Lsp ()) -> TRequestMessage message -> (Either ResponseError (MessageResult message) -> Lsp ()) -> Lsp ()
 
 module Unison.LSP.Diagnostics
 annToRange :: Ann -> Maybe Range
@@ -971,18 +970,10 @@ uToLspRange :: Range -> Range
 reportDiagnostics :: Foldable f => Uri -> Maybe FileVersion -> f Diagnostic -> Lsp ()
 mkDiagnostic :: Uri -> Range -> DiagnosticSeverity -> Text -> [(Text, Range)] -> Diagnostic
 data DiagnosticSeverity
-
--- | Error = 1,
-DsError :: DiagnosticSeverity
-
--- | Warning = 2,
-DsWarning :: DiagnosticSeverity
-
--- | Info = 3,
-DsInfo :: DiagnosticSeverity
-
--- | Hint = 4
-DsHint :: DiagnosticSeverity
+DiagnosticSeverity_Error :: DiagnosticSeverity
+DiagnosticSeverity_Warning :: DiagnosticSeverity
+DiagnosticSeverity_Information :: DiagnosticSeverity
+DiagnosticSeverity_Hint :: DiagnosticSeverity
 
 module Unison.LSP.Configuration
 
@@ -992,7 +983,7 @@ updateConfig :: Config -> Value -> Either Text Config
 -- | We could use this notification to cancel/update work-in-progress, but
 --   we don't actually need to update the config here, that's handled by
 --   the lsp library automatically.
-workspaceConfigurationChanged :: NotificationMessage 'WorkspaceDidChangeConfiguration -> Lsp ()
+workspaceConfigurationChanged :: TNotificationMessage 'Method_WorkspaceDidChangeConfiguration -> Lsp ()
 
 module Unison.LSP.Commands
 supportedCommands :: [Text]
@@ -1005,14 +996,14 @@ TextReplacement :: Range -> Text -> Text -> Uri -> TextReplacement
 [$sel:fileUri:TextReplacement] :: TextReplacement -> Uri
 
 -- | Computes code actions for a document.
-executeCommandHandler :: RequestMessage 'WorkspaceExecuteCommand -> (Either ResponseError Value -> Lsp ()) -> Lsp ()
+executeCommandHandler :: TRequestMessage 'Method_WorkspaceExecuteCommand -> (Either ResponseError (Value |? Null) -> Lsp ()) -> Lsp ()
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.Commands.TextReplacement
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.Commands.TextReplacement
 
 module Unison.LSP.CancelRequest
 
 -- | Allows a client to cancel work from a previous request.
-cancelRequestHandler :: NotificationMessage 'CancelRequest -> Lsp ()
+cancelRequestHandler :: TNotificationMessage 'Method_CancelRequest -> Lsp ()
 
 module Unison.LSP.VFS
 
@@ -1043,9 +1034,9 @@ identifierSplitAtPosition :: Uri -> Position -> MaybeT Lsp (Text, Text)
 -- | Returns the prefix of the symbol at the provided location, and the
 --   range that prefix spans.
 completionPrefix :: Uri -> Position -> MaybeT Lsp (Range, Text)
-lspOpenFile :: NotificationMessage 'TextDocumentDidOpen -> Lsp ()
-lspCloseFile :: NotificationMessage 'TextDocumentDidClose -> Lsp ()
-lspChangeFile :: NotificationMessage 'TextDocumentDidChange -> Lsp ()
+lspOpenFile :: TNotificationMessage 'Method_TextDocumentDidOpen -> Lsp ()
+lspCloseFile :: TNotificationMessage 'Method_TextDocumentDidClose -> Lsp ()
+lspChangeFile :: TNotificationMessage 'Method_TextDocumentDidChange -> Lsp ()
 
 module Unison.LSP.FileAnalysis
 
@@ -1137,7 +1128,7 @@ module Unison.LSP.Hover
 -- | Hover help handler
 --   
 --   TODO: * Add docs * Resolve fqn on hover
-hoverHandler :: RequestMessage 'TextDocumentHover -> (Either ResponseError (ResponseResult 'TextDocumentHover) -> Lsp ()) -> Lsp ()
+hoverHandler :: TRequestMessage 'Method_TextDocumentHover -> (Either ResponseError (MessageResult 'Method_TextDocumentHover) -> Lsp ()) -> Lsp ()
 hoverInfo :: Uri -> Position -> MaybeT Lsp Text
 
 -- | Get the type for term literals.
@@ -1145,7 +1136,7 @@ builtinTypeForTermLiterals :: Term Symbol Ann -> Maybe Text
 builtinTypeForPatternLiterals :: Pattern Ann -> Maybe Text
 
 module Unison.LSP.FoldingRange
-foldingRangeRequest :: RequestMessage 'TextDocumentFoldingRange -> (Either ResponseError (ResponseResult 'TextDocumentFoldingRange) -> Lsp ()) -> Lsp ()
+foldingRangeRequest :: TRequestMessage 'Method_TextDocumentFoldingRange -> (Either ResponseError (MessageResult 'Method_TextDocumentFoldingRange) -> Lsp ()) -> Lsp ()
 
 -- | Return a folding range for each top-level definition
 foldingRangesForFile :: Uri -> Lsp [FoldingRange]
@@ -1158,17 +1149,17 @@ TypeSigInsertion :: Range -> Text -> Uri -> TypeSigInsertion
 [$sel:fileUri:TypeSigInsertion] :: TypeSigInsertion -> Uri
 
 -- | Computes code actions for a document.
-codeLensHandler :: RequestMessage 'TextDocumentCodeLens -> (Either ResponseError (List CodeLens) -> Lsp ()) -> Lsp ()
+codeLensHandler :: TRequestMessage 'Method_TextDocumentCodeLens -> (Either ResponseError ([CodeLens] |? Null) -> Lsp ()) -> Lsp ()
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.LSP.CodeLens.TypeSigInsertion
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.LSP.CodeLens.TypeSigInsertion
 
 module Unison.LSP.CodeAction
 
 -- | Computes code actions for a document.
-codeActionHandler :: RequestMessage 'TextDocumentCodeAction -> (Either ResponseError (ResponseResult 'TextDocumentCodeAction) -> Lsp ()) -> Lsp ()
+codeActionHandler :: TRequestMessage 'Method_TextDocumentCodeAction -> (Either ResponseError (MessageResult 'Method_TextDocumentCodeAction) -> Lsp ()) -> Lsp ()
 
 module Unison.LSP.Completion
-completionHandler :: RequestMessage 'TextDocumentCompletion -> (Either ResponseError (ResponseResult 'TextDocumentCompletion) -> Lsp ()) -> Lsp ()
+completionHandler :: TRequestMessage 'Method_TextDocumentCompletion -> (Either ResponseError (MessageResult 'Method_TextDocumentCompletion) -> Lsp ()) -> Lsp ()
 mkDefCompletionItem :: Uri -> Range -> Name -> Name -> Text -> Text -> LabeledDependency -> CompletionItem
 
 -- | Generate a completion tree from a set of names. A completion tree is a
@@ -1214,7 +1205,7 @@ matchCompletions :: CompletionTree -> Text -> [(Path, Name, LabeledDependency)]
 
 -- | Called to resolve additional details for a completion item that the
 --   user is considering.
-completionItemResolveHandler :: RequestMessage 'CompletionItemResolve -> (Either ResponseError CompletionItem -> Lsp ()) -> Lsp ()
+completionItemResolveHandler :: TRequestMessage 'Method_CompletionItemResolve -> (Either ResponseError CompletionItem -> Lsp ()) -> Lsp ()
 
 -- | Data which will be provided back to us in the completion resolve
 --   handler when the user considers this completion.
@@ -1241,7 +1232,7 @@ spawnLsp :: Codebase IO Symbol Ann -> Runtime Symbol -> STM (Branch IO) -> STM A
 serverDefinition :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> ServerDefinition Config
 
 -- | Initialize any context needed by the LSP server
-lspDoInitialize :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> LanguageContextEnv Config -> Message 'Initialize -> IO (Either ResponseError Env)
+lspDoInitialize :: MVar VFS -> Codebase IO Symbol Ann -> Runtime Symbol -> Scope -> STM (Branch IO) -> STM Absolute -> LanguageContextEnv Config -> TMessage 'Method_Initialize -> IO (Either ResponseError Env)
 
 -- | LSP request handlers that don't register/unregister dynamically
 lspStaticHandlers :: Handlers Lsp

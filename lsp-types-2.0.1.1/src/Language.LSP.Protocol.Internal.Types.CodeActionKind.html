@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- THIS IS A GENERATED FILE, DO NOT EDIT</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-matches #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-deprecations #-}</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.CodeActionKind</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.DeepSeq</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Aeson.html"><span class="hs-identifier">Data.Row.Aeson</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Hashable.html"><span class="hs-identifier">Data.Row.Hashable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hashable</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html"><span class="hs-identifier">Language.LSP.Protocol.Types.LspEnum</span></a></span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-comment">{-|
+A set of predefined code action kinds
+-}</span><span>
+</span><span id="line-22"></span><span id="local-6989586621682101797"><span id="local-6989586621682101798"></span></span><span class="hs-keyword">data</span><span> </span><span id="CodeActionKind"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind"><span class="hs-identifier hs-var">CodeActionKind</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-23"></span><span>    </span><span class="hs-comment">{-|
+  Empty kind.
+  -}</span><span>
+</span><span id="line-26"></span><span>  </span><span id="CodeActionKind_Empty"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Empty"><span class="hs-identifier hs-var">CodeActionKind_Empty</span></a></span></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for quickfix actions: 'quickfix'
+  -}</span><span>
+</span><span id="line-30"></span><span>  </span><span id="CodeActionKind_QuickFix"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_QuickFix"><span class="hs-identifier hs-var">CodeActionKind_QuickFix</span></a></span></span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for refactoring actions: 'refactor'
+  -}</span><span>
+</span><span id="line-34"></span><span>  </span><span id="CodeActionKind_Refactor"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Refactor"><span class="hs-identifier hs-var">CodeActionKind_Refactor</span></a></span></span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for refactoring extraction actions: 'refactor.extract'
+
+  Example extract actions:
+
+  - Extract method
+  - Extract function
+  - Extract variable
+  - Extract interface from class
+  - ...
+  -}</span><span>
+</span><span id="line-46"></span><span>  </span><span id="CodeActionKind_RefactorExtract"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorExtract"><span class="hs-identifier hs-var">CodeActionKind_RefactorExtract</span></a></span></span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for refactoring inline actions: 'refactor.inline'
+
+  Example inline actions:
+
+  - Inline function
+  - Inline variable
+  - Inline constant
+  - ...
+  -}</span><span>
+</span><span id="line-57"></span><span>  </span><span id="CodeActionKind_RefactorInline"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorInline"><span class="hs-identifier hs-var">CodeActionKind_RefactorInline</span></a></span></span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for refactoring rewrite actions: 'refactor.rewrite'
+
+  Example rewrite actions:
+
+  - Convert JavaScript function to class
+  - Add or remove parameter
+  - Encapsulate field
+  - Make method static
+  - Move method to base class
+  - ...
+  -}</span><span>
+</span><span id="line-70"></span><span>  </span><span id="CodeActionKind_RefactorRewrite"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorRewrite"><span class="hs-identifier hs-var">CodeActionKind_RefactorRewrite</span></a></span></span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for source actions: `source`
+
+  Source code actions apply to the entire file.
+  -}</span><span>
+</span><span id="line-76"></span><span>  </span><span id="CodeActionKind_Source"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Source"><span class="hs-identifier hs-var">CodeActionKind_Source</span></a></span></span><span>
+</span><span id="line-77"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for an organize imports source action: `source.organizeImports`
+  -}</span><span>
+</span><span id="line-80"></span><span>  </span><span id="CodeActionKind_SourceOrganizeImports"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceOrganizeImports"><span class="hs-identifier hs-var">CodeActionKind_SourceOrganizeImports</span></a></span></span><span>
+</span><span id="line-81"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="hs-comment">{-|
+  Base kind for auto-fix source actions: `source.fixAll`.
+
+  Fix all actions automatically fix errors that have a clear fix that do not require user input.
+  They should not suppress errors or perform unsafe fixes such as generating new types or classes.
+
+  @since 3.15.0
+  -}</span><span>
+</span><span id="line-89"></span><span>  </span><span id="CodeActionKind_SourceFixAll"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceFixAll"><span class="hs-identifier hs-var">CodeActionKind_SourceFixAll</span></a></span></span><span>
+</span><span id="line-90"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="CodeActionKind_Custom"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Custom"><span class="hs-identifier hs-var">CodeActionKind_Custom</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Data.Text.Text</span></span><span>
+</span><span id="line-91"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682101777"><span id="local-6989586621682101779"><span id="local-6989586621682101785"><span class="annot"><span class="annottext">Int -&gt; CodeActionKind -&gt; ShowS
+[CodeActionKind] -&gt; ShowS
+CodeActionKind -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [CodeActionKind] -&gt; ShowS
+$cshowList :: [CodeActionKind] -&gt; ShowS
+show :: CodeActionKind -&gt; String
+$cshow :: CodeActionKind -&gt; String
+showsPrec :: Int -&gt; CodeActionKind -&gt; ShowS
+$cshowsPrec :: Int -&gt; CodeActionKind -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682101770"><span id="local-6989586621682101774"><span class="annot"><span class="annottext">CodeActionKind -&gt; CodeActionKind -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c/= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+== :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c== :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682101751"><span id="local-6989586621682101753"><span id="local-6989586621682101755"><span id="local-6989586621682101757"><span id="local-6989586621682101759"><span id="local-6989586621682101761"><span id="local-6989586621682101765"><span class="annot"><span class="annottext">Eq CodeActionKind
+CodeActionKind -&gt; CodeActionKind -&gt; Bool
+CodeActionKind -&gt; CodeActionKind -&gt; Ordering
+CodeActionKind -&gt; CodeActionKind -&gt; CodeActionKind
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CodeActionKind -&gt; CodeActionKind -&gt; CodeActionKind
+$cmin :: CodeActionKind -&gt; CodeActionKind -&gt; CodeActionKind
+max :: CodeActionKind -&gt; CodeActionKind -&gt; CodeActionKind
+$cmax :: CodeActionKind -&gt; CodeActionKind -&gt; CodeActionKind
+&gt;= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c&gt;= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+&gt; :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c&gt; :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+&lt;= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c&lt;= :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+&lt; :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+$c&lt; :: CodeActionKind -&gt; CodeActionKind -&gt; Bool
+compare :: CodeActionKind -&gt; CodeActionKind -&gt; Ordering
+$ccompare :: CodeActionKind -&gt; CodeActionKind -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep CodeActionKind x -&gt; CodeActionKind
+forall x. CodeActionKind -&gt; Rep CodeActionKind x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep CodeActionKind x -&gt; CodeActionKind
+$cfrom :: forall x. CodeActionKind -&gt; Rep CodeActionKind x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682101745"><span class="annot"><span class="annottext">CodeActionKind -&gt; ()
+forall a. (a -&gt; ()) -&gt; NFData a
+rnf :: CodeActionKind -&gt; ()
+$crnf :: CodeActionKind -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">NFData</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682101738"><span id="local-6989586621682101740"><span class="annot"><span class="annottext">Eq CodeActionKind
+Int -&gt; CodeActionKind -&gt; Int
+CodeActionKind -&gt; Int
+forall a. Eq a -&gt; (Int -&gt; a -&gt; Int) -&gt; (a -&gt; Int) -&gt; Hashable a
+hash :: CodeActionKind -&gt; Int
+$chash :: CodeActionKind -&gt; Int
+hashWithSalt :: Int -&gt; CodeActionKind -&gt; Int
+$chashWithSalt :: Int -&gt; CodeActionKind -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Hashable</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span> </span><span id="local-6989586621682101713"><span id="local-6989586621682101720"><span id="local-6989586621682101727"><span id="local-6989586621682101735"><span class="annot"><span class="annottext">[CodeActionKind] -&gt; Encoding
+[CodeActionKind] -&gt; Value
+CodeActionKind -&gt; Encoding
+CodeActionKind -&gt; Value
+forall a.
+(a -&gt; Value)
+-&gt; (a -&gt; Encoding)
+-&gt; ([a] -&gt; Value)
+-&gt; ([a] -&gt; Encoding)
+-&gt; ToJSON a
+toEncodingList :: [CodeActionKind] -&gt; Encoding
+$ctoEncodingList :: [CodeActionKind] -&gt; Encoding
+toJSONList :: [CodeActionKind] -&gt; Value
+$ctoJSONList :: [CodeActionKind] -&gt; Value
+toEncoding :: CodeActionKind -&gt; Encoding
+$ctoEncoding :: CodeActionKind -&gt; Encoding
+toJSON :: CodeActionKind -&gt; Value
+$ctoJSON :: CodeActionKind -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Aeson.ToJSON</span></span></span></span></span></span><span>
+</span><span id="line-94"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="local-6989586621682101690"><span id="local-6989586621682101699"><span class="annot"><span class="annottext">Value -&gt; Parser [CodeActionKind]
+Value -&gt; Parser CodeActionKind
+forall a.
+(Value -&gt; Parser a) -&gt; (Value -&gt; Parser [a]) -&gt; FromJSON a
+parseJSONList :: Value -&gt; Parser [CodeActionKind]
+$cparseJSONList :: Value -&gt; Parser [CodeActionKind]
+parseJSON :: Value -&gt; Parser CodeActionKind
+$cparseJSON :: Value -&gt; Parser CodeActionKind
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Aeson.FromJSON</span></span></span></span><span>
+</span><span id="line-95"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="local-6989586621682101677"><span class="annot"><span class="annottext">String -&gt; CodeActionKind
+forall a. (String -&gt; a) -&gt; IsString a
+fromString :: String -&gt; CodeActionKind
+$cfromString :: String -&gt; CodeActionKind
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Data.String.IsString</span></span></span><span> </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">via</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#AsLspEnum"><span class="hs-identifier hs-type">Language.LSP.Protocol.Types.LspEnum.AsLspEnum</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind"><span class="hs-identifier hs-type">CodeActionKind</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Data.Text.Text</span></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682101664"><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#LspEnum"><span class="hs-identifier hs-type">Language.LSP.Protocol.Types.LspEnum.LspEnum</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind"><span class="hs-identifier hs-type">CodeActionKind</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621682101661"><span class="annot"><span class="annottext">knownValues :: Set CodeActionKind
+</span><a href="Language.LSP.Protocol.Types.LspEnum.html#knownValues"><span class="hs-identifier hs-var hs-var hs-var hs-var">knownValues</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; [a] -&gt; Set a
+</span><span class="hs-identifier hs-var">Data.Set.fromList</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Empty"><span class="hs-identifier hs-var">CodeActionKind_Empty</span></a></span><span>
+</span><span id="line-99"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_QuickFix"><span class="hs-identifier hs-var">CodeActionKind_QuickFix</span></a></span><span>
+</span><span id="line-100"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Refactor"><span class="hs-identifier hs-var">CodeActionKind_Refactor</span></a></span><span>
+</span><span id="line-101"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorExtract"><span class="hs-identifier hs-var">CodeActionKind_RefactorExtract</span></a></span><span>
+</span><span id="line-102"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorInline"><span class="hs-identifier hs-var">CodeActionKind_RefactorInline</span></a></span><span>
+</span><span id="line-103"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorRewrite"><span class="hs-identifier hs-var">CodeActionKind_RefactorRewrite</span></a></span><span>
+</span><span id="line-104"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Source"><span class="hs-identifier hs-var">CodeActionKind_Source</span></a></span><span>
+</span><span id="line-105"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceOrganizeImports"><span class="hs-identifier hs-var">CodeActionKind_SourceOrganizeImports</span></a></span><span>
+</span><span id="line-106"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceFixAll"><span class="hs-identifier hs-var">CodeActionKind_SourceFixAll</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-107"></span><span>  </span><span class="hs-keyword">type</span><span> </span><span id="EnumBaseType"><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#EnumBaseType"><span class="hs-identifier hs-var">EnumBaseType</span></a></span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind"><span class="hs-identifier hs-type">CodeActionKind</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Data.Text.Text</span></span><span>
+</span><span id="line-108"></span><span>  </span><span id="local-6989586621682101648"><span class="annot"><span class="annottext">toEnumBaseType :: CodeActionKind -&gt; EnumBaseType CodeActionKind
+</span><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var hs-var hs-var hs-var">toEnumBaseType</span></a></span></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Empty"><span class="hs-identifier hs-var">CodeActionKind_Empty</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;&quot;</span></span><span>
+</span><span id="line-109"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_QuickFix"><span class="hs-identifier hs-var">CodeActionKind_QuickFix</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;quickfix&quot;</span></span><span>
+</span><span id="line-110"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Refactor"><span class="hs-identifier hs-var">CodeActionKind_Refactor</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;refactor&quot;</span></span><span>
+</span><span id="line-111"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorExtract"><span class="hs-identifier hs-var">CodeActionKind_RefactorExtract</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;refactor.extract&quot;</span></span><span>
+</span><span id="line-112"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorInline"><span class="hs-identifier hs-var">CodeActionKind_RefactorInline</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;refactor.inline&quot;</span></span><span>
+</span><span id="line-113"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorRewrite"><span class="hs-identifier hs-var">CodeActionKind_RefactorRewrite</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;refactor.rewrite&quot;</span></span><span>
+</span><span id="line-114"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Source"><span class="hs-identifier hs-var">CodeActionKind_Source</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;source&quot;</span></span><span>
+</span><span id="line-115"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceOrganizeImports"><span class="hs-identifier hs-var">CodeActionKind_SourceOrganizeImports</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;source.organizeImports&quot;</span></span><span>
+</span><span id="line-116"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceFixAll"><span class="hs-identifier hs-var">CodeActionKind_SourceFixAll</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;source.fixAll&quot;</span></span><span>
+</span><span id="line-117"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#toEnumBaseType"><span class="hs-identifier hs-var">toEnumBaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Custom"><span class="hs-identifier hs-type">CodeActionKind_Custom</span></a></span><span> </span><span id="local-6989586621682101646"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682101646"><span class="hs-identifier hs-var">arg</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682101646"><span class="hs-identifier hs-var">arg</span></a></span><span>
+</span><span id="line-118"></span><span>
+</span><span id="line-119"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#LspOpenEnum"><span class="hs-identifier hs-type">Language.LSP.Protocol.Types.LspEnum.LspOpenEnum</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind"><span class="hs-identifier hs-type">CodeActionKind</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-120"></span><span>  </span><span id="local-6989586621682101623"><span class="annot"><span class="annottext">fromOpenEnumBaseType :: EnumBaseType CodeActionKind -&gt; CodeActionKind
+</span><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromOpenEnumBaseType</span></a></span></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Empty"><span class="hs-identifier hs-var">CodeActionKind_Empty</span></a></span><span>
+</span><span id="line-121"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;quickfix&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_QuickFix"><span class="hs-identifier hs-var">CodeActionKind_QuickFix</span></a></span><span>
+</span><span id="line-122"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;refactor&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Refactor"><span class="hs-identifier hs-var">CodeActionKind_Refactor</span></a></span><span>
+</span><span id="line-123"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;refactor.extract&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorExtract"><span class="hs-identifier hs-var">CodeActionKind_RefactorExtract</span></a></span><span>
+</span><span id="line-124"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;refactor.inline&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorInline"><span class="hs-identifier hs-var">CodeActionKind_RefactorInline</span></a></span><span>
+</span><span id="line-125"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;refactor.rewrite&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_RefactorRewrite"><span class="hs-identifier hs-var">CodeActionKind_RefactorRewrite</span></a></span><span>
+</span><span id="line-126"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;source&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Source"><span class="hs-identifier hs-var">CodeActionKind_Source</span></a></span><span>
+</span><span id="line-127"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;source.organizeImports&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceOrganizeImports"><span class="hs-identifier hs-var">CodeActionKind_SourceOrganizeImports</span></a></span><span>
+</span><span id="line-128"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><span class="hs-string">&quot;source.fixAll&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_SourceFixAll"><span class="hs-identifier hs-var">CodeActionKind_SourceFixAll</span></a></span><span>
+</span><span id="line-129"></span><span>  </span><span class="annot"><a href="Language.LSP.Protocol.Types.LspEnum.html#fromOpenEnumBaseType"><span class="hs-identifier hs-var">fromOpenEnumBaseType</span></a></span><span> </span><span id="local-6989586621682101621"><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><a href="#local-6989586621682101621"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; CodeActionKind
+</span><a href="Language.LSP.Protocol.Internal.Types.CodeActionKind.html#CodeActionKind_Custom"><span class="hs-identifier hs-var">CodeActionKind_Custom</span></a></span><span> </span><span class="annot"><span class="annottext">EnumBaseType CodeActionKind
+</span><a href="#local-6989586621682101621"><span class="hs-identifier hs-var">arg</span></a></span><span>
+</span><span id="line-130"></span><span>
+</span><span id="line-131"></span><span>
+</span><span id="line-132"></span></pre></body></html>

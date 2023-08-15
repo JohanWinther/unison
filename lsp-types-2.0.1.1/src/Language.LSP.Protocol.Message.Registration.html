@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE DeriveAnyClass            #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric             #-}</span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE DuplicateRecordFields     #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# LANGUAGE ExistentialQuantification #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# LANGUAGE FlexibleContexts          #-}</span><span>
+</span><span id="line-6"></span><span class="hs-pragma">{-# LANGUAGE FlexibleInstances         #-}</span><span>
+</span><span id="line-7"></span><span class="hs-pragma">{-# LANGUAGE RankNTypes                #-}</span><span>
+</span><span id="line-8"></span><span class="hs-pragma">{-# LANGUAGE TemplateHaskell           #-}</span><span>
+</span><span id="line-9"></span><span class="hs-pragma">{-# LANGUAGE TypeInType                #-}</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Message.Registration</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Protocol.Types.html"><span class="hs-identifier">Language.LSP.Protocol.Types</span></a></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Method</span></a></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Protocol.Message.Meta.html"><span class="hs-identifier">Language.LSP.Protocol.Message.Meta</span></a></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Protocol.Message.Method.html"><span class="hs-identifier">Language.LSP.Protocol.Message.Method</span></a></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><a href="Language.LSP.Protocol.Utils.Misc.html"><span class="hs-identifier">Language.LSP.Protocol.Utils.Misc</span></a></span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>                         </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Text</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>                         </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">T</span></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | Typed registration type, with correct options.</span><span>
+</span><span id="line-25"></span><span id="local-6989586621682165817"><span id="local-6989586621682165818"></span></span><span class="hs-keyword">data</span><span> </span><span id="TRegistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-var">TRegistration</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682166249"><span id="local-6989586621682166247"><span class="annot"><a href="#local-6989586621682166247"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#Method"><span class="hs-identifier hs-type">Method</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Meta.html#ClientToServer"><span class="hs-identifier hs-type">ClientToServer</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166249"><span class="hs-identifier hs-type">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-26"></span><span>  </span><span id="TRegistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-var">TRegistration</span></a></span></span><span>
+</span><span id="line-27"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | The id used to register the request. The id can be used to deregister</span><span>
+</span><span id="line-28"></span><span>      </span><span class="hs-comment">-- the request again.</span><span>
+</span><span id="line-29"></span><span>      </span><span id="%24sel%3A_id%3ATRegistration"><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TRegistration m -&gt; Text
+</span><a href="Language.LSP.Protocol.Message.Registration.html#%24sel%3A_id%3ATRegistration"><span class="hs-identifier hs-var hs-var">_id</span></a></span></span><span>              </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-30"></span><span>      </span><span class="hs-comment">-- | The method / capability to register for.</span><span>
+</span><span id="line-31"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="%24sel%3A_method%3ATRegistration"><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TRegistration m -&gt; SClientMethod m
+</span><a href="Language.LSP.Protocol.Message.Registration.html#%24sel%3A_method%3ATRegistration"><span class="hs-identifier hs-var hs-var">_method</span></a></span></span><span>          </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Method.html#SClientMethod"><span class="hs-identifier hs-type">SClientMethod</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166247"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-32"></span><span>      </span><span class="hs-comment">-- | Options necessary for the registration.</span><span>
+</span><span id="line-33"></span><span>      </span><span class="hs-comment">-- Make this strict to aid the pattern matching exhaustiveness checker</span><span>
+</span><span id="line-34"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="%24sel%3A_registerOptions%3ATRegistration"><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TRegistration m -&gt; Maybe (RegistrationOptions m)
+</span><a href="Language.LSP.Protocol.Message.Registration.html#%24sel%3A_registerOptions%3ATRegistration"><span class="hs-identifier hs-var hs-var">_registerOptions</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-glyph">!</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#RegistrationOptions"><span class="hs-identifier hs-type">RegistrationOptions</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166247"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-36"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="annot"><span class="annottext">forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+Rep (TRegistration m) x -&gt; TRegistration m
+forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+TRegistration m -&gt; Rep (TRegistration m) x
+$cto :: forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+Rep (TRegistration m) x -&gt; TRegistration m
+$cfrom :: forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+TRegistration m -&gt; Rep (TRegistration m) x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span id="local-6989586621682165799"><span id="local-6989586621682165807"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621682166229"><span class="annot"><a href="#local-6989586621682166229"><span class="hs-keyword hs-type">stock</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#RegistrationOptions"><span class="hs-identifier hs-type">RegistrationOptions</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166229"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166229"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-39"></span><span id="local-6989586621682165784"><span id="local-6989586621682165786"><span id="local-6989586621682165796"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621682166221"><span class="annot"><a href="#local-6989586621682166221"><span class="hs-keyword hs-type">stock</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#RegistrationOptions"><span class="hs-identifier hs-type">RegistrationOptions</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166221"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166221"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- TODO: can we do this generically somehow?</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- This generates the function</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- regHelper :: SMethod m</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--           -&gt; (( Show (RegistrationOptions m)</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--               , ToJSON (RegistrationOptions m)</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--               , FromJSON ($regOptTcon m)</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--              =&gt; x)</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--           -&gt; x</span><span>
+</span><span id="line-49"></span><span id="regHelper"><span id="local-6989586621682166217"><span id="local-6989586621682166218"><span class="hs-identifier">makeRegHelper</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">RegistrationOptions</span></span></span></span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164611"><span id="local-6989586621682164613"><span id="local-6989586621682164615"><span id="local-6989586621682166055"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682166055"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-52"></span><span>  </span><span id="local-6989586621682164609"><span class="annot"><span class="annottext">toJSON :: TRegistration m -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span id="local-6989586621682164607"><span class="annot"><span class="annottext">x :: TRegistration m
+</span><a href="#local-6989586621682164607"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621682164606"><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164606"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="annot"><span class="annottext">Maybe (RegistrationOptions m)
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind} (m :: Method f t)
+       x.
+SMethod m
+-&gt; ((Show (RegistrationOptions m), ToJSON (RegistrationOptions m),
+     FromJSON (RegistrationOptions m)) =&gt;
+    x)
+-&gt; x
+</span><a href="Language.LSP.Protocol.Message.Registration.html#regHelper"><span class="hs-identifier hs-var">regHelper</span></a></span><span> </span><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164606"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a.
+(Generic a, GToJSON' Value Zero (Rep a)) =&gt;
+Options -&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">genericToJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
+</span><a href="Language.LSP.Protocol.Utils.Misc.html#lspOptions"><span class="hs-identifier hs-var">lspOptions</span></a></span><span> </span><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164607"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="hs-keyword">data</span><span> </span><span id="SomeRegistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-var">SomeRegistration</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621682164482"><span class="annot"><a href="#local-6989586621682164482"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682164481"><span class="annot"><a href="#local-6989586621682164481"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#Method"><span class="hs-identifier hs-type">Method</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Meta.html#ClientToServer"><span class="hs-identifier hs-type">ClientToServer</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682164482"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span class="hs-operator">.</span><span> </span><span id="SomeRegistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-var">SomeRegistration</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682164481"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164473"><span id="local-6989586621682164475"><span id="local-6989586621682164477"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-57"></span><span>  </span><span id="local-6989586621682164472"><span class="annot"><span class="annottext">toJSON :: SomeRegistration -&gt; Value
+</span><a href="#local-6989586621682164472"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span><span> </span><span id="local-6989586621682164470"><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164470"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164470"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164467"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-60"></span><span>  </span><span id="local-6989586621682164459"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser SomeRegistration
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; (Object -&gt; Parser a) -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">withObject</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;Registration&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621682164456"><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164456"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-61"></span><span>    </span><span class="annot"><a href="Language.LSP.Protocol.Message.Method.html#SomeClientMethod"><span class="hs-identifier hs-type">SomeClientMethod</span></a></span><span> </span><span id="local-6989586621682164443"><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164443"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164456"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">.:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;method&quot;</span></span><span>
+</span><span id="line-62"></span><span>    </span><span id="local-6989586621682164441"><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164441"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+Text
+-&gt; SClientMethod m
+-&gt; Maybe (RegistrationOptions m)
+-&gt; TRegistration m
+</span><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-var">TRegistration</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164456"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">.:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;id&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164443"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind} (m :: Method f t)
+       x.
+SMethod m
+-&gt; ((Show (RegistrationOptions m), ToJSON (RegistrationOptions m),
+     FromJSON (RegistrationOptions m)) =&gt;
+    x)
+-&gt; x
+</span><a href="Language.LSP.Protocol.Message.Registration.html#regHelper"><span class="hs-identifier hs-var">regHelper</span></a></span><span> </span><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164443"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164456"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">.:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;registerOptions&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TRegistration m -&gt; SomeRegistration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-var">SomeRegistration</span></a></span><span> </span><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164441"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164430"><span id="local-6989586621682164433"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-66"></span><span>  </span><span id="local-6989586621682164429"><span class="annot"><span class="annottext">show :: SomeRegistration -&gt; String
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">show</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span><span> </span><span id="local-6989586621682164427"><span class="annot"><span class="annottext">r :: TRegistration m
+</span><a href="#local-6989586621682164427"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621682164426"><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164426"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="annot"><span class="annottext">Maybe (RegistrationOptions m)
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind} (m :: Method f t)
+       x.
+SMethod m
+-&gt; ((Show (RegistrationOptions m), ToJSON (RegistrationOptions m),
+     FromJSON (RegistrationOptions m)) =&gt;
+    x)
+-&gt; x
+</span><a href="Language.LSP.Protocol.Message.Registration.html#regHelper"><span class="hs-identifier hs-var">regHelper</span></a></span><span> </span><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164426"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">TRegistration m
+</span><a href="#local-6989586621682164427"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>
+</span><span id="line-68"></span><span id="local-6989586621682165893"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#toUntypedRegistration"><span class="hs-identifier hs-type">toUntypedRegistration</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165893"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.Registration.html#Registration"><span class="hs-identifier hs-type">Registration</span></a></span></span><span>
+</span><span id="line-69"></span><span id="toUntypedRegistration"><span class="annot"><span class="annottext">toUntypedRegistration :: forall {t :: MessageKind} (m :: Method 'ClientToServer t).
+TRegistration m -&gt; Registration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#toUntypedRegistration"><span class="hs-identifier hs-var hs-var">toUntypedRegistration</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TRegistration"><span class="hs-identifier hs-type">TRegistration</span></a></span><span> </span><span id="local-6989586621682164420"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682164420"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621682164419"><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164419"><span class="hs-identifier hs-var">meth</span></a></span></span><span> </span><span id="local-6989586621682164418"><span class="annot"><span class="annottext">Maybe (RegistrationOptions m)
+</span><a href="#local-6989586621682164418"><span class="hs-identifier hs-var">opts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Maybe Value -&gt; Registration
+</span><a href="Language.LSP.Protocol.Internal.Types.Registration.html#Registration"><span class="hs-identifier hs-var">Registration</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682164420"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Text
+</span><span class="hs-identifier hs-var">T.pack</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SomeMethod -&gt; String
+</span><a href="Language.LSP.Protocol.Internal.Method.html#someMethodToMethodString"><span class="hs-identifier hs-var">someMethodToMethodString</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind}
+       (m :: Method f t).
+SMethod m -&gt; SomeMethod
+</span><a href="Language.LSP.Protocol.Internal.Method.html#SomeMethod"><span class="hs-identifier hs-var">SomeMethod</span></a></span><span> </span><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164419"><span class="hs-identifier hs-var">meth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind} (m :: Method f t)
+       x.
+SMethod m
+-&gt; ((Show (RegistrationOptions m), ToJSON (RegistrationOptions m),
+     FromJSON (RegistrationOptions m)) =&gt;
+    x)
+-&gt; x
+</span><a href="Language.LSP.Protocol.Message.Registration.html#regHelper"><span class="hs-identifier hs-var">regHelper</span></a></span><span> </span><span class="annot"><span class="annottext">SClientMethod m
+</span><a href="#local-6989586621682164419"><span class="hs-identifier hs-var">meth</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">Maybe (RegistrationOptions m)
+</span><a href="#local-6989586621682164418"><span class="hs-identifier hs-var">opts</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#toSomeRegistration"><span class="hs-identifier hs-type">toSomeRegistration</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.Registration.html#Registration"><span class="hs-identifier hs-type">Registration</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeRegistration"><span class="hs-identifier hs-type">SomeRegistration</span></a></span><span>
+</span><span id="line-72"></span><span id="toSomeRegistration"><span class="annot"><span class="annottext">toSomeRegistration :: Registration -&gt; Maybe SomeRegistration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#toSomeRegistration"><span class="hs-identifier hs-var hs-var">toSomeRegistration</span></a></span></span><span> </span><span id="local-6989586621682164408"><span class="annot"><span class="annottext">Registration
+</span><a href="#local-6989586621682164408"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621682164407"><span class="annot"><span class="annottext">v :: Value
+</span><a href="#local-6989586621682164407"><span class="hs-identifier hs-var hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">Registration
+</span><a href="#local-6989586621682164408"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Value -&gt; Result a
+</span><span class="hs-identifier hs-var">fromJSON</span></span><span> </span><span class="annot"><span class="annottext">Value
+</span><a href="#local-6989586621682164407"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-75"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Success</span></span><span> </span><span id="local-6989586621682164404"><span class="annot"><span class="annottext">SomeRegistration
+</span><a href="#local-6989586621682164404"><span class="hs-identifier hs-var">r'</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">SomeRegistration
+</span><a href="#local-6989586621682164404"><span class="hs-identifier hs-var">r'</span></a></span><span>
+</span><span id="line-76"></span><span>    </span><span class="annot"><span class="annottext">Result SomeRegistration
+</span><span class="hs-identifier">_</span></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-77"></span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- ---------------------------------------------------------------------</span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- | Typed unregistration type.</span><span>
+</span><span id="line-81"></span><span id="local-6989586621682164402"><span id="local-6989586621682164403"></span></span><span class="hs-keyword">data</span><span> </span><span id="TUnregistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-var">TUnregistration</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682165881"><span id="local-6989586621682165880"><span class="annot"><a href="#local-6989586621682165880"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#Method"><span class="hs-identifier hs-type">Method</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Meta.html#ClientToServer"><span class="hs-identifier hs-type">ClientToServer</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165881"><span class="hs-identifier hs-type">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-82"></span><span>  </span><span id="TUnregistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-var">TUnregistration</span></a></span></span><span>
+</span><span id="line-83"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | The id used to unregister the request or notification. Usually an id</span><span>
+</span><span id="line-84"></span><span>      </span><span class="hs-comment">-- provided during the register request.</span><span>
+</span><span id="line-85"></span><span>      </span><span id="%24sel%3A_id%3ATUnregistration"><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TUnregistration m -&gt; Text
+</span><a href="Language.LSP.Protocol.Message.Registration.html#%24sel%3A_id%3ATUnregistration"><span class="hs-identifier hs-var hs-var">_id</span></a></span></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-86"></span><span>      </span><span class="hs-comment">-- | The method / capability to unregister for.</span><span>
+</span><span id="line-87"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="%24sel%3A_method%3ATUnregistration"><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TUnregistration m -&gt; SMethod m
+</span><a href="Language.LSP.Protocol.Message.Registration.html#%24sel%3A_method%3ATUnregistration"><span class="hs-identifier hs-var hs-var">_method</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#SMethod"><span class="hs-identifier hs-type">SMethod</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165880"><span class="hs-identifier hs-type">m</span></a></span><span>
+</span><span id="line-88"></span><span>    </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="annot"><span class="annottext">forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+Rep (TUnregistration m) x -&gt; TUnregistration m
+forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+TUnregistration m -&gt; Rep (TUnregistration m) x
+$cto :: forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+Rep (TUnregistration m) x -&gt; TUnregistration m
+$cfrom :: forall (t :: MessageKind) (m :: Method 'ClientToServer t) x.
+TUnregistration m -&gt; Rep (TUnregistration m) x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span>
+</span><span id="line-89"></span><span>
+</span><span id="line-90"></span><span id="local-6989586621682164390"><span id="local-6989586621682164394"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621682165874"><span class="annot"><a href="#local-6989586621682165874"><span class="hs-keyword hs-type">stock</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165874"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-91"></span><span id="local-6989586621682164381"><span id="local-6989586621682164383"><span id="local-6989586621682164388"><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621682165872"><span class="annot"><a href="#local-6989586621682165872"><span class="hs-keyword hs-type">stock</span></a></span></span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165872"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-92"></span><span>
+</span><span id="line-93"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164374"><span id="local-6989586621682164376"><span id="local-6989586621682164378"><span id="local-6989586621682165870"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165870"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-94"></span><span>  </span><span id="local-6989586621682164373"><span class="annot"><span class="annottext">toJSON :: TUnregistration m -&gt; Value
+</span><a href="#local-6989586621682164373"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span id="local-6989586621682164372"><span class="annot"><span class="annottext">x :: TUnregistration m
+</span><a href="#local-6989586621682164372"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621682164371"><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164371"><span class="hs-identifier hs-var">m</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind} (m :: Method f t)
+       x.
+SMethod m
+-&gt; ((Show (RegistrationOptions m), ToJSON (RegistrationOptions m),
+     FromJSON (RegistrationOptions m)) =&gt;
+    x)
+-&gt; x
+</span><a href="Language.LSP.Protocol.Message.Registration.html#regHelper"><span class="hs-identifier hs-var">regHelper</span></a></span><span> </span><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164371"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a.
+(Generic a, GToJSON' Value Zero (Rep a)) =&gt;
+Options -&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">genericToJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
+</span><a href="Language.LSP.Protocol.Utils.Misc.html#lspOptions"><span class="hs-identifier hs-var">lspOptions</span></a></span><span> </span><span class="annot"><span class="annottext">TUnregistration m
+</span><a href="#local-6989586621682164372"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>
+</span><span id="line-96"></span><span class="hs-keyword">data</span><span> </span><span id="SomeUnregistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-var">SomeUnregistration</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621682164305"><span class="annot"><a href="#local-6989586621682164305"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682164304"><span class="annot"><a href="#local-6989586621682164304"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Method.html#Method"><span class="hs-identifier hs-type">Method</span></a></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Meta.html#ClientToServer"><span class="hs-identifier hs-type">ClientToServer</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682164305"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span class="hs-operator">.</span><span> </span><span id="SomeUnregistration"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-var">SomeUnregistration</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682164304"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164296"><span id="local-6989586621682164298"><span id="local-6989586621682164300"><span class="annot"><span class="hs-identifier hs-type">ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-type">SomeUnregistration</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621682164295"><span class="annot"><span class="annottext">toJSON :: SomeUnregistration -&gt; Value
+</span><a href="#local-6989586621682164295"><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-type">SomeUnregistration</span></a></span><span> </span><span id="local-6989586621682164293"><span class="annot"><span class="annottext">TUnregistration m
+</span><a href="#local-6989586621682164293"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">TUnregistration m
+</span><a href="#local-6989586621682164293"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682164290"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-type">SomeUnregistration</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621682164286"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser SomeUnregistration
+</span><a href="#local-6989586621682164286"><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; (Object -&gt; Parser a) -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">withObject</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;Unregistration&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621682164285"><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164285"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-103"></span><span>    </span><span class="annot"><a href="Language.LSP.Protocol.Message.Method.html#SomeClientMethod"><span class="hs-identifier hs-type">SomeClientMethod</span></a></span><span> </span><span id="local-6989586621682164277"><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164277"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164285"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">.:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;method&quot;</span></span><span>
+</span><span id="line-104"></span><span>    </span><span id="local-6989586621682164276"><span class="annot"><span class="annottext">TUnregistration m
+</span><a href="#local-6989586621682164276"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+Text -&gt; SMethod m -&gt; TUnregistration m
+</span><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-var">TUnregistration</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682164285"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">.:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;id&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164277"><span class="hs-identifier hs-var">m</span></a></span><span>
+</span><span id="line-105"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (t :: MessageKind) (m :: Method 'ClientToServer t).
+TUnregistration m -&gt; SomeUnregistration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-var">SomeUnregistration</span></a></span><span> </span><span class="annot"><span class="annottext">TUnregistration m
+</span><a href="#local-6989586621682164276"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span id="local-6989586621682165862"><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#toUntypedUnregistration"><span class="hs-identifier hs-type">toUntypedUnregistration</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span class="annot"><a href="#local-6989586621682165862"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.Unregistration.html#Unregistration"><span class="hs-identifier hs-type">Unregistration</span></a></span></span><span>
+</span><span id="line-108"></span><span id="toUntypedUnregistration"><span class="annot"><span class="annottext">toUntypedUnregistration :: forall {t :: MessageKind} (m :: Method 'ClientToServer t).
+TUnregistration m -&gt; Unregistration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#toUntypedUnregistration"><span class="hs-identifier hs-var hs-var">toUntypedUnregistration</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#TUnregistration"><span class="hs-identifier hs-type">TUnregistration</span></a></span><span> </span><span id="local-6989586621682164274"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682164274"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621682164273"><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164273"><span class="hs-identifier hs-var">meth</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Unregistration
+</span><a href="Language.LSP.Protocol.Internal.Types.Unregistration.html#Unregistration"><span class="hs-identifier hs-var">Unregistration</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682164274"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Text
+</span><span class="hs-identifier hs-var">T.pack</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SomeMethod -&gt; String
+</span><a href="Language.LSP.Protocol.Internal.Method.html#someMethodToMethodString"><span class="hs-identifier hs-var">someMethodToMethodString</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall {f :: MessageDirection} {t :: MessageKind}
+       (m :: Method f t).
+SMethod m -&gt; SomeMethod
+</span><a href="Language.LSP.Protocol.Internal.Method.html#SomeMethod"><span class="hs-identifier hs-var">SomeMethod</span></a></span><span> </span><span class="annot"><span class="annottext">SMethod m
+</span><a href="#local-6989586621682164273"><span class="hs-identifier hs-var">meth</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#toSomeUnregistration"><span class="hs-identifier hs-type">toSomeUnregistration</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.Unregistration.html#Unregistration"><span class="hs-identifier hs-type">Unregistration</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Message.Registration.html#SomeUnregistration"><span class="hs-identifier hs-type">SomeUnregistration</span></a></span><span>
+</span><span id="line-111"></span><span id="toSomeUnregistration"><span class="annot"><span class="annottext">toSomeUnregistration :: Unregistration -&gt; Maybe SomeUnregistration
+</span><a href="Language.LSP.Protocol.Message.Registration.html#toSomeUnregistration"><span class="hs-identifier hs-var hs-var">toSomeUnregistration</span></a></span></span><span> </span><span id="local-6989586621682164270"><span class="annot"><span class="annottext">Unregistration
+</span><a href="#local-6989586621682164270"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-112"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621682164269"><span class="annot"><span class="annottext">v :: Value
+</span><a href="#local-6989586621682164269"><span class="hs-identifier hs-var hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToJSON a =&gt; a -&gt; Value
+</span><span class="hs-identifier hs-var">toJSON</span></span><span> </span><span class="annot"><span class="annottext">Unregistration
+</span><a href="#local-6989586621682164270"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-113"></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Value -&gt; Result a
+</span><span class="hs-identifier hs-var">fromJSON</span></span><span> </span><span class="annot"><span class="annottext">Value
+</span><a href="#local-6989586621682164269"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Success</span></span><span> </span><span id="local-6989586621682164268"><span class="annot"><span class="annottext">SomeUnregistration
+</span><a href="#local-6989586621682164268"><span class="hs-identifier hs-var">r'</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">SomeUnregistration
+</span><a href="#local-6989586621682164268"><span class="hs-identifier hs-var">r'</span></a></span><span>
+</span><span id="line-115"></span><span>    </span><span class="annot"><span class="annottext">Result SomeUnregistration
+</span><span class="hs-identifier">_</span></span><span>          </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span></pre></body></html>

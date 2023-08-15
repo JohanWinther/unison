@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- THIS IS A GENERATED FILE, DO NOT EDIT</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-matches #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-deprecations #-}</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.DeclarationLink</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.DeepSeq</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Aeson.html"><span class="hs-identifier">Data.Row.Aeson</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Hashable.html"><span class="hs-identifier">Data.Row.Hashable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hashable</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.LocationLink.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.LocationLink</span></a></span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-comment">{-|
+Information about where a symbol is declared.
+
+Provides additional metadata over normal `Location` declarations, including the range of
+the declaring symbol.
+
+Servers should prefer returning `DeclarationLink` over `Declaration` if supported
+by the client.
+-}</span><span>
+</span><span id="line-25"></span><span id="local-6989586621682129247"><span id="local-6989586621682129248"></span></span><span class="hs-keyword">newtype</span><span> </span><span id="DeclarationLink"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DeclarationLink.html#DeclarationLink"><span class="hs-identifier hs-var">DeclarationLink</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DeclarationLink"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DeclarationLink.html#DeclarationLink"><span class="hs-identifier hs-var">DeclarationLink</span></a></span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.LocationLink.html#LocationLink"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.LocationLink.LocationLink</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682129231"><span id="local-6989586621682129235"><span id="local-6989586621682129239"><span id="local-6989586621682129244"><span class="annot"><span class="annottext">[DeclarationLink] -&gt; Encoding
+[DeclarationLink] -&gt; Value
+DeclarationLink -&gt; Encoding
+DeclarationLink -&gt; Value
+forall a.
+(a -&gt; Value)
+-&gt; (a -&gt; Encoding)
+-&gt; ([a] -&gt; Value)
+-&gt; ([a] -&gt; Encoding)
+-&gt; ToJSON a
+toEncodingList :: [DeclarationLink] -&gt; Encoding
+$ctoEncodingList :: [DeclarationLink] -&gt; Encoding
+toJSONList :: [DeclarationLink] -&gt; Value
+$ctoJSONList :: [DeclarationLink] -&gt; Value
+toEncoding :: DeclarationLink -&gt; Encoding
+$ctoEncoding :: DeclarationLink -&gt; Encoding
+toJSON :: DeclarationLink -&gt; Value
+$ctoJSON :: DeclarationLink -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Aeson.ToJSON</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682129220"><span id="local-6989586621682129225"><span class="annot"><span class="annottext">Value -&gt; Parser [DeclarationLink]
+Value -&gt; Parser DeclarationLink
+forall a.
+(Value -&gt; Parser a) -&gt; (Value -&gt; Parser [a]) -&gt; FromJSON a
+parseJSONList :: Value -&gt; Parser [DeclarationLink]
+$cparseJSONList :: Value -&gt; Parser [DeclarationLink]
+parseJSON :: Value -&gt; Parser DeclarationLink
+$cparseJSON :: Value -&gt; Parser DeclarationLink
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Aeson.FromJSON</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682129206"><span id="local-6989586621682129208"><span id="local-6989586621682129214"><span class="annot"><span class="annottext">Int -&gt; DeclarationLink -&gt; ShowS
+[DeclarationLink] -&gt; ShowS
+DeclarationLink -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DeclarationLink] -&gt; ShowS
+$cshowList :: [DeclarationLink] -&gt; ShowS
+show :: DeclarationLink -&gt; String
+$cshow :: DeclarationLink -&gt; String
+showsPrec :: Int -&gt; DeclarationLink -&gt; ShowS
+$cshowsPrec :: Int -&gt; DeclarationLink -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682129199"><span id="local-6989586621682129203"><span class="annot"><span class="annottext">DeclarationLink -&gt; DeclarationLink -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c/= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+== :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c== :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682129176"><span id="local-6989586621682129178"><span id="local-6989586621682129181"><span id="local-6989586621682129184"><span id="local-6989586621682129187"><span id="local-6989586621682129190"><span id="local-6989586621682129194"><span class="annot"><span class="annottext">Eq DeclarationLink
+DeclarationLink -&gt; DeclarationLink -&gt; Bool
+DeclarationLink -&gt; DeclarationLink -&gt; Ordering
+DeclarationLink -&gt; DeclarationLink -&gt; DeclarationLink
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: DeclarationLink -&gt; DeclarationLink -&gt; DeclarationLink
+$cmin :: DeclarationLink -&gt; DeclarationLink -&gt; DeclarationLink
+max :: DeclarationLink -&gt; DeclarationLink -&gt; DeclarationLink
+$cmax :: DeclarationLink -&gt; DeclarationLink -&gt; DeclarationLink
+&gt;= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c&gt;= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+&gt; :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c&gt; :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+&lt;= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c&lt;= :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+&lt; :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+$c&lt; :: DeclarationLink -&gt; DeclarationLink -&gt; Bool
+compare :: DeclarationLink -&gt; DeclarationLink -&gt; Ordering
+$ccompare :: DeclarationLink -&gt; DeclarationLink -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep DeclarationLink x -&gt; DeclarationLink
+forall x. DeclarationLink -&gt; Rep DeclarationLink x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep DeclarationLink x -&gt; DeclarationLink
+$cfrom :: forall x. DeclarationLink -&gt; Rep DeclarationLink x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682129170"><span class="annot"><span class="annottext">DeclarationLink -&gt; ()
+forall a. (a -&gt; ()) -&gt; NFData a
+rnf :: DeclarationLink -&gt; ()
+$crnf :: DeclarationLink -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">NFData</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682129163"><span id="local-6989586621682129165"><span class="annot"><span class="annottext">Eq DeclarationLink
+Int -&gt; DeclarationLink -&gt; Int
+DeclarationLink -&gt; Int
+forall a. Eq a -&gt; (Int -&gt; a -&gt; Int) -&gt; (a -&gt; Int) -&gt; Hashable a
+hash :: DeclarationLink -&gt; Int
+$chash :: DeclarationLink -&gt; Int
+hashWithSalt :: Int -&gt; DeclarationLink -&gt; Int
+$chashWithSalt :: Int -&gt; DeclarationLink -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Hashable</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span></pre></body></html>

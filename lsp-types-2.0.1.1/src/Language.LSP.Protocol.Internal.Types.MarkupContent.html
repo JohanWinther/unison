@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- THIS IS A GENERATED FILE, DO NOT EDIT</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-matches #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-deprecations #-}</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.MarkupContent</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.DeepSeq</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Aeson.html"><span class="hs-identifier">Data.Row.Aeson</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Hashable.html"><span class="hs-identifier">Data.Row.Hashable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hashable</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Text</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupKind.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.MarkupKind</span></a></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Types.Common.html"><span class="hs-identifier">Language.LSP.Protocol.Types.Common</span></a></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">{-|
+A `MarkupContent` literal represents a string value which content is interpreted base on its
+kind flag. Currently the protocol supports `plaintext` and `markdown` as markup kinds.
+
+If the kind is `markdown` then the value can contain fenced code blocks like in GitHub issues.
+See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
+
+Here is an example how such a string can be constructed using JavaScript / TypeScript:
+```ts
+let markdown: MarkdownContent = {
+ kind: MarkupKind.Markdown,
+ value: [
+   '# Header',
+   'Some text',
+   '```typescript',
+   'someCode();',
+   '```'
+ ].join('\n')
+};
+```
+
+*Please Note* that clients might sanitize the return markdown. A client could decide to
+remove HTML from the markdown to avoid script execution.
+-}</span><span>
+</span><span id="line-42"></span><span id="local-6989586621682088616"><span id="local-6989586621682088617"></span></span><span class="hs-keyword">data</span><span> </span><span id="MarkupContent"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-var">MarkupContent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MarkupContent"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-var">MarkupContent</span></a></span></span><span> </span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">{-|
+  The type of the Markup
+  -}</span><span>
+</span><span id="line-46"></span><span>  </span><span id="%24sel%3A_kind%3AMarkupContent"><span class="annot"><span class="annottext">MarkupContent -&gt; MarkupKind
+</span><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#%24sel%3A_kind%3AMarkupContent"><span class="hs-identifier hs-var hs-var">_kind</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupKind.html#MarkupKind"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.MarkupKind.MarkupKind</span></a></span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">{-|
+  The content itself
+  -}</span><span>
+</span><span id="line-50"></span><span>  </span><span id="%24sel%3A_value%3AMarkupContent"><span class="annot"><span class="annottext">MarkupContent -&gt; Text
+</span><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#%24sel%3A_value%3AMarkupContent"><span class="hs-identifier hs-var hs-var">_value</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Data.Text.Text</span></span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682088601"><span id="local-6989586621682088603"><span id="local-6989586621682088611"><span class="annot"><span class="annottext">Int -&gt; MarkupContent -&gt; ShowS
+[MarkupContent] -&gt; ShowS
+MarkupContent -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [MarkupContent] -&gt; ShowS
+$cshowList :: [MarkupContent] -&gt; ShowS
+show :: MarkupContent -&gt; String
+$cshow :: MarkupContent -&gt; String
+showsPrec :: Int -&gt; MarkupContent -&gt; ShowS
+$cshowsPrec :: Int -&gt; MarkupContent -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682088592"><span id="local-6989586621682088598"><span class="annot"><span class="annottext">MarkupContent -&gt; MarkupContent -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c/= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+== :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c== :: MarkupContent -&gt; MarkupContent -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682088566"><span id="local-6989586621682088568"><span id="local-6989586621682088571"><span id="local-6989586621682088574"><span id="local-6989586621682088577"><span id="local-6989586621682088581"><span id="local-6989586621682088587"><span class="annot"><span class="annottext">Eq MarkupContent
+MarkupContent -&gt; MarkupContent -&gt; Bool
+MarkupContent -&gt; MarkupContent -&gt; Ordering
+MarkupContent -&gt; MarkupContent -&gt; MarkupContent
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: MarkupContent -&gt; MarkupContent -&gt; MarkupContent
+$cmin :: MarkupContent -&gt; MarkupContent -&gt; MarkupContent
+max :: MarkupContent -&gt; MarkupContent -&gt; MarkupContent
+$cmax :: MarkupContent -&gt; MarkupContent -&gt; MarkupContent
+&gt;= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c&gt;= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+&gt; :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c&gt; :: MarkupContent -&gt; MarkupContent -&gt; Bool
+&lt;= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c&lt;= :: MarkupContent -&gt; MarkupContent -&gt; Bool
+&lt; :: MarkupContent -&gt; MarkupContent -&gt; Bool
+$c&lt; :: MarkupContent -&gt; MarkupContent -&gt; Bool
+compare :: MarkupContent -&gt; MarkupContent -&gt; Ordering
+$ccompare :: MarkupContent -&gt; MarkupContent -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep MarkupContent x -&gt; MarkupContent
+forall x. MarkupContent -&gt; Rep MarkupContent x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep MarkupContent x -&gt; MarkupContent
+$cfrom :: forall x. MarkupContent -&gt; Rep MarkupContent x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682088560"><span class="annot"><span class="annottext">MarkupContent -&gt; ()
+forall a. (a -&gt; ()) -&gt; NFData a
+rnf :: MarkupContent -&gt; ()
+$crnf :: MarkupContent -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">NFData</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682088553"><span id="local-6989586621682088555"><span class="annot"><span class="annottext">Eq MarkupContent
+Int -&gt; MarkupContent -&gt; Int
+MarkupContent -&gt; Int
+forall a. Eq a -&gt; (Int -&gt; a -&gt; Int) -&gt; (a -&gt; Int) -&gt; Hashable a
+hash :: MarkupContent -&gt; Int
+$chash :: MarkupContent -&gt; Int
+hashWithSalt :: Int -&gt; MarkupContent -&gt; Int
+$chashWithSalt :: Int -&gt; MarkupContent -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Hashable</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682088545"><span id="local-6989586621682088547"><span id="local-6989586621682088549"><span class="annot"><span class="hs-identifier hs-type">Aeson.ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-type">MarkupContent</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-56"></span><span>  </span><span id="local-6989586621682088531"><span class="annot"><span class="annottext">toJSON :: MarkupContent -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-type">MarkupContent</span></a></span><span> </span><span id="local-6989586621682088529"><span class="annot"><span class="annottext">MarkupKind
+</span><a href="#local-6989586621682088529"><span class="hs-identifier hs-var">arg0</span></a></span></span><span> </span><span id="local-6989586621682088528"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682088528"><span class="hs-identifier hs-var">arg1</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Pair] -&gt; Value
+</span><span class="hs-identifier hs-var">Aeson.object</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>  </span><span class="hs-special">[</span><span class="hs-special">[</span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;kind&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; Key -&gt; v -&gt; kv
+</span><span class="hs-operator hs-var">Aeson..=</span></span><span> </span><span class="annot"><span class="annottext">MarkupKind
+</span><a href="#local-6989586621682088529"><span class="hs-identifier hs-var">arg0</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-57"></span><span>    </span><span class="hs-special">,</span><span class="hs-special">[</span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;value&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; Key -&gt; v -&gt; kv
+</span><span class="hs-operator hs-var">Aeson..=</span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621682088528"><span class="hs-identifier hs-var">arg1</span></a></span><span class="hs-special">]</span><span class="hs-special">]</span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682088522"><span class="annot"><span class="hs-identifier hs-type">Aeson.FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-type">MarkupContent</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-60"></span><span>  </span><span id="local-6989586621682088510"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser MarkupContent
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; (Object -&gt; Parser a) -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">Aeson.withObject</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;MarkupContent&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621682088507"><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682088507"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">MarkupKind -&gt; Text -&gt; MarkupContent
+</span><a href="Language.LSP.Protocol.Internal.Types.MarkupContent.html#MarkupContent"><span class="hs-identifier hs-var">MarkupContent</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682088507"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">Aeson..:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;kind&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682088507"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser a
+</span><span class="hs-operator hs-var">Aeson..:</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;value&quot;</span></span><span>
+</span><span id="line-61"></span></pre></body></html>

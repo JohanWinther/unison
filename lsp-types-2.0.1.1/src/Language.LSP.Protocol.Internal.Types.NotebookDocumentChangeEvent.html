@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- THIS IS A GENERATED FILE, DO NOT EDIT</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-matches #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-deprecations #-}</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.DeepSeq</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Row</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Row</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Aeson.html"><span class="hs-identifier">Data.Row.Aeson</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Hashable.html"><span class="hs-identifier">Data.Row.Hashable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hashable</span></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookCell.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.NotebookCell</span></a></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookCellArrayChange.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.NotebookCellArrayChange</span></a></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentContentChangeEvent.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.TextDocumentContentChangeEvent</span></a></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier</span></a></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentItem.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.TextDocumentItem</span></a></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier.html"><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier</span></a></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Types.Common.html"><span class="hs-identifier">Language.LSP.Protocol.Types.Common</span></a></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-comment">{-|
+A change event for a notebook document.
+
+@since 3.17.0
+-}</span><span>
+</span><span id="line-29"></span><span id="local-6989586621682128154"><span id="local-6989586621682128155"></span></span><span class="hs-keyword">data</span><span> </span><span id="NotebookDocumentChangeEvent"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-var">NotebookDocumentChangeEvent</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="NotebookDocumentChangeEvent"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-var">NotebookDocumentChangeEvent</span></a></span></span><span> </span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">{-|
+  The changed meta data if any.
+
+  Note: should always be an object literal (e.g. LSPObject)
+  -}</span><span>
+</span><span id="line-35"></span><span>  </span><span id="%24sel%3A_metadata%3ANotebookDocumentChangeEvent"><span class="annot"><span class="annottext">NotebookDocumentChangeEvent -&gt; Maybe Object
+</span><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#%24sel%3A_metadata%3ANotebookDocumentChangeEvent"><span class="hs-identifier hs-var hs-var">_metadata</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Data.Aeson.Object</span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">{-|
+  Changes to cells
+  -}</span><span>
+</span><span id="line-39"></span><span>  </span><span id="%24sel%3A_cells%3ANotebookDocumentChangeEvent"><span class="annot"><span class="annottext">NotebookDocumentChangeEvent
+-&gt; Maybe
+     (Rec
+        ((&quot;structure&quot;
+          .== Maybe
+                (Rec
+                   ((&quot;array&quot; .== NotebookCellArrayChange)
+                    .+ (Extend &quot;didOpen&quot; (Maybe [TextDocumentItem]) ('R '[])
+                        .+ ((&quot;didClose&quot; .== Maybe [TextDocumentIdentifier]) .+ 'R '[])))))
+         .+ ((&quot;data&quot; .== Maybe [NotebookCell])
+             .+ ((&quot;textContent&quot;
+                  .== Maybe
+                        [Rec
+                           (Extend &quot;document&quot; VersionedTextDocumentIdentifier ('R '[])
+                            .+ ((&quot;changes&quot; .== [TextDocumentContentChangeEvent]) .+ 'R '[]))])
+                 .+ 'R '[]))))
+</span><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#%24sel%3A_cells%3ANotebookDocumentChangeEvent"><span class="hs-identifier hs-var hs-var">_cells</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Row.Rec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;structure&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Row.Rec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;array&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookCellArrayChange.html#NotebookCellArrayChange"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.NotebookCellArrayChange.NotebookCellArrayChange</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;didOpen&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentItem.html#TextDocumentItem"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.TextDocumentItem.TextDocumentItem</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;didClose&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier.html#TextDocumentIdentifier"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.TextDocumentIdentifier.TextDocumentIdentifier</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Row.Empty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;data&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookCell.html#NotebookCell"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.NotebookCell.NotebookCell</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;textContent&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Row.Rec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;document&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier.html#VersionedTextDocumentIdentifier"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.VersionedTextDocumentIdentifier.VersionedTextDocumentIdentifier</span></a></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;changes&quot;</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..==</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.TextDocumentContentChangeEvent.html#TextDocumentContentChangeEvent"><span class="hs-identifier hs-type">Language.LSP.Protocol.Internal.Types.TextDocumentContentChangeEvent.TextDocumentContentChangeEvent</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Row.Empty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-operator hs-type">Row..+</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Row.Empty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-41"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682128137"><span id="local-6989586621682128139"><span id="local-6989586621682128148"><span class="annot"><span class="annottext">Int -&gt; NotebookDocumentChangeEvent -&gt; ShowS
+[NotebookDocumentChangeEvent] -&gt; ShowS
+NotebookDocumentChangeEvent -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [NotebookDocumentChangeEvent] -&gt; ShowS
+$cshowList :: [NotebookDocumentChangeEvent] -&gt; ShowS
+show :: NotebookDocumentChangeEvent -&gt; String
+$cshow :: NotebookDocumentChangeEvent -&gt; String
+showsPrec :: Int -&gt; NotebookDocumentChangeEvent -&gt; ShowS
+$cshowsPrec :: Int -&gt; NotebookDocumentChangeEvent -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682128033"><span id="local-6989586621682128039"><span class="annot"><span class="annottext">NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c/= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+== :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c== :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682127917"><span id="local-6989586621682127919"><span id="local-6989586621682127922"><span id="local-6989586621682127925"><span id="local-6989586621682127928"><span id="local-6989586621682127934"><span id="local-6989586621682127941"><span class="annot"><span class="annottext">Eq NotebookDocumentChangeEvent
+NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; Ordering
+NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent
+$cmin :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent
+max :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent
+$cmax :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent
+&gt;= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c&gt;= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+&gt; :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c&gt; :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+&lt;= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c&lt;= :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+&lt; :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+$c&lt; :: NotebookDocumentChangeEvent -&gt; NotebookDocumentChangeEvent -&gt; Bool
+compare :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; Ordering
+$ccompare :: NotebookDocumentChangeEvent
+-&gt; NotebookDocumentChangeEvent -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x.
+Rep NotebookDocumentChangeEvent x -&gt; NotebookDocumentChangeEvent
+forall x.
+NotebookDocumentChangeEvent -&gt; Rep NotebookDocumentChangeEvent x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x.
+Rep NotebookDocumentChangeEvent x -&gt; NotebookDocumentChangeEvent
+$cfrom :: forall x.
+NotebookDocumentChangeEvent -&gt; Rep NotebookDocumentChangeEvent x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682127661"><span class="annot"><span class="annottext">NotebookDocumentChangeEvent -&gt; ()
+forall a. (a -&gt; ()) -&gt; NFData a
+rnf :: NotebookDocumentChangeEvent -&gt; ()
+$crnf :: NotebookDocumentChangeEvent -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">NFData</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682127654"><span id="local-6989586621682127656"><span class="annot"><span class="annottext">Eq NotebookDocumentChangeEvent
+Int -&gt; NotebookDocumentChangeEvent -&gt; Int
+NotebookDocumentChangeEvent -&gt; Int
+forall a. Eq a -&gt; (Int -&gt; a -&gt; Int) -&gt; (a -&gt; Int) -&gt; Hashable a
+hash :: NotebookDocumentChangeEvent -&gt; Int
+$chash :: NotebookDocumentChangeEvent -&gt; Int
+hashWithSalt :: Int -&gt; NotebookDocumentChangeEvent -&gt; Int
+$chashWithSalt :: Int -&gt; NotebookDocumentChangeEvent -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Hashable</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682127646"><span id="local-6989586621682127648"><span id="local-6989586621682127650"><span class="annot"><span class="hs-identifier hs-type">Aeson.ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-type">NotebookDocumentChangeEvent</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-45"></span><span>  </span><span id="local-6989586621682127537"><span class="annot"><span class="annottext">toJSON :: NotebookDocumentChangeEvent -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-type">NotebookDocumentChangeEvent</span></a></span><span> </span><span id="local-6989586621682127535"><span class="annot"><span class="annottext">Maybe Object
+</span><a href="#local-6989586621682127535"><span class="hs-identifier hs-var">arg0</span></a></span></span><span> </span><span id="local-6989586621682127534"><span class="annot"><span class="annottext">Maybe
+  (Rec
+     ((&quot;structure&quot;
+       .== Maybe
+             (Rec
+                ((&quot;array&quot; .== NotebookCellArrayChange)
+                 .+ (Extend &quot;didOpen&quot; (Maybe [TextDocumentItem]) ('R '[])
+                     .+ ((&quot;didClose&quot; .== Maybe [TextDocumentIdentifier]) .+ 'R '[])))))
+      .+ ((&quot;data&quot; .== Maybe [NotebookCell])
+          .+ ((&quot;textContent&quot;
+               .== Maybe
+                     [Rec
+                        (Extend &quot;document&quot; VersionedTextDocumentIdentifier ('R '[])
+                         .+ ((&quot;changes&quot; .== [TextDocumentContentChangeEvent]) .+ 'R '[]))])
+              .+ 'R '[]))))
+</span><a href="#local-6989586621682127534"><span class="hs-identifier hs-var">arg1</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Pair] -&gt; Value
+</span><span class="hs-identifier hs-var">Aeson.object</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>  </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;metadata&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; String -&gt; Maybe v -&gt; [kv]
+</span><a href="Language.LSP.Protocol.Types.Common.html#.%3D%3F"><span class="hs-operator hs-var">Language.LSP.Protocol.Types.Common..=?</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Object
+</span><a href="#local-6989586621682127535"><span class="hs-identifier hs-var">arg0</span></a></span><span>
+</span><span id="line-46"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;cells&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; String -&gt; Maybe v -&gt; [kv]
+</span><a href="Language.LSP.Protocol.Types.Common.html#.%3D%3F"><span class="hs-operator hs-var">Language.LSP.Protocol.Types.Common..=?</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe
+  (Rec
+     ((&quot;structure&quot;
+       .== Maybe
+             (Rec
+                ((&quot;array&quot; .== NotebookCellArrayChange)
+                 .+ (Extend &quot;didOpen&quot; (Maybe [TextDocumentItem]) ('R '[])
+                     .+ ((&quot;didClose&quot; .== Maybe [TextDocumentIdentifier]) .+ 'R '[])))))
+      .+ ((&quot;data&quot; .== Maybe [NotebookCell])
+          .+ ((&quot;textContent&quot;
+               .== Maybe
+                     [Rec
+                        (Extend &quot;document&quot; VersionedTextDocumentIdentifier ('R '[])
+                         .+ ((&quot;changes&quot; .== [TextDocumentContentChangeEvent]) .+ 'R '[]))])
+              .+ 'R '[]))))
+</span><a href="#local-6989586621682127534"><span class="hs-identifier hs-var">arg1</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682127528"><span class="annot"><span class="hs-identifier hs-type">Aeson.FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-type">NotebookDocumentChangeEvent</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621682127414"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser NotebookDocumentChangeEvent
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; (Object -&gt; Parser a) -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">Aeson.withObject</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;NotebookDocumentChangeEvent&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621682127411"><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682127411"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Object
+-&gt; Maybe
+     (Rec
+        ((&quot;structure&quot;
+          .== Maybe
+                (Rec
+                   ((&quot;array&quot; .== NotebookCellArrayChange)
+                    .+ (Extend &quot;didOpen&quot; (Maybe [TextDocumentItem]) ('R '[])
+                        .+ ((&quot;didClose&quot; .== Maybe [TextDocumentIdentifier]) .+ 'R '[])))))
+         .+ ((&quot;data&quot; .== Maybe [NotebookCell])
+             .+ ((&quot;textContent&quot;
+                  .== Maybe
+                        [Rec
+                           (Extend &quot;document&quot; VersionedTextDocumentIdentifier ('R '[])
+                            .+ ((&quot;changes&quot; .== [TextDocumentContentChangeEvent]) .+ 'R '[]))])
+                 .+ 'R '[]))))
+-&gt; NotebookDocumentChangeEvent
+</span><a href="Language.LSP.Protocol.Internal.Types.NotebookDocumentChangeEvent.html#NotebookDocumentChangeEvent"><span class="hs-identifier hs-var">NotebookDocumentChangeEvent</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682127411"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser (Maybe a)
+</span><span class="hs-operator hs-var">Aeson..:!</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;metadata&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682127411"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser (Maybe a)
+</span><span class="hs-operator hs-var">Aeson..:!</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;cells&quot;</span></span><span>
+</span><span id="line-50"></span></pre></body></html>

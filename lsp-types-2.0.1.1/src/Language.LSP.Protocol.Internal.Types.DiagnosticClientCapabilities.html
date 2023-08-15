@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- THIS IS A GENERATED FILE, DO NOT EDIT</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
+</span><span id="line-4"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-matches #-}</span><span>
+</span><span id="line-5"></span><span class="hs-pragma">{-# OPTIONS_GHC -Wno-deprecations #-}</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.DeepSeq</span></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Hashable</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Aeson.html"><span class="hs-identifier">Data.Row.Aeson</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Aeson</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Data.Row.Hashable.html"><span class="hs-identifier">Data.Row.Hashable</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Hashable</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Types.Common.html"><span class="hs-identifier">Language.LSP.Protocol.Types.Common</span></a></span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span class="hs-comment">{-|
+Client capabilities specific to diagnostic pull requests.
+
+@since 3.17.0
+-}</span><span>
+</span><span id="line-21"></span><span id="local-6989586621682070499"><span id="local-6989586621682070500"></span></span><span class="hs-keyword">data</span><span> </span><span id="DiagnosticClientCapabilities"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-var">DiagnosticClientCapabilities</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DiagnosticClientCapabilities"><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-var">DiagnosticClientCapabilities</span></a></span></span><span> </span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">{-|
+  Whether implementation supports dynamic registration. If this is set to `true`
+  the client supports the new `(TextDocumentRegistrationOptions &amp; StaticRegistrationOptions)`
+  return value for the corresponding server capability as well.
+  -}</span><span>
+</span><span id="line-27"></span><span>  </span><span id="%24sel%3A_dynamicRegistration%3ADiagnosticClientCapabilities"><span class="annot"><span class="annottext">DiagnosticClientCapabilities -&gt; Maybe Bool
+</span><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#%24sel%3A_dynamicRegistration%3ADiagnosticClientCapabilities"><span class="hs-identifier hs-var hs-var">_dynamicRegistration</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">{-|
+  Whether the clients supports related documents for document diagnostic pulls.
+  -}</span><span>
+</span><span id="line-31"></span><span>  </span><span id="%24sel%3A_relatedDocumentSupport%3ADiagnosticClientCapabilities"><span class="annot"><span class="annottext">DiagnosticClientCapabilities -&gt; Maybe Bool
+</span><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#%24sel%3A_relatedDocumentSupport%3ADiagnosticClientCapabilities"><span class="hs-identifier hs-var hs-var">_relatedDocumentSupport</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682070484"><span id="local-6989586621682070486"><span id="local-6989586621682070494"><span class="annot"><span class="annottext">Int -&gt; DiagnosticClientCapabilities -&gt; ShowS
+[DiagnosticClientCapabilities] -&gt; ShowS
+DiagnosticClientCapabilities -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [DiagnosticClientCapabilities] -&gt; ShowS
+$cshowList :: [DiagnosticClientCapabilities] -&gt; ShowS
+show :: DiagnosticClientCapabilities -&gt; String
+$cshow :: DiagnosticClientCapabilities -&gt; String
+showsPrec :: Int -&gt; DiagnosticClientCapabilities -&gt; ShowS
+$cshowsPrec :: Int -&gt; DiagnosticClientCapabilities -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682070474"><span id="local-6989586621682070480"><span class="annot"><span class="annottext">DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c/= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+== :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c== :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682070446"><span id="local-6989586621682070448"><span id="local-6989586621682070451"><span id="local-6989586621682070454"><span id="local-6989586621682070457"><span id="local-6989586621682070462"><span id="local-6989586621682070468"><span class="annot"><span class="annottext">Eq DiagnosticClientCapabilities
+DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Ordering
+DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; DiagnosticClientCapabilities
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; DiagnosticClientCapabilities
+$cmin :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; DiagnosticClientCapabilities
+max :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; DiagnosticClientCapabilities
+$cmax :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; DiagnosticClientCapabilities
+&gt;= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c&gt;= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+&gt; :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c&gt; :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+&lt;= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c&lt;= :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+&lt; :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+$c&lt; :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Bool
+compare :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Ordering
+$ccompare :: DiagnosticClientCapabilities
+-&gt; DiagnosticClientCapabilities -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x.
+Rep DiagnosticClientCapabilities x -&gt; DiagnosticClientCapabilities
+forall x.
+DiagnosticClientCapabilities -&gt; Rep DiagnosticClientCapabilities x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x.
+Rep DiagnosticClientCapabilities x -&gt; DiagnosticClientCapabilities
+$cfrom :: forall x.
+DiagnosticClientCapabilities -&gt; Rep DiagnosticClientCapabilities x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">anyclass</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621682070439"><span class="annot"><span class="annottext">DiagnosticClientCapabilities -&gt; ()
+forall a. (a -&gt; ()) -&gt; NFData a
+rnf :: DiagnosticClientCapabilities -&gt; ()
+$crnf :: DiagnosticClientCapabilities -&gt; ()
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">NFData</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621682070432"><span id="local-6989586621682070434"><span class="annot"><span class="annottext">Eq DiagnosticClientCapabilities
+Int -&gt; DiagnosticClientCapabilities -&gt; Int
+DiagnosticClientCapabilities -&gt; Int
+forall a. Eq a -&gt; (Int -&gt; a -&gt; Int) -&gt; (a -&gt; Int) -&gt; Hashable a
+hash :: DiagnosticClientCapabilities -&gt; Int
+$chash :: DiagnosticClientCapabilities -&gt; Int
+hashWithSalt :: Int -&gt; DiagnosticClientCapabilities -&gt; Int
+$chashWithSalt :: Int -&gt; DiagnosticClientCapabilities -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Hashable</span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682070424"><span id="local-6989586621682070426"><span id="local-6989586621682070428"><span class="annot"><span class="hs-identifier hs-type">Aeson.ToJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-type">DiagnosticClientCapabilities</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-37"></span><span>  </span><span id="local-6989586621682070414"><span class="annot"><span class="annottext">toJSON :: DiagnosticClientCapabilities -&gt; Value
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toJSON</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-type">DiagnosticClientCapabilities</span></a></span><span> </span><span id="local-6989586621682070412"><span class="annot"><span class="annottext">Maybe Bool
+</span><a href="#local-6989586621682070412"><span class="hs-identifier hs-var">arg0</span></a></span></span><span> </span><span id="local-6989586621682070411"><span class="annot"><span class="annottext">Maybe Bool
+</span><a href="#local-6989586621682070411"><span class="hs-identifier hs-var">arg1</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Pair] -&gt; Value
+</span><span class="hs-identifier hs-var">Aeson.object</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>  </span><span class="hs-special">[</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;dynamicRegistration&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; String -&gt; Maybe v -&gt; [kv]
+</span><a href="Language.LSP.Protocol.Types.Common.html#.%3D%3F"><span class="hs-operator hs-var">Language.LSP.Protocol.Types.Common..=?</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Bool
+</span><a href="#local-6989586621682070412"><span class="hs-identifier hs-var">arg0</span></a></span><span>
+</span><span id="line-38"></span><span>    </span><span class="hs-special">,</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;relatedDocumentSupport&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall kv v. (KeyValue kv, ToJSON v) =&gt; String -&gt; Maybe v -&gt; [kv]
+</span><a href="Language.LSP.Protocol.Types.Common.html#.%3D%3F"><span class="hs-operator hs-var">Language.LSP.Protocol.Types.Common..=?</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Bool
+</span><a href="#local-6989586621682070411"><span class="hs-identifier hs-var">arg1</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621682070405"><span class="annot"><span class="hs-identifier hs-type">Aeson.FromJSON</span></span><span> </span><span class="annot"><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-type">DiagnosticClientCapabilities</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>  </span><span id="local-6989586621682070393"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser DiagnosticClientCapabilities
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; (Object -&gt; Parser a) -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">Aeson.withObject</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;DiagnosticClientCapabilities&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621682070390"><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682070390"><span class="hs-identifier hs-var">arg</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe Bool -&gt; Maybe Bool -&gt; DiagnosticClientCapabilities
+</span><a href="Language.LSP.Protocol.Internal.Types.DiagnosticClientCapabilities.html#DiagnosticClientCapabilities"><span class="hs-identifier hs-var">DiagnosticClientCapabilities</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682070390"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser (Maybe a)
+</span><span class="hs-operator hs-var">Aeson..:!</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;dynamicRegistration&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">Object
+</span><a href="#local-6989586621682070390"><span class="hs-identifier hs-var">arg</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. FromJSON a =&gt; Object -&gt; Key -&gt; Parser (Maybe a)
+</span><span class="hs-operator hs-var">Aeson..:!</span></span><span> </span><span class="annot"><span class="annottext">Key
+</span><span class="hs-string">&quot;relatedDocumentSupport&quot;</span></span><span>
+</span><span id="line-42"></span></pre></body></html>
