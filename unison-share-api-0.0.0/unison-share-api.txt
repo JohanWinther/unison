@@ -48,6 +48,8 @@ instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Util.Pretty.Widt
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.NameSegment.NameSegment
 instance Data.OpenApi.Internal.Schema.ToSchema n => Data.OpenApi.Internal.Schema.ToSchema (Unison.HashQualified.HashQualified n)
 instance Data.OpenApi.Internal.Schema.ToSchema n => Data.OpenApi.Internal.Schema.ToSchema (Unison.HashQualified'.HashQualified n)
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Core.Project.ProjectName
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Core.Project.ProjectBranchName
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Hash.Hash
 instance Data.Aeson.Types.FromJSON.FromJSON Unison.Hash.Hash
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.ShortHash.ShortHash
@@ -105,7 +107,9 @@ instance Web.Internal.HttpApiData.ToHttpApiData Unison.Name.Internal.Name
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Core.Project.ProjectName
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Core.Project.ProjectName
 instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "project-name" Unison.Core.Project.ProjectName)
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Core.Project.ProjectName
 instance Web.Internal.HttpApiData.FromHttpApiData Unison.Core.Project.ProjectBranchName
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Core.Project.ProjectBranchName
 instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Core.Project.ProjectBranchName
 instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "branch-name" Unison.Core.Project.ProjectBranchName)
 
@@ -1011,30 +1015,26 @@ module Unison.Server.Share.Definitions
 definitionForHQName :: Path -> CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
 
 module Unison.Server.Local.Endpoints.Projects
-type ProjectsAPI = "projects" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "owner" ProjectOwner :> APIGet [ProjectListing]
-newtype ProjectOwner
-ProjectOwner :: Text -> ProjectOwner
-projectOwnerFromText :: Text -> Either Text ProjectOwner
-data ProjectListing
-ProjectListing :: ProjectOwner -> Text -> UnisonHash -> ProjectListing
-[$sel:owner:ProjectListing] :: ProjectListing -> ProjectOwner
-[$sel:name:ProjectListing] :: ProjectListing -> Text
-[$sel:hash:ProjectListing] :: ProjectListing -> UnisonHash
-backendListEntryToProjectListing :: ProjectOwner -> ShallowListEntry Symbol a -> Maybe ProjectListing
-entryToOwner :: ShallowListEntry Symbol a -> Maybe ProjectOwner
-serve :: forall m. MonadIO m => Codebase m Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe ProjectOwner -> Backend m [ProjectListing]
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.Projects.ProjectOwner
-instance GHC.Show.Show Unison.Server.Local.Endpoints.Projects.ProjectOwner
-instance GHC.Generics.Generic Unison.Server.Local.Endpoints.Projects.ProjectOwner
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.Projects.ProjectListing
-instance GHC.Show.Show Unison.Server.Local.Endpoints.Projects.ProjectListing
+projectListingEndpoint :: Codebase IO Symbol Ann -> Maybe PrefixFilter -> Backend IO [ProjectListing]
+projectBranchListingEndpoint :: Codebase IO Symbol Ann -> ProjectName -> Maybe PrefixFilter -> Backend IO [ProjectBranchListing]
+type ListProjectsEndpoint = QueryParam "prefix" PrefixFilter :> Get '[JSON] [ProjectListing]
+type ListProjectBranchesEndpoint = QueryParam "prefix" PrefixFilter :> Get '[JSON] [ProjectBranchListing]
 instance GHC.Generics.Generic Unison.Server.Local.Endpoints.Projects.ProjectListing
-instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Local.Endpoints.Projects.ProjectOwner
-instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.Projects.ProjectListing
+instance GHC.Show.Show Unison.Server.Local.Endpoints.Projects.ProjectListing
+instance GHC.Generics.Generic Unison.Server.Local.Endpoints.Projects.ProjectBranchListing
+instance GHC.Show.Show Unison.Server.Local.Endpoints.Projects.ProjectBranchListing
+instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Local.Endpoints.Projects.PrefixFilter
+instance GHC.Generics.Generic Unison.Server.Local.Endpoints.Projects.PrefixFilter
+instance GHC.Show.Show Unison.Server.Local.Endpoints.Projects.PrefixFilter
+instance Data.OpenApi.Internal.ParamSchema.ToParamSchema Unison.Server.Local.Endpoints.Projects.PrefixFilter
+instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "prefix" Unison.Server.Local.Endpoints.Projects.PrefixFilter)
+instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.Projects.PrefixFilter
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.Projects.ProjectBranchListing
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.Projects.ProjectBranchListing
+instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.Projects.ProjectBranchListing
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.Projects.ProjectListing
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.Projects.ProjectListing
-instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "owner" Unison.Server.Local.Endpoints.Projects.ProjectOwner)
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.Projects.ProjectOwner
-instance Web.Internal.HttpApiData.FromHttpApiData Unison.Server.Local.Endpoints.Projects.ProjectOwner
+instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.Projects.ProjectListing
 
 module Unison.Server.Local.Endpoints.NamespaceListing
 serve :: Codebase IO Symbol Ann -> Maybe (Either ShortCausalHash CausalHash) -> Maybe Path -> Maybe Path -> Backend IO NamespaceListing
@@ -1212,8 +1212,8 @@ type OpenApiJSON = "openapi.json" :> Get '[JSON] OpenApi
 type UnisonAndDocsAPI = UnisonLocalAPI :<|> OpenApiJSON :<|> Raw
 type LooseCodeAPI = "non-project-code" :> CodebaseServerAPI
 type UnisonLocalAPI = ProjectsAPI :<|> LooseCodeAPI
-type CodebaseServerAPI = NamespaceListingAPI :<|> NamespaceDetailsAPI :<|> ProjectsAPI :<|> DefinitionsAPI :<|> FuzzyFindAPI :<|> TermSummaryAPI :<|> TypeSummaryAPI
-type ProjectsAPI = "projects" :> Capture "project-name" ProjectName :> "branches" :> Capture "branch-name" ProjectBranchName :> CodebaseServerAPI
+type CodebaseServerAPI = NamespaceListingAPI :<|> NamespaceDetailsAPI :<|> DefinitionsAPI :<|> FuzzyFindAPI :<|> TermSummaryAPI :<|> TypeSummaryAPI
+type ProjectsAPI = ("projects" :> ListProjectsEndpoint) :<|> ("projects" :> Capture "project-name" ProjectName :> "branches" :> ListProjectBranchesEndpoint) :<|> ("projects" :> Capture "project-name" ProjectName :> "branches" :> Capture "branch-name" ProjectBranchName :> CodebaseServerAPI)
 type WebUI = CaptureAll "route" Text :> Get '[HTML] RawHtml
 type ServerAPI = ("ui" :> WebUI) :<|> ("api" :> UnisonAndDocsAPI)
 type StaticAPI = "static" :> Raw
@@ -1338,8 +1338,9 @@ serveUnisonAndDocs :: BackendEnv -> Runtime Symbol -> Codebase IO Symbol Ann -> 
 serveDocs :: Application
 serveOpenAPI :: Handler OpenApi
 hoistWithAuth :: forall api. HasServer api '[] => Proxy api -> ByteString -> ServerT api Handler -> ServerT (Authed api) Handler
-serveLooseCode :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> Server LooseCodeAPI
-serveProjectsAPI :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> ProjectName -> ProjectBranchName -> Server LooseCodeAPI
+serveLooseCode :: Codebase IO Symbol Ann -> Runtime Symbol -> ServerT LooseCodeAPI (Backend IO)
+serveProjectsCodebaseServerAPI :: Codebase IO Symbol Ann -> Runtime Symbol -> ProjectName -> ProjectBranchName -> ServerT CodebaseServerAPI (Backend IO)
+serveProjectsAPI :: Codebase IO Symbol Ann -> Runtime Symbol -> ServerT ProjectsAPI (Backend IO)
 serveUnisonLocal :: BackendEnv -> Codebase IO Symbol Ann -> Runtime Symbol -> Server UnisonLocalAPI
 backendHandler :: BackendEnv -> Backend IO a -> Handler a
 instance GHC.Show.Show Unison.Server.CodebaseServer.DefinitionReference
