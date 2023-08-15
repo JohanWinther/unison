@@ -6,6 +6,11 @@
 @version 0.0.0
 
 module U.Codebase.HashTags
+
+-- | Represents a hash of a type or term component
+newtype ComponentHash
+ComponentHash :: Hash -> ComponentHash
+[unComponentHash] :: ComponentHash -> Hash
 newtype BranchHash
 BranchHash :: Hash -> BranchHash
 [unBranchHash] :: BranchHash -> Hash
@@ -17,6 +22,9 @@ CausalHash :: Hash -> CausalHash
 newtype PatchHash
 PatchHash :: Hash -> PatchHash
 [unPatchHash] :: PatchHash -> Hash
+instance GHC.Show.Show U.Codebase.HashTags.ComponentHash
+instance GHC.Classes.Ord U.Codebase.HashTags.ComponentHash
+instance GHC.Classes.Eq U.Codebase.HashTags.ComponentHash
 instance GHC.Classes.Ord U.Codebase.HashTags.BranchHash
 instance GHC.Classes.Eq U.Codebase.HashTags.BranchHash
 instance GHC.Classes.Ord U.Codebase.HashTags.CausalHash

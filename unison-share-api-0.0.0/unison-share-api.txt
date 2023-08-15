@@ -1394,20 +1394,20 @@ PatchDiff :: hash -> [text] -> [oldHash] -> [hash] -> ByteString -> PatchDiff te
 [$sel:newHashLookup:PatchDiff] :: PatchDiff text oldHash hash -> [hash]
 [$sel:bytes:PatchDiff] :: PatchDiff text oldHash hash -> ByteString
 data Namespace text hash
-Namespace :: [text] -> [hash] -> [hash] -> [(hash, hash)] -> ByteString -> Namespace text hash
+Namespace :: [text] -> [hash] -> [hash] -> [(hash, hash)] -> LocalBranchBytes -> Namespace text hash
 [$sel:textLookup:Namespace] :: Namespace text hash -> [text]
 [$sel:defnLookup:Namespace] :: Namespace text hash -> [hash]
 [$sel:patchLookup:Namespace] :: Namespace text hash -> [hash]
 [$sel:childLookup:Namespace] :: Namespace text hash -> [(hash, hash)]
-[$sel:bytes:Namespace] :: Namespace text hash -> ByteString
+[$sel:bytes:Namespace] :: Namespace text hash -> LocalBranchBytes
 data NamespaceDiff text hash
-NamespaceDiff :: hash -> [text] -> [hash] -> [hash] -> [(hash, hash)] -> ByteString -> NamespaceDiff text hash
+NamespaceDiff :: hash -> [text] -> [hash] -> [hash] -> [(hash, hash)] -> LocalBranchBytes -> NamespaceDiff text hash
 [$sel:parent:NamespaceDiff] :: NamespaceDiff text hash -> hash
 [$sel:textLookup:NamespaceDiff] :: NamespaceDiff text hash -> [text]
 [$sel:defnLookup:NamespaceDiff] :: NamespaceDiff text hash -> [hash]
 [$sel:patchLookup:NamespaceDiff] :: NamespaceDiff text hash -> [hash]
 [$sel:childLookup:NamespaceDiff] :: NamespaceDiff text hash -> [(hash, hash)]
-[$sel:bytes:NamespaceDiff] :: NamespaceDiff text hash -> ByteString
+[$sel:bytes:NamespaceDiff] :: NamespaceDiff text hash -> LocalBranchBytes
 data Causal hash
 Causal :: hash -> Set hash -> Causal hash
 [$sel:namespaceHash:Causal] :: Causal hash -> hash

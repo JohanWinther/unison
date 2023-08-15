@@ -274,6 +274,7 @@ type LocalBranch = Branch' LocalTextId LocalDefnId LocalPatchObjectId LocalBranc
 --     }
 --   </pre>
 type DbBranch = Branch' TextId ObjectId PatchObjectId (BranchObjectId, CausalHashId)
+type HashBranch = Branch' Text ComponentHash PatchHash (BranchHash, CausalHash)
 type Referent'' t h = Referent' (Reference' t h) (Reference' t h)
 data Branch' t h p c
 Branch :: Map t (Map (Referent'' t h) (MetadataSetFormat' t h)) -> Map t (Map (Reference' t h) (MetadataSetFormat' t h)) -> Map t p -> Map t c -> Branch' t h p c
@@ -339,10 +340,17 @@ module U.Codebase.Sqlite.Branch.Format
 --   (<tt>object.bytes</tt>).
 --   
 --   you can use the exact same <a>BranchLocalIds</a> when converting
---   between <a>Full</a> and <a>BranchFormat</a>
-data BranchFormat
-Full :: BranchLocalIds -> LocalBranch -> BranchFormat
-Diff :: BranchObjectId -> BranchLocalIds -> LocalDiff -> BranchFormat
+--   between <a>Full</a> and <a>BranchFormat'</a>
+data BranchFormat' text defRef patchRef childRef branchRef
+Full :: BranchLocalIds' text defRef patchRef childRef -> LocalBranch -> BranchFormat' text defRef patchRef childRef branchRef
+Diff :: branchRef -> BranchLocalIds' text defRef patchRef childRef -> LocalDiff -> BranchFormat' text defRef patchRef childRef branchRef
+
+-- | The <a>BranchFormat'</a> used to store a branch in Sqlite
+type BranchFormat = BranchFormat' TextId ObjectId PatchObjectId (BranchObjectId, CausalHashId) BranchObjectId
+
+-- | A BranchFormat which uses Hashes and Text for all its references, no
+--   Ids which are specific to a particular codebase.
+type HashBranchFormat = BranchFormat' Text ComponentHash PatchHash (BranchHash, CausalHash)
 
 -- | A <a>BranchLocalIds</a> is a mapping between local ids (local to this
 --   object) encoded as offsets, and actual database ids.
@@ -357,14 +365,23 @@ LocalIds :: Vector t -> Vector d -> Vector p -> Vector c -> BranchLocalIds' t d 
 [$sel:branchDefnLookup:LocalIds] :: BranchLocalIds' t d p c -> Vector d
 [$sel:branchPatchLookup:LocalIds] :: BranchLocalIds' t d p c -> Vector p
 [$sel:branchChildLookup:LocalIds] :: BranchLocalIds' t d p c -> Vector c
+type HashBranchLocalIds = BranchLocalIds' Text ComponentHash PatchHash (BranchHash, CausalHash)
 type SyncBranchFormat = SyncBranchFormat' BranchObjectId TextId ObjectId PatchObjectId (BranchObjectId, CausalHashId)
 data SyncBranchFormat' parent text defn patch child
-SyncFull :: BranchLocalIds' text defn patch child -> ByteString -> SyncBranchFormat' parent text defn patch child
-SyncDiff :: parent -> BranchLocalIds' text defn patch child -> ByteString -> SyncBranchFormat' parent text defn patch child
+SyncFull :: BranchLocalIds' text defn patch child -> LocalBranchBytes -> SyncBranchFormat' parent text defn patch child
+SyncDiff :: parent -> BranchLocalIds' text defn patch child -> LocalBranchBytes -> SyncBranchFormat' parent text defn patch child
+
+-- | Bytes encoding a LocalBranch
+newtype LocalBranchBytes
+LocalBranchBytes :: ByteString -> LocalBranchBytes
 localToDbBranch :: BranchLocalIds -> LocalBranch -> DbBranch
 localToDbDiff :: BranchLocalIds -> LocalDiff -> Diff
+localToHashBranch :: HashBranchLocalIds -> LocalBranch -> HashBranch
 instance (GHC.Show.Show t, GHC.Show.Show d, GHC.Show.Show p, GHC.Show.Show c) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Format.BranchLocalIds' t d p c)
-instance GHC.Show.Show U.Codebase.Sqlite.Branch.Format.BranchFormat
+instance (GHC.Show.Show text, GHC.Show.Show defRef, GHC.Show.Show patchRef, GHC.Show.Show childRef, GHC.Show.Show branchRef) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Format.BranchFormat' text defRef patchRef childRef branchRef)
+instance GHC.Classes.Ord U.Codebase.Sqlite.Branch.Format.LocalBranchBytes
+instance GHC.Classes.Eq U.Codebase.Sqlite.Branch.Format.LocalBranchBytes
+instance GHC.Show.Show U.Codebase.Sqlite.Branch.Format.LocalBranchBytes
 
 
 -- | Types related to working with NameLookups. We define these low-level
@@ -734,7 +751,7 @@ instance U.Core.ABT.Var.Var U.Codebase.Sqlite.Symbol.Symbol
 
 module U.Codebase.Sqlite.HashHandle
 data HashHandle
-HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> HashHandle
+HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> (HashBranchLocalIds -> LocalBranch -> BranchHash) -> HashHandle
 
 -- | Hash type
 [$sel:toReference:HashHandle] :: HashHandle -> Type Symbol -> Reference
@@ -750,6 +767,7 @@ HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (H
 [$sel:toReferenceDeclMentions:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Set Reference
 [$sel:hashBranch:HashHandle] :: HashHandle -> forall m. Monad m => Branch m -> m BranchHash
 [$sel:hashCausal:HashHandle] :: HashHandle -> BranchHash -> Set CausalHash -> CausalHash
+[$sel:hashBranchFormatFull:HashHandle] :: HashHandle -> HashBranchLocalIds -> LocalBranch -> BranchHash
 
 module U.Codebase.Sqlite.Decl.Format
 
@@ -875,91 +893,39 @@ type TempNamespaceLocalIds = BranchLocalIds' Text Hash32 Hash32 (Hash32, Hash32)
 type TempCausalFormat = SyncCausalFormat' Hash32 Hash32
 
 module U.Codebase.Sqlite.Serialization
-debug :: Bool
-putABT :: (MonadPut m, Foldable f, Functor f, Ord v) => (v -> m ()) -> (a -> m ()) -> (forall x. (x -> m ()) -> f x -> m ()) -> Term f v a -> m ()
-getABT :: (MonadGet m, Foldable f, Functor f, Ord v) => m v -> m a -> (forall x. m x -> m (f x)) -> m (Term f v a)
-putLocalIds :: (MonadPut m, Integral t, Bits t, Integral d, Bits d) => LocalIds' t d -> m ()
-putLocalIdsWith :: MonadPut m => (t -> m ()) -> (d -> m ()) -> LocalIds' t d -> m ()
-getLocalIds :: MonadGet m => m LocalIds
-getWatchLocalIds :: MonadGet m => m WatchLocalIds
-getLocalIdsWith :: MonadGet m => m t -> m d -> m (LocalIds' t d)
-putUnit :: Applicative m => () -> m ()
-getUnit :: Applicative m => m ()
-putWatchResultFormat :: MonadPut m => WatchResultFormat -> m ()
-getWatchResultFormat :: MonadGet m => m WatchResultFormat
-putTermFormat :: MonadPut m => TermFormat -> m ()
-getTermFormat :: MonadGet m => m TermFormat
-putTermComponent :: MonadPut m => LocallyIndexedComponent -> m ()
-putTerm :: MonadPut m => Term -> m ()
-getTermComponent :: MonadGet m => m LocallyIndexedComponent
-getTermAndType :: MonadGet m => m (Term, Type)
-getTerm :: MonadGet m => m Term
-lookupTermElement :: MonadGet m => Pos -> m (LocalIds, Term, Type)
-lookupTermElementDiscardingType :: MonadGet m => Pos -> m (LocalIds, Term)
-lookupTermElementDiscardingTerm :: MonadGet m => Pos -> m (LocalIds, Type)
-getTType :: MonadGet m => m Type
-getType :: forall m r. MonadGet m => m r -> m (TypeR r Symbol)
-putDeclFormat :: MonadPut m => DeclFormat -> m ()
-getDeclFormat :: MonadGet m => m DeclFormat
-getDeclElement :: MonadGet m => m (Decl Symbol)
-lookupDeclElement :: MonadGet m => Pos -> m (LocalIds, Decl Symbol)
-putBranchFormat :: MonadPut m => BranchFormat -> m ()
-putBranchLocalIds :: MonadPut m => BranchLocalIds -> m ()
-putPatchFormat :: MonadPut m => PatchFormat -> m ()
-getPatchFormat :: MonadGet m => m PatchFormat
-getPatchLocalIds :: MonadGet m => m PatchLocalIds
-putPatchFull :: MonadPut m => LocalPatch -> m ()
-putPatchDiff :: MonadPut m => LocalPatchDiff -> m ()
-putPatchLocalIds :: MonadPut m => PatchLocalIds -> m ()
-putTermEdit :: MonadPut m => LocalTermEdit -> m ()
-putTypeEdit :: MonadPut m => LocalTypeEdit -> m ()
-getBranchFormat :: MonadGet m => m BranchFormat
-getBranchLocalIds :: MonadGet m => m BranchLocalIds
-decomposeTermFormat :: MonadGet m => m SyncTermFormat
-decomposeDeclFormat :: MonadGet m => m SyncDeclFormat
-decomposeComponent :: MonadGet m => m (Vector (LocalIds, ByteString))
-recomposeTermFormat :: MonadPut m => SyncTermFormat -> m ()
-recomposeDeclFormat :: MonadPut m => SyncDeclFormat -> m ()
-recomposeComponent :: MonadPut m => Vector (LocalIds, ByteString) -> m ()
-decomposeWatchFormat :: MonadGet m => m SyncWatchResultFormat
-recomposeWatchFormat :: MonadPut m => SyncWatchResultFormat -> m ()
-decomposePatchFormat :: MonadGet m => m SyncPatchFormat
-recomposePatchFormat :: MonadPut m => SyncPatchFormat -> m ()
 decomposeBranchFormat :: MonadGet m => m SyncBranchFormat
-recomposeBranchFormat :: MonadPut m => SyncBranchFormat -> m ()
-putTempEntity :: MonadPut m => TempEntity -> m ()
-getHash32 :: MonadGet m => m Hash32
-getTempTermFormat :: MonadGet m => m TempTermFormat
-getTempDeclFormat :: MonadGet m => m TempDeclFormat
-getTempPatchFormat :: MonadGet m => m TempPatchFormat
-getTempNamespaceFormat :: MonadGet m => m TempNamespaceFormat
+decomposeDeclFormat :: MonadGet m => m SyncDeclFormat
+decomposePatchFormat :: MonadGet m => m SyncPatchFormat
+decomposeTermFormat :: MonadGet m => m SyncTermFormat
+decomposeWatchFormat :: MonadGet m => m SyncWatchResultFormat
+getBranchFormat :: MonadGet m => m BranchFormat
+getLocalBranch :: MonadGet m => m LocalBranch
+getDeclElement :: MonadGet m => m (Decl Symbol)
+getDeclFormat :: MonadGet m => m DeclFormat
+getPatchFormat :: MonadGet m => m PatchFormat
 getTempCausalFormat :: MonadGet m => m TempCausalFormat
-getSymbol :: MonadGet m => m Symbol
-putSymbol :: MonadPut m => Symbol -> m ()
-putReferent :: (MonadPut m, Integral t1, Integral h1, Bits t1, Bits h1, Integral t2, Integral h2, Bits t2, Bits h2) => Referent' (Reference' t1 h1) (Reference' t2 h2) -> m ()
-putReferent' :: MonadPut m => (r1 -> m ()) -> (r2 -> m ()) -> Referent' r1 r2 -> m ()
-putReference :: (MonadPut m, Integral t, Bits t, Integral r, Bits r) => Reference' t r -> m ()
-getReferent' :: MonadGet m => m r1 -> m r2 -> m (Referent' r1 r2)
-getReferent :: (MonadGet m, Integral t1, Integral h1, Bits t1, Bits h1, Integral t2, Integral h2, Bits t2, Bits h2) => m (Referent' (Reference' t1 h1) (Reference' t2 h2))
-getReference :: (MonadGet m, Integral t, Bits t, Integral r, Bits r) => m (Reference' t r)
-putRecursiveReference :: (MonadPut m, Integral t, Bits t, Integral r, Bits r) => Reference' t (Maybe r) -> m ()
-getRecursiveReference :: (MonadGet m, Integral t, Bits t, Integral r, Bits r) => m (Reference' t (Maybe r))
-putInt :: MonadPut m => Int64 -> m ()
-getInt :: MonadGet m => m Int64
-putNat :: MonadPut m => Word64 -> m ()
-getNat :: MonadGet m => m Word64
-putFloat :: MonadPut m => Double -> m ()
-getFloat :: MonadGet m => m Double
-putBoolean :: MonadPut m => Bool -> m ()
-getBoolean :: MonadGet m => m Bool
-putTType :: MonadPut m => Type -> m ()
-putDType :: MonadPut m => Type Symbol -> m ()
-putType :: forall m r v. (MonadPut m, Ord v) => (r -> m ()) -> (v -> m ()) -> TypeR r v -> m ()
-putChar :: MonadPut m => Char -> m ()
-getChar :: MonadGet m => m Char
-putMaybe :: MonadPut m => (a -> m ()) -> Maybe a -> m ()
-getMaybe :: MonadGet m => m a -> m (Maybe a)
-unknownTag :: (MonadGet m, Show a) => String -> a -> m x
+getTempDeclFormat :: MonadGet m => m TempDeclFormat
+getTempNamespaceFormat :: MonadGet m => m TempNamespaceFormat
+getTempPatchFormat :: MonadGet m => m TempPatchFormat
+getTempTermFormat :: MonadGet m => m TempTermFormat
+getTermAndType :: MonadGet m => m (Term, Type)
+getTermFormat :: MonadGet m => m TermFormat
+getWatchResultFormat :: MonadGet m => m WatchResultFormat
+lookupDeclElement :: MonadGet m => Pos -> m (LocalIds, Decl Symbol)
+lookupTermElement :: MonadGet m => Pos -> m (LocalIds, Term, Type)
+lookupTermElementDiscardingTerm :: MonadGet m => Pos -> m (LocalIds, Type)
+lookupTermElementDiscardingType :: MonadGet m => Pos -> m (LocalIds, Term)
+putBranchFormat :: MonadPut m => BranchFormat -> m ()
+putDeclFormat :: MonadPut m => DeclFormat -> m ()
+putPatchFormat :: MonadPut m => PatchFormat -> m ()
+putTempEntity :: MonadPut m => TempEntity -> m ()
+putTermFormat :: MonadPut m => TermFormat -> m ()
+putWatchResultFormat :: MonadPut m => WatchResultFormat -> m ()
+recomposeBranchFormat :: MonadPut m => SyncBranchFormat -> m ()
+recomposeDeclFormat :: MonadPut m => SyncDeclFormat -> m ()
+recomposePatchFormat :: MonadPut m => SyncPatchFormat -> m ()
+recomposeTermFormat :: MonadPut m => SyncTermFormat -> m ()
+recomposeWatchFormat :: MonadPut m => SyncWatchResultFormat -> m ()
 
 
 -- | This module contains decoders for blobs stored in SQLite.
