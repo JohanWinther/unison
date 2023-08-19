@@ -1245,6 +1245,7 @@ visit_ :: (Traversable f, Applicative g, Ord v) => (f (Term f v a) -> g ()) -> T
 visitPure :: forall (f :: Type -> Type) v a. (Traversable f, Ord v) => (Term f v a -> Maybe (Term f v a)) -> Term f v a -> Term f v a
 changeVars :: (Foldable f, Functor f, Var v) => Map v v -> Term f v a -> Term f v a
 allVars :: Foldable f => Term f v a -> [v]
+numberedFreeVars :: (Ord v, Foldable f) => Term f v a -> Map v Int
 subterms :: forall v (f :: Type -> Type) a. (Ord v, Traversable f) => Term f v a -> [Term f v a]
 annotateBound :: (Ord v, Foldable f, Functor f) => Term f v a -> Term f v (a, Set v)
 rebuildUp :: (Ord v, Foldable f, Functor f) => (f (Term f v a) -> f (Term f v a)) -> Term f v a -> Term f v a
@@ -1636,9 +1637,10 @@ usesEffects :: Ord v => Type v a -> Bool
 freeEffectVars :: Ord v => Type v a -> Set v
 existentializeArrows :: (Ord v, Monad m) => m v -> Type v a -> m (Type v a)
 purifyArrows :: Ord v => Type v a -> Type v a
-removeEffectVars :: Var v => Set v -> Type v a -> Type v a
+removeEffectVars :: Var v => Bool -> Set v -> Type v a -> Type v a
 removeAllEffectVars :: Var v => Type v a -> Type v a
-removePureEffects :: Var v => Type v a -> Type v a
+removeEmptyEffects :: Ord v => Type v a -> Type v a
+removePureEffects :: Var v => Bool -> Type v a -> Type v a
 editFunctionResult :: forall v a. Ord v => (Type v a -> Type v a) -> Type v a -> Type v a
 functionResult :: Type v a -> Maybe (Type v a)
 
@@ -1650,6 +1652,7 @@ functionResult :: Type v a -> Maybe (Type v a)
 --   blarrg.woot` (unchanged)
 generalizeLowercase :: Var v => Set v -> Type v a -> Type v a
 freeVarsToOuters :: Ord v => Set v -> Type v a -> Type v a
+normalizeForallOrder :: forall v a. Var v => Type v a -> Type v a
 
 -- | This function removes all variable shadowing from the types and
 --   reduces fresh ids to the minimum possible to avoid ambiguity. Useful
