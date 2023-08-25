@@ -1493,6 +1493,13 @@ expectTempEntity :: Hash32 -> Transaction TempEntity
 -- | Delete a row from the <tt>temp_entity</tt> table, if it exists.
 deleteTempEntity :: Hash32 -> Transaction ()
 
+-- | Clears the <tt>temp_entity</tt> and
+--   <tt>temp_entity_missing_dependency</tt> tables. The hashjwts stored in
+--   temp entity tables can sometimes go stale, so we clear them out. This
+--   is safe because temp entities are generally considered ephemeral
+--   except during an active pull.
+clearTempEntityTables :: Transaction ()
+
 -- | <a>Elaborate</a> a set of <tt>temp_entity</tt> hashes.
 --   
 --   Given a set of <tt>temp_entity</tt> hashes, returns the (known) set of
