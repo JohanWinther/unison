@@ -356,8 +356,8 @@ GistInput :: WriteGitRepo -> GistInput
 --   or both.
 data PullSourceTarget
 PullSourceTarget0 :: PullSourceTarget
-PullSourceTarget1 :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> PullSourceTarget
-PullSourceTarget2 :: ReadRemoteNamespace (These ProjectName ProjectBranchName) -> LooseCodeOrProject -> PullSourceTarget
+PullSourceTarget1 :: ReadRemoteNamespace (These ProjectName ProjectBranchNameOrLatestRelease) -> PullSourceTarget
+PullSourceTarget2 :: ReadRemoteNamespace (These ProjectName ProjectBranchNameOrLatestRelease) -> LooseCodeOrProject -> PullSourceTarget
 data PushRemoteBranchInput
 PushRemoteBranchInput :: PushSourceTarget -> PushBehavior -> SyncMode -> PushRemoteBranchInput
 [$sel:sourceTarget:PushRemoteBranchInput] :: PushRemoteBranchInput -> PushSourceTarget
@@ -673,7 +673,7 @@ module Unison.Codebase.Editor.UCMVersion
 type UCMVersion = Text
 
 module Unison.Codebase.Editor.UriParser
-repoPath :: P (ReadRemoteNamespace (These ProjectName ProjectBranchName))
+readRemoteNamespaceParser :: ProjectBranchSpecifier branch -> P (ReadRemoteNamespace (These ProjectName branch))
 writeGitRepo :: P WriteGitRepo
 
 -- | A parser for the deprecated format of git URLs, which may still exist
@@ -727,7 +727,6 @@ writeGitRepo :: P WriteGitRepo
 deprecatedWriteGitRemoteNamespace :: P WriteGitRemoteNamespace
 writeRemoteNamespace :: P (WriteRemoteNamespace (These ProjectName ProjectBranchName))
 writeRemoteNamespaceWith :: P a -> P (WriteRemoteNamespace a)
-parseReadRemoteNamespace :: String -> String -> Either (Pretty ColorText) (ReadRemoteNamespace (These ProjectName ProjectBranchName))
 parseReadShareLooseCode :: String -> String -> Either (Pretty ColorText) ReadShareLooseCode
 instance GHC.Show.Show Unison.Codebase.Editor.UriParser.Scheme
 instance GHC.Classes.Ord Unison.Codebase.Editor.UriParser.Scheme
@@ -1556,6 +1555,7 @@ CantRenameBranchTo :: ProjectBranchName -> Output
 FetchingLatestReleaseOfBase :: Output
 FailedToFetchLatestReleaseOfBase :: Output
 HappyCoding :: Output
+ProjectHasNoReleases :: ProjectName -> Output
 data AmbiguousReset'Argument
 AmbiguousReset'Hash :: AmbiguousReset'Argument
 AmbiguousReset'Target :: AmbiguousReset'Argument
@@ -2614,6 +2614,7 @@ projectBranchNameWithOptionalProjectNameArg :: ArgumentType
 
 -- | A project name.
 projectNameArg :: ArgumentType
+parsePullSource :: Text -> Maybe (ReadRemoteNamespace (These ProjectName ProjectBranchNameOrLatestRelease))
 
 -- | Parse a <a>PushSource</a>.
 parsePushSource :: String -> Either (Pretty ColorText) PushSource

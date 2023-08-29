@@ -582,13 +582,27 @@ ProjectBranchNameKind'NothingSpecial :: ProjectBranchNameKind
 --   </pre>
 classifyProjectBranchName :: ProjectBranchName -> ProjectBranchNameKind
 
+-- | A project branch name, or the latest release of its project.
+data ProjectBranchNameOrLatestRelease
+ProjectBranchNameOrLatestRelease'LatestRelease :: ProjectBranchNameOrLatestRelease
+ProjectBranchNameOrLatestRelease'Name :: !ProjectBranchName -> ProjectBranchNameOrLatestRelease
+
+-- | How a project branch can be specified.
+data ProjectBranchSpecifier :: Type -> Type
+
+-- | By name.
+[ProjectBranchSpecifier'Name] :: ProjectBranchSpecifier ProjectBranchName
+
+-- | By name, or "the latest release"
+[ProjectBranchSpecifier'NameOrLatestRelease] :: ProjectBranchSpecifier ProjectBranchNameOrLatestRelease
+
 -- | A generic data structure that contains information about a project and
 --   a branch in that project.
 data ProjectAndBranch a b
 ProjectAndBranch :: a -> b -> ProjectAndBranch a b
 [project] :: ProjectAndBranch a b -> a
 [branch] :: ProjectAndBranch a b -> b
-projectAndBranchNamesParser :: Parsec Void Text (These ProjectName ProjectBranchName)
+projectAndBranchNamesParser :: forall branch. ProjectBranchSpecifier branch -> Parsec Void Text (These ProjectName branch)
 
 -- | Sometimes, it's convenient (to users) if we defer interpreting certain
 --   names (like "foo") as a project name or branch name, instead leaving
@@ -606,9 +620,12 @@ data Semver
 Semver :: !Int -> !Int -> !Int -> Semver
 instance GHC.Show.Show Unison.Project.Semver
 instance GHC.Classes.Eq Unison.Project.Semver
+instance GHC.Show.Show Unison.Project.ProjectBranchNameOrLatestRelease
+instance GHC.Classes.Eq Unison.Project.ProjectBranchNameOrLatestRelease
 instance GHC.Show.Show Unison.Project.ProjectAndBranchNames
 instance GHC.Classes.Eq Unison.Project.ProjectAndBranchNames
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Project.ProjectAndBranchNames
+instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName)
 instance Witch.From.From Unison.Project.Semver Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Project.Semver
 instance Witch.From.From Unison.Core.Project.ProjectName Data.Text.Internal.Text
@@ -617,7 +634,6 @@ instance Witch.From.From Unison.Core.Project.ProjectBranchName Data.Text.Interna
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text Unison.Core.Project.ProjectBranchName
 instance Witch.From.From (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
 instance Witch.From.From (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
-instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Data.These.These Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName)
 instance Witch.From.From (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName (GHC.Maybe.Maybe Unison.Core.Project.ProjectBranchName)) Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName (GHC.Maybe.Maybe Unison.Core.Project.ProjectBranchName))
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Unison.Core.Project.ProjectAndBranch Unison.Core.Project.ProjectName Unison.Core.Project.ProjectBranchName)
