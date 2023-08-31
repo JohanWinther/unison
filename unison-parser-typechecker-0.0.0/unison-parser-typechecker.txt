@@ -12,6 +12,7 @@ module U.Codebase.Branch.Diff
 newtype TreeDiff m
 TreeDiff :: Cofree (Compose (Map NameSegment) m) DefinitionDiffs -> TreeDiff m
 [$sel:unTreeDiff:TreeDiff] :: TreeDiff m -> Cofree (Compose (Map NameSegment) m) DefinitionDiffs
+hoistTreeDiff :: Functor m => (forall x. m x -> n x) -> TreeDiff m -> TreeDiff n
 
 -- | A summary of a <a>TreeDiff</a>, containing all names added and
 --   removed. Note that there isn't a clear notion of a name "changing"
@@ -53,7 +54,7 @@ NameBasedDiff :: Relation Reference Reference -> Relation Reference Reference ->
 [$sel:types:NameBasedDiff] :: NameBasedDiff -> Relation Reference Reference
 
 -- | Diff two Branches, returning a tree containing all of the changes
-diffBranches :: forall m. Monad m => Branch m -> Branch m -> TreeDiff m
+diffBranches :: Branch Transaction -> Branch Transaction -> Transaction (TreeDiff Transaction)
 
 -- | Get a summary of all of the name adds and removals from a tree diff.
 --   

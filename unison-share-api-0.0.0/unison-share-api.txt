@@ -248,19 +248,6 @@ instance (GHC.Show.Show v, GHC.Show.Show a) => GHC.Show.Show (Unison.Server.Sear
 instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq a) => GHC.Classes.Eq (Unison.Server.SearchResult'.SearchResult' v a)
 
 
--- | Helpers which are specific to the remote share server.
-module Unison.Server.Share
-
--- | Given an arbitrary query and perspective, find the name root the query
---   belongs in, then return that root and the query relocated to that
---   root.
---   
---   A name root is either a project root or a dependency root. E.g.
---   <tt>.myproject.some.namespace -&gt; .myproject</tt> or
---   <tt>.myproject.lib.base.List -&gt; .myproject.lib.base</tt>
-relocateToNameRoot :: Path -> HashQualified Name -> BranchHash -> Transaction (NamesPerspective, HashQualified Name)
-
-
 -- | Duplicate of the Unison.Util.SyntaxText module, but we expect these to
 --   evolve separately. This is the version which is outward facing to the
 --   server frontend.
@@ -884,7 +871,8 @@ definitionResultsDependencies :: DefinitionResults -> Set LabeledDependency
 --   evaluated-but-not-rendered form.
 evalDocRef :: Runtime Symbol -> Codebase IO Symbol Ann -> TermReference -> IO (EvaluatedDoc Symbol)
 mkTermDefinition :: Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Path -> CausalBranch Transaction -> Width -> Reference -> [(HashQualifiedName, UnisonHash, Doc)] -> DisplayObject (AnnotatedText (Element Reference)) (AnnotatedText (Element Reference)) -> Backend IO TermDefinition
-mkTypeDefinition :: Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Path -> CausalBranch Transaction -> Width -> Reference -> [(HashQualifiedName, UnisonHash, Doc)] -> DisplayObject (AnnotatedText (Element Reference)) (AnnotatedText (Element Reference)) -> Backend IO TypeDefinition
+mkTypeDefinition :: MonadIO m => Codebase IO Symbol Ann -> PrettyPrintEnvDecl -> Path -> CausalBranch Transaction -> Width -> Reference -> [(HashQualifiedName, UnisonHash, Doc)] -> DisplayObject (AnnotatedText (Element Reference)) (AnnotatedText (Element Reference)) -> m TypeDefinition
+displayTerm :: Codebase m Symbol Ann -> Reference -> Transaction (DisplayObject (Type Symbol Ann) (Term Symbol Ann))
 instance GHC.Show.Show Unison.Server.Backend.BackendError
 instance GHC.Base.Monad m => Control.Monad.Error.Class.MonadError Unison.Server.Backend.BackendError (Unison.Server.Backend.Backend m)
 instance GHC.Base.Monad m => Control.Monad.Reader.Class.MonadReader Unison.Server.Backend.BackendEnv (Unison.Server.Backend.Backend m)
@@ -910,109 +898,6 @@ instance GHC.Classes.Ord Unison.Server.Backend.FoundRef
 instance GHC.Classes.Eq Unison.Server.Backend.FoundRef
 instance GHC.Show.Show Unison.Server.Backend.DefinitionResults
 instance Control.Monad.Trans.Class.MonadTrans Unison.Server.Backend.Backend
-
-
--- | Helper for rendering docs within a given namespace
-module Unison.Server.Share.RenderDoc
-
--- | Find, eval, and render the first doc we find with any of the provided
---   names within the given namespace If no doc is found, return Nothing
---   
---   Requires Name Lookups, currently only usable on Share.
-findAndRenderDoc :: Set NameSegment -> Runtime Symbol -> Codebase IO Symbol Ann -> Path -> CausalHash -> Maybe Width -> Backend IO (Maybe Doc)
-
-module Unison.Server.Share.NamespaceDetails
-namespaceDetails :: Runtime Symbol -> Codebase IO Symbol Ann -> Path -> CausalHash -> Maybe Width -> Backend IO NamespaceDetails
-
-module Unison.Server.Share.FuzzyFind
-type FuzzyFindAPI = "find" :> QueryParam "rootBranch" ShortCausalHash :> QueryParam "relativeTo" Path :> QueryParam "limit" Int :> QueryParam "renderWidth" Width :> QueryParam "query" String :> APIGet [(Alignment, FoundResult)]
-data FoundTerm
-FoundTerm :: HashQualifiedName -> NamedTerm -> FoundTerm
-[$sel:bestFoundTermName:FoundTerm] :: FoundTerm -> HashQualifiedName
-[$sel:namedTerm:FoundTerm] :: FoundTerm -> NamedTerm
-data FoundType
-FoundType :: HashQualifiedName -> DisplayObject SyntaxText SyntaxText -> NamedType -> FoundType
-[$sel:bestFoundTypeName:FoundType] :: FoundType -> HashQualifiedName
-[$sel:typeDef:FoundType] :: FoundType -> DisplayObject SyntaxText SyntaxText
-[$sel:namedType:FoundType] :: FoundType -> NamedType
-data FoundResult
-FoundTermResult :: FoundTerm -> FoundResult
-FoundTypeResult :: FoundType -> FoundResult
-serveFuzzyFind :: Bool -> Bool -> Codebase IO Symbol Ann -> CausalHash -> Path -> Maybe Int -> Maybe Width -> Text -> Backend IO [(Alignment, FoundResult)]
-scoreMatch :: NamedRef r -> Int
-data Alignment
-Alignment :: Int -> MatchResult -> Alignment
-[$sel:score:Alignment] :: Alignment -> Int
-[$sel:result:Alignment] :: Alignment -> MatchResult
-data MatchResult
-MatchResult :: [MatchSegment] -> MatchResult
-[$sel:segments:MatchResult] :: MatchResult -> [MatchSegment]
-data MatchSegment
-Gap :: Text -> MatchSegment
-Match :: Text -> MatchSegment
-computeMatchSegments :: [Text] -> NamedRef r -> [MatchSegment]
-
--- | Splits a query into segments, where each segment must appear in order
---   in any matching names.
---   
---   <pre>
---   &gt;&gt;&gt; prepareQuery "foo bar baz"
---   ["foo","bar","baz"]
---   </pre>
---   
---   Split camel-case style words into segments. &gt;&gt;&gt; prepareQuery
---   "fMap" ["f",<a>Map</a>]
---   
---   Collapse multiple spaces &gt;&gt;&gt; prepareQuery "foo barBaz boom"
---   ["foo","bar",<a>Baz</a>,"boom"]
---   
---   Split namespaces into segments with a required dot in between.
---   &gt;&gt;&gt; prepareQuery "List.map" [<a>List</a>,".","map"]
---   
---   Shouldn't get multiple splits for capitalized letters &gt;&gt;&gt;
---   prepareQuery <a>List.Map</a> [<a>List</a>,".",<a>Map</a>]
-prepareQuery :: String -> [Text]
-instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundTerm
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundTerm
-instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundType
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundType
-instance GHC.Show.Show Unison.Server.Share.FuzzyFind.FoundResult
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.FoundResult
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.MatchSegment
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.MatchSegment
-instance GHC.Show.Show Unison.Server.Share.FuzzyFind.MatchSegment
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.MatchResult
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.MatchResult
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.Alignment
-instance GHC.Generics.Generic Unison.Server.Share.FuzzyFind.Alignment
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundType
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundTerm
-instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Share.FuzzyFind.FoundResult
-instance Servant.Docs.Internal.ToSample Unison.Server.Share.FuzzyFind.Alignment
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.Alignment
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.MatchResult
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.MatchSegment
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundResult
-instance Servant.Docs.Internal.ToSample Unison.Server.Share.FuzzyFind.FoundResult
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundType
-instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Share.FuzzyFind.FoundTerm
-instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "limit" GHC.Types.Int)
-instance Servant.Docs.Internal.ToParam (Servant.API.QueryParam.QueryParam "query" GHC.Base.String)
-
-
--- | This module contains implementations of Backend methods which are
---   specialized for Share. We should likely move them to the Share
---   repository eventually, but for now it's much easier to ensure they're
---   resilient to refactors and changes in the Backend API if they live
---   here.
---   
---   Perhaps we'll move them when the backing implementation switches to
---   postgres.
-module Unison.Server.Share.Definitions
-
--- | Renders a definition for the given name or hash alongside its
---   documentation.
-definitionForHQName :: Path -> CausalHash -> Maybe Width -> Suffixify -> Runtime Symbol -> Codebase IO Symbol Ann -> HashQualified Name -> Backend IO DefinitionDisplayResults
 
 module Unison.Server.Local.Endpoints.Projects
 projectListingEndpoint :: Codebase IO Symbol Ann -> Maybe PrefixFilter -> Backend IO [ProjectListing]
