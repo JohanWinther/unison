@@ -158,6 +158,33 @@ instance Data.Bifunctor.Bifunctor Unison.Core.Project.ProjectAndBranch
 instance Data.Bifoldable.Bifoldable Unison.Core.Project.ProjectAndBranch
 instance Data.Bitraversable.Bitraversable Unison.Core.Project.ProjectAndBranch
 
+module Unison.ShortHash
+data ShortHash
+Builtin :: Text -> ShortHash
+ShortHash :: Text -> Maybe Word64 -> Maybe Word64 -> ShortHash
+[prefix] :: ShortHash -> Text
+[cycle] :: ShortHash -> Maybe Word64
+[cid] :: ShortHash -> Maybe Word64
+newtype ShortCausalHash
+ShortCausalHash :: Text -> ShortCausalHash
+[shortCausalHashToText] :: ShortCausalHash -> Text
+newtype ShortNamespaceHash
+ShortNamespaceHash :: Text -> ShortNamespaceHash
+[shortNamespaceHashToText] :: ShortNamespaceHash -> Text
+isPrefixOf :: ShortHash -> ShortHash -> Bool
+shortenTo :: Int -> ShortHash -> ShortHash
+fromText :: Text -> Maybe ShortHash
+toText :: ShortHash -> Text
+instance GHC.Show.Show Unison.ShortHash.ShortHash
+instance GHC.Classes.Ord Unison.ShortHash.ShortHash
+instance GHC.Classes.Eq Unison.ShortHash.ShortHash
+instance GHC.Show.Show Unison.ShortHash.ShortCausalHash
+instance GHC.Classes.Ord Unison.ShortHash.ShortCausalHash
+instance GHC.Classes.Eq Unison.ShortHash.ShortCausalHash
+instance GHC.Show.Show Unison.ShortHash.ShortNamespaceHash
+instance GHC.Classes.Ord Unison.ShortHash.ShortNamespaceHash
+instance GHC.Classes.Eq Unison.ShortHash.ShortNamespaceHash
+
 module Unison.Util.Alphabetical
 class (Eq n) => Alphabetical n
 compareAlphabetical :: Alphabetical n => n -> n -> Ordering

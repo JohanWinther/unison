@@ -640,35 +640,6 @@ instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Unison.Core.Project.Proj
 instance Witch.From.From (Unison.Core.Project.ProjectAndBranch (GHC.Maybe.Maybe Unison.Core.Project.ProjectName) Unison.Core.Project.ProjectBranchName) Data.Text.Internal.Text
 instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Unison.Core.Project.ProjectAndBranch (GHC.Maybe.Maybe Unison.Core.Project.ProjectName) Unison.Core.Project.ProjectBranchName)
 
-module Unison.Settings
-debugNoteLoc :: Bool
-debugNoteSummary :: Bool
-debugRevealForalls :: Bool
-renderTermMaxLength :: Int
-demoHideVarNumber :: Bool
-removePureEffects :: Bool
-cleanupTypes :: Bool
-
-module Unison.ShortHash
-data ShortHash
-Builtin :: Text -> ShortHash
-ShortHash :: Text -> Maybe Text -> Maybe Text -> ShortHash
-[prefix] :: ShortHash -> Text
-[cycle] :: ShortHash -> Maybe Text
-[cid] :: ShortHash -> Maybe Text
-isConstructor :: ShortHash -> Bool
-fromText :: Text -> Maybe ShortHash
-unsafeFromText :: Text -> ShortHash
-toText :: ShortHash -> Text
-toString :: ShortHash -> String
-fromString :: String -> Maybe ShortHash
-take :: Int -> ShortHash -> ShortHash
-isPrefixOf :: ShortHash -> ShortHash -> Bool
-instance GHC.Generics.Generic Unison.ShortHash.ShortHash
-instance GHC.Show.Show Unison.ShortHash.ShortHash
-instance GHC.Classes.Ord Unison.ShortHash.ShortHash
-instance GHC.Classes.Eq Unison.ShortHash.ShortHash
-
 module Unison.Reference
 
 -- | Either a builtin or a user defined (hashed) top-level declaration.
@@ -1171,6 +1142,15 @@ instance GHC.Base.Functor (Unison.Names.ResolutionResult.ResolutionFailure var)
 instance (GHC.Show.Show var, GHC.Show.Show annotation) => GHC.Show.Show (Unison.Names.ResolutionResult.ResolutionFailure var annotation)
 instance (GHC.Classes.Ord var, GHC.Classes.Ord annotation) => GHC.Classes.Ord (Unison.Names.ResolutionResult.ResolutionFailure var annotation)
 instance (GHC.Classes.Eq var, GHC.Classes.Eq annotation) => GHC.Classes.Eq (Unison.Names.ResolutionResult.ResolutionFailure var annotation)
+
+module Unison.Settings
+debugNoteLoc :: Bool
+debugNoteSummary :: Bool
+debugRevealForalls :: Bool
+renderTermMaxLength :: Int
+demoHideVarNumber :: Bool
+removePureEffects :: Bool
+cleanupTypes :: Bool
 
 module Unison.Util.Components
 

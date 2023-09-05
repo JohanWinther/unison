@@ -24,41 +24,6 @@ instance GHC.Read.Read U.Codebase.Kind.Kind
 instance GHC.Classes.Ord U.Codebase.Kind.Kind
 instance GHC.Classes.Eq U.Codebase.Kind.Kind
 
-module U.Codebase.Reflog
-data Entry causal text
-Entry :: UTCTime -> causal -> causal -> text -> Entry causal text
-[time] :: Entry causal text -> UTCTime
-[fromRootCausalHash] :: Entry causal text -> causal
-[toRootCausalHash] :: Entry causal text -> causal
-[reason] :: Entry causal text -> text
-instance Data.Bifunctor.Bifunctor U.Codebase.Reflog.Entry
-instance Data.Bifoldable.Bifoldable U.Codebase.Reflog.Entry
-instance Data.Bitraversable.Bitraversable U.Codebase.Reflog.Entry
-
-module U.Codebase.ShortHash
-data ShortHash
-Builtin :: Text -> ShortHash
-ShortHash :: Text -> Maybe Word64 -> Maybe Word64 -> ShortHash
-[prefix] :: ShortHash -> Text
-[cycle] :: ShortHash -> Maybe Word64
-[cid] :: ShortHash -> Maybe Word64
-newtype ShortCausalHash
-ShortCausalHash :: Text -> ShortCausalHash
-[shortCausalHashToText] :: ShortCausalHash -> Text
-newtype ShortNamespaceHash
-ShortNamespaceHash :: Text -> ShortNamespaceHash
-[shortNamespaceHashToText] :: ShortNamespaceHash -> Text
-shortenTo :: Int -> ShortHash -> ShortHash
-instance GHC.Show.Show U.Codebase.ShortHash.ShortHash
-instance GHC.Classes.Ord U.Codebase.ShortHash.ShortHash
-instance GHC.Classes.Eq U.Codebase.ShortHash.ShortHash
-instance GHC.Show.Show U.Codebase.ShortHash.ShortCausalHash
-instance GHC.Classes.Ord U.Codebase.ShortHash.ShortCausalHash
-instance GHC.Classes.Eq U.Codebase.ShortHash.ShortCausalHash
-instance GHC.Show.Show U.Codebase.ShortHash.ShortNamespaceHash
-instance GHC.Classes.Ord U.Codebase.ShortHash.ShortNamespaceHash
-instance GHC.Classes.Eq U.Codebase.ShortHash.ShortNamespaceHash
-
 module U.Codebase.Reference
 
 -- | This is the canonical representation of Reference
@@ -89,6 +54,17 @@ instance (GHC.Classes.Eq t, GHC.Classes.Eq h) => GHC.Classes.Eq (U.Codebase.Refe
 instance Data.Bifunctor.Bifunctor U.Codebase.Reference.Reference'
 instance Data.Bifoldable.Bifoldable U.Codebase.Reference.Reference'
 instance Data.Bitraversable.Bitraversable U.Codebase.Reference.Reference'
+
+module U.Codebase.Reflog
+data Entry causal text
+Entry :: UTCTime -> causal -> causal -> text -> Entry causal text
+[time] :: Entry causal text -> UTCTime
+[fromRootCausalHash] :: Entry causal text -> causal
+[toRootCausalHash] :: Entry causal text -> causal
+[reason] :: Entry causal text -> text
+instance Data.Bifunctor.Bifunctor U.Codebase.Reflog.Entry
+instance Data.Bifoldable.Bifoldable U.Codebase.Reflog.Entry
+instance Data.Bitraversable.Bitraversable U.Codebase.Reflog.Entry
 
 module U.Codebase.Type
 
