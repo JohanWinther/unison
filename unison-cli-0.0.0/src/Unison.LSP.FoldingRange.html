@@ -21,15 +21,15 @@
       ResponseError (MessageResult 'Method_TextDocumentFoldingRange)
     -&gt; Lsp ())
 -&gt; Lsp ()
-</span><a href="Unison.LSP.FoldingRange.html#foldingRangeRequest"><span class="hs-identifier hs-var hs-var">foldingRangeRequest</span></a></span></span><span> </span><span id="local-6989586621679590798"><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentFoldingRange
-</span><a href="#local-6989586621679590798"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679590797"><span class="annot"><span class="annottext">Either
+</span><a href="Unison.LSP.FoldingRange.html#foldingRangeRequest"><span class="hs-identifier hs-var hs-var">foldingRangeRequest</span></a></span></span><span> </span><span id="local-6989586621679590811"><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentFoldingRange
+</span><a href="#local-6989586621679590811"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679590810"><span class="annot"><span class="annottext">Either
   ResponseError (MessageResult 'Method_TextDocumentFoldingRange)
 -&gt; Lsp ()
-</span><a href="#local-6989586621679590797"><span class="hs-identifier hs-var">respond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-20"></span><span>  </span><span id="local-6989586621679590796"><span class="annot"><span class="annottext">[FoldingRange]
-</span><a href="#local-6989586621679590796"><span class="hs-identifier hs-var">foldRanges</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Lsp [FoldingRange]
+</span><a href="#local-6989586621679590810"><span class="hs-identifier hs-var">respond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621679590809"><span class="annot"><span class="annottext">[FoldingRange]
+</span><a href="#local-6989586621679590809"><span class="hs-identifier hs-var">foldRanges</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Lsp [FoldingRange]
 </span><a href="Unison.LSP.FoldingRange.html#foldingRangesForFile"><span class="hs-identifier hs-var">foldingRangesForFile</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentFoldingRange
-</span><a href="#local-6989586621679590798"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590811"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasParams s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">params</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasTextDocument s a =&gt; Lens' s a
@@ -42,53 +42,53 @@ DebugFlag -&gt; String -&gt; a -&gt; m ()
 </span><span class="hs-identifier hs-var">Debug.debugM</span></span><span> </span><span class="annot"><span class="annottext">DebugFlag
 </span><span class="hs-identifier hs-var">Debug.LSP</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Folding Ranges&quot;</span></span><span> </span><span class="annot"><span class="annottext">[FoldingRange]
-</span><a href="#local-6989586621679590796"><span class="hs-identifier hs-var">foldRanges</span></a></span><span>
+</span><a href="#local-6989586621679590809"><span class="hs-identifier hs-var">foldRanges</span></a></span><span>
 </span><span id="line-22"></span><span>  </span><span class="annot"><span class="annottext">Either
   ResponseError (MessageResult 'Method_TextDocumentFoldingRange)
 -&gt; Lsp ()
-</span><a href="#local-6989586621679590797"><span class="hs-identifier hs-var">respond</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679590810"><span class="hs-identifier hs-var">respond</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; a |? b
 </span><span class="hs-identifier hs-var">InL</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[FoldingRange]
-</span><a href="#local-6989586621679590796"><span class="hs-identifier hs-var">foldRanges</span></a></span><span>
+</span><a href="#local-6989586621679590809"><span class="hs-identifier hs-var">foldRanges</span></a></span><span>
 </span><span id="line-23"></span><span>
 </span><span id="line-24"></span><span class="hs-comment">-- | Return a folding range for each top-level definition</span><span>
 </span><span id="line-25"></span><span class="annot"><a href="Unison.LSP.FoldingRange.html#foldingRangesForFile"><span class="hs-identifier hs-type">foldingRangesForFile</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Uri</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">FoldingRange</span></span><span class="hs-special">]</span><span>
 </span><span id="line-26"></span><span id="foldingRangesForFile"><span class="annot"><span class="annottext">foldingRangesForFile :: Uri -&gt; Lsp [FoldingRange]
-</span><a href="Unison.LSP.FoldingRange.html#foldingRangesForFile"><span class="hs-identifier hs-var hs-var">foldingRangesForFile</span></a></span></span><span> </span><span id="local-6989586621679590786"><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679590786"><span class="hs-identifier hs-var">fileUri</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.LSP.FoldingRange.html#foldingRangesForFile"><span class="hs-identifier hs-var hs-var">foldingRangesForFile</span></a></span></span><span> </span><span id="local-6989586621679590799"><span class="annot"><span class="annottext">Uri
+</span><a href="#local-6989586621679590799"><span class="hs-identifier hs-var">fileUri</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-27"></span><span>  </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a -&gt; a
 </span><span class="hs-identifier hs-var">fromMaybe</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-28"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MaybeT m a -&gt; m (Maybe a)
 </span><span class="hs-identifier hs-var">runMaybeT</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-29"></span><span>      </span><span class="annot"><a href="Unison.LSP.Types.html#FileAnalysis"><span class="hs-identifier hs-type">FileAnalysis</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679590781"><span class="annot"><span class="annottext">Maybe (UnisonFile Symbol Ann)
+</span><span id="line-29"></span><span>      </span><span class="annot"><a href="Unison.LSP.Types.html#FileAnalysis"><span class="hs-identifier hs-type">FileAnalysis</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679590794"><span class="annot"><span class="annottext">Maybe (UnisonFile Symbol Ann)
 $sel:parsedFile:FileAnalysis :: FileAnalysis -&gt; Maybe (UnisonFile Symbol Ann)
 parsedFile :: Maybe (UnisonFile Symbol Ann)
 </span><a href="Unison.LSP.Types.html#%24sel%3AparsedFile%3AFileAnalysis"><span class="hs-identifier hs-var hs-var">parsedFile</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; MaybeT Lsp FileAnalysis
 </span><a href="Unison.LSP.FileAnalysis.html#getFileAnalysis"><span class="hs-identifier hs-var">getFileAnalysis</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679590786"><span class="hs-identifier hs-var">fileUri</span></a></span><span>
-</span><span id="line-30"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">UnisonFileId</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679590778"><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, DataDeclaration Symbol Ann)
+</span><a href="#local-6989586621679590799"><span class="hs-identifier hs-var">fileUri</span></a></span><span>
+</span><span id="line-30"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">UnisonFileId</span></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679590791"><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, DataDeclaration Symbol Ann)
 $sel:dataDeclarationsId:UnisonFileId :: forall v a.
 UnisonFile v a -&gt; Map v (TypeReferenceId, DataDeclaration v a)
 dataDeclarationsId :: Map Symbol (TypeReferenceId, DataDeclaration Symbol Ann)
-</span><span class="hs-identifier hs-var hs-var">dataDeclarationsId</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590776"><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, EffectDeclaration Symbol Ann)
+</span><span class="hs-identifier hs-var hs-var">dataDeclarationsId</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590789"><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, EffectDeclaration Symbol Ann)
 $sel:effectDeclarationsId:UnisonFileId :: forall v a.
 UnisonFile v a -&gt; Map v (TypeReferenceId, EffectDeclaration v a)
 effectDeclarationsId :: Map Symbol (TypeReferenceId, EffectDeclaration Symbol Ann)
-</span><span class="hs-identifier hs-var hs-var">effectDeclarationsId</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590774"><span class="annot"><span class="annottext">[(Symbol, Ann, Term Symbol Ann)]
+</span><span class="hs-identifier hs-var hs-var">effectDeclarationsId</span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590787"><span class="annot"><span class="annottext">[(Symbol, Ann, Term Symbol Ann)]
 $sel:terms:UnisonFileId :: forall v a. UnisonFile v a -&gt; [(v, a, Term v a)]
 terms :: [(Symbol, Ann, Term Symbol Ann)]
 </span><span class="hs-identifier hs-var hs-var">terms</span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. m (Maybe a) -&gt; MaybeT m a
 </span><span class="hs-identifier hs-var">MaybeT</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Maybe (UnisonFile Symbol Ann)
-</span><a href="#local-6989586621679590781"><span class="hs-identifier hs-var">parsedFile</span></a></span><span>
-</span><span id="line-31"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590771"><span class="annot"><span class="annottext">dataFolds :: [Ann]
-</span><a href="#local-6989586621679590771"><span class="hs-identifier hs-var hs-var">dataFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, DataDeclaration Symbol Ann)
-</span><a href="#local-6989586621679590778"><span class="hs-identifier hs-var">dataDeclarationsId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
+</span><a href="#local-6989586621679590794"><span class="hs-identifier hs-var">parsedFile</span></a></span><span>
+</span><span id="line-31"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590784"><span class="annot"><span class="annottext">dataFolds :: [Ann]
+</span><a href="#local-6989586621679590784"><span class="hs-identifier hs-var hs-var">dataFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, DataDeclaration Symbol Ann)
+</span><a href="#local-6989586621679590791"><span class="hs-identifier hs-var">dataDeclarationsId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
 </span><span class="hs-operator hs-var">^..</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Foldable f =&gt; IndexedFold Int (f a) a
 </span><span class="hs-identifier hs-var">folded</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s t a b. Field2 s t a b =&gt; Lens s t a b
@@ -97,10 +97,10 @@ terms :: [(Symbol, Ann, Term Symbol Ann)]
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
 </span><span class="hs-identifier hs-var">to</span></span><span> </span><span class="annot"><span class="annottext">forall {a} {v}. Monoid a =&gt; DataDeclaration v a -&gt; a
-</span><a href="#local-6989586621679590766"><span class="hs-identifier hs-var">dataDeclSpan</span></a></span><span>
-</span><span id="line-32"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590765"><span class="annot"><span class="annottext">abilityFolds :: [Ann]
-</span><a href="#local-6989586621679590765"><span class="hs-identifier hs-var hs-var">abilityFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, EffectDeclaration Symbol Ann)
-</span><a href="#local-6989586621679590776"><span class="hs-identifier hs-var">effectDeclarationsId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
+</span><a href="#local-6989586621679590779"><span class="hs-identifier hs-var">dataDeclSpan</span></a></span><span>
+</span><span id="line-32"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590778"><span class="annot"><span class="annottext">abilityFolds :: [Ann]
+</span><a href="#local-6989586621679590778"><span class="hs-identifier hs-var hs-var">abilityFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map Symbol (TypeReferenceId, EffectDeclaration Symbol Ann)
+</span><a href="#local-6989586621679590789"><span class="hs-identifier hs-var">effectDeclarationsId</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
 </span><span class="hs-operator hs-var">^..</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Foldable f =&gt; IndexedFold Int (f a) a
 </span><span class="hs-identifier hs-var">folded</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s t a b. Field2 s t a b =&gt; Lens s t a b
@@ -114,10 +114,10 @@ terms :: [(Symbol, Ann, Term Symbol Ann)]
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
 </span><span class="hs-identifier hs-var">to</span></span><span> </span><span class="annot"><span class="annottext">forall {a} {v}. Monoid a =&gt; DataDeclaration v a -&gt; a
-</span><a href="#local-6989586621679590766"><span class="hs-identifier hs-var">dataDeclSpan</span></a></span><span>
-</span><span id="line-33"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590763"><span class="annot"><span class="annottext">termFolds :: [Ann]
-</span><a href="#local-6989586621679590763"><span class="hs-identifier hs-var hs-var">termFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(Symbol, Ann, Term Symbol Ann)]
-</span><a href="#local-6989586621679590774"><span class="hs-identifier hs-var">terms</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
+</span><a href="#local-6989586621679590779"><span class="hs-identifier hs-var">dataDeclSpan</span></a></span><span>
+</span><span id="line-33"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590776"><span class="annot"><span class="annottext">termFolds :: [Ann]
+</span><a href="#local-6989586621679590776"><span class="hs-identifier hs-var hs-var">termFolds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(Symbol, Ann, Term Symbol Ann)]
+</span><a href="#local-6989586621679590787"><span class="hs-identifier hs-var">terms</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting (Endo [a]) s a -&gt; [a]
 </span><span class="hs-operator hs-var">^..</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Foldable f =&gt; IndexedFold Int (f a) a
 </span><span class="hs-identifier hs-var">folded</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s t a b. Field3 s t a b =&gt; Lens s t a b
@@ -127,89 +127,89 @@ terms :: [(Symbol, Ann, Term Symbol Ann)]
 (s -&gt; a) -&gt; Optic' p f s a
 </span><span class="hs-identifier hs-var">to</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a. Term f v a -&gt; a
 </span><span class="hs-identifier hs-var">ABT.annotation</span></span><span>
-</span><span id="line-34"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590760"><span class="annot"><span class="annottext">folds :: [Ann]
-</span><a href="#local-6989586621679590760"><span class="hs-identifier hs-var hs-var">folds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Ann]
-</span><a href="#local-6989586621679590771"><span class="hs-identifier hs-var">dataFolds</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-34"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590773"><span class="annot"><span class="annottext">folds :: [Ann]
+</span><a href="#local-6989586621679590773"><span class="hs-identifier hs-var hs-var">folds</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Ann]
+</span><a href="#local-6989586621679590784"><span class="hs-identifier hs-var">dataFolds</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Ann]
-</span><a href="#local-6989586621679590765"><span class="hs-identifier hs-var">abilityFolds</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679590778"><span class="hs-identifier hs-var">abilityFolds</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Ann]
-</span><a href="#local-6989586621679590763"><span class="hs-identifier hs-var">termFolds</span></a></span><span>
-</span><span id="line-35"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590759"><span class="annot"><span class="annottext">ranges :: [Range]
-</span><a href="#local-6989586621679590759"><span class="hs-identifier hs-var hs-var">ranges</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b.
+</span><a href="#local-6989586621679590776"><span class="hs-identifier hs-var">termFolds</span></a></span><span>
+</span><span id="line-35"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679590772"><span class="annot"><span class="annottext">ranges :: [Range]
+</span><a href="#local-6989586621679590772"><span class="hs-identifier hs-var hs-var">ranges</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b.
 Filterable f =&gt;
 (a -&gt; Maybe b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">mapMaybe</span></span><span> </span><span class="annot"><span class="annottext">Ann -&gt; Maybe Range
 </span><a href="Unison.LSP.Conversions.html#annToRange"><span class="hs-identifier hs-var">annToRange</span></a></span><span> </span><span class="annot"><span class="annottext">[Ann]
-</span><a href="#local-6989586621679590760"><span class="hs-identifier hs-var">folds</span></a></span><span>
+</span><a href="#local-6989586621679590773"><span class="hs-identifier hs-var">folds</span></a></span><span>
 </span><span id="line-36"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-37"></span><span>        </span><span class="annot"><span class="annottext">[Range]
-</span><a href="#local-6989586621679590759"><span class="hs-identifier hs-var">ranges</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
-</span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679590756"><span class="annot"><span class="annottext">Range
-</span><a href="#local-6989586621679590756"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679590772"><span class="hs-identifier hs-var">ranges</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
+</span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679590769"><span class="annot"><span class="annottext">Range
+</span><a href="#local-6989586621679590769"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-38"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">FoldingRange</span></span><span>
 </span><span id="line-39"></span><span>            </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:_startLine:FoldingRange :: UInt
-</span><a href="#local-6989586621679590754"><span class="hs-identifier hs-var">_startLine</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Range
-</span><a href="#local-6989586621679590756"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590767"><span class="hs-identifier hs-var">_startLine</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Range
+</span><a href="#local-6989586621679590769"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasStart s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">start</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasLine s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">line</span></span><span class="hs-special">,</span><span>
 </span><span id="line-40"></span><span>              </span><span class="annot"><span class="annottext">$sel:_startCharacter:FoldingRange :: Maybe UInt
-</span><a href="#local-6989586621679590751"><span class="hs-identifier hs-var">_startCharacter</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679590764"><span class="hs-identifier hs-var">_startCharacter</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Range
-</span><a href="#local-6989586621679590756"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590769"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasStart s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">start</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasCharacter s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">character</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-41"></span><span>              </span><span class="annot"><span class="annottext">$sel:_endLine:FoldingRange :: UInt
-</span><a href="#local-6989586621679590749"><span class="hs-identifier hs-var">_endLine</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Range
-</span><a href="#local-6989586621679590756"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590762"><span class="hs-identifier hs-var">_endLine</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Range
+</span><a href="#local-6989586621679590769"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasEnd s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">end</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasLine s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">line</span></span><span class="hs-special">,</span><span>
 </span><span id="line-42"></span><span>              </span><span class="annot"><span class="annottext">$sel:_endCharacter:FoldingRange :: Maybe UInt
-</span><a href="#local-6989586621679590747"><span class="hs-identifier hs-var">_endCharacter</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679590760"><span class="hs-identifier hs-var">_endCharacter</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Range
-</span><a href="#local-6989586621679590756"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590769"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasEnd s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">end</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasCharacter s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">character</span></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-43"></span><span>              </span><span class="annot"><span class="annottext">$sel:_kind:FoldingRange :: Maybe FoldingRangeKind
-</span><a href="#local-6989586621679590746"><span class="hs-identifier hs-var">_kind</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679590759"><span class="hs-identifier hs-var">_kind</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">FoldingRangeKind
 </span><span class="hs-identifier hs-var">FoldingRangeKind_Region</span></span><span class="hs-special">,</span><span>
 </span><span id="line-44"></span><span>              </span><span class="annot"><span class="annottext">$sel:_collapsedText:FoldingRange :: Maybe Text
-</span><a href="#local-6989586621679590744"><span class="hs-identifier hs-var">_collapsedText</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><a href="#local-6989586621679590757"><span class="hs-identifier hs-var">_collapsedText</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span>
 </span><span id="line-45"></span><span>            </span><span class="hs-special">}</span><span>
 </span><span id="line-46"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-47"></span><span>    </span><span id="local-6989586621679590766"><span class="annot"><span class="annottext">dataDeclSpan :: DataDeclaration v a -&gt; a
-</span><a href="#local-6989586621679590766"><span class="hs-identifier hs-var hs-var">dataDeclSpan</span></a></span></span><span> </span><span id="local-6989586621679590731"><span class="annot"><span class="annottext">DataDeclaration v a
-</span><a href="#local-6989586621679590731"><span class="hs-identifier hs-var">dd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-47"></span><span>    </span><span id="local-6989586621679590779"><span class="annot"><span class="annottext">dataDeclSpan :: DataDeclaration v a -&gt; a
+</span><a href="#local-6989586621679590779"><span class="hs-identifier hs-var hs-var">dataDeclSpan</span></a></span></span><span> </span><span id="local-6989586621679590744"><span class="annot"><span class="annottext">DataDeclaration v a
+</span><a href="#local-6989586621679590744"><span class="hs-identifier hs-var">dd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-48"></span><span>      </span><span class="hs-comment">-- We don't have a proper Annotation for data decls so we take the span of all the</span><span>
 </span><span id="line-49"></span><span>      </span><span class="hs-comment">-- constructors using their monoid instance.</span><span>
 </span><span id="line-50"></span><span>      </span><span class="annot"><span class="annottext">forall v a. DataDeclaration v a -&gt; a
 </span><span class="hs-identifier hs-var">DD.annotation</span></span><span> </span><span class="annot"><span class="annottext">DataDeclaration v a
-</span><a href="#local-6989586621679590731"><span class="hs-identifier hs-var">dd</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679590744"><span class="hs-identifier hs-var">dd</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall v a. DataDeclaration v a -&gt; [(a, v, Type v a)]
 </span><span class="hs-identifier hs-var">DD.constructors'</span></span><span> </span><span class="annot"><span class="annottext">DataDeclaration v a
-</span><a href="#local-6989586621679590731"><span class="hs-identifier hs-var">dd</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679590744"><span class="hs-identifier hs-var">dd</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Foldable f =&gt; IndexedFold Int (f a) a
 </span><span class="hs-identifier hs-var">folded</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (p :: * -&gt; * -&gt; *) (f :: * -&gt; *) s a.
 (Profunctor p, Contravariant f) =&gt;
 (s -&gt; a) -&gt; Optic' p f s a
-</span><span class="hs-identifier hs-var">to</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679590728"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679590728"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590727"><span class="annot"><span class="annottext">v
-</span><a href="#local-6989586621679590727"><span class="hs-identifier hs-var">_v</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590726"><span class="annot"><span class="annottext">Type v a
-</span><a href="#local-6989586621679590726"><span class="hs-identifier hs-var">typ</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679590728"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-identifier hs-var">to</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621679590741"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590741"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590740"><span class="annot"><span class="annottext">v
+</span><a href="#local-6989586621679590740"><span class="hs-identifier hs-var">_v</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590739"><span class="annot"><span class="annottext">Type v a
+</span><a href="#local-6989586621679590739"><span class="hs-identifier hs-var">typ</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590741"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a. Term f v a -&gt; a
 </span><span class="hs-identifier hs-var">ABT.annotation</span></span><span> </span><span class="annot"><span class="annottext">Type v a
-</span><a href="#local-6989586621679590726"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679590739"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-51"></span></pre></body></html>
