@@ -798,12 +798,13 @@ data CodebaseInitStatus
 NewlyCreatedCodebase :: CodebaseInitStatus
 PreviouslyCreatedCodebase :: CodebaseInitStatus
 data Welcome
-Welcome :: Onboarding -> Text -> Welcome
+Welcome :: Onboarding -> Text -> Bool -> Welcome
 [$sel:onboarding:Welcome] :: Welcome -> Onboarding
 [$sel:unisonVersion:Welcome] :: Welcome -> Text
+[$sel:showWelcomeHint:Welcome] :: Welcome -> Bool
 asciiartUnison :: Pretty ColorText
 run :: Welcome -> [Either Event Input]
-welcome :: CodebaseInitStatus -> Text -> Welcome
+welcome :: CodebaseInitStatus -> Text -> Bool -> Welcome
 instance GHC.Classes.Eq Unison.CommandLine.Welcome.CodebaseInitStatus
 instance GHC.Show.Show Unison.CommandLine.Welcome.CodebaseInitStatus
 instance GHC.Classes.Eq Unison.CommandLine.Welcome.Onboarding
