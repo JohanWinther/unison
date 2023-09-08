@@ -90,7 +90,9 @@ instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "hash" Uni
 instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "fqn" Unison.Name.Internal.Name)
 instance Servant.Docs.Internal.ToCapture (Servant.API.Capture.Capture "namespace" Unison.Codebase.Path.Path)
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Codebase.Path.Path
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Codebase.Path.Absolute
 instance Data.OpenApi.Internal.Schema.ToSchema Unison.Codebase.Path.Path
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Codebase.Path.Absolute
 instance Data.Aeson.Types.ToJSON.ToJSON (Unison.HashQualified.HashQualified Unison.Name.Internal.Name)
 instance Data.Aeson.Types.ToJSON.ToJSON (Unison.HashQualified.HashQualified Unison.NameSegment.NameSegment)
 instance Data.Aeson.Types.ToJSON.ToJSON (Unison.HashQualified'.HashQualified Unison.Name.Internal.Name)
@@ -1043,6 +1045,25 @@ instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.Definition
 instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.DefinitionSummary.TermSummary
 instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.DefinitionSummary.TermSummary
 
+module Unison.Server.Local.Endpoints.Current
+type CurrentEndpoint = "current" :> APIGet Current
+data Current
+Current :: Maybe ProjectName -> Maybe ProjectBranchName -> Absolute -> Current
+[$sel:project:Current] :: Current -> Maybe ProjectName
+[$sel:branch:Current] :: Current -> Maybe ProjectBranchName
+[$sel:path:Current] :: Current -> Absolute
+serveCurrent :: MonadIO m => Codebase m v a -> Backend m Current
+getCurrentProjectBranch :: MonadIO m => Codebase m v a -> m Current
+instance Data.OpenApi.Internal.Schema.ToSchema Unison.Server.Local.Endpoints.Current.Current
+instance GHC.Show.Show Unison.Server.Local.Endpoints.Current.Current
+instance GHC.Generics.Generic Unison.Server.Local.Endpoints.Current.Current
+instance Servant.Docs.Internal.ToSample Unison.Server.Local.Endpoints.Current.Current
+instance Data.Aeson.Types.ToJSON.ToJSON Unison.Server.Local.Endpoints.Current.Current
+
+module Unison.Server.Local.Endpoints.UCM
+type UCMAPI = CurrentEndpoint
+ucmServer :: MonadIO m => Codebase m v a -> Backend m Current
+
 
 -- | Helpers which are specific to the local share server.
 module Unison.Server.Local
@@ -1095,10 +1116,10 @@ RawHtml :: ByteString -> RawHtml
 [$sel:unRaw:RawHtml] :: RawHtml -> ByteString
 type OpenApiJSON = "openapi.json" :> Get '[JSON] OpenApi
 type UnisonAndDocsAPI = UnisonLocalAPI :<|> OpenApiJSON :<|> Raw
-type LooseCodeAPI = "non-project-code" :> CodebaseServerAPI
-type UnisonLocalAPI = ProjectsAPI :<|> LooseCodeAPI
+type LooseCodeAPI = CodebaseServerAPI
+type UnisonLocalAPI = ("projects" :> ProjectsAPI) :<|> ("non-project-code" :> LooseCodeAPI) :<|> ("ucm" :> UCMAPI)
 type CodebaseServerAPI = NamespaceListingAPI :<|> NamespaceDetailsAPI :<|> DefinitionsAPI :<|> FuzzyFindAPI :<|> TermSummaryAPI :<|> TypeSummaryAPI
-type ProjectsAPI = ("projects" :> ListProjectsEndpoint) :<|> ("projects" :> Capture "project-name" ProjectName :> "branches" :> ListProjectBranchesEndpoint) :<|> ("projects" :> Capture "project-name" ProjectName :> "branches" :> Capture "branch-name" ProjectBranchName :> CodebaseServerAPI)
+type ProjectsAPI = ListProjectsEndpoint :<|> (Capture "project-name" ProjectName :> "branches" :> ListProjectBranchesEndpoint) :<|> (Capture "project-name" ProjectName :> "branches" :> Capture "branch-name" ProjectBranchName :> CodebaseServerAPI)
 type WebUI = CaptureAll "route" Text :> Get '[HTML] RawHtml
 type ServerAPI = ("ui" :> WebUI) :<|> ("api" :> UnisonAndDocsAPI)
 type StaticAPI = "static" :> Raw
