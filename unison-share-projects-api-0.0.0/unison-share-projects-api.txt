@@ -90,7 +90,7 @@ CreateProjectResponseSuccess :: !Project -> CreateProjectResponse
 --   /project-branch?projectId=XXX&amp;branchName=YYY</tt></i> Get a
 --   project branch by name.</li>
 --   </ul>
-type GetProjectBranchAPI = "project-branch" :> QueryParam' '[Required, Strict] "projectId" Text :> QueryParam "branchId" Text :> QueryParam "branchName" Text :> Verb 'GET 200 '[JSON] GetProjectBranchResponse
+type GetProjectBranchAPI = "project-branch" :> QueryParam' '[Required, Strict] "projectId" Text :> QueryParam "branchId" Text :> QueryParam "branchName" Text :> QueryFlag "includeSquashed" :> Verb 'GET 200 '[JSON] GetProjectBranchResponse
 
 -- | <tt>GET /project-branch</tt> response.
 data GetProjectBranchResponse
@@ -159,12 +159,13 @@ Project :: Text -> Text -> Maybe ReleaseVersion -> Maybe BranchName -> Project
 
 -- | A project branch.
 data ProjectBranch
-ProjectBranch :: Text -> Text -> Text -> Text -> HashJWT -> ProjectBranch
+ProjectBranch :: Text -> Text -> Text -> Text -> HashJWT -> Maybe HashJWT -> ProjectBranch
 [$sel:projectId:ProjectBranch] :: ProjectBranch -> Text
 [$sel:projectName:ProjectBranch] :: ProjectBranch -> Text
 [$sel:branchId:ProjectBranch] :: ProjectBranch -> Text
 [$sel:branchName:ProjectBranch] :: ProjectBranch -> Text
 [$sel:branchHead:ProjectBranch] :: ProjectBranch -> HashJWT
+[$sel:squashedBranchHead:ProjectBranch] :: ProjectBranch -> Maybe HashJWT
 
 -- | A project id and branch id.
 data ProjectBranchIds

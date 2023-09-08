@@ -178,12 +178,13 @@ RemoteProject :: RemoteProjectId -> ProjectName -> Maybe Semver -> RemoteProject
 
 -- | A remote project branch.
 data RemoteProjectBranch
-RemoteProjectBranch :: RemoteProjectId -> ProjectName -> RemoteProjectBranchId -> ProjectBranchName -> HashJWT -> RemoteProjectBranch
+RemoteProjectBranch :: RemoteProjectId -> ProjectName -> RemoteProjectBranchId -> ProjectBranchName -> HashJWT -> Maybe HashJWT -> RemoteProjectBranch
 [$sel:projectId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectId
 [$sel:projectName:RemoteProjectBranch] :: RemoteProjectBranch -> ProjectName
 [$sel:branchId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectBranchId
 [$sel:branchName:RemoteProjectBranch] :: RemoteProjectBranch -> ProjectBranchName
 [$sel:branchHead:RemoteProjectBranch] :: RemoteProjectBranch -> HashJWT
+[$sel:squashedBranchHead:RemoteProjectBranch] :: RemoteProjectBranch -> Maybe HashJWT
 instance GHC.Show.Show Unison.Cli.Share.Projects.Types.RemoteProject
 instance GHC.Generics.Generic Unison.Cli.Share.Projects.Types.RemoteProject
 instance GHC.Classes.Eq Unison.Cli.Share.Projects.Types.RemoteProject
@@ -1642,6 +1643,7 @@ ShareErrorGetCausalHashByPath :: GetCausalHashByPathError -> ShareError
 ShareErrorPull :: PullError -> ShareError
 ShareErrorTransport :: CodeserverTransportError -> ShareError
 ShareErrorUploadEntities :: UploadEntitiesError -> ShareError
+ShareExpectedSquashedHead :: ShareError
 isFailure :: Output -> Bool
 isNumberedFailure :: NumberedOutput -> Bool
 instance GHC.Show.Show Unison.Codebase.Editor.Output.HistoryTail
@@ -1937,12 +1939,13 @@ RemoteProject :: RemoteProjectId -> ProjectName -> Maybe Semver -> RemoteProject
 
 -- | A remote project branch.
 data RemoteProjectBranch
-RemoteProjectBranch :: RemoteProjectId -> ProjectName -> RemoteProjectBranchId -> ProjectBranchName -> HashJWT -> RemoteProjectBranch
+RemoteProjectBranch :: RemoteProjectId -> ProjectName -> RemoteProjectBranchId -> ProjectBranchName -> HashJWT -> Maybe HashJWT -> RemoteProjectBranch
 [$sel:projectId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectId
 [$sel:projectName:RemoteProjectBranch] :: RemoteProjectBranch -> ProjectName
 [$sel:branchId:RemoteProjectBranch] :: RemoteProjectBranch -> RemoteProjectBranchId
 [$sel:branchName:RemoteProjectBranch] :: RemoteProjectBranch -> ProjectBranchName
 [$sel:branchHead:RemoteProjectBranch] :: RemoteProjectBranch -> HashJWT
+[$sel:squashedBranchHead:RemoteProjectBranch] :: RemoteProjectBranch -> Maybe HashJWT
 
 -- | Get a project by id.
 --   
@@ -1966,20 +1969,23 @@ data GetProjectBranchResponse
 GetProjectBranchResponseBranchNotFound :: GetProjectBranchResponse
 GetProjectBranchResponseProjectNotFound :: GetProjectBranchResponse
 GetProjectBranchResponseSuccess :: !RemoteProjectBranch -> GetProjectBranchResponse
+data IncludeSquashedHead
+IncludeSquashedHead :: IncludeSquashedHead
+NoSquashedHead :: IncludeSquashedHead
 
 -- | Get a project branch by id.
 --   
 --   On success, update the <tt>remote_project_branch</tt> table.
-getProjectBranchById :: ProjectAndBranch RemoteProjectId RemoteProjectBranchId -> Cli GetProjectBranchResponse
+getProjectBranchById :: IncludeSquashedHead -> ProjectAndBranch RemoteProjectId RemoteProjectBranchId -> Cli GetProjectBranchResponse
 
 -- | Get a project branch by name.
 --   
 --   On success, update the <tt>remote_project_branch</tt> table.
-getProjectBranchByName :: ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli GetProjectBranchResponse
+getProjectBranchByName :: IncludeSquashedHead -> ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli GetProjectBranchResponse
 
 -- | Variant of <a>getProjectBranchByName</a> that returns servant client
 --   errors.
-getProjectBranchByName' :: ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Either ClientError GetProjectBranchResponse)
+getProjectBranchByName' :: IncludeSquashedHead -> ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Either ClientError GetProjectBranchResponse)
 
 -- | Create a new project branch.
 --   
@@ -1998,6 +2004,8 @@ SetProjectBranchHeadResponseSuccess :: SetProjectBranchHeadResponse
 setProjectBranchHead :: SetProjectBranchHeadRequest -> Cli SetProjectBranchHeadResponse
 hardCodedBaseUrl :: BaseUrl
 hardCodedUri :: URI
+instance GHC.Classes.Eq Unison.Cli.Share.Projects.IncludeSquashedHead
+instance GHC.Show.Show Unison.Cli.Share.Projects.IncludeSquashedHead
 instance GHC.Generics.Generic Unison.Cli.Share.Projects.SetProjectBranchHeadResponse
 instance GHC.Show.Show Unison.Cli.Share.Projects.SetProjectBranchHeadResponse
 instance GHC.Classes.Eq Unison.Cli.Share.Projects.SetProjectBranchHeadResponse
@@ -2264,12 +2272,12 @@ expectProjectAndBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli
 --   </ol>
 expectLooseCodeOrProjectBranch :: These Path' (ProjectAndBranch (Maybe ProjectName) ProjectBranchName) -> Cli (Either Path' (ProjectAndBranch Project ProjectBranch))
 expectRemoteProjectByName :: ProjectName -> Cli RemoteProject
-expectRemoteProjectBranchById :: ProjectAndBranch (RemoteProjectId, ProjectName) (RemoteProjectBranchId, ProjectBranchName) -> Cli RemoteProjectBranch
-loadRemoteProjectBranchByName :: ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
-expectRemoteProjectBranchByName :: ProjectAndBranch (RemoteProjectId, ProjectName) ProjectBranchName -> Cli RemoteProjectBranch
-loadRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
-expectRemoteProjectBranchByNames :: ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
-expectRemoteProjectBranchByTheseNames :: These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
+expectRemoteProjectBranchById :: IncludeSquashedHead -> ProjectAndBranch (RemoteProjectId, ProjectName) (RemoteProjectBranchId, ProjectBranchName) -> Cli RemoteProjectBranch
+loadRemoteProjectBranchByName :: IncludeSquashedHead -> ProjectAndBranch RemoteProjectId ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
+expectRemoteProjectBranchByName :: IncludeSquashedHead -> ProjectAndBranch (RemoteProjectId, ProjectName) ProjectBranchName -> Cli RemoteProjectBranch
+loadRemoteProjectBranchByNames :: IncludeSquashedHead -> ProjectAndBranch ProjectName ProjectBranchName -> Cli (Maybe RemoteProjectBranch)
+expectRemoteProjectBranchByNames :: IncludeSquashedHead -> ProjectAndBranch ProjectName ProjectBranchName -> Cli RemoteProjectBranch
+expectRemoteProjectBranchByTheseNames :: IncludeSquashedHead -> These ProjectName ProjectBranchName -> Cli RemoteProjectBranch
 
 module Unison.Codebase.Editor.HandleInput.UI
 openUI :: Path' -> Cli ()
@@ -2742,7 +2750,7 @@ mergeBranchAndPropagateDefaultPatch :: MergeMode -> Text -> Maybe Output -> Bran
 propagatePatch :: Text -> Patch -> Absolute -> Cli Bool
 
 -- | <tt>downloadShareProjectBranch branch</tt> downloads the given branch.
-downloadShareProjectBranch :: RemoteProjectBranch -> Cli ()
+downloadShareProjectBranch :: HasCallStack => Bool -> RemoteProjectBranch -> Cli HashJWT
 withEntitiesDownloadedProgressCallback :: ((Int -> IO (), IO Int) -> IO a) -> IO a
 
 
