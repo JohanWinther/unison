@@ -24,37 +24,6 @@ instance GHC.Read.Read U.Codebase.Kind.Kind
 instance GHC.Classes.Ord U.Codebase.Kind.Kind
 instance GHC.Classes.Eq U.Codebase.Kind.Kind
 
-module U.Codebase.Reference
-
--- | This is the canonical representation of Reference
-type Reference = Reference' Text Hash
-type Id = Id' Hash
-data Reference' t h
-ReferenceBuiltin :: t -> Reference' t h
-ReferenceDerived :: Id' h -> Reference' t h
-_ReferenceDerived :: Prism (Reference' t h) (Reference' t h') (Id' h) (Id' h')
-pattern Derived :: h -> Pos -> Reference' t h
-type Pos = Word64
-data Id' h
-Id :: h -> Pos -> Id' h
-t_ :: Traversal (Reference' t h) (Reference' t' h) t t'
-h_ :: Traversal (Reference' t h) (Reference' t h') h h'
-idH :: Lens (Id' h) (Id' h') h h'
-isBuiltin :: Reference -> Bool
-toShortHash :: Reference -> ShortHash
-instance Data.Traversable.Traversable U.Codebase.Reference.Id'
-instance Data.Foldable.Foldable U.Codebase.Reference.Id'
-instance GHC.Base.Functor U.Codebase.Reference.Id'
-instance GHC.Show.Show h => GHC.Show.Show (U.Codebase.Reference.Id' h)
-instance GHC.Classes.Ord h => GHC.Classes.Ord (U.Codebase.Reference.Id' h)
-instance GHC.Classes.Eq h => GHC.Classes.Eq (U.Codebase.Reference.Id' h)
-instance (GHC.Show.Show t, GHC.Show.Show h) => GHC.Show.Show (U.Codebase.Reference.Reference' t h)
-instance (GHC.Classes.Ord t, GHC.Classes.Ord h) => GHC.Classes.Ord (U.Codebase.Reference.Reference' t h)
-instance (GHC.Classes.Eq t, GHC.Classes.Eq h) => GHC.Classes.Eq (U.Codebase.Reference.Reference' t h)
-instance Data.Bifunctor.Bifunctor U.Codebase.Reference.Reference'
-instance Data.Bifoldable.Bifoldable U.Codebase.Reference.Reference'
-instance Data.Bitraversable.Bitraversable U.Codebase.Reference.Reference'
-
 module U.Codebase.Reflog
 data Entry causal text
 Entry :: UTCTime -> causal -> causal -> text -> Entry causal text

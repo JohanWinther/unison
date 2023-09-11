@@ -185,6 +185,70 @@ instance GHC.Show.Show Unison.ShortHash.ShortNamespaceHash
 instance GHC.Classes.Ord Unison.ShortHash.ShortNamespaceHash
 instance GHC.Classes.Eq Unison.ShortHash.ShortNamespaceHash
 
+module U.Codebase.Reference
+
+-- | This is the canonical representation of Reference
+type Reference = Reference' Text Hash
+
+-- | A possibly-self (R = "recursive") reference.
+type RReference = Reference' Text (Maybe Hash)
+
+-- | A term reference.
+type TermReference = Reference
+
+-- | A possibly-self term reference.
+type TermRReference = RReference
+
+-- | A term reference id.
+type TermReferenceId = Id
+
+-- | A type declaration reference.
+type TypeReference = Reference
+
+-- | A possibly-self type declaration reference.
+type TypeRReference = RReference
+
+-- | A type declaration reference id.
+type TypeReferenceId = Id
+
+-- | Either a builtin or a user defined (hashed) top-level declaration.
+--   Used for both terms and types.
+data Reference' t h
+ReferenceBuiltin :: t -> Reference' t h
+ReferenceDerived :: Id' h -> Reference' t h
+pattern Derived :: h -> Pos -> Reference' t h
+type Id = Id' Hash
+
+-- | <tt>Pos</tt> is a position into a cycle, as cycles are hashed
+--   together.
+data Id' h
+Id :: h -> Pos -> Id' h
+type Pos = Word64
+_ReferenceDerived :: Prism (Reference' t h) (Reference' t h') (Id' h) (Id' h')
+_RReferenceReference :: Prism' (Reference' t (Maybe h)) (Reference' t h)
+t_ :: Traversal (Reference' t h) (Reference' t' h) t t'
+h_ :: Traversal (Reference' t h) (Reference' t h') h h'
+idH :: Lens (Id' h) (Id' h') h h'
+idToHash :: Id -> Hash
+idToShortHash :: Id -> ShortHash
+isBuiltin :: Reference -> Bool
+toShortHash :: Reference -> ShortHash
+toId :: Reference -> Maybe Id
+unsafeId :: Reference -> Id
+instance Data.Traversable.Traversable U.Codebase.Reference.Id'
+instance Data.Foldable.Foldable U.Codebase.Reference.Id'
+instance GHC.Base.Functor U.Codebase.Reference.Id'
+instance GHC.Show.Show h => GHC.Show.Show (U.Codebase.Reference.Id' h)
+instance GHC.Classes.Ord h => GHC.Classes.Ord (U.Codebase.Reference.Id' h)
+instance GHC.Classes.Eq h => GHC.Classes.Eq (U.Codebase.Reference.Id' h)
+instance (GHC.Show.Show t, GHC.Show.Show h) => GHC.Show.Show (U.Codebase.Reference.Reference' t h)
+instance (GHC.Classes.Ord t, GHC.Classes.Ord h) => GHC.Classes.Ord (U.Codebase.Reference.Reference' t h)
+instance GHC.Generics.Generic (U.Codebase.Reference.Reference' t h)
+instance (GHC.Classes.Eq t, GHC.Classes.Eq h) => GHC.Classes.Eq (U.Codebase.Reference.Reference' t h)
+instance Data.Bifunctor.Bifunctor U.Codebase.Reference.Reference'
+instance Data.Bifoldable.Bifoldable U.Codebase.Reference.Reference'
+instance Data.Bitraversable.Bitraversable U.Codebase.Reference.Reference'
+
 module Unison.Util.Alphabetical
 class (Eq n) => Alphabetical n
 compareAlphabetical :: Alphabetical n => n -> n -> Ordering

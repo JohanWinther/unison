@@ -642,32 +642,38 @@ instance Witch.TryFrom.TryFrom Data.Text.Internal.Text (Unison.Core.Project.Proj
 
 module Unison.Reference
 
+-- | This is the canonical representation of Reference
+type Reference = Reference' Text Hash
+
 -- | Either a builtin or a user defined (hashed) top-level declaration.
---   
---   Used for both terms and types. Doesn't distinguish between them.
---   
---   Other used defined things like local variables don't get
---   <tt>Reference</tt>s.
-data Reference
-pattern Builtin :: () => Text -> Reference
-pattern Derived :: Hash -> Pos -> Reference
-pattern DerivedId :: () => Id -> Reference
+--   Used for both terms and types.
+data Reference' t h
+ReferenceBuiltin :: t -> Reference' t h
+ReferenceDerived :: Id' h -> Reference' t h
+pattern Builtin :: t -> Reference' t h
+pattern DerivedId :: Id' h -> Reference' t h
+pattern Derived :: h -> Pos -> Reference' t h
 _DerivedId :: Prism' Reference Id
+type Id = Id' Hash
 
 -- | <tt>Pos</tt> is a position into a cycle, as cycles are hashed
 --   together.
-data Id
-Id :: Hash -> Pos -> Id
+data Id' h
+Id :: h -> Pos -> Id' h
 type Pos = Word64
 type CycleSize = Word64
 type Size = CycleSize
 
 -- | A term reference.
 type TermReference = Reference
+
+-- | A term reference id.
 type TermReferenceId = Id
 
 -- | A type declaration reference.
 type TypeReference = Reference
+
+-- | A type declaration reference id.
 type TypeReferenceId = Id
 derivedBase32Hex :: Text -> Pos -> Maybe Reference
 component :: Hash -> [k] -> [(k, Id)]
@@ -676,9 +682,7 @@ groupByComponent :: [(k, Reference)] -> [[(k, Reference)]]
 componentFor :: Hash -> [a] -> [(Id, a)]
 componentFromLength :: Hash -> CycleSize -> Set Id
 unsafeFromText :: Text -> Reference
-idFromText :: Text -> Maybe Id
 isPrefixOf :: ShortHash -> Reference -> Bool
-fromShortHash :: ShortHash -> Maybe Reference
 
 -- | todo: take a (Reference -&gt; CycleSize) so that <a>readSuffix</a>
 --   doesn't have to parse the size from the text. examples:
@@ -710,13 +714,6 @@ toShortHash :: Reference -> ShortHash
 idToHash :: Id -> Hash
 idToShortHash :: Id -> ShortHash
 isBuiltin :: Reference -> Bool
-instance GHC.Classes.Ord Unison.Reference.Id
-instance GHC.Classes.Eq Unison.Reference.Id
-instance GHC.Generics.Generic Unison.Reference.Reference
-instance GHC.Classes.Ord Unison.Reference.Reference
-instance GHC.Classes.Eq Unison.Reference.Reference
-instance GHC.Show.Show Unison.Reference.Id
-instance GHC.Show.Show Unison.Reference.Reference
 
 
 -- | The constructor reference type.
