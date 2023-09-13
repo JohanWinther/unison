@@ -1120,10 +1120,10 @@ loadAllProjects :: Transaction [Project]
 -- | Load all projects whose name matches a prefix.
 loadAllProjectsBeginningWith :: Maybe Text -> Transaction [Project]
 
--- | Insert a <tt>project</tt> row.
+-- | Insert a <a>project</a> row.
 insertProject :: ProjectId -> ProjectName -> Transaction ()
 
--- | Rename a <tt>project</tt> row.
+-- | Rename a <a>project</a> row.
 --   
 --   Precondition: the new name is available.
 renameProject :: ProjectId -> ProjectName -> Transaction ()
@@ -1146,6 +1146,10 @@ loadAllProjectBranchesBeginningWith :: ProjectId -> Maybe Text -> Transaction [(
 --   remote branches.
 loadAllProjectBranchInfo :: ProjectId -> Transaction (Map ProjectBranchName (Map URI (ProjectName, ProjectBranchName)))
 loadProjectAndBranchNames :: ProjectId -> ProjectBranchId -> Transaction (Maybe (ProjectName, ProjectBranchName))
+
+-- | Load ALL project/branch name pairs Useful for
+--   autocomplete/fuzzy-finding
+loadAllProjectBranchNamePairs :: Transaction [(ProjectAndBranch ProjectName ProjectBranchName, ProjectAndBranch ProjectId ProjectBranchId)]
 loadProjectBranch :: ProjectId -> ProjectBranchId -> Transaction (Maybe ProjectBranch)
 
 -- | Insert a project branch.

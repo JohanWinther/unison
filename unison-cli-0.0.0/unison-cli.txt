@@ -321,7 +321,7 @@ VersionI :: Input
 DiffNamespaceToPatchI :: DiffNamespaceToPatchInput -> Input
 ProjectCreateI :: Bool -> Maybe ProjectName -> Input
 ProjectRenameI :: ProjectName -> Input
-ProjectSwitchI :: ProjectAndBranchNames -> Input
+ProjectSwitchI :: Maybe ProjectAndBranchNames -> Input
 ProjectsI :: Input
 BranchI :: BranchSourceI -> ProjectAndBranch (Maybe ProjectName) ProjectBranchName -> Input
 BranchRenameI :: ProjectBranchName -> Input
@@ -2312,7 +2312,7 @@ module Unison.Codebase.Editor.HandleInput.ProjectSwitch
 --   <li>Complain, because there's both a project "foo" and a branch "foo"
 --   in the current project</li>
 --   </ol>
-projectSwitch :: ProjectAndBranchNames -> Cli ()
+projectSwitch :: Maybe ProjectAndBranchNames -> Cli ()
 
 
 -- | <tt>project.rename</tt> input handler
