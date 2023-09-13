@@ -5260,6 +5260,7 @@ module Unison.Runtime.ANF
 minimizeCyclesOrCrash :: Var v => Term v a -> Term v a
 pattern TVar :: Var v => v -> Term ANormalF v
 pattern TLit :: Var v => Lit -> Term ANormalF v
+pattern TBLit :: Var v => Lit -> Term ANormalF v
 pattern TApp :: Var v => Func v -> [v] -> Term ANormalF v
 pattern TApv :: Var v => v -> [v] -> Term ANormalF v
 pattern TCom :: Var v => Reference -> [v] -> Term ANormalF v
@@ -5433,12 +5434,14 @@ float :: Var v => Monoid a => Map v Reference -> Term v a -> (Term v a, Map Refe
 floatGroup :: Var v => Monoid a => Map v Reference -> [(v, Term v a)] -> ([(v, Id)], [(Reference, Term v a)], [(Reference, Term v a)])
 lamLift :: Var v => Monoid a => Map v Reference -> Term v a -> (Term v a, Map Reference Reference, [(Reference, Term v a)], [(Reference, Term v a)])
 lamLiftGroup :: Var v => Monoid a => Map v Reference -> [(v, Term v a)] -> ([(v, Id)], [(Reference, Term v a)], [(Reference, Term v a)])
+litRef :: Lit -> Reference
 inlineAlias :: Var v => Monoid a => Term v a -> Term v a
 addDefaultCases :: Var v => Monoid a => String -> Term v a -> Term v a
 data ANormalF v e
 ALet :: Direction Word16 -> [Mem] -> e -> e -> ANormalF v e
 AName :: Either Reference v -> [v] -> e -> ANormalF v e
 ALit :: Lit -> ANormalF v e
+ABLit :: Lit -> ANormalF v e
 AMatch :: v -> Branched e -> ANormalF v e
 AShift :: Reference -> e -> ANormalF v e
 AHnd :: [Reference] -> v -> e -> ANormalF v e
@@ -5477,6 +5480,11 @@ Bytes :: Bytes -> BLit
 Quote :: Value -> BLit
 Code :: SuperGroup Symbol -> BLit
 BArr :: ByteArray -> BLit
+Pos :: Word64 -> BLit
+Neg :: Word64 -> BLit
+Char :: Char -> BLit
+Float :: Double -> BLit
+Arr :: Array Value -> BLit
 packTags :: RTag -> CTag -> Word64
 unpackTags :: Word64 -> (RTag, CTag)
 maskTags :: Word64 -> Word64
@@ -5488,6 +5496,7 @@ MatchRequest :: Map Reference (EnumMap CTag ([Mem], e)) -> e -> Branched e
 MatchEmpty :: Branched e
 MatchData :: Reference -> EnumMap CTag ([Mem], e) -> Maybe e -> Branched e
 MatchSum :: EnumMap Word64 ([Mem], e) -> Branched e
+MatchNumeric :: Reference -> EnumMap Word64 e -> Maybe e -> Branched e
 pattern MatchDataCover :: Reference -> EnumMap CTag ([Mem], e) -> Branched e
 data Func v
 FVar :: v -> Func v
@@ -5640,6 +5649,7 @@ Info :: !String -> Instr
 Pack :: !Reference -> !Word64 -> !Args -> Instr
 Unpack :: !Maybe Reference -> !Int -> Instr
 Lit :: !MLit -> Instr
+BLit :: !Reference -> !MLit -> Instr
 Print :: !Int -> Instr
 Reset :: !EnumSet Word64 -> Instr
 Fork :: !Int -> Instr
@@ -5656,6 +5666,9 @@ Ins :: !Instr -> !Section -> Section
 Let :: !Section -> !CombIx -> Section
 Die :: String -> Section
 Exit :: Section
+DMatch :: !Maybe Reference -> !Int -> !Branch -> Section
+NMatch :: !Maybe Reference -> !Int -> !Branch -> Section
+RMatch :: !Int -> !Section -> !EnumMap Word64 Branch -> Section
 pattern MatchT :: Int -> Section -> Map Text Section -> Section
 pattern MatchW :: Int -> Section -> EnumMap Word64 Section -> Section
 data Comb
@@ -6066,12 +6079,16 @@ putChar :: MonadPut m => Char -> m ()
 getChar :: MonadGet m => m Char
 putFloat :: MonadPut m => Double -> m ()
 getFloat :: MonadGet m => m Double
+putBool :: MonadPut m => Bool -> m ()
+getBool :: MonadGet m => m Bool
 putNat :: MonadPut m => Word64 -> m ()
 getNat :: MonadGet m => m Word64
 putInt :: MonadPut m => Int64 -> m ()
 getInt :: MonadGet m => m Int64
 putLength :: (MonadPut m, Integral n, Integral (Unsigned n), Bits n, Bits (Unsigned n)) => n -> m ()
 getLength :: (MonadGet m, Integral n, Integral (Unsigned n), Bits n, Bits (Unsigned n)) => m n
+putPositive :: MonadPut m => Bits n => Bits (Unsigned n) => Integral n => Integral (Unsigned n) => n -> m ()
+getPositive :: forall m n. Bounded n => Integral n => MonadGet m => m n
 putFoldable :: (Foldable f, MonadPut m) => (a -> m ()) -> f a -> m ()
 putMap :: MonadPut m => (a -> m ()) -> (b -> m ()) -> Map a b -> m ()
 getList :: MonadGet m => m a -> m [a]
@@ -6131,6 +6148,7 @@ NameRefT :: TmTag
 NameVarT :: TmTag
 LetDirT :: TmTag
 LetIndT :: TmTag
+BxLitT :: TmTag
 data FnTag
 FVarT :: FnTag
 FCombT :: FnTag
@@ -6146,6 +6164,7 @@ MReqT :: MtTag
 MEmptyT :: MtTag
 MDataT :: MtTag
 MSumT :: MtTag
+MNumT :: MtTag
 data LtTag
 IT :: LtTag
 NT :: LtTag
@@ -6163,6 +6182,11 @@ BytesT :: BLTag
 QuoteT :: BLTag
 CodeT :: BLTag
 BArrT :: BLTag
+PosT :: BLTag
+NegT :: BLTag
+CharT :: BLTag
+FloatT :: BLTag
+ArrT :: BLTag
 data VaTag
 PartialT :: VaTag
 DataT :: VaTag
@@ -6394,8 +6418,10 @@ apply1 :: (Stack 'UN -> Stack 'BX -> IO ()) -> CCache -> ActiveThreads -> Closur
 jump0 :: (Stack 'UN -> Stack 'BX -> IO ()) -> CCache -> ActiveThreads -> Closure -> IO ()
 unitValue :: Closure
 lookupDenv :: Word64 -> DEnv -> Closure
+buildLit :: Reference -> MLit -> Closure
 exec :: CCache -> DEnv -> ActiveThreads -> Stack 'UN -> Stack 'BX -> K -> Reference -> Instr -> IO (DEnv, Stack 'UN, Stack 'BX, K)
 encodeExn :: Stack 'UN -> Stack 'BX -> Either SomeException () -> IO (Stack 'BX)
+numValue :: Maybe Reference -> Closure -> IO Word64
 eval :: CCache -> DEnv -> ActiveThreads -> Stack 'UN -> Stack 'BX -> K -> Reference -> Section -> IO ()
 forkEval :: CCache -> ActiveThreads -> Closure -> IO ThreadId
 nestEval :: CCache -> ActiveThreads -> (Closure -> IO ()) -> Closure -> IO ()
@@ -6408,6 +6434,7 @@ repush :: CCache -> ActiveThreads -> Stack 'UN -> Stack 'BX -> DEnv -> K -> K ->
 moveArgs :: Stack 'UN -> Stack 'BX -> Args -> IO (Stack 'UN, Stack 'BX)
 closureArgs :: Stack 'BX -> Args -> IO [Closure]
 buildData :: Stack 'UN -> Stack 'BX -> Reference -> Tag -> Args -> IO Closure
+dumpDataNoTag :: Maybe Reference -> Stack 'UN -> Stack 'BX -> Closure -> IO (Word64, Stack 'UN, Stack 'BX)
 dumpData :: Maybe Reference -> Stack 'UN -> Stack 'BX -> Closure -> IO (Stack 'UN, Stack 'BX)
 closeArgs :: Augment -> Stack 'UN -> Stack 'BX -> Seg 'UN -> Seg 'BX -> Args -> IO (Seg 'UN, Seg 'BX)
 peekForeign :: Stack 'BX -> Int -> IO a
@@ -6421,6 +6448,7 @@ selectBranch :: Tag -> Branch -> Section
 splitCont :: DEnv -> Stack 'UN -> Stack 'BX -> K -> Word64 -> IO (Closure, DEnv, Stack 'UN, Stack 'BX, K)
 discardCont :: DEnv -> Stack 'UN -> Stack 'BX -> K -> Word64 -> IO (DEnv, Stack 'UN, Stack 'BX, K)
 resolve :: CCache -> DEnv -> Stack 'BX -> Ref -> IO Closure
+unhandledErr :: String -> CCache -> Word64 -> IO a
 combSection :: HasCallStack => CCache -> CombIx -> IO Comb
 dummyRef :: Reference
 reserveIds :: Word64 -> TVar Word64 -> IO Word64
@@ -6437,6 +6465,8 @@ cacheAdd :: [(Reference, SuperGroup Symbol)] -> CCache -> IO [Reference]
 reflectValue :: EnumMap Word64 Reference -> Closure -> IO Value
 reifyValue :: CCache -> Value -> IO (Either [Reference] Closure)
 reifyValue0 :: (Map Reference Word64, Map Reference Word64) -> Value -> IO Closure
+doubleToInt :: Double -> Int
+intToDouble :: Int -> Double
 closureNum :: Closure -> Int
 universalEq :: (Foreign -> Foreign -> Bool) -> Closure -> Closure -> Bool
 arrayEq :: (Closure -> Closure -> Bool) -> Array Closure -> Array Closure -> Bool
@@ -6444,6 +6474,7 @@ compareAsFloat :: Int -> Int -> Ordering
 compareAsNat :: Int -> Int -> Ordering
 floatTag :: Word64
 natTag :: Word64
+intTag :: Word64
 charTag :: Word64
 unitTag :: Word64
 universalCompare :: (Foreign -> Foreign -> Ordering) -> Closure -> Closure -> Ordering
