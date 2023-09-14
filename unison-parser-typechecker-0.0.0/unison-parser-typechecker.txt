@@ -2778,6 +2778,21 @@ toNames :: Var v => UnisonFile v a -> Names
 typecheckedToNames :: Var v => TypecheckedUnisonFile v a -> Names
 typecheckedUnisonFile0 :: Ord v => TypecheckedUnisonFile v a
 bindNames :: Var v => Names -> UnisonFile v a -> ResolutionResult v a (UnisonFile v a)
+
+-- | Given the set of fully-qualified variable names, this computes a Map
+--   from unique suffixes to the fully qualified name.
+--   
+--   Example, given [foo.bar, qux.bar, baz.quaffle], this returns:
+--   
+--   Map [ foo.bar -&gt; foo.bar , qux.bar -&gt; qux.bar , baz.quaffle
+--   -&gt; baz.quaffle , quaffle -&gt; baz.quaffle ]
+--   
+--   This is used to replace variable references with their canonical fully
+--   qualified variables.
+--   
+--   It's used below in <a>environmentFor</a> and also during the term
+--   resolution process.
+variableCanonicalizer :: forall v. Var v => [v] -> Map v v
 environmentFor :: forall v a. Var v => Names -> Map v (DataDeclaration v a) -> Map v (EffectDeclaration v a) -> ResolutionResult v a (Either [Error v a] (Env v a))
 
 module Unison.Codebase.CodeLookup.Util
