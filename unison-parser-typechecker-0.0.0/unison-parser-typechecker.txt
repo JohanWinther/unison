@@ -3713,6 +3713,46 @@ instance GHC.Base.Monoid (Unison.Typechecker.Notes v loc)
 module Unison.Codebase.TermEdit.Typing
 typing :: Var v => Type v loc -> Type v loc -> Typing
 
+module Unison.DataDeclaration.Dependencies
+declTypeDependencies :: Ord v => Decl v a -> Set Reference
+
+-- | All references to types mentioned in the given data declaration's
+--   fields/constructors Note: Does not include references to the
+--   constructors or the decl itself (unless the decl is self-referential)
+--   Note: Does NOT include the referents for fields and field accessors.
+--   Those must be computed separately because we need access to the
+--   typechecker to do so.
+typeDependencies :: Ord v => DataDeclaration v a -> Set Reference
+labeledTypeDependencies :: Ord v => DataDeclaration v a -> Set LabeledDependency
+labeledDeclTypeDependencies :: Ord v => Decl v a -> Set LabeledDependency
+
+-- | Compute the dependencies of a data declaration, including the type
+--   itself and references for each of its constructors.
+--   
+--   NOTE: You may prefer
+--   labeledDeclDependenciesIncludingSelfAndFieldAccessors in
+--   Unison.DataDeclaration.Dependencies, it also includes Referents for
+--   accessors of record fields.
+labeledDeclDependenciesIncludingSelf :: Ord v => TypeReference -> Decl v a -> Set LabeledDependency
+
+-- | Generate the LabeledDependencies for everything in a Decl, including
+--   the Decl itself, all its constructors, all referenced types, and all
+--   possible record accessors.
+--   
+--   Note that we can't actually tell whether the Decl was originally a
+--   record or not, so we include all possible accessors, but they may or
+--   may not exist in the codebase.
+labeledDeclDependenciesIncludingSelfAndFieldAccessors :: Var v => TypeReference -> Decl v a -> Set LabeledDependency
+
+-- | Generate Referents for all possible field accessors of a Decl. Returns
+--   <a>Nothing</a> if typechecking of any accessor fails.
+fieldAccessorRefs :: forall v a. Var v => Reference -> DataDeclaration v a -> Maybe (Set Referent)
+
+-- | Generate Referents for all possible field accessors of a Decl. Returns
+--   <a>Nothing</a> if typechecking of any accessor fails (which shouldn't
+--   happen).
+hashFieldAccessors :: forall v a. Var v => PrettyPrintEnv -> v -> [v] -> Reference -> DataDeclaration v a -> Maybe (Map v (Id, Term v (), Type v ()))
+
 module Unison.Syntax.DeclPrinter
 prettyDecl :: Var v => PrettyPrintEnvDecl -> Reference -> HashQualified Name -> Decl v a -> Pretty SyntaxText
 prettyDeclHeader :: Var v => HashQualified Name -> Either (EffectDeclaration v a) (DataDeclaration v a) -> Pretty SyntaxText
