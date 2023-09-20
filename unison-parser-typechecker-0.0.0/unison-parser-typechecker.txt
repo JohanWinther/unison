@@ -5030,6 +5030,7 @@ type SyncToDir m = CodebasePath -> SyncMode -> Branch m -> m ()
 
 -- | Run a transaction on a codebase.
 runTransaction :: MonadIO m => Codebase m v a -> Transaction b -> m b
+runTransactionWithRollback :: MonadIO m => Codebase m v a -> ((forall void. b -> Transaction void) -> Transaction b) -> m b
 
 -- | Acquire a new connection to the same underlying database file this
 --   codebase object connects to.

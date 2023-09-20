@@ -1820,8 +1820,8 @@ respondNumbered :: NumberedOutput -> Cli ()
 time :: String -> Cli a -> Cli a
 runTransaction :: Transaction a -> Cli a
 
--- | Return early if a transaction returns Left.
-runEitherTransaction :: Transaction (Either Output a) -> Cli a
+-- | Run a transaction that can abort early with an output message.
+runTransactionWithRollback :: ((forall void. Output -> Transaction void) -> Transaction a) -> Cli a
 
 -- | The result of calling <a>$sel:loadSource:Env</a>.
 data LoadSourceResult
@@ -2035,7 +2035,7 @@ resolveSplit' :: (Path', a) -> Cli (Absolute, a)
 resolveAbsBranchId :: AbsBranchId -> Cli (Branch IO)
 
 -- | V2 version of <tt>resolveAbsBranchId2</tt>.
-resolveAbsBranchIdV2 :: AbsBranchId -> Transaction (Either Output (Branch Transaction))
+resolveAbsBranchIdV2 :: (forall void. Output -> Transaction void) -> AbsBranchId -> Transaction (Branch Transaction)
 
 -- | Resolve a <tt>BranchId</tt> to the corresponding <tt>Branch IO</tt>,
 --   or fail if no such branch hash is found. (Non-existent branches by

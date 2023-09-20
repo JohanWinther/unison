@@ -135,6 +135,10 @@ data Transaction a
 -- | Run a transaction on the given connection.
 runTransaction :: MonadIO m => Connection -> Transaction a -> m a
 
+-- | Run a transaction on the given connection, providing a function that
+--   can short-circuit (and roll back) the transaction.
+runTransactionWithRollback :: MonadIO m => Connection -> ((forall void. a -> Transaction void) -> Transaction a) -> m a
+
 -- | Run a transaction that is known to only perform reads.
 --   
 --   The action is provided a function that peels off the
@@ -191,6 +195,8 @@ rowsModified :: Transaction Int
 instance GHC.Base.Monad Unison.Sqlite.Transaction.Transaction
 instance GHC.Base.Functor Unison.Sqlite.Transaction.Transaction
 instance GHC.Base.Applicative Unison.Sqlite.Transaction.Transaction
+instance GHC.Exception.Type.Exception Unison.Sqlite.Transaction.RollingBack
+instance GHC.Show.Show Unison.Sqlite.Transaction.RollingBack
 
 
 -- | The Unison monorepo interface to SQLite.
@@ -227,6 +233,10 @@ data Transaction a
 
 -- | Run a transaction on the given connection.
 runTransaction :: MonadIO m => Connection -> Transaction a -> m a
+
+-- | Run a transaction on the given connection, providing a function that
+--   can short-circuit (and roll back) the transaction.
+runTransactionWithRollback :: MonadIO m => Connection -> ((forall void. a -> Transaction void) -> Transaction a) -> m a
 
 -- | Run a transaction that is known to only perform reads.
 --   
