@@ -1,23 +1,12 @@
-{-# LANGUAGE NumericUnderscores #-}
-
 module Unison.Auth.CredentialFile (atomicallyModifyCredentialsFile) where
 
 import Data.Aeson qualified as Aeson
+import System.FileLock qualified as FileLock
 import System.FilePath (takeDirectory, (</>))
-import System.IO.LockFile
 import Unison.Auth.Types
 import Unison.Debug qualified as Debug
 import Unison.Prelude
 import UnliftIO.Directory
-
-lockfileConfig :: LockingParameters
-lockfileConfig =
-  LockingParameters
-    { retryToAcquireLock = NumberOfTimes 3,
-      sleepBetweenRetries = sleepTimeMicros
-    }
-  where
-    sleepTimeMicros = 100_000 -- 100ms
 
 getCredentialJSONFilePath :: (MonadIO m) => m FilePath
 getCredentialJSONFilePath = do
@@ -35,7 +24,7 @@ atomicallyModifyCredentialsFile f = liftIO $ do
       createDirectoryIfMissing True $ takeDirectory credentialJSONPath
       Aeson.encodeFile credentialJSONPath emptyCredentials
 
-  withLockFile lockfileConfig (withLockExt credentialJSONPath) $ do
+  FileLock.withFileLock credentialJSONPath FileLock.Exclusive \_lock -> do
     credentials <-
       Aeson.eitherDecodeFileStrict credentialJSONPath >>= \case
         -- If something goes wrong, just wipe the credentials file so we're in a clean slate.
