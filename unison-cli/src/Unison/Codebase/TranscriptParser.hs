@@ -201,9 +201,9 @@ withTranscriptRunner ::
   (TranscriptRunner -> m r) ->
   m r
 withTranscriptRunner verbosity ucmVersion configFile action = do
-  withRuntimes \runtime sbRuntime -> withConfig $ \config -> do
+  withRuntimes \runtime sbRuntime -> withConfig \config -> do
     action \transcriptName transcriptSrc (codebaseDir, codebase) -> do
-      Server.startServer (Backend.BackendEnv {Backend.useNamesIndex = False}) Server.defaultCodebaseServerOpts runtime codebase $ \baseUrl -> do
+      Server.startServer (Backend.BackendEnv {Backend.useNamesIndex = False}) Server.defaultCodebaseServerOpts runtime codebase \baseUrl -> do
         let parsed = parse transcriptName transcriptSrc
         result <- for parsed \stanzas -> do
           liftIO $ run verbosity codebaseDir stanzas codebase runtime sbRuntime config ucmVersion (tShow baseUrl)
