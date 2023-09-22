@@ -106,7 +106,6 @@ import Unison.Codebase.Path qualified as Path
 import Unison.Codebase.Path.Parse qualified as Path
 import Unison.Codebase.Runtime qualified as Runtime
 import Unison.Codebase.ShortCausalHash qualified as SCH
-import Unison.Codebase.SqliteCodebase.Conversions qualified as Conversions
 import Unison.Codebase.SyncMode qualified as SyncMode
 import Unison.Codebase.TermEdit (TermEdit (..))
 import Unison.Codebase.TermEdit qualified as TermEdit
@@ -151,7 +150,7 @@ import Unison.PrettyPrintEnvDecl qualified as PPE hiding (biasTo, empty)
 import Unison.PrettyPrintEnvDecl qualified as PPED
 import Unison.PrettyPrintEnvDecl.Names qualified as PPED
 import Unison.Project (ProjectBranchNameOrLatestRelease (..))
-import Unison.Reference (Reference, TermReference)
+import Unison.Reference (Reference, Reference' (..), TermReference)
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -779,7 +778,7 @@ loop e = do
                   diff
               where
                 d :: Reference.Id -> Referent
-                d = Referent.Ref . Reference.DerivedId
+                d = Referent.Ref . ReferenceDerived
                 base :: Path.Split' = (Path.relativeEmpty', "metadata")
                 authorPath' = base |> "authors" |> authorNameSegment
             MoveTermI src' dest' -> do
@@ -1675,7 +1674,7 @@ handleStructuredFindI rule = do
     Referent.Ref _ <- pure r
     Just shortName <- [PPE.terms (PPED.suffixifiedPPE ppe) r]
     pure (HQ'.toHQ shortName, r)
-  let ok t@(_, Referent.Ref (Reference.DerivedId r)) = do
+  let ok t@(_, Referent.Ref (ReferenceDerived r)) = do
         oe <- Cli.runTransaction (Codebase.getTerm codebase r)
         pure $ (t, maybe False (\e -> any ($ e) rules) oe)
       ok t = pure (t, False)
@@ -1700,7 +1699,7 @@ lookupRewrite onErr prepare rule = do
       case NamesWithHistory.lookupHQTerm rule currentNames of
         s
           | Set.size s == 1,
-            Referent.Ref (Reference.DerivedId r) <- Set.findMin s ->
+            Referent.Ref (ReferenceDerived r) <- Set.findMin s ->
               Cli.runTransaction (Codebase.getTerm codebase r)
         s -> Cli.returnEarly (TermAmbiguous (PPE.suffixifiedPPE ppe) rule s)
   tm <- maybe (Cli.returnEarly (TermAmbiguous (PPE.suffixifiedPPE ppe) rule mempty)) pure ot
@@ -1830,18 +1829,18 @@ handleDependencies hq = do
   results <- for (toList lds) \ld -> do
     dependencies :: Set LabeledDependency <-
       Cli.runTransaction do
-        let tp r@(Reference.DerivedId i) =
+        let tp r@(ReferenceDerived i) =
               Codebase.getTypeDeclaration codebase i <&> \case
                 Nothing -> error $ "What happened to " ++ show i ++ "?"
                 Just decl ->
                   Set.map LabeledDependency.TypeReference . Set.delete r . DD.typeDependencies $
                     DD.asDataDecl decl
             tp _ = pure mempty
-            tm r@(Referent.Ref (Reference.DerivedId i)) =
+            tm r@(Referent.Ref (ReferenceDerived i)) =
               Codebase.getTerm codebase i <&> \case
                 Nothing -> error $ "What happened to " ++ show i ++ "?"
                 Just tm -> Set.delete (LabeledDependency.TermReferent r) (Term.labeledDependencies tm)
-            tm con@(Referent.Con (ConstructorReference (Reference.DerivedId i) cid) _ct) =
+            tm con@(Referent.Con (ConstructorReference (ReferenceDerived i) cid) _ct) =
               Codebase.getTypeDeclaration codebase i <&> \case
                 Nothing -> error $ "What happened to " ++ show i ++ "?"
                 Just decl -> case DD.typeOfConstructor (DD.asDataDecl decl) cid of
@@ -1953,17 +1952,17 @@ handleDiffNamespaceToPatch description input = do
       V2.Reference ->
       Set V2.Reference ->
       Sqlite.Transaction (Maybe (Reference, TermEdit))
-    makeTermEdit codebase (Conversions.reference2to1 -> oldRef) newRefs =
+    makeTermEdit codebase oldRef newRefs =
       runMaybeT do
-        newRef <- Conversions.reference2to1 <$> MaybeT (pure (Set.asSingleton newRefs))
+        newRef <- MaybeT (pure (Set.asSingleton newRefs))
         oldRefType <- MaybeT (Codebase.getTypeOfTerm codebase oldRef)
         newRefType <- MaybeT (Codebase.getTypeOfTerm codebase newRef)
         pure (oldRef, TermEdit.Replace newRef (TermEdit.typing oldRefType newRefType))
 
     -- Same idea as 'makeTermEdit', but simpler, because there's nothing to look up in the database.
     makeTypeEdit :: V2.Reference -> Set V2.Reference -> Maybe (Reference, TypeEdit)
-    makeTypeEdit (Conversions.reference2to1 -> oldRef) newRefs =
-      Set.asSingleton newRefs <&> \newRef -> (oldRef, TypeEdit.Replace (Conversions.reference2to1 newRef))
+    makeTypeEdit oldRef newRefs =
+      Set.asSingleton newRefs <&> \newRef -> (oldRef, TypeEdit.Replace newRef)
 
 handleIOTest :: HQ.HashQualified Name -> Cli ()
 handleIOTest main = do
@@ -2136,8 +2135,8 @@ handleTest TestInput {includeLibNamespace, showFailures, showSuccesses} = do
   cachedTests <- do
     fmap Map.fromList do
       Set.toList testRefs & wither \case
-        Reference.Builtin _ -> pure Nothing
-        r@(Reference.DerivedId rid) -> fmap (r,) <$> Cli.runTransaction (Codebase.getWatch codebase WK.TestWatch rid)
+        ReferenceBuiltin _ -> pure Nothing
+        r@(ReferenceDerived rid) -> fmap (r,) <$> Cli.runTransaction (Codebase.getWatch codebase WK.TestWatch rid)
   let stats = Output.CachedTests (Set.size testRefs) (Map.size cachedTests)
   names <-
     makePrintNamesFromLabeled' $
@@ -2157,11 +2156,11 @@ handleTest TestInput {includeLibNamespace, showFailures, showSuccesses} = do
     let total = Set.size toCompute
     computedTests <- fmap join . for (toList toCompute `zip` [1 ..]) $ \(r, n) ->
       case r of
-        Reference.DerivedId rid ->
+        ReferenceDerived rid ->
           Cli.runTransaction (Codebase.getTerm codebase rid) >>= \case
             Nothing -> do
               hqLength <- Cli.runTransaction Codebase.hashLength
-              Cli.respond (TermNotFound' . SH.shortenTo hqLength . Reference.toShortHash $ Reference.DerivedId rid)
+              Cli.respond (TermNotFound' . SH.shortenTo hqLength . Reference.toShortHash $ ReferenceDerived rid)
               pure []
             Just tm -> do
               Cli.respond $ TestIncrementalOutputStart ppe (n, total) r tm
@@ -2224,15 +2223,15 @@ doDisplay outputLoc names tm = do
       evalTerm tm =
         fmap ErrorUtil.hush . fmap (fmap Term.unannotate) $
           evalUnisonTermE True (PPE.suffixifiedPPE ppe) useCache (Term.amap (const External) tm)
-      loadTerm (Reference.DerivedId r) = case Map.lookup r tms of
+      loadTerm (ReferenceDerived r) = case Map.lookup r tms of
         Nothing -> fmap (fmap Term.unannotate) $ Cli.runTransaction (Codebase.getTerm codebase r)
         Just (_, tm, _) -> pure (Just $ Term.unannotate tm)
       loadTerm _ = pure Nothing
-      loadDecl (Reference.DerivedId r) = case Map.lookup r typs of
+      loadDecl (ReferenceDerived r) = case Map.lookup r typs of
         Nothing -> fmap (fmap $ DD.amap (const ())) $ Cli.runTransaction $ Codebase.getTypeDeclaration codebase r
         Just decl -> pure (Just $ DD.amap (const ()) decl)
       loadDecl _ = pure Nothing
-      loadTypeOfTerm' (Referent.Ref (Reference.DerivedId r))
+      loadTypeOfTerm' (Referent.Ref (ReferenceDerived r))
         | Just (_, _, ty) <- Map.lookup r tms = pure $ Just (void ty)
       loadTypeOfTerm' r = fmap (fmap void) . Cli.runTransaction . loadTypeOfTerm codebase $ r
   rendered <-
@@ -2883,8 +2882,8 @@ loadDisplayInfo codebase refs = do
 
 loadTypeDisplayObject :: Codebase m Symbol Ann -> Reference -> Sqlite.Transaction (DisplayObject () (DD.Decl Symbol Ann))
 loadTypeDisplayObject codebase = \case
-  Reference.Builtin _ -> pure (BuiltinObject ())
-  Reference.DerivedId id ->
+  ReferenceBuiltin _ -> pure (BuiltinObject ())
+  ReferenceDerived id ->
     maybe (MissingObject $ Reference.idToShortHash id) UserObject
       <$> Codebase.getTypeDeclaration codebase id
 
@@ -3078,7 +3077,7 @@ executePPE unisonFile =
 
 loadTypeOfTerm :: Codebase m Symbol Ann -> Referent -> Sqlite.Transaction (Maybe (Type Symbol Ann))
 loadTypeOfTerm codebase (Referent.Ref r) = Codebase.getTypeOfTerm codebase r
-loadTypeOfTerm codebase (Referent.Con (ConstructorReference (Reference.DerivedId r) cid) _) = do
+loadTypeOfTerm codebase (Referent.Con (ConstructorReference (ReferenceDerived r) cid) _) = do
   decl <- Codebase.getTypeDeclaration codebase r
   case decl of
     Just (either DD.toDataDecl id -> dd) -> pure $ DD.typeOfConstructor dd cid
@@ -3138,7 +3137,7 @@ synthesizeForce :: Type Symbol Ann -> Type Symbol Ann
 synthesizeForce typeOfFunc = do
   let term :: Term Symbol Ann
       term = Term.ref External ref
-      ref = Reference.DerivedId (Reference.Id (Hash.fromByteString "deadbeef") 0)
+      ref = ReferenceDerived (Reference.Id (Hash.fromByteString "deadbeef") 0)
       env =
         Typechecker.Env
           { Typechecker._ambientAbilities = [DD.exceptionType External, Type.builtinIO External],
@@ -3228,7 +3227,7 @@ evalPureUnison ppe useCache tm = evalUnisonTermE False ppe useCache tm'
         tm
         (Term.app a (Term.builtin a "bug") (Term.text a msg))
     a = ABT.annotation tm
-    allow = Term.list a [Term.termLink a (Referent.Ref (Reference.Builtin "Debug.toText"))]
+    allow = Term.list a [Term.termLink a (Referent.Ref (ReferenceBuiltin "Debug.toText"))]
     msg = "pure code can't perform I/O"
 
 -- | Evaluate a single closed definition.

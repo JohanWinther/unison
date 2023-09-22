@@ -21,7 +21,7 @@ import Data.Set qualified as Set
 import Unison.ConstructorReference (ConstructorReference)
 import Unison.ConstructorType (ConstructorType (Data, Effect))
 import Unison.Prelude hiding (fold)
-import Unison.Reference (Id, Reference, Reference' (DerivedId))
+import Unison.Reference (Id, Reference, Reference' (..))
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
 
@@ -42,10 +42,10 @@ pattern TermReference ref = TermReferent (Referent.Ref ref)
 {-# COMPLETE ConReference, TermReference, TypeReference #-}
 
 derivedType :: Id -> LabeledDependency
-derivedType = TypeReference . DerivedId
+derivedType = TypeReference . ReferenceDerived
 
 derivedTerm :: Id -> LabeledDependency
-derivedTerm = TermReference . DerivedId
+derivedTerm = TermReference . ReferenceDerived
 
 typeRef :: Reference -> LabeledDependency
 typeRef = TypeReference

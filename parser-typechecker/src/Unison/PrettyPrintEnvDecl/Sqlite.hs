@@ -42,9 +42,9 @@ ppedForReferences namesPerspective refs = do
     pure result
   longestTypeSuffixMatches <- forMaybe typeNames \(name, ref) -> do
     result <-
-      Ops.longestMatchingTypeNameForSuffixification namesPerspective (NamedRef {reversedSegments = coerce $ Name.reverseSegments name, ref = Cv.reference1to2 ref})
+      Ops.longestMatchingTypeNameForSuffixification namesPerspective (NamedRef {reversedSegments = coerce $ Name.reverseSegments name, ref})
         <&> fmap \(NamedRef {reversedSegments, ref}) ->
-          (Name.fromReverseSegments (coerce reversedSegments), Cv.reference2to1 ref)
+          (Name.fromReverseSegments (coerce reversedSegments), ref)
     pure result
   let allTermNamesToConsider = termNames <> longestTermSuffixMatches
   let allTypeNamesToConsider = typeNames <> longestTypeSuffixMatches
@@ -56,5 +56,5 @@ ppedForReferences namesPerspective refs = do
         termNames <- fmap (Name.fromReverseSegments . coerce) <$> Ops.termNamesForRefWithinNamespace namesPerspective (Cv.referent1to2 ref) Nothing
         pure ((,ref) <$> termNames, [])
       LD.TypeReference ref -> do
-        typeNames <- fmap (Name.fromReverseSegments . coerce) <$> Ops.typeNamesForRefWithinNamespace namesPerspective (Cv.reference1to2 ref) Nothing
+        typeNames <- fmap (Name.fromReverseSegments . coerce) <$> Ops.typeNamesForRefWithinNamespace namesPerspective ref Nothing
         pure ([], (,ref) <$> typeNames)

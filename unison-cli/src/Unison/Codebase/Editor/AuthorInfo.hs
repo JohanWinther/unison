@@ -10,6 +10,7 @@ import Data.Text (Text)
 import Unison.ConstructorReference (GConstructorReference (..))
 import Unison.Hashing.V2.Convert qualified as H
 import Unison.Prelude (MonadIO, Word8)
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Runtime.IOSource qualified as IOSource
 import Unison.Term (Term)
@@ -43,7 +44,7 @@ createAuthorInfo a t = createAuthorInfo' . unpack <$> liftIO (getRandomBytes 32)
             hashAndWrangle "author" authorType $
               Term.apps
                 (Term.constructor a (ConstructorReference authorTypeRef 0))
-                [ (a, Term.ref a (Reference.DerivedId guidRef)),
+                [ (a, Term.ref a (ReferenceDerived guidRef)),
                   (a, Term.text a t)
                 ]
 
@@ -51,7 +52,7 @@ createAuthorInfo a t = createAuthorInfo' . unpack <$> liftIO (getRandomBytes 32)
             hashAndWrangle "copyrightHolder" chType $
               Term.apps
                 (Term.constructor a (ConstructorReference chTypeRef 0))
-                [ (a, Term.ref a (Reference.DerivedId guidRef)),
+                [ (a, Term.ref a (ReferenceDerived guidRef)),
                   (a, Term.text a t)
                 ]
        in AuthorInfo

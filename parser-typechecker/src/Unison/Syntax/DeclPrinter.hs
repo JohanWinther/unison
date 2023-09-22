@@ -18,7 +18,7 @@ import Unison.PrettyPrintEnv (PrettyPrintEnv)
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl (PrettyPrintEnvDecl (..))
 import Unison.PrettyPrintEnvDecl qualified as PPED
-import Unison.Reference (Reference, Reference' (DerivedId))
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Referent qualified as Referent
 import Unison.Result qualified as Result
 import Unison.Syntax.HashQualified qualified as HQ (toString, toVar, unsafeFromString)
@@ -187,7 +187,7 @@ fieldNames env r name dd = do
         Just typ -> Just (v, trm, Type.cleanup typ)
   let hashes = Hashing.hashTermComponents (Map.fromList . fmap (\(v, trm, typ) -> (v, (trm, typ, ()))) $ accessorsWithTypes)
   let names =
-        [ (r, HQ.toString . PPE.termName env . Referent.Ref $ DerivedId r)
+        [ (r, HQ.toString . PPE.termName env . Referent.Ref $ ReferenceDerived r)
           | r <- (\(refId, _trm, _typ, _ann) -> refId) <$> Map.elems hashes
         ]
   let fieldNames =

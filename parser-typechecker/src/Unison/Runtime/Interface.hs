@@ -53,8 +53,8 @@ import Unison.Parser.Ann (Ann (External))
 import Unison.Prelude
 import Unison.PrettyPrintEnv
 import Unison.PrettyPrintEnv qualified as PPE
-import Unison.Reference (Reference)
-import Unison.Reference qualified as RF
+import Unison.Reference (Reference, Reference' (..))
+import Unison.Reference qualified as Reference
 import Unison.Referent qualified as RF (pattern Ref)
 import Unison.Runtime.ANF
 import Unison.Runtime.ANF.Rehash (rehashGroups)
@@ -92,6 +92,7 @@ import Unison.Runtime.Machine
 import Unison.Runtime.Pattern
 import Unison.Runtime.Serialize as SER
 import Unison.Runtime.Stack
+import Unison.ShortHash qualified as ShortHash
 import Unison.Symbol (Symbol)
 import Unison.Syntax.HashQualified qualified as HQ (toString)
 import Unison.Syntax.NamePrinter (prettyHashQualified)
@@ -140,21 +141,21 @@ baseContext sandboxed = cacheContext <$> baseCCache sandboxed
 
 resolveTermRef ::
   CodeLookup Symbol IO () ->
-  RF.Reference ->
+  Reference ->
   IO (Term Symbol)
-resolveTermRef _ b@(RF.Builtin _) =
+resolveTermRef _ b@(ReferenceBuiltin _) =
   die $ "Unknown builtin term reference: " ++ show b
-resolveTermRef cl r@(RF.DerivedId i) =
+resolveTermRef cl r@(ReferenceDerived i) =
   getTerm cl i >>= \case
     Nothing -> die $ "Unknown term reference: " ++ show r
     Just tm -> pure tm
 
 allocType ::
   EvalCtx ->
-  RF.Reference ->
+  Reference ->
   Either [Int] [Int] ->
   IO EvalCtx
-allocType _ b@(RF.Builtin _) _ =
+allocType _ b@(ReferenceBuiltin _) _ =
   die $ "Unknown builtin type reference: " ++ show b
 allocType ctx r cons =
   pure $ ctx {dspec = Map.insert r cons $ dspec ctx}
@@ -167,7 +168,7 @@ recursiveDeclDeps ::
   IO (Set Reference, Set Reference)
 recursiveDeclDeps seen0 cl d = do
   rec <- for (toList newDeps) $ \case
-    RF.DerivedId i ->
+    ReferenceDerived i ->
       getTypeDeclaration cl i >>= \case
         Just d -> recursiveDeclDeps seen cl d
         Nothing -> pure mempty
@@ -193,13 +194,13 @@ recursiveTermDeps ::
   IO (Set Reference, Set Reference)
 recursiveTermDeps seen0 cl tm = do
   rec <- for (toList (deps \\ seen0)) $ \case
-    RF.ConReference (RF.ConstructorReference (RF.DerivedId refId) _conId) _conType -> handleTypeReferenceId refId
-    RF.TypeReference (RF.DerivedId refId) -> handleTypeReferenceId refId
+    RF.ConReference (RF.ConstructorReference (ReferenceDerived refId) _conId) _conType -> handleTypeReferenceId refId
+    RF.TypeReference (ReferenceDerived refId) -> handleTypeReferenceId refId
     RF.TermReference r -> recursiveRefDeps seen cl r
     _ -> pure mempty
   pure $ foldMap categorize deps <> fold rec
   where
-    handleTypeReferenceId :: RF.Id -> IO (Set Reference, Set Reference)
+    handleTypeReferenceId :: Reference.Id -> IO (Set Reference, Set Reference)
     handleTypeReferenceId refId =
       getTypeDeclaration cl refId >>= \case
         Just d -> recursiveDeclDeps seen cl d
@@ -212,7 +213,7 @@ recursiveRefDeps ::
   CodeLookup Symbol IO () ->
   Reference ->
   IO (Set Reference, Set Reference)
-recursiveRefDeps seen cl (RF.DerivedId i) =
+recursiveRefDeps seen cl (ReferenceDerived i) =
   getTerm cl i >>= \case
     Just tm -> recursiveTermDeps seen cl tm
     Nothing -> pure mempty
@@ -226,7 +227,7 @@ collectDeps cl tm = do
   (tys, tms) <- recursiveTermDeps mempty cl tm
   (,toList tms) <$> traverse getDecl (toList tys)
   where
-    getDecl ty@(RF.DerivedId i) =
+    getDecl ty@(ReferenceDerived i) =
       (ty,) . maybe (Right []) declFields
         <$> getTypeDeclaration cl i
     getDecl r = pure (r, Right [])
@@ -324,27 +325,27 @@ loadDeps cl ppe ctx tyrs tmrs = do
   sand <- readTVarIO (sandbox cc)
   p <-
     refNumsTy cc <&> \m (r, _) -> case r of
-      RF.DerivedId {} ->
+      ReferenceDerived {} ->
         r `Map.notMember` dspec ctx
           || r `Map.notMember` m
       _ -> False
   q <-
     refNumsTm (ccache ctx) <&> \m r -> case r of
-      RF.DerivedId {}
+      ReferenceDerived {}
         | Just r <- baseToIntermed ctx r -> r `Map.notMember` m
         | Just r <- floatToIntermed ctx r -> r `Map.notMember` m
         | otherwise -> True
       _ -> False
   ctx <- foldM (uncurry . allocType) ctx $ Prelude.filter p tyrs
   itms <-
-    traverse (\r -> (RF.unsafeId r,) <$> resolveTermRef cl r) $
+    traverse (\r -> (Reference.unsafeId r,) <$> resolveTermRef cl r) $
       Prelude.filter q tmrs
   let im = Tm.unhashComponent (Map.fromList itms)
       (subvs, rgrp0, rbkr) = intermediateTerms ppe ctx im
       lubvs r = case Map.lookup r subvs of
         Just r -> r
         Nothing -> error "loadDeps: variable missing for float refs"
-      vm = Map.mapKeys RF.DerivedId . Map.map (lubvs . fst) $ im
+      vm = Map.mapKeys ReferenceDerived . Map.map (lubvs . fst) $ im
       int b r = if b then r else toIntermed ctx r
       (ctx', _, rgrp) =
         performRehash
@@ -367,7 +368,7 @@ intermediateTerms ::
   (HasCallStack) =>
   PrettyPrintEnv ->
   EvalCtx ->
-  Map RF.Id (Symbol, Term Symbol) ->
+  Map Reference.Id (Symbol, Term Symbol) ->
   ( Map.Map Symbol Reference,
     Map.Map Reference (SuperGroup Symbol),
     Map.Map Reference (Map.Map Word64 (Term Symbol))
@@ -386,7 +387,7 @@ intermediateTerms ppe ctx rtms =
   where
     orig =
       Map.fromList
-        . fmap (\(x, y) -> (y, RF.DerivedId x))
+        . fmap (\(x, y) -> (y, ReferenceDerived x))
         . Map.toList
         $ Map.map fst rtms
 
@@ -407,12 +408,12 @@ normalizeTerm ctx tm =
   where
     orig
       | Tm.LetRecNamed' bs _ <- tm =
-          fmap (RF.DerivedId . fst)
+          fmap (ReferenceDerived . fst)
             . Hashing.hashTermComponentsWithoutTypes
             $ Map.fromList bs
       | otherwise = mempty
     absorb (ll, frem, bs, dcmp) =
-      let ref = RF.DerivedId $ Hashing.hashClosedTerm ll
+      let ref = ReferenceDerived $ Hashing.hashClosedTerm ll
        in (ref, frem, Map.fromList $ (ref, ll) : bs, backrefLifted ref tm dcmp)
 
 normalizeGroup ::
@@ -425,7 +426,7 @@ normalizeGroup ::
   )
 normalizeGroup ctx orig gr0 = case lamLiftGroup orig gr of
   (subvis, cmbs, dcmp) ->
-    let subvs = (fmap . fmap) RF.DerivedId subvis
+    let subvs = (fmap . fmap) ReferenceDerived subvis
         subrs = Map.fromList $ mapMaybe f subvs
      in ( Map.fromList subvs,
           Map.fromList $
@@ -715,7 +716,7 @@ startRuntime sandboxed runtimeHost version = do
           sto <- standalone cc w
           BL.writeFile path . runPutL $ do
             serialize $ version
-            serialize $ RF.showShort 8 rf
+            serialize . ShortHash.toText . ShortHash.shortenTo 8 $ Reference.toShortHash rf
             putNat w
             putStoredCache sto,
         mainType = builtinMain External,

@@ -121,7 +121,7 @@ getUIUrlParts startPath definitionPath' codebase = do
 toTypeReference :: Name -> V2.Reference -> Server.DefinitionReference
 toTypeReference name reference =
   Server.TypeReference $
-    HQ.fromNamedReference name (Conversions.reference2to1 reference)
+    HQ.fromNamedReference name reference
 
 toTermReference :: Codebase m Symbol Ann -> Name -> V2.Referent -> Sqlite.Transaction Server.DefinitionReference
 toTermReference codebase name referent = do
@@ -129,7 +129,7 @@ toTermReference codebase name referent = do
     V2.Referent.Ref reference ->
       pure $
         Server.TermReference $
-          HQ.fromNamedReference name (Conversions.reference2to1 reference)
+          HQ.fromNamedReference name reference
     V2.Referent.Con _ _ -> do
       v1Referent <- Conversions.referent2to1 (Codebase.getDeclType codebase) referent
       let hq = HQ.fromNamedReferent name v1Referent

@@ -14,7 +14,7 @@ import Unison.DataDeclaration qualified as DD
 import Unison.DataDeclaration.ConstructorId (ConstructorId)
 import Unison.Hashing.V2.Convert (hashDataDecls)
 import Unison.Pattern qualified as Pattern
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -28,14 +28,14 @@ import Unison.Var qualified as Var
 
 lookupDeclRef :: Text -> Reference
 lookupDeclRef str
-  | [(_, d)] <- filter (\(v, _) -> v == Var.named str) decls = Reference.DerivedId d
+  | [(_, d)] <- filter (\(v, _) -> v == Var.named str) decls = ReferenceDerived d
   | otherwise = error $ "lookupDeclRef: missing \"" ++ unpack str ++ "\""
   where
     decls = [(a, b) | (a, b, _) <- builtinDataDecls]
 
 lookupEffectRef :: Text -> Reference
 lookupEffectRef str
-  | [(_, d)] <- filter (\(v, _) -> v == Var.named str) decls = Reference.DerivedId d
+  | [(_, d)] <- filter (\(v, _) -> v == Var.named str) decls = ReferenceDerived d
   | otherwise = error $ "lookupEffectRef: missing \"" ++ unpack str ++ "\""
   where
     decls = [(a, b) | (a, b, _) <- builtinEffectDecls]
@@ -98,7 +98,7 @@ unitCtorRef = Referent.Con (ConstructorReference unitRef 0) CT.Data
 
 constructorId :: Reference -> Text -> Maybe ConstructorId
 constructorId ref name = do
-  (_, _, dd) <- find (\(_, r, _) -> Reference.DerivedId r == ref) builtinDataDecls
+  (_, _, dd) <- find (\(_, r, _) -> ReferenceDerived r == ref) builtinDataDecls
   fmap fromIntegral . elemIndex name $ DD.constructorNames dd
 
 noneId, someId, okConstructorId, failConstructorId, docBlobId, docLinkId, docSignatureId, docSourceId, docEvaluateId, docJoinId, linkTermId, linkTypeId, eitherRightId, eitherLeftId :: ConstructorId

@@ -1,3 +1,5 @@
+{-# LANGUAGE DataKinds #-}
+
 module U.Codebase.Reference
   ( Reference,
     RReference,
@@ -10,6 +12,7 @@ module U.Codebase.Reference
     Reference' (..),
     pattern Derived,
     Id,
+    RId,
     Id' (..),
     Pos,
     _ReferenceDerived,
@@ -18,10 +21,17 @@ module U.Codebase.Reference
     h_,
     idH,
     idToHash,
+    idToRId,
     idToShortHash,
+    idToText,
     isBuiltin,
-    toShortHash,
+    isPrefixOf,
+    ridToId,
+    rreferenceToReference,
     toId,
+    toRReference,
+    toShortHash,
+    toText,
     unsafeId,
   )
 where
@@ -29,6 +39,7 @@ where
 import Control.Lens (Lens, Prism, Prism', Traversal, lens, preview, prism)
 import Data.Bifoldable (Bifoldable (..))
 import Data.Bitraversable (Bitraversable (..))
+import Data.Generics.Sum (_Ctor)
 import Data.Text qualified as Text
 import Unison.Hash (Hash)
 import Unison.Hash qualified as Hash
@@ -54,7 +65,11 @@ type TypeReference = Reference
 -- | A possibly-self type declaration reference.
 type TypeRReference = RReference
 
+-- | A reference id.
 type Id = Id' Hash
+
+-- | A possibl-self reference id.
+type RId = Id' (Maybe Hash)
 
 -- | A term reference id.
 type TermReferenceId = Id
@@ -82,11 +97,8 @@ _RReferenceReference = prism embed project
         Just h -> Right (ReferenceDerived (Id h p))
 
 _ReferenceDerived :: Prism (Reference' t h) (Reference' t h') (Id' h) (Id' h')
-_ReferenceDerived = prism embed project
-  where
-    embed (Id h pos) = ReferenceDerived (Id h pos)
-    project (ReferenceDerived id') = Right id'
-    project (ReferenceBuiltin t) = Left (ReferenceBuiltin t)
+_ReferenceDerived =
+  _Ctor @"ReferenceDerived"
 
 pattern Derived :: h -> Pos -> Reference' t h
 pattern Derived h i = ReferenceDerived (Id h i)
@@ -115,22 +127,51 @@ idH = lens (\(Id h _w) -> h) (\(Id _h w) h -> Id h w)
 idToHash :: Id -> Hash
 idToHash (Id h _) = h
 
+idToRId :: Hash -> Id -> RId
+idToRId h (Id h' i) = Id oh i
+  where
+    oh = if h == h' then Nothing else Just h'
+
 idToShortHash :: Id -> ShortHash
 idToShortHash = toShortHash . ReferenceDerived
 
+idToText :: Id -> Text
+idToText = toText . ReferenceDerived
+
 isBuiltin :: Reference -> Bool
-isBuiltin (ReferenceBuiltin _) = True
-isBuiltin _ = False
+isBuiltin = \case
+  ReferenceBuiltin _ -> True
+  ReferenceDerived _ -> False
+
+isPrefixOf :: ShortHash -> Reference -> Bool
+isPrefixOf sh r = SH.isPrefixOf sh (toShortHash r)
+
+ridToId :: Hash -> RId -> Id
+ridToId h (Id oh i) =
+  Id (fromMaybe h oh) i
+
+rreferenceToReference :: Hash -> RReference -> Reference
+rreferenceToReference h = \case
+  ReferenceBuiltin t -> ReferenceBuiltin t
+  ReferenceDerived i -> ReferenceDerived (ridToId h i)
 
 toId :: Reference -> Maybe Id
 toId =
   preview _ReferenceDerived
+
+toRReference :: Hash -> Reference -> RReference
+toRReference h = \case
+  ReferenceBuiltin t -> ReferenceBuiltin t
+  ReferenceDerived i -> ReferenceDerived (idToRId h i)
 
 toShortHash :: Reference -> ShortHash
 toShortHash = \case
   ReferenceBuiltin b -> SH.Builtin b
   ReferenceDerived (Id h 0) -> SH.ShortHash (Hash.toBase32HexText h) Nothing Nothing
   ReferenceDerived (Id h i) -> SH.ShortHash (Hash.toBase32HexText h) (Just i) Nothing
+
+toText :: Reference -> Text
+toText = SH.toText . toShortHash
 
 unsafeId :: Reference -> Id
 unsafeId = \case

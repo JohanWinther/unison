@@ -27,7 +27,7 @@ import Unison.Builtin.Decls (exceptionRef, ioFailureRef)
 import Unison.Builtin.Decls qualified as Rf
 import Unison.ConstructorReference qualified as CR
 import Unison.Prelude hiding (Text)
-import Unison.Reference (Reference, Reference' (Builtin), toShortHash)
+import Unison.Reference (Reference, Reference' (..), toShortHash)
 import Unison.Referent (pattern Con, pattern Ref)
 import Unison.Runtime.ANF as ANF
   ( CompileExn (..),
@@ -164,7 +164,7 @@ topDEnv ::
   (DEnv, K -> K)
 topDEnv rfTy rfTm
   | Just n <- M.lookup exceptionRef rfTy,
-    rcrf <- Builtin (DTx.pack "raise"),
+    rcrf <- ReferenceBuiltin (DTx.pack "raise"),
     Just j <- M.lookup rcrf rfTm =
       ( EC.mapSingleton n (PAp (CIx rcrf j 0) unull bnull),
         Mark 0 0 (EC.setSingleton n) mempty
@@ -1827,7 +1827,7 @@ combSection env (CIx _ n i) =
     Nothing -> die $ "unknown combinator `" ++ show n ++ "`."
 
 dummyRef :: Reference
-dummyRef = Builtin (DTx.pack "dummy")
+dummyRef = ReferenceBuiltin (DTx.pack "dummy")
 
 reserveIds :: Word64 -> TVar Word64 -> IO Word64
 reserveIds n free = atomically . stateTVar free $ \i -> (i, i + n)

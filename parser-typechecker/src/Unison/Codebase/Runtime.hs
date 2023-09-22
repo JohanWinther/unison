@@ -12,7 +12,7 @@ import Unison.Hashing.V2.Convert qualified as Hashing
 import Unison.Parser.Ann (Ann)
 import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Term qualified as Term
 import Unison.Type (Type)
@@ -130,7 +130,7 @@ evaluateWatches code ppe evaluationCache rt tuf = do
     -- unref :: Map Reference.Id v -> Term.Term v a -> Term.Term v a
     unref rv t = ABT.visitPure go t
       where
-        go t@(Term.Ref' (Reference.DerivedId r)) = case Map.lookup r rv of
+        go t@(Term.Ref' (ReferenceDerived r)) = case Map.lookup r rv of
           Nothing -> Nothing
           Just v -> Just (Term.var (ABT.annotation t) v)
         go _ = Nothing

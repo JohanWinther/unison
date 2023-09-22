@@ -63,13 +63,13 @@ checkMissing (unzip -> (rs, gs)) = do
   is <- fmap Set.fromList . traverse f $ rs
   pure . nub . foldMap (filter (p is) . groupTermLinks) $ gs
   where
-    f (Ref (DerivedId i)) = pure i
+    f (Ref (ReferenceDerived i)) = pure i
     f r@Ref {} =
       Left ("loaded code cannot be associated to a builtin link", [r])
     f r =
       Left ("loaded code cannot be associated to a constructor", [r])
 
-    p s (DerivedId i) =
+    p s (ReferenceDerived i) =
       any (\j -> idToHash i == idToHash j) s && not (Set.member i s)
     p _ _ = False
 

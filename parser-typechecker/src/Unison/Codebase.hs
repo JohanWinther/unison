@@ -154,7 +154,7 @@ import Unison.NameSegment qualified as NameSegment
 import Unison.Parser.Ann (Ann)
 import Unison.Parser.Ann qualified as Parser
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Runtime.IOSource qualified as IOSource
@@ -327,12 +327,12 @@ addDefsToCodebase c uf = do
 getTypeOfConstructor :: (Ord v) => Codebase m v a -> ConstructorReference -> Sqlite.Transaction (Maybe (Type v a))
 getTypeOfConstructor codebase (ConstructorReference r0 cid) =
   case r0 of
-    Reference.DerivedId r -> do
+    ReferenceDerived r -> do
       maybeDecl <- getTypeDeclaration codebase r
       pure $ case maybeDecl of
         Nothing -> Nothing
         Just decl -> DD.typeOfConstructor (either DD.toDataDecl id decl) cid
-    Reference.Builtin _ -> error (reportBug "924628772" "Attempt to load a type declaration which is a builtin!")
+    ReferenceBuiltin _ -> error (reportBug "924628772" "Attempt to load a type declaration which is a builtin!")
 
 -- | Like 'getWatch', but first looks up the given reference as a regular watch, then as a test watch.
 --
@@ -365,7 +365,7 @@ typeLookupForDependencies codebase s = do
     -- pattern match coverage checking (specifically for
     -- the inhabitation check). We ensure these are found
     -- by collecting all transitive type dependencies.
-    go tl ref@(Reference.DerivedId id) =
+    go tl ref@(ReferenceDerived id) =
       getTypeOfTerm codebase ref >>= \case
         Just typ ->
           let z = tl <> TypeLookup (Map.singleton ref typ) mempty mempty
@@ -379,7 +379,7 @@ typeLookupForDependencies codebase s = do
               let z = tl <> TypeLookup mempty (Map.singleton ref dd) mempty
                in depthFirstAccum z (DD.typeDependencies dd)
             Nothing -> pure tl
-    go tl Reference.Builtin {} = pure tl -- codebase isn't consulted for builtins
+    go tl ReferenceBuiltin {} = pure tl -- codebase isn't consulted for builtins
     unseen :: TL.TypeLookup Symbol a -> Reference -> Bool
     unseen tl r =
       isNothing
@@ -405,8 +405,8 @@ getTypeOfTerm ::
   Sqlite.Transaction (Maybe (Type Symbol a))
 getTypeOfTerm _c r | debug && trace ("Codebase.getTypeOfTerm " ++ show r) False = undefined
 getTypeOfTerm c r = case r of
-  Reference.DerivedId h -> getTypeOfTermImpl c h
-  r@Reference.Builtin {} ->
+  ReferenceDerived h -> getTypeOfTermImpl c h
+  r@ReferenceBuiltin {} ->
     pure $
       fmap (const builtinAnnotation)
         <$> Map.lookup r Builtin.termRefTypes
@@ -423,23 +423,23 @@ getTypeOfReferent c = \case
 
 componentReferencesForReference :: Reference -> Sqlite.Transaction (Set Reference)
 componentReferencesForReference = \case
-  r@Reference.Builtin {} -> pure (Set.singleton r)
+  r@ReferenceBuiltin {} -> pure (Set.singleton r)
   Reference.Derived h _i ->
-    Set.mapMonotonic Reference.DerivedId . Reference.componentFromLength h <$> unsafeGetComponentLength h
+    Set.mapMonotonic ReferenceDerived . Reference.componentFromLength h <$> unsafeGetComponentLength h
 
 -- | Get the set of terms, type declarations, and builtin types that depend on the given term, type declaration, or
 -- builtin type.
 dependents :: Queries.DependentsSelector -> Reference -> Sqlite.Transaction (Set Reference)
 dependents selector r =
   Set.union (Builtin.builtinTypeDependents r)
-    . Set.map Reference.DerivedId
-    <$> SqliteCodebase.Operations.dependentsImpl selector r
+    . Set.map ReferenceDerived
+    <$> Operations.dependents selector r
 
 dependentsOfComponent :: Hash -> Sqlite.Transaction (Set Reference)
 dependentsOfComponent h =
   Set.union (Builtin.builtinTypeDependentsOfComponent h)
-    . Set.map Reference.DerivedId
-    <$> SqliteCodebase.Operations.dependentsOfComponentImpl h
+    . Set.map ReferenceDerived
+    <$> Operations.dependentsOfComponent h
 
 -- | Get the set of terms-or-constructors that have the given type.
 termsOfType :: (Var v) => Codebase m v a -> Type v a -> Sqlite.Transaction (Set Referent.Referent)
@@ -449,14 +449,14 @@ termsOfType c ty = termsOfTypeByReference c $ Hashing.typeToReference ty
 termsOfTypeByReference :: (Var v) => Codebase m v a -> Reference -> Sqlite.Transaction (Set Referent.Referent)
 termsOfTypeByReference c r =
   Set.union (Rel.lookupDom r Builtin.builtinTermsByType)
-    . Set.map (fmap Reference.DerivedId)
+    . Set.map (fmap ReferenceDerived)
     <$> termsOfTypeImpl c r
 
 -- | Get the set of terms-or-constructors mention the given type anywhere in their signature.
 termsMentioningType :: (Var v) => Codebase m v a -> Type v a -> Sqlite.Transaction (Set Referent.Referent)
 termsMentioningType c ty =
   Set.union (Rel.lookupDom r Builtin.builtinTermsByTypeMention)
-    . Set.map (fmap Reference.DerivedId)
+    . Set.map (fmap ReferenceDerived)
     <$> termsMentioningTypeImpl c r
   where
     r = Hashing.typeToReference ty
@@ -471,8 +471,8 @@ isTerm code = fmap isJust . getTypeOfTerm code
 
 isType :: Codebase m v a -> Reference -> Sqlite.Transaction Bool
 isType c r = case r of
-  Reference.Builtin {} -> pure $ Builtin.isBuiltinType r
-  Reference.DerivedId r -> isJust <$> getTypeDeclaration c r
+  ReferenceBuiltin {} -> pure $ Builtin.isBuiltinType r
+  ReferenceDerived r -> isJust <$> getTypeDeclaration c r
 
 -- * Git stuff
 

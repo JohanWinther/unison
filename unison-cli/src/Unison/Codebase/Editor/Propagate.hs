@@ -339,7 +339,7 @@ propagate patch b = case validatePatch patch of
                     declMap = over _2 (either Decl.toDataDecl id) <$> componentMap'
                     -- TODO: kind-check the new components
                     hashedDecls =
-                      (fmap . fmap) (over _2 DerivedId)
+                      (fmap . fmap) (over _2 ReferenceDerived)
                         . Hashing.hashDataDecls
                         $ view _2 <$> declMap
                 hashedComponents' <- case hashedDecls of
@@ -568,7 +568,7 @@ unhashTypeComponent r = case Reference.toId r of
   Nothing -> pure mempty
   Just id -> do
     unhashed <- unhashTypeComponent' (Reference.idToHash id)
-    pure $ over _1 Reference.DerivedId <$> unhashed
+    pure $ over _1 ReferenceDerived <$> unhashed
 
 unhashTypeComponent' :: Hash -> Sqlite.Transaction (Map Symbol (Reference.Id, Decl Symbol Ann))
 unhashTypeComponent' h =

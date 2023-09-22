@@ -51,7 +51,7 @@ import Unison.Hashing.V2.Convert qualified as Hashing
 import Unison.LabeledDependency (LabeledDependency)
 import Unison.LabeledDependency qualified as LD
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Term (Term)
@@ -66,10 +66,10 @@ import Unison.Var qualified as Var
 import Unison.WatchKind (WatchKind, pattern TestWatch)
 
 dataDeclarations :: UnisonFile v a -> Map v (Reference, DataDeclaration v a)
-dataDeclarations = fmap (first Reference.DerivedId) . dataDeclarationsId
+dataDeclarations = fmap (first ReferenceDerived) . dataDeclarationsId
 
 effectDeclarations :: UnisonFile v a -> Map v (Reference, EffectDeclaration v a)
-effectDeclarations = fmap (first Reference.DerivedId) . effectDeclarationsId
+effectDeclarations = fmap (first ReferenceDerived) . effectDeclarationsId
 
 watchesOfKind :: WatchKind -> UnisonFile v a -> [(v, a, Term v a)]
 watchesOfKind kind uf = Map.findWithDefault [] kind (watches uf)
@@ -104,13 +104,13 @@ typecheckingTerm uf =
 
 -- backwards compatibility with the old data type
 dataDeclarations' :: TypecheckedUnisonFile v a -> Map v (Reference, DataDeclaration v a)
-dataDeclarations' = fmap (first Reference.DerivedId) . dataDeclarationsId'
+dataDeclarations' = fmap (first ReferenceDerived) . dataDeclarationsId'
 
 effectDeclarations' :: TypecheckedUnisonFile v a -> Map v (Reference, EffectDeclaration v a)
-effectDeclarations' = fmap (first Reference.DerivedId) . effectDeclarationsId'
+effectDeclarations' = fmap (first ReferenceDerived) . effectDeclarationsId'
 
 hashTerms :: TypecheckedUnisonFile v a -> Map v (a, Reference, Maybe WatchKind, Term v a, Type v a)
-hashTerms = fmap (over _2 Reference.DerivedId) . hashTermsId
+hashTerms = fmap (over _2 ReferenceDerived) . hashTermsId
 
 mapTerms :: (Term v a -> Term v a) -> UnisonFile v a -> UnisonFile v a
 mapTerms f (UnisonFileId datas effects terms watches) =
@@ -246,7 +246,7 @@ indexByReference uf = (tms, tys)
         <> Map.fromList (over _2 Left <$> toList (effectDeclarationsId' uf))
     tms =
       Map.fromList
-        [ (r, (a, tm, ty)) | (a, Reference.DerivedId r, _wk, tm, ty) <- Map.elems (hashTerms uf)
+        [ (r, (a, tm, ty)) | (a, ReferenceDerived r, _wk, tm, ty) <- Map.elems (hashTerms uf)
         ]
 
 -- | A mapping of all terms in the file by their var name.

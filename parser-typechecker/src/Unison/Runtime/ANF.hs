@@ -1,10 +1,4 @@
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternGuards #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE ViewPatterns #-}
 
 module Unison.Runtime.ANF
   ( minimizeCyclesOrCrash,
@@ -100,7 +94,7 @@ import Unison.Hashing.V2.Convert (hashTermComponentsWithoutTypes)
 import Unison.Pattern (SeqOp (..))
 import Unison.Pattern qualified as P
 import Unison.Prelude hiding (Text)
-import Unison.Reference (Id, Reference, Reference' (Builtin, DerivedId))
+import Unison.Reference (Id, Reference, Reference' (..))
 import Unison.Referent (Referent, pattern Con, pattern Ref)
 import Unison.Symbol (Symbol)
 import Unison.Term hiding (List, Ref, Text, float, fresh, resolve)
@@ -493,7 +487,7 @@ postFloat ::
 postFloat orig (_, bs, dcmp) =
   ( subs,
     subvs,
-    fmap (first DerivedId) tops,
+    fmap (first ReferenceDerived) tops,
     dcmp >>= \(v, tm) ->
       let stm = open $ ABT.substs dsubs tm
        in (subm Map.! v, stm) : [(r, stm) | Just r <- [Map.lookup v orig]]
@@ -507,9 +501,9 @@ postFloat orig (_, bs, dcmp) =
     trips = Map.toList m
     f (v, (id, tm)) = ((v, id), (v, idtm), (id, tm))
       where
-        idtm = ref (ABT.annotation tm) (DerivedId id)
+        idtm = ref (ABT.annotation tm) (ReferenceDerived id)
     (subvs, subs, tops) = unzip3 $ map f trips
-    subm = fmap DerivedId (Map.fromList subvs)
+    subm = fmap ReferenceDerived (Map.fromList subvs)
     dsubs = Map.toList $ Map.map (ref mempty) orig <> Map.fromList subs
 
 float ::
@@ -527,7 +521,7 @@ float orig tm = case runState go0 (Set.empty, [], []) of
         dcmp
       )
   where
-    f (v, i) = (,DerivedId i) <$> Map.lookup v orig
+    f (v, i) = (,ReferenceDerived i) <$> Map.lookup v orig
     go0 = fromMaybe (go tm) (floater True go tm)
     go = ABT.visit $ floater False go
 
@@ -633,7 +627,7 @@ defaultCaseVisitor func m@(Match' scrut cases)
     v = Var.freshIn mempty $ typed Var.Blank
     txt = "pattern match failure in function `" <> func <> "`"
     msg = text a $ Data.Text.pack txt
-    bu = ref a (Builtin "bug")
+    bu = ref a (ReferenceBuiltin "bug")
     dflt =
       MatchCase (P.Var a) Nothing
         . ABT.abs' a v
@@ -1627,7 +1621,7 @@ anfBlock (If' c t f) = do
   (cx, v) <- contextualize cc
   let cases =
         MatchData
-          (Builtin $ Data.Text.pack "Boolean")
+          (ReferenceBuiltin $ Data.Text.pack "Boolean")
           (EC.mapSingleton 0 ([], cf))
           (Just ct)
   pure (cctx <> cx, (Indirect () <> df <> dt, TMatch v cases))
@@ -1726,8 +1720,8 @@ anfBlock (Match' scrut cas) = do
     AccumSeqView en (Just em) bd -> do
       r <- fresh
       let op
-            | SLeft <- en = Builtin "List.viewl"
-            | otherwise = Builtin "List.viewr"
+            | SLeft <- en = ReferenceBuiltin "List.viewl"
+            | otherwise = ReferenceBuiltin "List.viewr"
       b <- binder
       pure
         ( sctx
@@ -1883,7 +1877,7 @@ anfInitCase u (MatchCase p guard (ABT.AbsN' vs bd))
           let (us, uk) =
                 maybe (internalBug "anfInitCase: unsnoc impossible") id $
                   unsnoc exp
-              jn = Builtin "jumpCont"
+              jn = ReferenceBuiltin "jumpCont"
            in flip AccumRequest Nothing
                 . Map.singleton r
                 . EC.mapSingleton (fromIntegral t)

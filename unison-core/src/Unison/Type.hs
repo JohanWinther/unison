@@ -15,7 +15,7 @@ import Unison.LabeledDependency qualified as LD
 import Unison.Name qualified as Name
 import Unison.Names.ResolutionResult qualified as Names
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Settings qualified as Settings
 import Unison.Util.List qualified as List
@@ -238,7 +238,7 @@ ref :: (Ord v) => a -> Reference -> Type v a
 ref a = ABT.tm' a . Ref
 
 refId :: (Ord v) => a -> Reference.Id -> Type v a
-refId a = ref a . Reference.DerivedId
+refId a = ref a . ReferenceDerived
 
 termLink :: (Ord v) => a -> Type v a
 termLink a = ABT.tm' a . Ref $ termLinkRef
@@ -250,98 +250,98 @@ derivedBase32Hex :: (Ord v) => Reference -> a -> Type v a
 derivedBase32Hex r a = ref a r
 
 intRef, natRef, floatRef, booleanRef, textRef, charRef, listRef, bytesRef, effectRef, termLinkRef, typeLinkRef :: Reference
-intRef = Reference.Builtin "Int"
-natRef = Reference.Builtin "Nat"
-floatRef = Reference.Builtin "Float"
-booleanRef = Reference.Builtin "Boolean"
-textRef = Reference.Builtin "Text"
-charRef = Reference.Builtin "Char"
-listRef = Reference.Builtin "Sequence"
-bytesRef = Reference.Builtin "Bytes"
-effectRef = Reference.Builtin "Effect"
-termLinkRef = Reference.Builtin "Link.Term"
-typeLinkRef = Reference.Builtin "Link.Type"
+intRef = ReferenceBuiltin "Int"
+natRef = ReferenceBuiltin "Nat"
+floatRef = ReferenceBuiltin "Float"
+booleanRef = ReferenceBuiltin "Boolean"
+textRef = ReferenceBuiltin "Text"
+charRef = ReferenceBuiltin "Char"
+listRef = ReferenceBuiltin "Sequence"
+bytesRef = ReferenceBuiltin "Bytes"
+effectRef = ReferenceBuiltin "Effect"
+termLinkRef = ReferenceBuiltin "Link.Term"
+typeLinkRef = ReferenceBuiltin "Link.Type"
 
 builtinIORef, fileHandleRef, filePathRef, threadIdRef, socketRef :: Reference
-builtinIORef = Reference.Builtin "IO"
-fileHandleRef = Reference.Builtin "Handle"
-filePathRef = Reference.Builtin "FilePath"
-threadIdRef = Reference.Builtin "ThreadId"
-socketRef = Reference.Builtin "Socket"
+builtinIORef = ReferenceBuiltin "IO"
+fileHandleRef = ReferenceBuiltin "Handle"
+filePathRef = ReferenceBuiltin "FilePath"
+threadIdRef = ReferenceBuiltin "ThreadId"
+socketRef = ReferenceBuiltin "Socket"
 
 processHandleRef :: Reference
-processHandleRef = Reference.Builtin "ProcessHandle"
+processHandleRef = ReferenceBuiltin "ProcessHandle"
 
 scopeRef, refRef :: Reference
-scopeRef = Reference.Builtin "Scope"
-refRef = Reference.Builtin "Ref"
+scopeRef = ReferenceBuiltin "Scope"
+refRef = ReferenceBuiltin "Ref"
 
 iarrayRef, marrayRef :: Reference
-iarrayRef = Reference.Builtin "ImmutableArray"
-marrayRef = Reference.Builtin "MutableArray"
+iarrayRef = ReferenceBuiltin "ImmutableArray"
+marrayRef = ReferenceBuiltin "MutableArray"
 
 ibytearrayRef, mbytearrayRef :: Reference
-ibytearrayRef = Reference.Builtin "ImmutableByteArray"
-mbytearrayRef = Reference.Builtin "MutableByteArray"
+ibytearrayRef = ReferenceBuiltin "ImmutableByteArray"
+mbytearrayRef = ReferenceBuiltin "MutableByteArray"
 
 mvarRef, tvarRef :: Reference
-mvarRef = Reference.Builtin "MVar"
-tvarRef = Reference.Builtin "TVar"
+mvarRef = ReferenceBuiltin "MVar"
+tvarRef = ReferenceBuiltin "TVar"
 
 ticketRef :: Reference
-ticketRef = Reference.Builtin "Ref.Ticket"
+ticketRef = ReferenceBuiltin "Ref.Ticket"
 
 promiseRef :: Reference
-promiseRef = Reference.Builtin "Promise"
+promiseRef = ReferenceBuiltin "Promise"
 
 tlsRef :: Reference
-tlsRef = Reference.Builtin "Tls"
+tlsRef = ReferenceBuiltin "Tls"
 
 stmRef :: Reference
-stmRef = Reference.Builtin "STM"
+stmRef = ReferenceBuiltin "STM"
 
 patternRef :: Reference
-patternRef = Reference.Builtin "Pattern"
+patternRef = ReferenceBuiltin "Pattern"
 
 charClassRef :: Reference
-charClassRef = Reference.Builtin "Char.Class"
+charClassRef = ReferenceBuiltin "Char.Class"
 
 tlsClientConfigRef :: Reference
-tlsClientConfigRef = Reference.Builtin "Tls.ClientConfig"
+tlsClientConfigRef = ReferenceBuiltin "Tls.ClientConfig"
 
 tlsServerConfigRef :: Reference
-tlsServerConfigRef = Reference.Builtin "Tls.ServerConfig"
+tlsServerConfigRef = ReferenceBuiltin "Tls.ServerConfig"
 
 tlsSignedCertRef :: Reference
-tlsSignedCertRef = Reference.Builtin "Tls.SignedCert"
+tlsSignedCertRef = ReferenceBuiltin "Tls.SignedCert"
 
 tlsPrivateKeyRef :: Reference
-tlsPrivateKeyRef = Reference.Builtin "Tls.PrivateKey"
+tlsPrivateKeyRef = ReferenceBuiltin "Tls.PrivateKey"
 
 tlsCipherRef :: Reference
-tlsCipherRef = Reference.Builtin "Tls.Cipher"
+tlsCipherRef = ReferenceBuiltin "Tls.Cipher"
 
 tlsVersionRef :: Reference
-tlsVersionRef = Reference.Builtin "Tls.Version"
+tlsVersionRef = ReferenceBuiltin "Tls.Version"
 
 hashAlgorithmRef :: Reference
-hashAlgorithmRef = Reference.Builtin "crypto.HashAlgorithm"
+hashAlgorithmRef = ReferenceBuiltin "crypto.HashAlgorithm"
 
 codeRef, valueRef :: Reference
-codeRef = Reference.Builtin "Code"
-valueRef = Reference.Builtin "Value"
+codeRef = ReferenceBuiltin "Code"
+valueRef = ReferenceBuiltin "Value"
 
 anyRef :: Reference
-anyRef = Reference.Builtin "Any"
+anyRef = ReferenceBuiltin "Any"
 
 timeSpecRef :: Reference
-timeSpecRef = Reference.Builtin "TimeSpec"
+timeSpecRef = ReferenceBuiltin "TimeSpec"
 
 any :: (Ord v) => a -> Type v a
 any a = ref a anyRef
 
 builtin :: (Ord v) => a -> Text -> Type v a
-builtin a = ref a . Reference.Builtin
+builtin a = ref a . ReferenceBuiltin
 
 int :: (Ord v) => a -> Type v a
 int a = ref a intRef

@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ViewPatterns #-}
-
 module Unison.CommandLine.DisplayValues where
 
 import Control.Lens ((^.))
@@ -18,7 +15,7 @@ import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnv.Util qualified as PPE
 import Unison.PrettyPrintEnvDecl qualified as PPE
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -149,7 +146,7 @@ displayPretty pped terms typeOf eval types tm = go tm
           tms = [ref | DD.TupleTerm' [DD.EitherRight' (DD.Doc2Term (toRef -> Just ref)), _anns] <- toList es]
       typeMap <-
         let -- todo: populate the variable names / kind once BuiltinObject supports that
-            go ref@(Reference.Builtin _) = pure (ref, DO.BuiltinObject ())
+            go ref@(ReferenceBuiltin _) = pure (ref, DO.BuiltinObject ())
             go ref =
               (ref,) <$> do
                 decl <- types ref
@@ -159,7 +156,7 @@ displayPretty pped terms typeOf eval types tm = go tm
       termMap <-
         let go ref =
               (ref,) <$> case ref of
-                Reference.Builtin _ -> pure $ Builtin.typeOf missing DO.BuiltinObject ref
+                ReferenceBuiltin _ -> pure $ Builtin.typeOf missing DO.BuiltinObject ref
                 _ -> maybe missing DO.UserObject <$> terms ref
               where
                 missing = DO.MissingObject (Reference.toShortHash ref)
@@ -317,7 +314,7 @@ displayDoc pped terms typeOf evaluated types = go
               (PPE.suffixifiedPPE pped)
               [(r, PPE.termName (PPE.unsuffixifiedPPE pped) r, typ)]
     prettyEval terms r = case r of
-      Referent.Ref (Reference.Builtin n) -> pure . P.syntaxToColor $ P.text n
+      Referent.Ref (ReferenceBuiltin n) -> pure . P.syntaxToColor $ P.text n
       Referent.Ref ref ->
         let ppe = PPE.declarationPPE pped ref
          in terms ref >>= \case
@@ -325,7 +322,7 @@ displayDoc pped terms typeOf evaluated types = go
               Just tm -> pure $ TP.pretty ppe tm
       Referent.Con (ConstructorReference r _) _ -> pure $ typeName (PPE.declarationPPE pped r) r
     prettyTerm terms r = case r of
-      Referent.Ref (Reference.Builtin _) -> prettySignature r
+      Referent.Ref (ReferenceBuiltin _) -> prettySignature r
       Referent.Ref ref ->
         let ppe = PPE.declarationPPE pped ref
          in terms ref >>= \case

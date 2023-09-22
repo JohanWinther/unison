@@ -1,12 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ApplicativeDo #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ViewPatterns #-}
 
 module Unison.Server.Backend
   ( -- * Types
@@ -161,7 +155,7 @@ import Unison.PrettyPrintEnvDecl qualified as PPED
 import Unison.PrettyPrintEnvDecl.Names qualified as PPED
 import Unison.Project (ProjectAndBranch (..), ProjectBranchName, ProjectName)
 import Unison.Project.Util qualified as ProjectUtils
-import Unison.Reference (Reference, TermReference)
+import Unison.Reference (Reference, Reference' (..), TermReference)
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -336,7 +330,6 @@ shallowNames codebase b = do
         V2Branch.types b
           & Map.mapKeys Name.fromSegment
           & fmap Map.keysSet
-          & traverse . Set.traverse %~ Cv.reference2to1
   pure (Names (R.fromMultimap newTerms) (R.fromMultimap newTypes))
 
 loadReferentType ::
@@ -348,7 +341,7 @@ loadReferentType codebase = \case
   Referent.Con r _ -> getTypeOfConstructor r
   where
     -- Mitchell wonders: why was this definition copied from Unison.Codebase?
-    getTypeOfConstructor (ConstructorReference (Reference.DerivedId r) cid) = do
+    getTypeOfConstructor (ConstructorReference (ReferenceDerived r) cid) = do
       maybeDecl <- Codebase.getTypeDeclaration codebase r
       pure $ case maybeDecl of
         Nothing -> Nothing
@@ -478,7 +471,7 @@ findDocInBranch names namespaceBranch =
         case k of
           -- This shouldn't ever happen unless someone puts a non-doc as their readme.
           V2Referent.Con {} -> empty
-          V2Referent.Ref ref -> pure $ Cv.reference2to1 ref
+          V2Referent.Ref ref -> pure ref
         where
           termsMap = V2Branch.terms namespaceBranch
    in readmeRef
@@ -681,8 +674,7 @@ lsBranch codebase b0 = do
   typeEntries <-
     Codebase.runTransaction codebase do
       for (flattenRefs $ V2Branch.types b0) \(r, ns) -> do
-        let v1Ref = Cv.reference2to1 r
-        ShallowTypeEntry <$> typeListEntry codebase (Just b0) (ExactName ns v1Ref)
+        ShallowTypeEntry <$> typeListEntry codebase (Just b0) (ExactName ns r)
   childrenWithStats <- Codebase.runTransaction codebase (V2Branch.childStats b0)
   let branchEntries :: [ShallowListEntry Symbol Ann] = do
         (ns, (h, stats)) <- Map.toList $ childrenWithStats
@@ -959,8 +951,8 @@ evalDocRef rt codebase r = do
   let tm = Term.ref () r
   Doc.evalDoc terms typeOf eval decls tm
   where
-    terms r@(Reference.Builtin _) = pure (Just (Term.ref () r))
-    terms (Reference.DerivedId r) =
+    terms r@(ReferenceBuiltin _) = pure (Just (Term.ref () r))
+    terms (ReferenceDerived r) =
       fmap Term.unannotate <$> Codebase.runTransaction codebase (Codebase.getTerm codebase r)
 
     typeOf r = fmap void <$> Codebase.runTransaction codebase (Codebase.getTypeOfReferent codebase r)
@@ -984,7 +976,7 @@ evalDocRef rt codebase r = do
             Nothing -> pure ()
       pure $ r <&> Term.amap (const mempty)
 
-    decls (Reference.DerivedId r) =
+    decls (ReferenceDerived r) =
       fmap (DD.amap (const ())) <$> Codebase.runTransaction codebase (Codebase.getTypeDeclaration codebase r)
     decls _ = pure Nothing
 
@@ -1264,13 +1256,13 @@ definitionsBySuffixes codebase nameSearch includeCycles query = do
 
 displayTerm :: Codebase m Symbol Ann -> Reference -> Sqlite.Transaction (DisplayObject (Type Symbol Ann) (Term Symbol Ann))
 displayTerm codebase = \case
-  ref@(Reference.Builtin _) -> do
+  ref@(ReferenceBuiltin _) -> do
     pure case Map.lookup ref B.termRefTypes of
       -- This would be better as a `MissingBuiltin` constructor; `MissingObject` is kind of being
       -- misused here. Is `MissingObject` even possible anymore?
       Nothing -> MissingObject $ Reference.toShortHash ref
       Just typ -> BuiltinObject (mempty <$ typ)
-  Reference.DerivedId rid -> do
+  ReferenceDerived rid -> do
     (term, ty) <- Codebase.unsafeGetTermWithType codebase rid
     pure case term of
       Term.Ann' _ _ -> UserObject term
@@ -1279,8 +1271,8 @@ displayTerm codebase = \case
 
 displayType :: Codebase m Symbol Ann -> Reference -> Sqlite.Transaction (DisplayObject () (DD.Decl Symbol Ann))
 displayType codebase = \case
-  Reference.Builtin _ -> pure (BuiltinObject ())
-  Reference.DerivedId rid -> do
+  ReferenceBuiltin _ -> pure (BuiltinObject ())
+  ReferenceDerived rid -> do
     decl <- Codebase.unsafeGetTypeDeclaration codebase rid
     pure (UserObject decl)
 
@@ -1383,8 +1375,8 @@ loadTypeDisplayObject ::
   Reference ->
   Sqlite.Transaction (DisplayObject () (DD.Decl v Ann))
 loadTypeDisplayObject c = \case
-  Reference.Builtin _ -> pure (BuiltinObject ())
-  Reference.DerivedId id ->
+  ReferenceBuiltin _ -> pure (BuiltinObject ())
+  ReferenceDerived id ->
     maybe (MissingObject $ Reference.idToShortHash id) UserObject
       <$> Codebase.getTypeDeclaration c id
 

@@ -21,7 +21,7 @@ import Data.Text (Text)
 import Data.Word (Word16, Word32, Word64)
 import GHC.Stack
 import Unison.ABT.Normalized (Term (..))
-import Unison.Reference (Reference, Reference' (Builtin), pattern Derived)
+import Unison.Reference (Reference, Reference' (..), pattern Derived)
 import Unison.Runtime.ANF as ANF hiding (Tag)
 import Unison.Runtime.Exception
 import Unison.Runtime.Serialize
@@ -857,7 +857,7 @@ serializeGroupForRehash ::
   Reference ->
   SuperGroup v ->
   L.ByteString
-serializeGroupForRehash _ (Builtin _) _ =
+serializeGroupForRehash _ (ReferenceBuiltin _) _ =
   error "serializeForRehash: builtin reference"
 serializeGroupForRehash fops (Derived h _) sg =
   runPutLazy $ putGroup refrep fops sg

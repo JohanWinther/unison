@@ -39,6 +39,7 @@ import Control.Lens (Iso', Lens', imap, iso, lens, over, _3)
 import Control.Monad.State (evalState)
 import Data.Map qualified as Map
 import Data.Set qualified as Set
+import U.Codebase.Reference (Reference' (..))
 import Unison.ABT qualified as ABT
 import Unison.ConstructorReference (GConstructorReference (..))
 import Unison.ConstructorType qualified as CT
@@ -85,10 +86,10 @@ labeledDeclDependenciesIncludingSelf selfRef decl =
     labeledConstructorRefs :: Set LD.LabeledDependency
     labeledConstructorRefs =
       case selfRef of
-        Reference.Builtin {} -> mempty
-        Reference.DerivedId selfRefId ->
+        ReferenceBuiltin {} -> mempty
+        ReferenceDerived selfRefId ->
           declConstructorReferents selfRefId decl
-            & fmap (LD.TermReferent . fmap Reference.DerivedId)
+            & fmap (LD.TermReferent . fmap ReferenceDerived)
             & Set.fromList
 
 constructorType :: Decl v a -> CT.ConstructorType
@@ -330,7 +331,7 @@ unhashComponent m =
       unhash1 :: ABT.Term Type.F v a -> ABT.Term Type.F v a
       unhash1 = ABT.rebuildUp' go
         where
-          go e@(Type.Ref' (Reference.DerivedId r)) = case Map.lookup r m' of
+          go e@(Type.Ref' (ReferenceDerived r)) = case Map.lookup r m' of
             Nothing -> e
             Just (v, _) -> Type.var (ABT.annotation e) v
           go e = e

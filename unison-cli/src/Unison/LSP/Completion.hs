@@ -36,6 +36,7 @@ import Unison.Names (Names (..))
 import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl qualified as PPED
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Runtime.IOSource qualified as IOSource
@@ -300,11 +301,11 @@ completionItemResolveHandler message respond = do
             pure $ (completion {_detail = Just renderedType, _documentation = Just doc} :: CompletionItem)
           LD.TypeReference ref ->
             case ref of
-              Reference.Builtin {} -> do
+              ReferenceBuiltin {} -> do
                 let renderedBuiltin = ": <builtin>"
                 let doc = toMarkup (Text.unlines $ ["```unison", Name.toText fullyQualifiedName, "```"] ++ renderedDocs)
                 pure $ (completion {_detail = Just renderedBuiltin, _documentation = Just doc} :: CompletionItem)
-              Reference.DerivedId refId -> do
+              ReferenceDerived refId -> do
                 decl <- LSPQ.getTypeDeclaration fileUri refId
                 let renderedDecl = ": " <> (Text.pack . Pretty.toPlain typeWidth . Pretty.syntaxToColor $ DeclPrinter.prettyDecl pped ref (HQ.NameOnly relativeName) decl)
                 let doc = toMarkup (Text.unlines $ ["```unison", Name.toText fullyQualifiedName, "```"] ++ renderedDocs)

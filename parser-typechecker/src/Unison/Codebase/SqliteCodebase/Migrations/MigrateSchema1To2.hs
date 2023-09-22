@@ -70,6 +70,7 @@ import Unison.Parser.Ann (Ann)
 import Unison.Pattern (Pattern)
 import Unison.Pattern qualified as Pattern
 import Unison.Prelude
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Referent' qualified as Referent'
@@ -736,10 +737,10 @@ someRefCon_ = refConPair_ . asConstructorReference_
     refConPair_ :: Traversal' ConstructorReference.ConstructorReference ConstructorReference.ConstructorReferenceId
     refConPair_ f s =
       case s of
-        ConstructorReference.ConstructorReference (Reference.Builtin _) _ -> pure s
-        ConstructorReference.ConstructorReference (Reference.DerivedId n) c ->
+        ConstructorReference.ConstructorReference (ReferenceBuiltin _) _ -> pure s
+        ConstructorReference.ConstructorReference (ReferenceDerived n) c ->
           ( \(ConstructorReference.ConstructorReference n' c') ->
-              ConstructorReference.ConstructorReference (Reference.DerivedId n') c'
+              ConstructorReference.ConstructorReference (ReferenceDerived n') c'
           )
             <$> f (ConstructorReference.ConstructorReference n c)
 
@@ -772,14 +773,14 @@ patternReferences_ f = \case
 
 referentAsSomeTermReference_ :: Traversal' Referent.Referent SomeReferenceId
 referentAsSomeTermReference_ f = \case
-  (Referent'.Ref' (Reference.DerivedId refId)) -> do
+  (Referent'.Ref' (ReferenceDerived refId)) -> do
     newRefId <- refId & asTermReference_ %%~ f
-    pure (Referent'.Ref' (Reference.DerivedId newRefId))
-  (Referent'.Con' (ConstructorReference.ConstructorReference (Reference.DerivedId refId) conId) conType) ->
+    pure (Referent'.Ref' (ReferenceDerived newRefId))
+  (Referent'.Con' (ConstructorReference.ConstructorReference (ReferenceDerived refId) conId) conType) ->
     (ConstructorReference.ConstructorReference refId conId & asConstructorReference_ %%~ f)
       <&> \(ConstructorReference.ConstructorReference newRefId newConId) ->
         Referent'.Con'
-          (ConstructorReference.ConstructorReference (Reference.DerivedId newRefId) newConId)
+          (ConstructorReference.ConstructorReference (ReferenceDerived newRefId) newConId)
           conType
   r -> pure r
 

@@ -1,14 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ViewPatterns #-}
 
 module Unison.UnisonFile.Env (Env (..), datas) where
 
 import Unison.DataDeclaration (DataDeclaration, EffectDeclaration (..))
 import Unison.Names (Names)
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 
 data Env v a = Env
@@ -21,4 +18,4 @@ data Env v a = Env
   }
 
 datas :: Env v a -> Map v (Reference, DataDeclaration v a)
-datas = fmap (first Reference.DerivedId) . datasId
+datas = fmap (first ReferenceDerived) . datasId

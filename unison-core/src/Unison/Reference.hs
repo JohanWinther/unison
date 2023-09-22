@@ -5,8 +5,6 @@ module Unison.Reference
     Reference'
       ( ReferenceBuiltin,
         ReferenceDerived,
-        Builtin,
-        DerivedId,
         Derived
       ),
     _DerivedId,
@@ -19,18 +17,12 @@ module Unison.Reference
     TermReferenceId,
     TypeReference,
     TypeReferenceId,
-    derivedBase32Hex,
-    component,
-    components,
     groupByComponent,
     componentFor,
     componentFromLength,
     unsafeFromText,
     isPrefixOf,
     fromText,
-    readSuffix,
-    showShort,
-    showSuffix,
     toHash,
     toId,
     fromId,
@@ -61,56 +53,20 @@ import U.Codebase.Reference
     TypeReferenceId,
     idToHash,
     idToShortHash,
+    idToText,
     isBuiltin,
+    isPrefixOf,
     toId,
     toShortHash,
+    toText,
     unsafeId,
     pattern Derived,
   )
 import Unison.Hash qualified as H
 import Unison.Prelude
-import Unison.ShortHash (ShortHash)
-import Unison.ShortHash qualified as SH
-
-pattern Builtin :: t -> Reference' t h
-pattern Builtin x = ReferenceBuiltin x
-
-pattern DerivedId :: Id' h -> Reference' t h
-pattern DerivedId x = ReferenceDerived x
-
-{-# COMPLETE Builtin, DerivedId #-}
-
-{-# COMPLETE Builtin, Derived #-}
-
-{-# COMPLETE Builtin, ReferenceDerived #-}
-
-{-# COMPLETE ReferenceBuiltin, DerivedId #-}
 
 _DerivedId :: Prism' Reference Id
 _DerivedId = _Ctor @"ReferenceDerived"
-
-showSuffix :: Pos -> Text
-showSuffix = Text.pack . show
-
-readSuffix :: Text -> Either String Pos
-readSuffix = \case
-  pos
-    | Text.all isDigit pos,
-      Just pos' <- readMaybe (Text.unpack pos) ->
-        Right pos'
-  t -> Left $ "Invalid reference suffix: " <> show t
-
-isPrefixOf :: ShortHash -> Reference -> Bool
-isPrefixOf sh r = SH.isPrefixOf sh (toShortHash r)
-
-toText :: Reference -> Text
-toText = SH.toText . toShortHash
-
-idToText :: Id -> Text
-idToText = toText . ReferenceDerived
-
-showShort :: Int -> Reference -> Text
-showShort numHashChars = SH.toText . SH.shortenTo numHashChars . toShortHash
 
 type Pos = Word64
 
@@ -124,11 +80,6 @@ componentFor h as = [(Id h i, a) | (i, a) <- zip [0 ..] as]
 
 componentFromLength :: H.Hash -> CycleSize -> Set Id
 componentFromLength h size = Set.fromList [Id h i | i <- [0 .. size - 1]]
-
-derivedBase32Hex :: Text -> Pos -> Maybe Reference
-derivedBase32Hex b32Hex i = mayH <&> \h -> Derived h i
-  where
-    mayH = H.fromBase32HexText b32Hex
 
 unsafeFromText :: Text -> Reference
 unsafeFromText = either error id . fromText
@@ -174,13 +125,18 @@ fromText t = case Text.split (== '#') t of
   where
     bail = Left $ "couldn't parse a Reference from " <> Text.unpack t
 
-component :: H.Hash -> [k] -> [(k, Id)]
-component h ks =
-  let
-   in [(k, (Id h i)) | (k, i) <- ks `zip` [0 ..]]
+    derivedBase32Hex :: Text -> Pos -> Maybe Reference
+    derivedBase32Hex b32Hex i = mayH <&> \h -> Derived h i
+      where
+        mayH = H.fromBase32HexText b32Hex
 
-components :: [(H.Hash, [k])] -> [(k, Id)]
-components sccs = uncurry component =<< sccs
+    readSuffix :: Text -> Either String Pos
+    readSuffix = \case
+      pos
+        | Text.all isDigit pos,
+          Just pos' <- readMaybe (Text.unpack pos) ->
+            Right pos'
+      t -> Left $ "Invalid reference suffix: " <> show t
 
 groupByComponent :: [(k, Reference)] -> [[(k, Reference)]]
 groupByComponent refs = done $ foldl' insert Map.empty refs

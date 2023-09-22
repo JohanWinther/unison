@@ -112,7 +112,7 @@ import Unison.PrintError
     renderCompilerBug,
   )
 import Unison.Project (ProjectAndBranch (..))
-import Unison.Reference (Reference, TermReference)
+import Unison.Reference (Reference, Reference' (..), TermReference)
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -1108,8 +1108,8 @@ notifyUser dir = \case
       formatCount thing 1 = Just $ "1 " <> thing
       formatCount thing n = Just $ P.shown n <> " " <> thing <> "s"
       isBuiltin = \case
-        Reference.Builtin {} -> P.lit "(builtin type)"
-        Reference.DerivedId {} -> P.lit "(type)"
+        ReferenceBuiltin {} -> P.lit "(builtin type)"
+        ReferenceDerived {} -> P.lit "(type)"
   SlurpOutput input ppe s ->
     let isPast = case input of
           Input.AddI {} -> True
@@ -1720,14 +1720,14 @@ notifyUser dir = \case
     pure . P.syntaxToColor . P.lines $
       ( effects <&> \(n, r) ->
           "ability "
-            <> prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ Reference.DerivedId r)
+            <> prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ ReferenceDerived r)
       )
         <> ( datas <&> \(n, r) ->
                "type "
-                 <> prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ Reference.DerivedId r)
+                 <> prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ ReferenceDerived r)
            )
         <> ( terms <&> \(n, r) ->
-               prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ Reference.DerivedId r)
+               prettyHashQualified' (HQ'.take hqLength . HQ'.fromNamedReference n $ ReferenceDerived r)
            )
   RefusedToPush pushBehavior path ->
     (pure . P.warnCallout) case pushBehavior of
@@ -1807,7 +1807,7 @@ notifyUser dir = \case
           -- We don't use the constructor type in the actual output here, so there's no
           -- point in looking up the correct one.
           P.text . Referent.toText . runIdentity . Cv.referent2to1 (\_ref -> Identity CT.Data)
-    let referenceText = P.text . Reference.toText . Cv.reference2to1
+    let referenceText = P.text . Reference.toText
     pure $
       P.columnNHeader
         ["Kind", "Name", "Change", "Ref"]
@@ -2467,7 +2467,7 @@ prettyUnisonFile ppe uf@(UF.UnisonFileId datas effects terms watches) =
     pb v tm = st $ TermPrinter.prettyBinding sppe v tm
     ppe' = PPED.PrettyPrintEnvDecl dppe dppe `PPED.addFallback` ppe
     dppe = PPE.fromNames 8 (Names.NamesWithHistory (UF.toNames uf) mempty)
-    rd = Reference.DerivedId
+    rd = ReferenceDerived
     hqv v = HQ.unsafeFromVar v
 
 displayDefinitions' ::
@@ -2787,7 +2787,7 @@ renderEditConflicts ppe Patch {..} = do
                  then "deprecated and also replaced with"
                  else "replaced with"
              )
-          `P.hang` P.lines replacements
+            `P.hang` P.lines replacements
     formatTermEdits ::
       (Reference.TermReference, Set TermEdit.TermEdit) ->
       Numbered Pretty
@@ -2802,7 +2802,7 @@ renderEditConflicts ppe Patch {..} = do
                  then "deprecated and also replaced with"
                  else "replaced with"
              )
-          `P.hang` P.lines replacements
+            `P.hang` P.lines replacements
     formatConflict ::
       Either
         (Reference, Set TypeEdit.TypeEdit)
@@ -3442,7 +3442,7 @@ listOfDefinitions' fscope ppe detailed results =
     --   where sigs0 = (\(name, _, typ) -> (name, typ)) <$> terms
     termsWithMissingTypes =
       [ (name, Reference.idToShortHash r)
-        | SR'.Tm name Nothing (Referent.Ref (Reference.DerivedId r)) _ <- results
+        | SR'.Tm name Nothing (Referent.Ref (ReferenceDerived r)) _ <- results
       ]
     missingTypes =
       nubOrdOn snd $
@@ -3452,7 +3452,7 @@ listOfDefinitions' fscope ppe detailed results =
              ]
     missingBuiltins =
       results >>= \case
-        SR'.Tm name Nothing r@(Referent.Ref (Reference.Builtin _)) _ ->
+        SR'.Tm name Nothing r@(Referent.Ref (ReferenceBuiltin _)) _ ->
           [(name, r)]
         _ -> []
 

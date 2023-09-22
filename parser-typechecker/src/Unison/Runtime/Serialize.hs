@@ -25,15 +25,10 @@ import Unison.ConstructorReference (ConstructorReference, GConstructorReference 
 import Unison.ConstructorType qualified as CT
 import Unison.Hash (Hash)
 import Unison.Hash qualified as Hash
-import Unison.Reference (Id' (..), Reference, Reference' (Builtin, DerivedId), pattern Derived)
+import Unison.Reference (Id' (..), Reference, Reference' (..), pattern Derived)
 import Unison.Referent (Referent, pattern Con, pattern Ref)
 import Unison.Runtime.Exception
-import Unison.Runtime.MCode
-  ( BPrim1 (..),
-    BPrim2 (..),
-    UPrim1 (..),
-    UPrim2 (..),
-  )
+import Unison.Runtime.MCode (BPrim1 (..), BPrim2 (..), UPrim1 (..), UPrim2 (..))
 import Unison.Util.Bytes qualified as Bytes
 import Unison.Util.EnumContainers as EC
 
@@ -229,7 +224,7 @@ getText = do
 
 putReference :: (MonadPut m) => Reference -> m ()
 putReference r = case r of
-  Builtin name -> do
+  ReferenceBuiltin name -> do
     putWord8 0
     putText name
   Derived hash i -> do
@@ -241,8 +236,8 @@ getReference :: (MonadGet m) => m Reference
 getReference = do
   tag <- getWord8
   case tag of
-    0 -> Builtin <$> getText
-    1 -> DerivedId <$> (Id <$> getHash <*> getLength)
+    0 -> ReferenceBuiltin <$> getText
+    1 -> ReferenceDerived <$> (Id <$> getHash <*> getLength)
     _ -> unknownTag "Reference" tag
 
 putConstructorReference :: (MonadPut m) => ConstructorReference -> m ()

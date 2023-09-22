@@ -13,7 +13,7 @@ import Unison.ABT qualified as ABT
 import Unison.ABT.Normalized (Term (TAbs))
 import Unison.ConstructorReference (GConstructorReference (..))
 import Unison.Pattern qualified as P
-import Unison.Reference (Reference, Reference' (Builtin))
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Runtime.ANF as ANF
 import Unison.Runtime.MCode (RefNums (..), emitCombs)
 import Unison.Term qualified as Term
@@ -53,7 +53,7 @@ testLift :: String -> Test ()
 testLift s = case cs of !_ -> ok
   where
     cs =
-      emitCombs (RN (const 0) (const 0)) (Builtin "Test") 0
+      emitCombs (RN (const 0) (const 0)) (ReferenceBuiltin "Test") 0
         . superNormalize
         . (\(ll, _, _, _) -> ll)
         . lamLift mempty

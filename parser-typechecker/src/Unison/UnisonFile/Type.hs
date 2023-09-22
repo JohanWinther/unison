@@ -6,8 +6,7 @@ import Control.Lens
 import Unison.ABT qualified as ABT
 import Unison.DataDeclaration (DataDeclaration, EffectDeclaration (..))
 import Unison.Prelude
-import Unison.Reference (TermReference, TermReferenceId, TypeReference, TypeReferenceId)
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference' (..), TermReference, TermReferenceId, TypeReference, TypeReferenceId)
 import Unison.Term (Term)
 import Unison.Term qualified as Term
 import Unison.Type (Type)
@@ -30,8 +29,8 @@ pattern UnisonFile ::
   UnisonFile v a
 pattern UnisonFile ds es tms ws <-
   UnisonFileId
-    (fmap (first Reference.DerivedId) -> ds)
-    (fmap (first Reference.DerivedId) -> es)
+    (fmap (first ReferenceDerived) -> ds)
+    (fmap (first ReferenceDerived) -> es)
     tms
     ws
 
@@ -66,11 +65,11 @@ pattern TypecheckedUnisonFile ::
   TypecheckedUnisonFile v a
 pattern TypecheckedUnisonFile ds es tlcs wcs hts <-
   TypecheckedUnisonFileId
-    (fmap (first Reference.DerivedId) -> ds)
-    (fmap (first Reference.DerivedId) -> es)
+    (fmap (first ReferenceDerived) -> ds)
+    (fmap (first ReferenceDerived) -> es)
     tlcs
     wcs
-    (fmap (over _2 Reference.DerivedId) -> hts)
+    (fmap (over _2 ReferenceDerived) -> hts)
 
 instance (Ord v) => Functor (TypecheckedUnisonFile v) where
   fmap f (TypecheckedUnisonFileId ds es tlcs wcs hashTerms) =

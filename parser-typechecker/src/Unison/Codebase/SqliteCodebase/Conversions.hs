@@ -54,6 +54,7 @@ import Unison.Util.Relation qualified as Relation
 import Unison.Util.Star3 qualified as V1.Star3
 import Unison.Var qualified as Var
 import Unison.WatchKind qualified as V1.WK
+import qualified Data.Tuple as Tuple
 
 sch1to2 :: V1.ShortCausalHash -> ShortCausalHash
 sch1to2 (V1.ShortCausalHash b32) = ShortCausalHash b32
@@ -96,9 +97,9 @@ term1to2 h =
       V1.Term.Boolean b -> V2.Term.Boolean b
       V1.Term.Text t -> V2.Term.Text t
       V1.Term.Char c -> V2.Term.Char c
-      V1.Term.Ref r -> V2.Term.Ref (rreference1to2 h r)
-      V1.Term.Constructor (V1.ConstructorReference r i) -> V2.Term.Constructor (reference1to2 r) (fromIntegral i)
-      V1.Term.Request (V1.ConstructorReference r i) -> V2.Term.Request (reference1to2 r) (fromIntegral i)
+      V1.Term.Ref r -> V2.Term.Ref (V2.Reference.toRReference h r)
+      V1.Term.Constructor (V1.ConstructorReference r i) -> V2.Term.Constructor r i
+      V1.Term.Request (V1.ConstructorReference r i) -> V2.Term.Request r i
       V1.Term.Handle b h -> V2.Term.Handle b h
       V1.Term.App f a -> V2.Term.App f a
       V1.Term.Ann e t -> V2.Term.Ann e (ttype1to2 t)
@@ -111,7 +112,7 @@ term1to2 h =
       V1.Term.Let _ b body -> V2.Term.Let b body
       V1.Term.Match e cases -> V2.Term.Match e (goCase <$> cases)
       V1.Term.TermLink r -> V2.Term.TermLink (rreferent1to2 h r)
-      V1.Term.TypeLink r -> V2.Term.TypeLink (reference1to2 r)
+      V1.Term.TypeLink r -> V2.Term.TypeLink r
       V1.Term.Blank _ -> error ("can't serialize term with blanks (" ++ show h ++ ")")
 
     goCase (V1.Term.MatchCase p g b) =
@@ -128,11 +129,11 @@ term1to2 h =
       V1.Pattern.Text _ t -> V2.Term.PText t
       V1.Pattern.Char _ c -> V2.Term.PChar c
       V1.Pattern.Constructor _ (V1.ConstructorReference r i) ps ->
-        V2.Term.PConstructor (reference1to2 r) i (goPat <$> ps)
+        V2.Term.PConstructor r i (goPat <$> ps)
       V1.Pattern.As _ p -> V2.Term.PAs (goPat p)
       V1.Pattern.EffectPure _ p -> V2.Term.PEffectPure (goPat p)
       V1.Pattern.EffectBind _ (V1.ConstructorReference r i) ps k ->
-        V2.Term.PEffectBind (reference1to2 r) i (goPat <$> ps) (goPat k)
+        V2.Term.PEffectBind r i (goPat <$> ps) (goPat k)
       V1.Pattern.SequenceLiteral _ ps -> V2.Term.PSequenceLiteral (goPat <$> ps)
       V1.Pattern.SequenceOp _ p op p2 ->
         V2.Term.PSequenceOp (goPat p) (goSeqOp op) (goPat p2)
@@ -158,11 +159,9 @@ term2to1 h lookupCT =
           V2.Term.Boolean b -> pure $ V1.Term.Boolean b
           V2.Term.Text t -> pure $ V1.Term.Text t
           V2.Term.Char c -> pure $ V1.Term.Char c
-          V2.Term.Ref r -> pure $ V1.Term.Ref (rreference2to1 h r)
-          V2.Term.Constructor r i ->
-            pure (V1.Term.Constructor (V1.ConstructorReference (reference2to1 r) (fromIntegral i)))
-          V2.Term.Request r i ->
-            pure (V1.Term.Request (V1.ConstructorReference (reference2to1 r) (fromIntegral i)))
+          V2.Term.Ref r -> pure $ V1.Term.Ref (V2.Reference.rreferenceToReference h r)
+          V2.Term.Constructor r i -> pure (V1.Term.Constructor (V1.ConstructorReference r i))
+          V2.Term.Request r i -> pure (V1.Term.Request (V1.ConstructorReference r i))
           V2.Term.Handle a a4 -> pure $ V1.Term.Handle a a4
           V2.Term.App a a4 -> pure $ V1.Term.App a a4
           V2.Term.Ann a t2 -> pure $ V1.Term.Ann a (ttype2to1 t2)
@@ -175,7 +174,7 @@ term2to1 h lookupCT =
           V2.Term.Let a a4 -> pure $ V1.Term.Let False a a4
           V2.Term.Match a cases -> V1.Term.Match a <$> traverse goCase cases
           V2.Term.TermLink rr -> V1.Term.TermLink <$> rreferent2to1 h lookupCT rr
-          V2.Term.TypeLink r -> pure $ V1.Term.TypeLink (reference2to1 r)
+          V2.Term.TypeLink r -> pure $ V1.Term.TypeLink r
         goCase = \case
           V2.Term.MatchCase pat cond body ->
             V1.Term.MatchCase <$> (goPat pat) <*> pure cond <*> pure body
@@ -189,11 +188,11 @@ term2to1 h lookupCT =
           V2.Term.PText t -> pure $ V1.Pattern.Text a t
           V2.Term.PChar c -> pure $ V1.Pattern.Char a c
           V2.Term.PConstructor r i ps ->
-            V1.Pattern.Constructor a (V1.ConstructorReference (reference2to1 r) i) <$> traverse goPat ps
+            V1.Pattern.Constructor a (V1.ConstructorReference r i) <$> traverse goPat ps
           V2.Term.PAs p -> V1.Pattern.As a <$> goPat p
           V2.Term.PEffectPure p -> V1.Pattern.EffectPure a <$> goPat p
           V2.Term.PEffectBind r i ps p ->
-            V1.Pattern.EffectBind a (V1.ConstructorReference (reference2to1 r) i) <$> traverse goPat ps <*> goPat p
+            V1.Pattern.EffectBind a (V1.ConstructorReference r i) <$> traverse goPat ps <*> goPat p
           V2.Term.PSequenceLiteral ps -> V1.Pattern.SequenceLiteral a <$> traverse goPat ps
           V2.Term.PSequenceOp p1 op p2 -> V1.Pattern.SequenceOp a <$> goPat p1 <*> pure (goOp op) <*> goPat p2
         goOp = \case
@@ -246,79 +245,43 @@ symbol2to1 (V2.Symbol i t) = V1.Symbol i (Var.User t)
 symbol1to2 :: V1.Symbol -> V2.Symbol
 symbol1to2 (V1.Symbol i varType) = V2.Symbol i (Var.rawName varType)
 
-rreference2to1 :: Hash -> V2.Reference' Text (Maybe Hash) -> V1.Reference
-rreference2to1 h = \case
-  V2.ReferenceBuiltin t -> V1.Reference.Builtin t
-  V2.ReferenceDerived i -> V1.Reference.DerivedId $ rreferenceid2to1 h i
-
-rreference1to2 :: Hash -> V1.Reference -> V2.Reference' Text (Maybe Hash)
-rreference1to2 h = \case
-  V1.Reference.Builtin t -> V2.ReferenceBuiltin t
-  V1.Reference.DerivedId i -> V2.ReferenceDerived (rreferenceid1to2 h i)
-
-rreferenceid2to1 :: Hash -> V2.Reference.Id' (Maybe Hash) -> V1.Reference.Id
-rreferenceid2to1 h (V2.Reference.Id oh i) = V1.Reference.Id h' i
-  where
-    h' = fromMaybe h oh
-
-rreferenceid1to2 :: Hash -> V1.Reference.Id -> V2.Reference.Id' (Maybe Hash)
-rreferenceid1to2 h (V1.Reference.Id h' i) = V2.Reference.Id oh i
-  where
-    oh = if h == h' then Nothing else Just h'
-
 branchHash1to2 :: V1.Branch.NamespaceHash m -> BranchHash
 branchHash1to2 = BranchHash . V1.genericHash
 
 branchHash2to1 :: forall m. BranchHash -> V1.Branch.NamespaceHash m
 branchHash2to1 = V1.HashFor . unBranchHash
 
-reference2to1 :: V2.Reference -> V1.Reference
-reference2to1 = \case
-  V2.ReferenceBuiltin t -> V1.Reference.Builtin t
-  V2.ReferenceDerived i -> V1.Reference.DerivedId $ referenceid2to1 i
-
-reference1to2 :: V1.Reference -> V2.Reference
-reference1to2 = \case
-  V1.Reference.Builtin t -> V2.ReferenceBuiltin t
-  V1.Reference.DerivedId i -> V2.ReferenceDerived (referenceid1to2 i)
-
-referenceid1to2 :: V1.Reference.Id -> V2.Reference.Id
-referenceid1to2 (V1.Reference.Id h i) = V2.Reference.Id h i
-
-referenceid2to1 :: V2.Reference.Id -> V1.Reference.Id
-referenceid2to1 (V2.Reference.Id h i) = V1.Reference.Id h i
-
 rreferent2to1 :: (Applicative m) => Hash -> (V2.Reference -> m CT.ConstructorType) -> V2.ReferentH -> m V1.Referent
 rreferent2to1 h lookupCT = \case
-  V2.Ref r -> pure . V1.Ref $ rreference2to1 h r
-  V2.Con r i -> V1.Con (V1.ConstructorReference (reference2to1 r) (fromIntegral i)) <$> lookupCT r
+  V2.Ref r -> pure . V1.Ref $ V2.rreferenceToReference h r
+  V2.Con r i -> V1.Con (V1.ConstructorReference r i) <$> lookupCT r
 
 rreferent1to2 :: Hash -> V1.Referent -> V2.ReferentH
 rreferent1to2 h = \case
-  V1.Ref r -> V2.Ref (rreference1to2 h r)
-  V1.Con (V1.ConstructorReference r i) _ct -> V2.Con (reference1to2 r) (fromIntegral i)
+  V1.Ref r -> V2.Ref (V2.Reference.toRReference h r)
+  V1.Con (V1.ConstructorReference r i) _ct -> V2.Con r i
 
 referent2to1 :: (Applicative m) => (V2.Reference -> m CT.ConstructorType) -> V2.Referent -> m V1.Referent
 referent2to1 lookupCT = \case
-  V2.Ref r -> pure $ V1.Ref (reference2to1 r)
-  V2.Con r i -> V1.Con (V1.ConstructorReference (reference2to1 r) (fromIntegral i)) <$> lookupCT r
+  V2.Ref r -> pure $ V1.Ref r
+  V2.Con r i -> V1.Con (V1.ConstructorReference r i) <$> lookupCT r
 
 -- | Like referent2to1, but uses the provided constructor type directly
 referent2to1UsingCT :: V2.ConstructorType -> V2.Referent -> V1.Referent
 referent2to1UsingCT ct = \case
-  V2.Ref r -> V1.Ref (reference2to1 r)
-  V2.Con r i -> V1.Con (V1.ConstructorReference (reference2to1 r) (fromIntegral i)) (constructorType2to1 ct)
+  V2.Ref r -> V1.Ref r
+  V2.Con r i -> V1.Con (V1.ConstructorReference r i) (constructorType2to1 ct)
 
 referent1to2 :: V1.Referent -> V2.Referent
 referent1to2 = \case
-  V1.Ref r -> V2.Ref $ reference1to2 r
-  V1.Con (V1.ConstructorReference r i) _ct -> V2.Con (reference1to2 r) (fromIntegral i)
+  V1.Ref r -> V2.Ref r
+  V1.Con (V1.ConstructorReference r i) _ct -> V2.Con r i
 
 referentid2to1 :: (Applicative m) => (V2.Reference -> m CT.ConstructorType) -> V2.Referent.Id -> m V1.Referent.Id
 referentid2to1 lookupCT = \case
-  V2.RefId r -> pure $ V1.RefId (referenceid2to1 r)
+  V2.RefId r -> pure $ V1.RefId r
   V2.ConId r i ->
-    V1.ConId (V1.ConstructorReference (referenceid2to1 r) (fromIntegral i)) <$> lookupCT (V2.ReferenceDerived r)
+    V1.ConId (V1.ConstructorReference r i) <$> lookupCT (V2.ReferenceDerived r)
 
 constructorType1to2 :: CT.ConstructorType -> V2.ConstructorType
 constructorType1to2 = \case
@@ -331,10 +294,10 @@ constructorType2to1 = \case
   V2.EffectConstructor -> CT.Effect
 
 ttype2to1 :: V2.Term.Type V2.Symbol -> V1.Type.Type V1.Symbol Ann
-ttype2to1 = type2to1' reference2to1
+ttype2to1 = type2to1' id
 
 dtype2to1 :: Hash -> V2.Decl.Type V2.Symbol -> V1.Type.Type V1.Symbol Ann
-dtype2to1 h = type2to1' (rreference2to1 h)
+dtype2to1 h = type2to1' (V2.Reference.rreferenceToReference h)
 
 type2to1' :: (r -> V1.Reference) -> V2.Type.TypeR r V2.Symbol -> V1.Type.Type V1.Symbol Ann
 type2to1' convertRef =
@@ -358,10 +321,10 @@ type2to1' convertRef =
           V2.Kind.Arrow i o -> V1.Kind.Arrow (convertKind i) (convertKind o)
 
 dtype1to2 :: Hash -> V1.Type.Type V1.Symbol a -> V2.Type.TypeD V2.Symbol
-dtype1to2 h = type1to2' (rreference1to2 h)
+dtype1to2 h = type1to2' (V2.Reference.toRReference h)
 
 ttype1to2 :: V1.Type.Type V1.Symbol a -> V2.Type.TypeT V2.Symbol
-ttype1to2 = type1to2' reference1to2
+ttype1to2 = type1to2' id
 
 type1to2' :: (V1.Reference -> r) -> V1.Type.Type V1.Symbol a -> V2.Type.TypeR r V2.Symbol
 type1to2' convertRef =
@@ -439,8 +402,7 @@ causalbranch1to2 (V1.Branch.Branch c) =
                       Map.fromList
                         [ (referent1to2 r, pure md)
                           | r <- toList . Relation.lookupRan ns $ V1.Star3.d1 s,
-                            let mdrefs1to2 (typeR1, valR1) = (reference1to2 valR1, reference1to2 typeR1)
-                                md = V2.Branch.MdValues . Map.fromList . map mdrefs1to2 . toList . Relation.lookupDom r $ V1.Star3.d3 s
+                            let md = V2.Branch.MdValues . Map.fromList . map Tuple.swap . toList . Relation.lookupDom r $ V1.Star3.d3 s
                         ]
             ]
 
@@ -451,10 +413,9 @@ causalbranch1to2 (V1.Branch.Branch c) =
               | ns <- toList . Relation.ran $ V1.Star3.d1 s,
                 let m2 =
                       Map.fromList
-                        [ (reference1to2 r, pure md)
+                        [ (r, pure md)
                           | r <- toList . Relation.lookupRan ns $ V1.Star3.d1 s,
-                            let mdrefs1to2 (typeR1, valR1) = (reference1to2 valR1, reference1to2 typeR1)
-                                md = V2.Branch.MdValues . Map.fromList . map mdrefs1to2 . toList . Relation.lookupDom r $ V1.Star3.d3 s
+                            let md = V2.Branch.MdValues . Map.fromList . map Tuple.swap . toList . Relation.lookupDom r $ V1.Star3.d3 s
                         ]
             ]
 
@@ -469,20 +430,20 @@ patch2to1 (V2.Branch.Patch v2termedits v2typeedits) =
   V1.Patch (Relation.fromMultimap termEdits) (Relation.fromMultimap typeEdits)
   where
     termEdits = Map.bimap referent2to1' (Set.map termedit2to1) v2termedits
-    typeEdits = Map.bimap reference2to1 (Set.map typeedit2to1) v2typeedits
+    typeEdits = Map.map (Set.map typeedit2to1) v2typeedits
     referent2to1' :: V2.Referent -> V1.Reference
     referent2to1' = \case
-      V2.Referent.Ref r -> reference2to1 r
+      V2.Referent.Ref r -> r
       V2.Referent.Con {} -> error "found referent on LHS when converting patch2to1"
     termedit2to1 :: V2.TermEdit.TermEdit -> V1.TermEdit.TermEdit
     termedit2to1 = \case
       V2.TermEdit.Replace (V2.Referent.Ref r) t ->
-        V1.TermEdit.Replace (reference2to1 r) (typing2to1 t)
+        V1.TermEdit.Replace r (typing2to1 t)
       V2.TermEdit.Replace {} -> error "found referent on RHS when converting patch2to1"
       V2.TermEdit.Deprecate -> V1.TermEdit.Deprecate
     typeedit2to1 :: V2.TypeEdit.TypeEdit -> V1.TypeEdit.TypeEdit
     typeedit2to1 = \case
-      V2.TypeEdit.Replace r -> V1.TypeEdit.Replace (reference2to1 r)
+      V2.TypeEdit.Replace r -> V1.TypeEdit.Replace r
       V2.TypeEdit.Deprecate -> V1.TypeEdit.Deprecate
     typing2to1 t = case t of
       V2.TermEdit.Same -> V1.TermEdit.Same
@@ -492,15 +453,15 @@ patch2to1 (V2.Branch.Patch v2termedits v2typeedits) =
 patch1to2 :: V1.Patch -> V2.Branch.Patch
 patch1to2 (V1.Patch v1termedits v1typeedits) = V2.Branch.Patch v2termedits v2typeedits
   where
-    v2termedits = Map.bimap (V2.Referent.Ref . reference1to2) (Set.map termedit1to2) $ Relation.domain v1termedits
-    v2typeedits = Map.bimap reference1to2 (Set.map typeedit1to2) $ Relation.domain v1typeedits
+    v2termedits = Map.bimap V2.Referent.Ref (Set.map termedit1to2) $ Relation.domain v1termedits
+    v2typeedits = Map.map (Set.map typeedit1to2) $ Relation.domain v1typeedits
     termedit1to2 :: V1.TermEdit.TermEdit -> V2.TermEdit.TermEdit
     termedit1to2 = \case
-      V1.TermEdit.Replace r t -> V2.TermEdit.Replace (V2.Referent.Ref (reference1to2 r)) (typing1to2 t)
+      V1.TermEdit.Replace r t -> V2.TermEdit.Replace (V2.Referent.Ref r) (typing1to2 t)
       V1.TermEdit.Deprecate -> V2.TermEdit.Deprecate
     typeedit1to2 :: V1.TypeEdit.TypeEdit -> V2.TypeEdit.TypeEdit
     typeedit1to2 = \case
-      V1.TypeEdit.Replace r -> V2.TypeEdit.Replace (reference1to2 r)
+      V1.TypeEdit.Replace r -> V2.TypeEdit.Replace r
       V1.TypeEdit.Deprecate -> V2.TypeEdit.Deprecate
     typing1to2 = \case
       V1.TermEdit.Same -> V2.TermEdit.Same
@@ -514,14 +475,14 @@ branch2to1 ::
   V2.Branch.Branch m ->
   m (V1.Branch.Branch0 m)
 branch2to1 branchCache lookupCT (V2.Branch.Branch v2terms v2types v2patches v2children) = do
-  v1terms <- toStar reference2to1 <$> traverse (Map.bitraverse (referent2to1 lookupCT) id) v2terms
-  v1types <- toStar reference2to1 <$> traverse (Map.bitraverse (pure . reference2to1) id) v2types
+  v1terms <- toStar <$> traverse (Map.bitraverse (referent2to1 lookupCT) id) v2terms
+  v1types <- toStar <$> traverse (Map.bitraverse pure id) v2types
   v1children <- traverse (causalbranch2to1 branchCache lookupCT) v2children
   pure $ V1.Branch.branch0 v1terms v1types v1children v1patches
   where
     v1patches = Map.map (fmap (fmap patch2to1)) v2patches
-    toStar :: forall name ref. (Ord name, Ord ref) => (V2.Reference -> V1.Reference) -> Map name (Map ref V2.Branch.MdValues) -> V1.Metadata.Star ref name
-    toStar mdref2to1 m = foldl' insert mempty (Map.toList m)
+    toStar :: forall name ref. (Ord name, Ord ref) => Map name (Map ref V2.Branch.MdValues) -> V1.Metadata.Star ref name
+    toStar m = foldl' insert mempty (Map.toList m)
       where
         insert star (name, m) = foldl' (insert' name) star (Map.toList m)
         insert' :: name -> V1.Metadata.Star ref name -> (ref, V2.Branch.MdValues) -> V1.Metadata.Star ref name
@@ -529,9 +490,9 @@ branch2to1 branchCache lookupCT (V2.Branch.Branch v2terms v2types v2patches v2ch
           let facts = Set.singleton ref
               names = Relation.singleton ref name
               types :: Relation.Relation ref V1.Metadata.Type =
-                Relation.insertManyRan ref (fmap mdref2to1 (Map.elems mdvals)) mempty
+                Relation.insertManyRan ref (Map.elems mdvals) mempty
               vals :: Relation.Relation ref (V1.Metadata.Type, V1.Metadata.Value) =
-                Relation.insertManyRan ref (fmap (\(v, t) -> (mdref2to1 t, mdref2to1 v)) (Map.toList mdvals)) mempty
+                Relation.insertManyRan ref (fmap Tuple.swap (Map.toList mdvals)) mempty
            in star <> V1.Star3.Star3 facts names types vals
 
 -- | Generates a v1 short hash from a v2 referent.

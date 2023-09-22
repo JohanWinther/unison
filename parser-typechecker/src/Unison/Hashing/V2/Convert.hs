@@ -54,6 +54,7 @@ import Unison.Util.Map qualified as Map
 import Unison.Util.Relation qualified as Relation
 import Unison.Util.Star3 qualified as Memory.Star3
 import Unison.Var (Var)
+import qualified U.Codebase.Reference as Memory
 
 typeToReference :: (Var v) => Memory.Type.Type v a -> Memory.Reference.Reference
 typeToReference = h2mReference . Hashing.typeToReference . m2hType . Memory.Type.removeAllEffectVars
@@ -282,8 +283,8 @@ m2hKind = \case
 
 m2hReference :: Memory.Reference.Reference -> Hashing.Reference
 m2hReference = \case
-  Memory.Reference.Builtin t -> Hashing.ReferenceBuiltin t
-  Memory.Reference.DerivedId d -> Hashing.ReferenceDerivedId (m2hReferenceId d)
+  Memory.ReferenceBuiltin t -> Hashing.ReferenceBuiltin t
+  Memory.ReferenceDerived d -> Hashing.ReferenceDerivedId (m2hReferenceId d)
 
 m2hReferenceId :: Memory.Reference.Id -> Hashing.ReferenceId
 m2hReferenceId (Memory.Reference.Id h i) = Hashing.ReferenceId h i
@@ -320,8 +321,8 @@ h2mKind = \case
 
 h2mReference :: Hashing.Reference -> Memory.Reference.Reference
 h2mReference = \case
-  Hashing.ReferenceBuiltin t -> Memory.Reference.Builtin t
-  Hashing.ReferenceDerivedId d -> Memory.Reference.DerivedId (h2mReferenceId d)
+  Hashing.ReferenceBuiltin t -> Memory.ReferenceBuiltin t
+  Hashing.ReferenceDerivedId d -> Memory.ReferenceDerived (h2mReferenceId d)
 
 h2mReferenceId :: Hashing.ReferenceId -> Memory.Reference.Id
 h2mReferenceId (Hashing.ReferenceId h i) = Memory.Reference.Id h i

@@ -10,6 +10,7 @@ import Unison.Name qualified as Name
 import Unison.Names (Names (Names))
 import Unison.Names.ResolutionResult qualified as Names
 import Unison.Prelude
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Type.Names qualified as Type.Names
@@ -19,7 +20,7 @@ import Prelude hiding (cycle)
 
 -- implementation of dataDeclToNames and effectDeclToNames
 toNames :: (Var v) => (v -> Name.Name) -> CT.ConstructorType -> v -> Reference.Id -> DataDeclaration v a -> Names
-toNames varToName ct typeSymbol (Reference.DerivedId -> r) dd =
+toNames varToName ct typeSymbol (ReferenceDerived -> r) dd =
   -- constructor names
   foldMap names (DD.constructorVars dd `zip` [0 ..])
     -- name of the type itself

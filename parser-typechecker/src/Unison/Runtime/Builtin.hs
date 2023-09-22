@@ -1,10 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternGuards #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
 module Unison.Runtime.Builtin
@@ -1978,7 +1972,7 @@ boxToEBoxBox instr =
 builtinLookup :: Map.Map Reference (Sandbox, SuperNormal Symbol)
 builtinLookup =
   Map.fromList
-    . map (\(t, f) -> (Builtin t, f))
+    . map (\(t, f) -> (ReferenceBuiltin t, f))
     $ [ ("Int.+", (Untracked, addi)),
         ("Int.-", (Untracked, subi)),
         ("Int.*", (Untracked, muli)),
@@ -2720,7 +2714,7 @@ declareForeigns = do
   -- Hashing functions
   let declareHashAlgorithm :: forall alg. (Hash.HashAlgorithm alg) => Data.Text.Text -> alg -> FDecl Symbol ()
       declareHashAlgorithm txt alg = do
-        let algoRef = Builtin ("crypto.HashAlgorithm." <> txt)
+        let algoRef = ReferenceBuiltin ("crypto.HashAlgorithm." <> txt)
         declareForeign Untracked ("crypto.HashAlgorithm." <> txt) direct . mkForeign $ \() ->
           pure (HashAlgorithm algoRef alg)
 
@@ -3366,8 +3360,8 @@ typeReferences = zip rs [1 ..]
   where
     rs =
       [r | (_, r) <- Ty.builtinTypes]
-        ++ [DerivedId i | (_, i, _) <- Ty.builtinDataDecls]
-        ++ [DerivedId i | (_, i, _) <- Ty.builtinEffectDecls]
+        ++ [ReferenceDerived i | (_, i, _) <- Ty.builtinDataDecls]
+        ++ [ReferenceDerived i | (_, i, _) <- Ty.builtinEffectDecls]
 
 foreignDeclResults ::
   Bool -> (Word64, [(Data.Text.Text, (Sandbox, SuperNormal Symbol))], EnumMap Word64 (Data.Text.Text, ForeignFunc))

@@ -28,7 +28,7 @@ import Unison.LabeledDependency qualified as LD
 import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl qualified as PPE
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -404,7 +404,7 @@ evalDoc terms typeOf eval types tm =
           toRef (Term.RequestOrCtor' r) = Set.singleton (r ^. ConstructorReference.reference_)
           toRef _ = mempty
           goType :: Reference -> m (EvaluatedSrc v)
-          goType r@(Reference.Builtin _builtin) =
+          goType r@(ReferenceBuiltin _builtin) =
             pure (EvaluatedSrcDecl (BuiltinDecl r))
           goType r = do
             d <- types r
@@ -426,7 +426,7 @@ evalDoc terms typeOf eval types tm =
                   Term.Ref' r
                     | Set.notMember r seen ->
                         (: acc) <$> case r of
-                          Reference.Builtin _ ->
+                          ReferenceBuiltin _ ->
                             typeOf (Referent.Ref r) <&> \case
                               Nothing -> EvaluatedSrcTerm (MissingBuiltinTypeSig r)
                               Just ty -> EvaluatedSrcTerm (BuiltinTypeSig r ty)

@@ -24,8 +24,7 @@ import Unison.Parser.Ann (Ann (..))
 import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl qualified as PPE hiding (biasTo)
-import Unison.Reference (Reference)
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Server.Backend qualified as Backend
 import Unison.Sqlite qualified as Sqlite
 import Unison.Symbol (Symbol)
@@ -55,7 +54,7 @@ diffHelper before after =
 
 declOrBuiltin :: Codebase m Symbol Ann -> Reference -> Sqlite.Transaction (Maybe (DD.DeclOrBuiltin Symbol Ann))
 declOrBuiltin codebase r = case r of
-  Reference.Builtin {} ->
+  ReferenceBuiltin {} ->
     pure . fmap DD.Builtin $ Map.lookup r Builtin.builtinConstructorType
-  Reference.DerivedId id ->
+  ReferenceDerived id ->
     fmap DD.Decl <$> Codebase.getTypeDeclaration codebase id

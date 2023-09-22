@@ -8,7 +8,7 @@ module Unison.Test.MCode where
 import Control.Concurrent.STM
 import Data.Map.Strict qualified as Map
 import EasyTest
-import Unison.Reference (Reference, Reference' (Builtin))
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Runtime.ANF
   ( SuperGroup (..),
     lamLift,
@@ -32,10 +32,10 @@ import Unison.Term (unannotate)
 import Unison.Test.Common (tm)
 
 dummyRef :: Reference
-dummyRef = Builtin "dummy"
+dummyRef = ReferenceBuiltin "dummy"
 
 mainRef :: Reference
-mainRef = Builtin "main"
+mainRef = ReferenceBuiltin "main"
 
 modifyTVarTest :: TVar a -> (a -> a) -> Test ()
 modifyTVarTest v f = io . atomically $ modifyTVar v f

@@ -26,7 +26,7 @@ import Unison.PrettyPrintEnv (PrettyPrintEnv)
 import Unison.PrettyPrintEnv qualified as PrettyPrintEnv
 import Unison.PrettyPrintEnv.FQN (Imports, elideFQN)
 import Unison.PrettyPrintEnv.MonadPretty (MonadPretty, getPPE, runPretty, willCapture)
-import Unison.Reference (Reference, pattern Builtin)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Referent (Referent)
 import Unison.Settings qualified as Settings
 import Unison.Syntax.NamePrinter (styleHashQualified'')
@@ -106,7 +106,7 @@ prettyRaw im p tp = go im p tp
       Cycle' _ _ -> pure $ fromString "bug: TypeParser does not currently emit Cycle"
       Abs' _ -> pure $ fromString "bug: TypeParser does not currently emit Abs"
       Ann' _ _ -> pure $ fromString "bug: TypeParser does not currently emit Ann"
-      App' (Ref' (Builtin "Sequence")) x -> do
+      App' (Ref' (ReferenceBuiltin "Sequence")) x -> do
         x' <- go im (-1) x
         pure $ PP.group $ fmt S.DelimiterChar "[" <> x' <> fmt S.DelimiterChar "]"
       Apps' f xs ->

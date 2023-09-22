@@ -75,10 +75,7 @@ import Unison.ConstructorReference
     GConstructorReference (..),
     reference_,
   )
-import Unison.DataDeclaration
-  ( DataDeclaration,
-    EffectDeclaration,
-  )
+import Unison.DataDeclaration (DataDeclaration, EffectDeclaration)
 import Unison.DataDeclaration qualified as DD
 import Unison.DataDeclaration.ConstructorId (ConstructorId)
 import Unison.Pattern (Pattern)
@@ -90,8 +87,7 @@ import Unison.PatternMatchCoverage.ListPat qualified as ListPat
 import Unison.Prelude
 import Unison.PrettyPrintEnv (PrettyPrintEnv)
 import Unison.PrettyPrintEnv qualified as PPE
-import Unison.Reference (Reference)
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Referent (Referent)
 import Unison.Syntax.TypePrinter qualified as TP
 import Unison.Term qualified as Term
@@ -838,8 +834,8 @@ getDataConstructors typ
     crFromDecl r decl =
       [(v, ConstructorReference r i, ABT.vmap TypeVar.Universal t) | (i, (v, t)) <- zip [0 ..] (DD.constructors decl)]
     theRef t = case t of
-      Type.Apps' (Type.Ref' r@Reference.DerivedId {}) _targs -> Just r
-      Type.Ref' r@Reference.DerivedId {} -> Just r
+      Type.Apps' (Type.Ref' r@ReferenceDerived {}) _targs -> Just r
+      Type.Ref' r@ReferenceDerived {} -> Just r
       _ -> Nothing
 
 getEffectConstructorType :: (Var v, Ord loc) => ConstructorReference -> M v loc (Type v loc)
@@ -1318,8 +1314,8 @@ getDataConstructorsAtType t0 = do
             Map.fromList
               . mapMaybe
                 ( \e -> case e of
-                    Type.Apps' (Type.Ref' r@Reference.DerivedId {}) _targs -> Just (r, e)
-                    Type.Ref' r@Reference.DerivedId {} -> Just (r, e)
+                    Type.Apps' (Type.Ref' r@ReferenceDerived {}) _targs -> Just (r, e)
+                    Type.Ref' r@ReferenceDerived {} -> Just (r, e)
                     _ -> Nothing
                 )
               $ ets

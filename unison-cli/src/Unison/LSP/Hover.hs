@@ -21,7 +21,7 @@ import Unison.Pattern qualified as Pattern
 import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl qualified as PPED
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference' (..))
 import Unison.Runtime.IOSource qualified as IOSource
 import Unison.Symbol (Symbol)
 import Unison.Syntax.DeclPrinter qualified as DeclPrinter
@@ -91,9 +91,9 @@ hoverInfo uri pos =
               )
       typeSig <-
         case ref of
-          LD.TypeReference (Reference.Builtin {}) -> do
+          LD.TypeReference (ReferenceBuiltin {}) -> do
             pure (symAtCursor <> " : <builtin>")
-          LD.TypeReference ref@(Reference.DerivedId refId) -> do
+          LD.TypeReference ref@(ReferenceDerived refId) -> do
             nameAtCursor <- MaybeT . pure $ Name.fromText symAtCursor
             decl <- LSPQ.getTypeDeclaration uri refId
             let typ = Text.pack . Pretty.toPlain prettyWidth . Pretty.syntaxToColor $ DeclPrinter.prettyDecl pped ref (HQ.NameOnly nameAtCursor) decl

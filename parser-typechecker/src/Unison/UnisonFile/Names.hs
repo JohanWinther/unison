@@ -11,6 +11,7 @@ import Unison.Hashing.V2.Convert qualified as Hashing
 import Unison.Names (Names (..))
 import Unison.Names.ResolutionResult qualified as Names
 import Unison.Prelude
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.Syntax.Name qualified as Name (unsafeFromVar)
@@ -49,7 +50,7 @@ typecheckedToNames uf = Names (terms <> ctors) types
     ctors =
       Relation.fromMap
         . Map.mapKeys Name.unsafeFromVar
-        . fmap (fmap Reference.DerivedId)
+        . fmap (fmap ReferenceDerived)
         . UF.hashConstructors
         $ uf
 

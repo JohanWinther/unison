@@ -24,6 +24,7 @@ import Unison.Prelude
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnv.Names qualified as PPE
 import Unison.PrintError qualified as PrintError
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as R
 import Unison.Result qualified as Result
 import Unison.Symbol (Symbol)
@@ -93,7 +94,7 @@ typeNamedId s =
     Just (r, _) -> r
 
 typeNamed :: String -> R.Reference
-typeNamed = R.DerivedId . typeNamedId
+typeNamed = ReferenceDerived . typeNamedId
 
 abilityNamedId :: String -> R.Id
 abilityNamedId s =

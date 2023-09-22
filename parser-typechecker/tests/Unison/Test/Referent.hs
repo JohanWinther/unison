@@ -2,9 +2,9 @@
 
 module Unison.Test.Referent where
 
-import Data.Text (Text)
 import Data.Text qualified as Text
 import EasyTest
+import Unison.Prelude
 import Unison.Reference qualified as Rf
 import Unison.Referent qualified as R
 import Unison.ShortHash qualified as SH
@@ -60,8 +60,8 @@ test =
     ]
   where
     h = "#1tdqrgl90qnmqvrff0j76kg2rnajq7n8j54e9cbk4p8pdi41q343bnh8h2rv6nadhlin8teg8371d445pvo0as7j2sav8k401d2s3no"
-    suffix1 = Rf.showSuffix 0
-    suffix2 = Rf.showSuffix 3
+    suffix1 = tShow (0 :: Rf.Pos)
+    suffix2 = tShow (3 :: Rf.Pos)
     ref txt = scope (Text.unpack txt) $ case Rf.fromText txt of
       Left e -> fail e
       Right r1 -> case Rf.fromText (Rf.toText r1) of

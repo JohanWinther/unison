@@ -5,8 +5,7 @@ module Unison.PrettyPrintEnv.Util (declarationPPE, declarationPPEDecl) where
 import Unison.PrettyPrintEnv (PrettyPrintEnv (..))
 import Unison.PrettyPrintEnv qualified as PPE
 import Unison.PrettyPrintEnvDecl (PrettyPrintEnvDecl (suffixifiedPPE, unsuffixifiedPPE))
-import Unison.Reference (Reference)
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Referent qualified as Referent
 
 -- declarationPPE uses the full name for references that are
@@ -20,8 +19,8 @@ declarationPPE :: PrettyPrintEnvDecl -> Reference -> PrettyPrintEnv
 declarationPPE ppe ref = PrettyPrintEnv tm ty
   where
     rootH = hash ref
-    hash Reference.Builtin {} = Nothing
-    hash (Reference.Derived h _) = Just h
+    hash ReferenceBuiltin {} = Nothing
+    hash (Derived h _) = Just h
     tm r0@(Referent.Ref r)
       | hash r == rootH = PPE.termNames (unsuffixifiedPPE ppe) r0
       | otherwise = PPE.termNames (suffixifiedPPE ppe) r0

@@ -23,7 +23,7 @@ import Unison.Name (Name)
 import Unison.Name qualified as Name
 import Unison.NameSegment (NameSegment (..))
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -63,7 +63,7 @@ nameSearchForPerspective codebase namesPerspective@Ops.NamesPerspective {pathToM
 
     lookupNamesForTypes :: Reference -> Sqlite.Transaction (Set (HQ'.HashQualified Name))
     lookupNamesForTypes ref = do
-      names <- Ops.typeNamesForRefWithinNamespace namesPerspective (Cv.reference1to2 ref) Nothing
+      names <- Ops.typeNamesForRefWithinNamespace namesPerspective ref Nothing
       names
         & fmap (\segments -> HQ'.HashQualified (reversedSegmentsToName segments) (Reference.toShortHash ref))
         & Set.fromList
@@ -136,14 +136,14 @@ nameSearchForPerspective codebase namesPerspective@Ops.NamesPerspective {pathToM
               ExactMatch -> Ops.typeRefsForExactName namesPerspective (coerce $ Name.reverseSegments fqn)
               SuffixMatch -> Ops.typeNamesBySuffix namesPerspective (coerce $ Name.reverseSegments name)
           namedRefs
-            & fmap (Cv.reference2to1 . NamedRef.ref)
+            & fmap NamedRef.ref
             & Set.fromList
             & pure
         HQ'.HashQualified name sh -> do
           let fqn = fullyQualifyName name
           typeRefs <- typeReferencesByShortHash sh
           Set.forMaybe typeRefs \typeRef -> do
-            matches <- Ops.typeNamesForRefWithinNamespace namesPerspective (Cv.reference1to2 typeRef) (Just . coerce $ Name.reverseSegments name)
+            matches <- Ops.typeNamesForRefWithinNamespace namesPerspective typeRef (Just . coerce $ Name.reverseSegments name)
             -- Return a valid ref if at least one match was found. Require that it be an exact
             -- match if specified.
             if any (\n -> coerce (Name.reverseSegments fqn) == n || searchStrat /= ExactMatch) matches
@@ -165,7 +165,7 @@ typeReferencesByShortHash sh = do
         Set.filter
           (\r -> sh == Reference.toShortHash r)
           Builtin.intrinsicTypeReferences
-  pure (fromBuiltins <> Set.map Reference.DerivedId fromCodebase)
+  pure (fromBuiltins <> Set.map ReferenceDerived fromCodebase)
 
 -- | Look up terms in the codebase by short hash, and include builtins.
 termReferentsByShortHash :: Codebase m v a -> SH.ShortHash -> Sqlite.Transaction (Set Referent)
@@ -176,7 +176,7 @@ termReferentsByShortHash codebase sh = do
           Set.filter
             (\r -> sh == Reference.toShortHash r)
             Builtin.intrinsicTermReferences
-  pure (fromBuiltins <> Set.mapMonotonic (over Referent.reference_ Reference.DerivedId) fromCodebase)
+  pure (fromBuiltins <> Set.mapMonotonic (over Referent.reference_ ReferenceDerived) fromCodebase)
 
 -- | Resolves a shorthash into any possible matches.
 resolveShortHash :: Codebase m v a -> SH.ShortHash -> Sqlite.Transaction (Set LD.LabeledDependency)

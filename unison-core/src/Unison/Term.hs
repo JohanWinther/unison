@@ -29,7 +29,7 @@ import Unison.NamesWithHistory qualified as Names
 import Unison.Pattern (Pattern)
 import Unison.Pattern qualified as Pattern
 import Unison.Prelude
-import Unison.Reference (Reference, TermReference, pattern Builtin)
+import Unison.Reference (Reference, Reference' (..), TermReference)
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -511,7 +511,7 @@ pattern TypeLink' :: Reference -> ABT.Term (F typeVar typeAnn patternAnn) v a
 pattern TypeLink' r <- (ABT.out -> ABT.Tm (TypeLink r))
 
 pattern Builtin' :: Text -> ABT.Term (F typeVar typeAnn patternAnn) v a
-pattern Builtin' r <- (ABT.out -> ABT.Tm (Ref (Builtin r)))
+pattern Builtin' r <- (ABT.out -> ABT.Tm (Ref (ReferenceBuiltin r)))
 
 pattern App' ::
   ABT.Term (F typeVar typeAnn patternAnn) v a ->
@@ -758,7 +758,7 @@ unReferent (Request' r) = Just $ Referent.Con r CT.Effect
 unReferent _ = Nothing
 
 refId :: (Ord v) => a -> Reference.Id -> Term2 vt at ap v a
-refId a = ref a . Reference.DerivedId
+refId a = ref a . ReferenceDerived
 
 termLink :: (Ord v) => a -> Referent -> Term2 vt at ap v a
 termLink a r = ABT.tm' a (TermLink r)
@@ -767,7 +767,7 @@ typeLink :: (Ord v) => a -> Reference -> Term2 vt at ap v a
 typeLink a r = ABT.tm' a (TypeLink r)
 
 builtin :: (Ord v) => a -> Text -> Term2 vt at ap v a
-builtin a n = ref a (Reference.Builtin n)
+builtin a n = ref a (ReferenceBuiltin n)
 
 float :: (Ord v) => a -> Double -> Term2 vt at ap v a
 float a d = ABT.tm' a (Float d)
@@ -1359,7 +1359,7 @@ unhashComponent m =
       unhash1 :: Term v a -> Term v a
       unhash1 = ABT.rebuildUp' go
         where
-          go e@(Ref' (Reference.DerivedId r)) = case Map.lookup r m' of
+          go e@(Ref' (ReferenceDerived r)) = case Map.lookup r m' of
             Nothing -> e
             Just (v, _) -> var (ABT.annotation e) v
           go e = e

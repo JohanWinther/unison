@@ -41,7 +41,7 @@ import Unison.Parser.Ann (Ann)
 import Unison.Parser.Ann qualified as Ann
 import Unison.Pattern qualified as Pattern
 import Unison.Prelude
-import Unison.Reference (TypeReference)
+import Unison.Reference (Reference' (..), TypeReference)
 import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
@@ -86,15 +86,15 @@ getTypeOfReferent fileUri ref = do
     getFromFile = do
       FileSummary {termsByReference} <- getFileSummary fileUri
       case ref of
-        Referent.Ref (Reference.Builtin {}) -> empty
-        Referent.Ref (Reference.DerivedId termRefId) -> do
+        Referent.Ref (ReferenceBuiltin {}) -> empty
+        Referent.Ref (ReferenceDerived termRefId) -> do
           MaybeT . pure $ (termsByReference ^? ix (Just termRefId) . folded . _3 . _Just)
         Referent.Con (ConstructorReference r0 cid) _type -> do
           case r0 of
-            Reference.DerivedId r -> do
+            ReferenceDerived r -> do
               decl <- getTypeDeclaration fileUri r
               MaybeT . pure $ DD.typeOfConstructor (either DD.toDataDecl id decl) cid
-            Reference.Builtin _ -> empty
+            ReferenceBuiltin _ -> empty
     getFromCodebase = do
       Env {codebase} <- ask
       MaybeT . liftIO $ Codebase.runTransaction codebase $ Codebase.getTypeOfReferent codebase ref

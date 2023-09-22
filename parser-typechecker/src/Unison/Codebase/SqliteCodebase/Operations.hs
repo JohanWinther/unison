@@ -53,7 +53,7 @@ import Unison.Names qualified as Names
 import Unison.Names.Scoped (ScopedNames (..))
 import Unison.Parser.Ann (Ann)
 import Unison.Prelude
-import Unison.Reference (Reference)
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Reference qualified as Reference
 import Unison.Referent qualified as Referent
 import Unison.ShortHash (ShortHash)
@@ -195,7 +195,7 @@ getDeclType = \case
               ++ show t
               ++ ", but I've been asked for it's ConstructorType."
      in pure . fromMaybe err $
-          Map.lookup (Reference.Builtin t) Builtins.builtinConstructorType
+          Map.lookup (ReferenceBuiltin t) Builtins.builtinConstructorType
   C.Reference.ReferenceDerived i -> expectDeclTypeById i
 
 expectDeclTypeById :: C.Reference.Id -> Transaction CT.ConstructorType
@@ -304,8 +304,8 @@ addDeclComponentTypeIndex oId ctorss =
       let self = C.Referent.ConId (C.Reference.Id oId i) j
           typeForIndexing = Hashing.typeToReference tp
           typeMentionsForIndexing = Hashing.typeToReferenceMentions tp
-      Ops.addTypeToIndexForTerm self (Cv.reference1to2 typeForIndexing)
-      Ops.addTypeMentionsToIndexForTerm self (Set.map Cv.reference1to2 typeMentionsForIndexing)
+      Ops.addTypeToIndexForTerm self typeForIndexing
+      Ops.addTypeMentionsToIndexForTerm self typeMentionsForIndexing
 
 putTypeDeclarationComponent ::
   TVar (Map Hash TermBufferEntry) ->
@@ -436,20 +436,11 @@ putPatch h p =
 patchExists :: PatchHash -> Transaction Bool
 patchExists h = fmap isJust $ Q.loadPatchObjectIdForPrimaryHash h
 
-dependentsImpl :: Q.DependentsSelector -> Reference -> Transaction (Set Reference.Id)
-dependentsImpl selector r =
-  Set.map Cv.referenceid2to1
-    <$> Ops.dependents selector (Cv.reference1to2 r)
-
-dependentsOfComponentImpl :: Hash -> Transaction (Set Reference.Id)
-dependentsOfComponentImpl h =
-  Set.map Cv.referenceid2to1 <$> Ops.dependentsOfComponent h
-
 -- | @watches k@ returns all of the references @r@ that were previously put by a @putWatch k r t@. @t@ can be
 -- retrieved by @getWatch k r@.
 watches :: UF.WatchKind -> Transaction [Reference.Id]
 watches w =
-  Ops.listWatches (Cv.watchKind1to2 w) <&> fmap Cv.referenceid2to1
+  Ops.listWatches (Cv.watchKind1to2 w)
 
 getWatch ::
   -- | A 'getDeclType'-like lookup, possibly backed by a cache.
@@ -460,7 +451,7 @@ getWatch ::
 getWatch doGetDeclType k r@(Reference.Id h _i) =
   if elem k standardWatchKinds
     then runMaybeT do
-      watch <- Ops.loadWatch (Cv.watchKind1to2 k) (Cv.referenceid1to2 r)
+      watch <- Ops.loadWatch (Cv.watchKind1to2 k) r
       lift (Cv.term2to1 h doGetDeclType watch)
     else pure Nothing
 
@@ -479,7 +470,7 @@ putWatch k r@(Reference.Id h _i) tm =
   when (elem k standardWatchKinds) do
     Ops.saveWatch
       (Cv.watchKind1to2 k)
-      (Cv.referenceid1to2 r)
+      r
       (Cv.term1to2 h tm)
 
 standardWatchKinds :: [UF.WatchKind]
@@ -491,7 +482,7 @@ termsOfTypeImpl ::
   Reference ->
   Transaction (Set Referent.Id)
 termsOfTypeImpl doGetDeclType r =
-  Ops.termsHavingType (Cv.reference1to2 r)
+  Ops.termsHavingType r
     >>= Set.traverse (Cv.referentid2to1 doGetDeclType)
 
 termsMentioningTypeImpl ::
@@ -500,7 +491,7 @@ termsMentioningTypeImpl ::
   Reference ->
   Transaction (Set Referent.Id)
 termsMentioningTypeImpl doGetDeclType r =
-  Ops.termsMentioningType (Cv.reference1to2 r)
+  Ops.termsMentioningType r
     >>= Set.traverse (Cv.referentid2to1 doGetDeclType)
 
 -- | The number of base32 characters needed to distinguish any two references in the codebase.
@@ -513,12 +504,10 @@ branchHashLength = pure 10
 
 defnReferencesByPrefix :: OT.ObjectType -> ShortHash -> Transaction (Set Reference.Id)
 defnReferencesByPrefix _ (ShortHash.Builtin _) = pure mempty
-defnReferencesByPrefix ot (ShortHash.ShortHash prefix cycle _cid) = do
-  refs <- do
-    Ops.componentReferencesByPrefix ot prefix cycle
-      >>= traverse (C.Reference.idH Q.expectPrimaryHashByObjectId)
-      >>= pure . Set.fromList
-  pure $ Set.map Cv.referenceid2to1 refs
+defnReferencesByPrefix ot (ShortHash.ShortHash prefix cycle _cid) =
+  Ops.componentReferencesByPrefix ot prefix cycle
+    >>= traverse (C.Reference.idH Q.expectPrimaryHashByObjectId)
+    >>= pure . Set.fromList
 
 termReferencesByPrefix :: ShortHash -> Transaction (Set Reference.Id)
 termReferencesByPrefix = defnReferencesByPrefix OT.TermComponent
@@ -598,7 +587,7 @@ namesAtPath bh path = do
   where
     convertTypes names =
       names <&> \(S.NamedRef {reversedSegments, ref}) ->
-        (Name.fromReverseSegments (coerce reversedSegments), Cv.reference2to1 ref)
+        (Name.fromReverseSegments (coerce reversedSegments), ref)
     convertTerms names =
       names <&> \(S.NamedRef {reversedSegments, ref = (ref, ct)}) ->
         let v1ref = Cv.referent2to1UsingCT (fromMaybe (error "Required constructor type for constructor but it was null") ct) ref

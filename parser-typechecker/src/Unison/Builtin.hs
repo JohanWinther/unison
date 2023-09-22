@@ -40,6 +40,7 @@ import Unison.Names (Names (Names))
 import Unison.NamesWithHistory (NamesWithHistory (..))
 import Unison.Parser.Ann (Ann (..))
 import Unison.Prelude
+import Unison.Reference (Reference' (..))
 import Unison.Reference qualified as R
 import Unison.Referent qualified as Referent
 import Unison.Symbol (Symbol)
@@ -64,24 +65,24 @@ names0 = Names terms types
     terms =
       Rel.mapRan Referent.Ref (Rel.fromMap termNameRefs)
         <> Rel.fromList
-          [ (Name.unsafeFromVar vc, Referent.Con (ConstructorReference (R.DerivedId r) cid) ct)
+          [ (Name.unsafeFromVar vc, Referent.Con (ConstructorReference (ReferenceDerived r) cid) ct)
             | (ct, (_, (r, decl))) <-
                 ((CT.Data,) <$> builtinDataDecls)
                   <> ((CT.Effect,) . (second . second) DD.toDataDecl <$> builtinEffectDecls),
               ((_, vc, _), cid) <- DD.constructors' decl `zip` [0 ..]
           ]
         <> Rel.fromList
-          [ (Name.unsafeFromVar v, Referent.Ref (R.DerivedId i))
+          [ (Name.unsafeFromVar v, Referent.Ref (ReferenceDerived i))
             | (v, i) <- Map.toList TD.builtinTermsRef
           ]
     types =
       Rel.fromList builtinTypes
         <> Rel.fromList
-          [ (Name.unsafeFromVar v, R.DerivedId r)
+          [ (Name.unsafeFromVar v, ReferenceDerived r)
             | (v, (r, _)) <- builtinDataDecls
           ]
         <> Rel.fromList
-          [ (Name.unsafeFromVar v, R.DerivedId r)
+          [ (Name.unsafeFromVar v, ReferenceDerived r)
             | (v, (r, _)) <- builtinEffectDecls
           ]
 
@@ -94,8 +95,8 @@ typeLookup :: TL.TypeLookup Symbol Ann
 typeLookup =
   TL.TypeLookup
     (fmap (const Intrinsic) <$> termRefTypes)
-    (Map.fromList $ map (first R.DerivedId . snd) builtinDataDecls)
-    (Map.fromList $ map (first R.DerivedId . snd) builtinEffectDecls)
+    (Map.fromList $ map (first ReferenceDerived . snd) builtinDataDecls)
+    (Map.fromList $ map (first ReferenceDerived . snd) builtinEffectDecls)
 
 constructorType :: R.Reference -> Maybe CT.ConstructorType
 constructorType r =
@@ -159,8 +160,8 @@ builtinTypes =
     foldl' go mempty builtinTypesSrc
   where
     go m = \case
-      B' r _ -> Map.insert r (R.Builtin r) m
-      D' r -> Map.insert r (R.Builtin r) m
+      B' r _ -> Map.insert r (R.ReferenceBuiltin r) m
+      D' r -> Map.insert r (R.ReferenceBuiltin r) m
       Rename' r name -> case Map.lookup name m of
         Just _ ->
           error . Text.unpack $
@@ -262,15 +263,15 @@ intrinsicTypeReferences :: Set R.Reference
 intrinsicTypeReferences = foldl' go mempty builtinTypesSrc
   where
     go acc = \case
-      B' r _ -> Set.insert (R.Builtin r) acc
-      D' r -> Set.insert (R.Builtin r) acc
+      B' r _ -> Set.insert (R.ReferenceBuiltin r) acc
+      D' r -> Set.insert (R.ReferenceBuiltin r) acc
       _ -> acc
 
 intrinsicTermReferences :: Set R.Reference
 intrinsicTermReferences = Map.keysSet termRefTypes
 
 builtinConstructorType :: Map R.Reference CT.ConstructorType
-builtinConstructorType = Map.fromList [(R.Builtin r, ct) | B' r ct <- builtinTypesSrc]
+builtinConstructorType = Map.fromList [(R.ReferenceBuiltin r, ct) | B' r ct <- builtinTypesSrc]
 
 data BuiltinTypeDSL = B' Text CT.ConstructorType | D' Text | Rename' Text Text | Alias' Text Text
 
@@ -297,8 +298,8 @@ termNameRefs :: Map Name R.Reference
 termNameRefs = Map.mapKeys Name.unsafeFromText $ foldl' go mempty (stripVersion builtinsSrc)
   where
     go m = \case
-      B r _tp -> Map.insert r (R.Builtin r) m
-      D r _tp -> Map.insert r (R.Builtin r) m
+      B r _tp -> Map.insert r (R.ReferenceBuiltin r) m
+      D r _tp -> Map.insert r (R.ReferenceBuiltin r) m
       Rename r name -> case Map.lookup name m of
         Just _ ->
           error . Text.unpack $
@@ -332,8 +333,8 @@ termRefTypes :: Map R.Reference Type
 termRefTypes = foldl' go mempty builtinsSrc
   where
     go m = \case
-      B r t -> Map.insert (R.Builtin r) t m
-      D r t -> Map.insert (R.Builtin r) t m
+      B r t -> Map.insert (R.ReferenceBuiltin r) t m
+      D r t -> Map.insert (R.ReferenceBuiltin r) t m
       _ -> m
 
 typeOf :: a -> (Type -> a) -> R.Reference -> a

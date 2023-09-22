@@ -11,8 +11,7 @@ import EasyTest
 import Unison.Codebase.Branch (Branch (Branch), Branch0)
 import Unison.Codebase.Branch qualified as Branch
 import Unison.Codebase.Causal qualified as Causal
-import Unison.Reference (Reference)
-import Unison.Reference qualified as Reference
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Util.Relation qualified as Relation
 import Unison.Util.Star3 qualified as Star3
 
@@ -26,7 +25,7 @@ branch0Tests :: [Test ()]
 branch0Tests =
   [ scope "regression-2564" do
       let dummy :: Reference =
-            Reference.Builtin "foo"
+            ReferenceBuiltin "foo"
       let -- b
           b0 :: Branch0 Identity =
             Branch.branch0

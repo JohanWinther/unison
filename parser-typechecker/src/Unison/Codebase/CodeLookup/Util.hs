@@ -3,6 +3,7 @@
 module Unison.Codebase.CodeLookup.Util where
 
 import Data.Map qualified as Map
+import U.Codebase.Reference (Reference' (..))
 import Unison.Codebase.CodeLookup
 import Unison.DataDeclaration qualified as DataDeclaration
 import Unison.Prelude
@@ -22,13 +23,13 @@ fromTypecheckedUnisonFile tuf = CodeLookup tm ty
     dataDeclMap =
       Map.fromList
         [ (id, Right dd)
-          | (_, (Reference.DerivedId id, dd)) <-
+          | (_, (ReferenceDerived id, dd)) <-
               Map.toList (UF.dataDeclarations' tuf)
         ]
     effectDeclMap =
       Map.fromList
         [ (id, Left ad)
-          | (_, (Reference.DerivedId id, ad)) <-
+          | (_, (ReferenceDerived id, ad)) <-
               Map.toList (UF.effectDeclarations' tuf)
         ]
     termMap :: Map Reference.Id (Term.Term v a)

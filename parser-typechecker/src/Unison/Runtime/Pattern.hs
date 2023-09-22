@@ -1,9 +1,4 @@
-{-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternGuards #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE ViewPatterns #-}
 
 module Unison.Runtime.Pattern
   ( DataSpec,
@@ -38,7 +33,7 @@ import Unison.ConstructorReference qualified as ConstructorReference
 import Unison.DataDeclaration (declFields)
 import Unison.Pattern
 import Unison.Pattern qualified as P
-import Unison.Reference (Reference, Reference' (Builtin, DerivedId))
+import Unison.Reference (Reference, Reference' (..))
 import Unison.Runtime.ANF (internalBug)
 import Unison.Term hiding (Term, matchPattern)
 import Unison.Term qualified as Tm
@@ -89,10 +84,10 @@ builtinDataSpec :: DataSpec
 builtinDataSpec = Map.fromList decls
   where
     decls =
-      [ (DerivedId x, declFields $ Right y)
+      [ (ReferenceDerived x, declFields $ Right y)
         | (_, x, y) <- builtinDataDecls
       ]
-        ++ [ (DerivedId x, declFields $ Left y)
+        ++ [ (ReferenceDerived x, declFields $ Left y)
              | (_, x, y) <- builtinEffectDecls
            ]
 
@@ -598,7 +593,7 @@ lookupAbil rf _ = Left $ "unknown ability reference: " ++ show rf
 compile :: (Var v) => DataSpec -> Ctx v -> PatternMatrix v -> Term v
 compile _ _ (PM []) = apps' bu [text () "pattern match failure"]
   where
-    bu = ref () (Builtin "bug")
+    bu = ref () (ReferenceBuiltin "bug")
 compile spec ctx m@(PM (r : rs))
   | rowIrrefutable r =
       case guard r of
