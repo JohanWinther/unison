@@ -1,6 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Unison.Codebase.SqliteCodebase.Branch.Dependencies where
@@ -8,7 +5,7 @@ module Unison.Codebase.SqliteCodebase.Branch.Dependencies where
 import Data.Foldable (toList)
 import Data.Map (Map)
 import Data.Map qualified as Map
-import Data.Monoid.Generic (GenericMonoid (..), GenericSemigroup (..))
+import Data.Semigroup.Generic (GenericSemigroupMonoid (..)) -- just use Generically from base once we're on >= 4.17
 import Data.Set (Set)
 import Data.Set qualified as Set
 import GHC.Generics (Generic)
@@ -34,8 +31,7 @@ data Dependencies = Dependencies
   }
   deriving (Show)
   deriving (Generic)
-  deriving (Semigroup) via GenericSemigroup Dependencies
-  deriving (Monoid) via GenericMonoid Dependencies
+  deriving (Monoid, Semigroup) via GenericSemigroupMonoid Dependencies
 
 data Dependencies' = Dependencies'
   { patches' :: [PatchHash],
@@ -44,8 +40,7 @@ data Dependencies' = Dependencies'
   }
   deriving (Eq, Show)
   deriving (Generic)
-  deriving (Semigroup) via GenericSemigroup Dependencies'
-  deriving (Monoid) via GenericMonoid Dependencies'
+  deriving (Monoid, Semigroup) via GenericSemigroupMonoid Dependencies'
 
 to' :: Dependencies -> Dependencies'
 to' Dependencies {..} = Dependencies' (toList patches) (toList terms) (toList decls)
