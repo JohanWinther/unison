@@ -1,6 +1,5 @@
 module Unison.Result where
 
-import Control.Error.Util (note)
 import Control.Monad.Except (ExceptT (..))
 import Control.Monad.Fail qualified as Fail
 import Control.Monad.Morph qualified as Morph
@@ -62,7 +61,7 @@ getResult r = uncurry (flip Result) <$> runResultT r
 toEither :: (Functor f) => ResultT notes f a -> ExceptT notes f a
 toEither r = ExceptT (go <$> runResultT r)
   where
-    go (may, notes) = note notes may
+    go (may, notes) = maybeToEither notes may
 
 tell1 :: (Monad f) => note -> ResultT (Seq note) f ()
 tell1 = tell . pure

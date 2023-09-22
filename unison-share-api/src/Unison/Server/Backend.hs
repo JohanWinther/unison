@@ -90,7 +90,6 @@ module Unison.Server.Backend
   )
 where
 
-import Control.Error.Util (hush)
 import Control.Lens hiding ((??))
 import Control.Lens.Cons qualified as Cons
 import Control.Monad.Except
@@ -970,7 +969,7 @@ evalDocRef rt codebase r = do
       let evalPPE = PPE.empty
       let codeLookup = Codebase.toCodeLookup codebase
       let cache r = fmap Term.unannotate <$> Codebase.runTransaction codebase (Codebase.lookupWatchCache codebase r)
-      r <- fmap hush . liftIO $ Rt.evaluateTerm' codeLookup cache evalPPE rt tm
+      r <- fmap eitherToMaybe . liftIO $ Rt.evaluateTerm' codeLookup cache evalPPE rt tm
       -- Only cache watches when we're not in readonly mode
       Env.lookupEnv "UNISON_READONLY" >>= \case
         Just (_ : _) -> pure ()

@@ -8,7 +8,6 @@ where
 
 -- TODO: Don't import backend
 
-import Control.Error.Util qualified as ErrorUtil
 import Control.Exception (catch)
 import Control.Lens
 import Control.Monad.Reader (ask)
@@ -2218,7 +2217,7 @@ doDisplay outputLoc names tm = do
         LatestFileLocation -> fmap fst (loopState ^. #latestFile) <|> Just "scratch.u"
       useCache = True
       evalTerm tm =
-        fmap ErrorUtil.hush . fmap (fmap Term.unannotate) $
+        fmap eitherToMaybe . fmap (fmap Term.unannotate) $
           evalUnisonTermE True (PPE.suffixifiedPPE ppe) useCache (Term.amap (const External) tm)
       loadTerm (Reference.DerivedId r) = case Map.lookup r tms of
         Nothing -> fmap (fmap Term.unannotate) $ Cli.runTransaction (Codebase.getTerm codebase r)
