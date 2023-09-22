@@ -14,11 +14,11 @@ import Control.Monad.Reader
 import Control.Monad.Trans.Except
 import Data.Aeson ()
 import Data.ByteString qualified as Strict
+import Data.ByteString.Base64.URL qualified as Base64.Url
 import Data.ByteString.Char8 (unpack)
 import Data.ByteString.Char8 qualified as C8
 import Data.ByteString.Lazy qualified as Lazy
 import Data.ByteString.Lazy.UTF8 qualified as BLU
-import Data.NanoID (customNanoID, defaultAlphabet, unNanoID)
 import Data.OpenApi (Info (..), License (..), OpenApi, URL (..))
 import Data.OpenApi.Lens qualified as OpenApi
 import Data.Proxy (Proxy (..))
@@ -82,7 +82,7 @@ import System.Directory (canonicalizePath, doesFileExist)
 import System.Environment (getExecutablePath)
 import System.FilePath ((</>))
 import System.FilePath qualified as FilePath
-import System.Random.MWC (createSystemRandom)
+import System.Random.Stateful qualified as Random
 import U.Codebase.HashTags (CausalHash)
 import Unison.Codebase (Codebase)
 import Unison.Codebase qualified as Codebase
@@ -350,10 +350,8 @@ app env rt codebase uiPath expectedToken allowCorsHost =
 -- | The Token is used to help prevent multiple users on a machine gain access to
 -- each others codebases.
 genToken :: IO Strict.ByteString
-genToken = do
-  g <- createSystemRandom
-  n <- customNanoID defaultAlphabet 16 g
-  pure $ unNanoID n
+genToken =
+  Base64.Url.encodeBase64Unpadded' <$> Random.uniformByteStringM 12 Random.globalStdGen
 
 data Waiter a = Waiter
   { notify :: a -> IO (),
