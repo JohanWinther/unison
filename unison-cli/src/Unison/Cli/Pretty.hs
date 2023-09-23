@@ -54,7 +54,6 @@ import Data.Time (UTCTime)
 import Data.Time.Format.Human (HumanTimeLocale (..), defaultHumanTimeLocale, humanReadableTimeI18N')
 import Network.URI (URI)
 import Network.URI qualified as URI
-import Network.URI.Encode qualified as URI
 import U.Codebase.HashTags (CausalHash (..))
 import U.Codebase.Sqlite.Project qualified as Sqlite
 import U.Codebase.Sqlite.ProjectBranch qualified as Sqlite
@@ -133,7 +132,7 @@ prettyShareLink :: WriteShareRemoteNamespace -> Pretty
 prettyShareLink WriteShareRemoteNamespace {repo, path} =
   let encodedPath =
         Path.toList path
-          & fmap (URI.encodeText . NameSegment.toText)
+          & map (Text.pack . URI.escapeURIString URI.isUnreserved . Text.unpack . NameSegment.toText)
           & Text.intercalate "/"
    in P.green . P.text $ shareOrigin <> "/@" <> shareUserHandleToText repo <> "/p/code/latest/namespaces/" <> encodedPath
 

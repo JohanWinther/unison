@@ -28,8 +28,7 @@ import GHC.Generics ()
 import Network.HTTP.Media ((//), (/:))
 import Network.HTTP.Types (HeaderName)
 import Network.HTTP.Types.Status (ok200)
-import Network.URI.Encode as UriEncode
-import Network.URI.Encode qualified as URI
+import Network.URI qualified as URI
 import Network.Wai (Middleware, responseLBS)
 import Network.Wai.Handler.Warp
   ( Port,
@@ -183,7 +182,7 @@ data Service
   deriving stock (Show)
 
 instance Show BaseUrl where
-  show url = urlHost url <> ":" <> show (urlPort url) <> "/" <> (URI.encode . unpack . urlToken $ url)
+  show url = urlHost url <> ":" <> show (urlPort url) <> "/" <> (URI.escapeURIString URI.isUnreserved . unpack . urlToken $ url)
 
 data URISegment
   = EscapeMe Text
@@ -266,7 +265,7 @@ urlFor service baseUrl =
     toUrlPath path =
       path
         & fmap \case
-          EscapeMe txt -> UriEncode.encodeText txt
+          EscapeMe txt -> Text.pack . URI.escapeURIString URI.isUnreserved . Text.unpack $ txt
           DontEscape txt -> txt
         & Text.intercalate "/"
 
