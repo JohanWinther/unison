@@ -1,8 +1,3 @@
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE StandaloneDeriving #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 -- | Duplicate of the Unison.Util.SyntaxText module, but we expect these to
