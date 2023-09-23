@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ViewPatterns #-}
-
 module Unison.Codebase.Editor.Git
   ( gitIn,
     gitTextIn,
@@ -25,9 +22,9 @@ import Control.Monad.Except (MonadError, throwError)
 import Data.ByteString.Base16 qualified as ByteString
 import Data.Char qualified as Char
 import Data.Text qualified as Text
-import Shellmet (($?), ($^), ($|))
 import System.Exit (ExitCode (ExitSuccess))
 import System.FilePath ((</>))
+import System.Process qualified as Process
 import Unison.Codebase.Editor.RemoteRepo (ReadGitRepo (..))
 import Unison.Codebase.GitError (GitProtocolError)
 import Unison.Codebase.GitError qualified as GitError
@@ -185,7 +182,7 @@ withRepo repo@(ReadGitRepo {url = uri, ref = mayGitRef}) branchBehavior action =
     doesLocalRefExist :: GitRepo -> Text -> m Bool
     doesLocalRefExist workDir ref = liftIO $ do
       (gitIn workDir (["show-ref", "--verify", ref] ++ gitVerbosity) $> True)
-        $? pure False
+        <|> pure False
     -- fetch the given ref and update the local repositories ref to match the remote.
     -- returns whether or not the ref existed on the remote.
     fetchAndUpdateRef :: GitRepo -> Text -> m Bool
@@ -244,19 +241,19 @@ checkForGit = do
 getDefaultBranch :: (MonadIO m) => GitRepo -> m (Maybe Text)
 getDefaultBranch dir = liftIO $ do
   (Text.stripPrefix "refs/heads/" <$> gitTextIn dir ["symbolic-ref", "HEAD"])
-    $? pure Nothing
+    <|> pure Nothing
 
 -- | Does `git` recognize this directory as being managed by git?
 isGitRepo :: (MonadIO m) => GitRepo -> m Bool
 isGitRepo dir =
   liftIO $
-    (True <$ gitIn dir (["rev-parse"] ++ gitVerbosity)) $? pure False
+    (True <$ gitIn dir (["rev-parse"] ++ gitVerbosity)) <|> pure False
 
 -- | Returns True if the repo is empty, i.e. has no commits at the current branch,
 -- or if the dir isn't a git repo at all.
 isEmptyGitRepo :: (MonadIO m) => GitRepo -> m Bool
 isEmptyGitRepo dir = liftIO do
-  (gitTextIn dir (["rev-parse", "HEAD"] ++ gitVerbosity) $> False) $? pure True
+  (gitTextIn dir (["rev-parse", "HEAD"] ++ gitVerbosity) $> False) <|> pure True
 
 -- | Perform an IO action, passing any IO exception to `handler`
 withIOError :: (MonadIO m) => IO a -> (IOException -> m a) -> m a
@@ -294,13 +291,13 @@ setupGitDir dir =
 gitGlobal :: (MonadIO m) => [Text] -> m ()
 gitGlobal args = do
   when debugGit $ traceM (Text.unpack . Text.unwords $ ["$ git"] <> args)
-  liftIO $ "git" $^ (args ++ gitVerbosity)
+  liftIO $ Process.callProcess "git" (map Text.unpack (args ++ gitVerbosity))
 
 -- | Run a git command in the repository at localPath
 gitIn :: (MonadIO m) => GitRepo -> [Text] -> m ()
 gitIn localPath args = do
   when debugGit $ traceM (Text.unpack . Text.unwords $ ["$ git"] <> setupGitDir localPath <> args)
-  liftIO $ "git" $^ (setupGitDir localPath <> args)
+  liftIO $ Process.callProcess "git" (map Text.unpack (setupGitDir localPath <> args))
 
 -- | like 'gitIn', but silences all output from the command and returns whether the command
 -- succeeded.
@@ -314,4 +311,4 @@ gitInCaptured localPath args = do
 gitTextIn :: (MonadIO m) => GitRepo -> [Text] -> m Text
 gitTextIn localPath args = do
   when debugGit $ traceM (Text.unpack . Text.unwords $ ["$ git"] <> setupGitDir localPath <> args)
-  liftIO $ "git" $| setupGitDir localPath <> args
+  liftIO . fmap (Text.strip . Text.pack) $ Process.readProcess "git" (map Text.unpack (setupGitDir localPath <> args)) ""

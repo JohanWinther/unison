@@ -1,7 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE ViewPatterns #-}
 
 module Unison.Test.GitSync where
 
@@ -9,7 +6,6 @@ import Data.Maybe (fromJust)
 import Data.String.Here.Interpolated (i)
 import Data.Text qualified as Text
 import EasyTest
-import Shellmet ()
 import System.Directory (removePathForcibly)
 import System.FilePath ((</>))
 import System.IO.Temp qualified as Temp

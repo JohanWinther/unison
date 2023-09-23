@@ -1,14 +1,10 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Version where
 
-import Data.Bifunctor
-import Data.Text
 import Data.Text qualified as Text
-import Language.Haskell.TH (Exp (TupE), runIO)
-import Language.Haskell.TH.Syntax (Exp (LitE), Lit (StringL))
-import Shellmet
+import System.Process qualified as Process
+import Unison.Prelude
 
 -- | A formatted descriptor of when and against which commit this unison executable was built
 -- E.g. latest-149-g5cef8f851 (built on 2021-10-04)
@@ -29,15 +25,14 @@ type GitRef = Text
 --      release/M2i (built on 2021-10-05)
 gitDescribe :: (GitRef, CommitDate)
 gitDescribe =
-  bimap Text.pack Text.pack $
-    $( runIO $ do
-         -- Outputs date of current commit; E.g. 2021-08-06
-         let getDate = "git" $| ["show", "-s", "--format=%cs"]
-         date <- getDate $? pure ""
-         -- Fetches a unique tag-name to represent the current commit.
-         -- Uses human-readable names whenever possible.
-         -- Marks version with a `'` suffix if building on a dirty worktree.
-         let getTag = "git" $| ["describe", "--tags", "--always", "--dirty='"]
-         tag <- getTag $? pure "unknown"
-         pure (TupE [Just . LitE . StringL . unpack $ tag, Just . LitE . StringL . unpack $ date])
-     )
+  $( liftIO do
+       -- Outputs date of current commit; E.g. 2021-08-06
+       let getDate = Text.strip . Text.pack <$> Process.readProcess "git" ["show", "-s", "--format=%cs"] ""
+       date <- getDate <|> pure ""
+       -- Fetches a unique tag-name to represent the current commit.
+       -- Uses human-readable names whenever possible.
+       -- Marks version with a `'` suffix if building on a dirty worktree.
+       let getTag = Text.strip . Text.pack <$> Process.readProcess "git" ["describe", "--tags", "--always", "--dirty='"] ""
+       tag <- getTag <|> pure "unknown"
+       [|(tag, date)|]
+   )
