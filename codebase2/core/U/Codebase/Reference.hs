@@ -14,6 +14,7 @@ module U.Codebase.Reference
     Id,
     RId,
     Id' (..),
+    CycleSize,
     Pos,
     _ReferenceDerived,
     _RReferenceReference,
@@ -33,13 +34,19 @@ module U.Codebase.Reference
     toShortHash,
     toText,
     unsafeId,
+    fromId,
+    fromText,
+    componentFor,
+    componentFromLength,
   )
 where
 
 import Control.Lens (Lens, Prism, Prism', Traversal, lens, preview, prism)
 import Data.Bifoldable (Bifoldable (..))
 import Data.Bitraversable (Bitraversable (..))
+import Data.Char (isDigit)
 import Data.Generics.Sum (_Ctor)
+import Data.Set qualified as Set
 import Data.Text qualified as Text
 import Unison.Hash (Hash)
 import Unison.Hash qualified as Hash
@@ -83,6 +90,18 @@ data Reference' t h
   | ReferenceDerived (Id' h)
   deriving stock (Eq, Generic, Ord, Show)
 
+instance Bifunctor Reference' where
+  bimap f _ (ReferenceBuiltin t) = ReferenceBuiltin (f t)
+  bimap _ g (ReferenceDerived id) = ReferenceDerived (g <$> id)
+
+instance Bifoldable Reference' where
+  bifoldMap f _ (ReferenceBuiltin t) = f t
+  bifoldMap _ g (ReferenceDerived id) = foldMap g id
+
+instance Bitraversable Reference' where
+  bitraverse f _ (ReferenceBuiltin t) = ReferenceBuiltin <$> f t
+  bitraverse _ g (ReferenceDerived id) = ReferenceDerived <$> traverse g id
+
 _RReferenceReference :: Prism' (Reference' t (Maybe h)) (Reference' t h)
 _RReferenceReference = prism embed project
   where
@@ -104,6 +123,8 @@ pattern Derived :: h -> Pos -> Reference' t h
 pattern Derived h i = ReferenceDerived (Id h i)
 
 {-# COMPLETE ReferenceBuiltin, Derived #-}
+
+type CycleSize = Word64
 
 type Pos = Word64
 
@@ -178,14 +199,60 @@ unsafeId = \case
   ReferenceBuiltin b -> error $ "Tried to get the hash of builtin " <> Text.unpack b <> "."
   ReferenceDerived x -> x
 
-instance Bifunctor Reference' where
-  bimap f _ (ReferenceBuiltin t) = ReferenceBuiltin (f t)
-  bimap _ g (ReferenceDerived id) = ReferenceDerived (g <$> id)
+fromId :: Id -> Reference
+fromId = ReferenceDerived
 
-instance Bifoldable Reference' where
-  bifoldMap f _ (ReferenceBuiltin t) = f t
-  bifoldMap _ g (ReferenceDerived id) = foldMap g id
+-- |
+-- todo: take a (Reference -> CycleSize) so that `readSuffix` doesn't have to parse the size from the text.
+-- examples:
+--
+-- builtins don’t have cycles
+-- >>> fromText "##Text.take"
+-- Right ##Text.take
+--
+-- derived, no cycle
+-- >>> fromText "#dqp2oi4iderlrgp2h11sgkff6drk92omo4c84dncfhg9o0jn21cli4lhga72vlchmrb2jk0b3bdc2gie1l06sqdli8ego4q0akm3au8"
+-- Right #dqp2o
+--
+-- derived, part of cycle
+-- >>> fromText "#dqp2oi4iderlrgp2h11sgkff6drk92omo4c84dncfhg9o0jn21cli4lhga72vlchmrb2jk0b3bdc2gie1l06sqdli8ego4q0akm3au8.12345"
+-- Right #dqp2o.12345
+--
+-- Errors with 'Left' on invalid hashes
+-- >>> fromText "#invalid_hash.12345"
+-- Left "Invalid hash: \"invalid_hash\""
+fromText :: Text -> Either String Reference
+fromText t = case Text.split (== '#') t of
+  [_, "", b] -> Right (ReferenceBuiltin b)
+  [_, h] -> case Text.split (== '.') h of
+    [hash] ->
+      case derivedBase32Hex hash 0 of
+        Nothing -> Left $ "Invalid hash: " <> show hash
+        Just r -> Right r
+    [hash, suffix] -> do
+      pos <- readSuffix suffix
+      maybe (Left $ "Invalid hash: " <> show hash) Right (derivedBase32Hex hash pos)
+    _ -> bail
+  _ -> bail
+  where
+    bail = Left $ "couldn't parse a Reference from " <> Text.unpack t
 
-instance Bitraversable Reference' where
-  bitraverse f _ (ReferenceBuiltin t) = ReferenceBuiltin <$> f t
-  bitraverse _ g (ReferenceDerived id) = ReferenceDerived <$> traverse g id
+    derivedBase32Hex :: Text -> Pos -> Maybe Reference
+    derivedBase32Hex b32Hex i = mayH <&> \h -> Derived h i
+      where
+        mayH = Hash.fromBase32HexText b32Hex
+
+    readSuffix :: Text -> Either String Pos
+    readSuffix = \case
+      pos
+        | Text.all isDigit pos,
+          Just pos' <- readMaybe (Text.unpack pos) ->
+            Right pos'
+      t -> Left $ "Invalid reference suffix: " <> show t
+
+-- | enumerate the `a`s and associates them with corresponding `Reference.Id`s
+componentFor :: Hash -> [a] -> [(Id, a)]
+componentFor h as = [(Id h i, a) | (i, a) <- zip [0 ..] as]
+
+componentFromLength :: Hash -> CycleSize -> Set Id
+componentFromLength h size = Set.fromList [Id h i | i <- [0 .. size - 1]]

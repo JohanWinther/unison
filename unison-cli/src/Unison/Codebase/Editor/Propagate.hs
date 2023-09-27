@@ -44,7 +44,6 @@ import Unison.Names qualified as Names
 import Unison.Parser.Ann (Ann (..))
 import Unison.Prelude
 import Unison.Reference (Reference, Reference' (..), TermReference, TypeReference)
-import Unison.Reference qualified as Reference
 import Unison.Referent (Referent)
 import Unison.Referent qualified as Referent
 import Unison.Result qualified as Result

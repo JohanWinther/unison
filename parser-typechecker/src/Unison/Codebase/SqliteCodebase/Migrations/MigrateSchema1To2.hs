@@ -26,6 +26,7 @@ import System.Environment (lookupEnv)
 import System.IO.Unsafe (unsafePerformIO)
 import U.Codebase.Branch (NamespaceStats (..))
 import U.Codebase.HashTags (BranchHash (..), CausalHash (..), PatchHash (..))
+import U.Codebase.Reference (_ReferenceDerived)
 import U.Codebase.Reference qualified as C.Reference
 import U.Codebase.Reference qualified as UReference
 import U.Codebase.Referent qualified as UReferent
@@ -711,7 +712,7 @@ typeReferences_ =
   ABT.rewriteDown_ -- Focus all terms
     . ABT.baseFunctor_ -- Focus Type.F
     . Type._Ref -- Only the Ref constructor has references
-    . Reference._DerivedId
+    . _ReferenceDerived
     . asTypeReference_
 
 termReferences_ :: (Monad m, Ord v) => LensLike' m (Term.Term v a) SomeReferenceId
@@ -722,13 +723,13 @@ termReferences_ =
 
 termFReferences_ :: (Ord tv, Monad m) => LensLike' m (Term.F tv ta pa a) SomeReferenceId
 termFReferences_ f t =
-  (t & Term._Ref . Reference._DerivedId . asTermReference_ %%~ f)
+  (t & Term._Ref . _ReferenceDerived . asTermReference_ %%~ f)
     >>= Term._Constructor . someRefCon_ %%~ f
     >>= Term._Request . someRefCon_ %%~ f
     >>= Term._Ann . _2 . typeReferences_ %%~ f
     >>= Term._Match . _2 . traversed . Term.matchPattern_ . patternReferences_ %%~ f
     >>= Term._TermLink . referentAsSomeTermReference_ %%~ f
-    >>= Term._TypeLink . Reference._DerivedId . asTypeReference_ %%~ f
+    >>= Term._TypeLink . _ReferenceDerived . asTypeReference_ %%~ f
 
 -- | Build a SomeConstructorReference
 someRefCon_ :: Traversal' ConstructorReference.ConstructorReference SomeReferenceId
