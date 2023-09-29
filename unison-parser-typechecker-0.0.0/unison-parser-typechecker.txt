@@ -3842,18 +3842,18 @@ module Unison.Codebase.Runtime
 type Error = Pretty ColorText
 type Term v = Term v ()
 data Runtime v
-Runtime :: IO () -> (CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error (Term v))) -> (CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)) -> Type v Ann -> Type v Ann -> Runtime v
+Runtime :: IO () -> (CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error ([Error], Term v))) -> (CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)) -> Type v Ann -> Type v Ann -> Runtime v
 [$sel:terminate:Runtime] :: Runtime v -> IO ()
-[$sel:evaluate:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error (Term v))
+[$sel:evaluate:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error ([Error], Term v))
 [$sel:compileTo:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)
 [$sel:mainType:Runtime] :: Runtime v -> Type v Ann
 [$sel:ioTestType:Runtime] :: Runtime v -> Type v Ann
 type IsCacheHit = Bool
 noCache :: Id -> IO (Maybe (Term v))
-type WatchResults v a = (Either Error ([(v, Term v)], Map v (a, WatchKind, Id, Term v, Term v, IsCacheHit)))
+type WatchResults v a = (Either Error ([(v, Term v)], [Error], Map v (a, WatchKind, Id, Term v, Term v, IsCacheHit)))
 evaluateWatches :: forall v a. Var v => CodeLookup v IO a -> PrettyPrintEnv -> (Id -> IO (Maybe (Term v))) -> Runtime v -> TypecheckedUnisonFile v a -> IO (WatchResults v a)
-evaluateTerm' :: (Var v, Monoid a) => CodeLookup v IO a -> (Id -> IO (Maybe (Term v))) -> PrettyPrintEnv -> Runtime v -> Term v a -> IO (Either Error (Term v))
-evaluateTerm :: (Var v, Monoid a) => CodeLookup v IO a -> PrettyPrintEnv -> Runtime v -> Term v a -> IO (Either Error (Term v))
+evaluateTerm' :: (Var v, Monoid a) => CodeLookup v IO a -> (Id -> IO (Maybe (Term v))) -> PrettyPrintEnv -> Runtime v -> Term v a -> IO (Either Error ([Error], Term v))
+evaluateTerm :: (Var v, Monoid a) => CodeLookup v IO a -> PrettyPrintEnv -> Runtime v -> Term v a -> IO (Either Error ([Error], Term v))
 
 
 -- | Find a computation of type '{IO} () in the codebase.
@@ -6396,7 +6396,20 @@ instance GHC.Classes.Eq Unison.Runtime.Foreign.Function.ForeignFunc
 instance GHC.Classes.Ord Unison.Runtime.Foreign.Function.ForeignFunc
 
 module Unison.Runtime.Decompile
-decompile :: Var v => (Reference -> Maybe Reference) -> (Word64 -> Word64 -> Maybe (Term v ())) -> Closure -> Either Error (Term v ())
+decompile :: Var v => (Reference -> Maybe Reference) -> (Word64 -> Word64 -> Maybe (Term v ())) -> Closure -> DecompResult v
+data DecompError
+BadBool :: !Word64 -> DecompError
+BadUnboxed :: !Reference -> DecompError
+BadForeign :: !Reference -> DecompError
+BadData :: !Reference -> DecompError
+BadPAp :: !Reference -> DecompError
+UnkComb :: !Reference -> DecompError
+UnkLocal :: !Reference -> !Word64 -> DecompError
+Cont :: DecompError
+Exn :: DecompError
+renderDecompError :: DecompError -> Error
+instance GHC.Classes.Ord Unison.Runtime.Decompile.DecompError
+instance GHC.Classes.Eq Unison.Runtime.Decompile.DecompError
 
 module Unison.Runtime.Builtin
 builtinLookup :: Map Reference (Sandbox, SuperNormal Symbol)
@@ -6442,7 +6455,7 @@ type Tag = Word64
 type DEnv = EnumMap Word64 Closure
 data Tracer
 NoTrace :: Tracer
-MsgTrace :: String -> String -> Tracer
+MsgTrace :: String -> String -> String -> Tracer
 SimpleTrace :: String -> Tracer
 data CCache
 CCache :: EnumMap Word64 ForeignFunc -> Bool -> (Bool -> Closure -> Tracer) -> TVar (EnumMap Word64 Combs) -> TVar (EnumMap Word64 Reference) -> TVar (EnumMap Word64 Reference) -> TVar Word64 -> TVar Word64 -> TVar (Map Reference (SuperGroup Symbol)) -> TVar (Map Reference Word64) -> TVar (Map Reference Word64) -> TVar (Map Reference (Set Reference)) -> CCache
@@ -6551,9 +6564,9 @@ data RuntimeHost
 OneOff :: RuntimeHost
 Persistent :: RuntimeHost
 data Runtime v
-Runtime :: IO () -> (CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error (Term v))) -> (CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)) -> Type v Ann -> Type v Ann -> Runtime v
+Runtime :: IO () -> (CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error ([Error], Term v))) -> (CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)) -> Type v Ann -> Type v Ann -> Runtime v
 [$sel:terminate:Runtime] :: Runtime v -> IO ()
-[$sel:evaluate:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error (Term v))
+[$sel:evaluate:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Term v -> IO (Either Error ([Error], Term v))
 [$sel:compileTo:Runtime] :: Runtime v -> CodeLookup v IO () -> PrettyPrintEnv -> Reference -> FilePath -> IO (Maybe Error)
 [$sel:mainType:Runtime] :: Runtime v -> Type v Ann
 [$sel:ioTestType:Runtime] :: Runtime v -> Type v Ann
