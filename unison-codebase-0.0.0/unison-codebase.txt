@@ -170,10 +170,18 @@ instance GHC.Classes.Eq U.Codebase.TermEdit.TermEdit
 module U.Codebase.Term
 type ConstructorId = Word64
 type Term v = Term (F v) v ()
+
+-- | A version of <a>Term</a> but where TermRefs never have a
+--   <a>Nothing</a> Hash, but instead self references are filled with User
+--   Variable references to the relevant piece of the component in a
+--   component map.
+type HashableTerm v = Term (F' Text HashableTermRef TypeRef HashableTermLink TypeLink v) v ()
 type Type v = TypeR TypeRef v
 type TermRef = Reference' Text (Maybe Hash)
+type HashableTermRef = Reference' Text Hash
 type TypeRef = Reference
 type TermLink = Referent' (Reference' Text (Maybe Hash)) (Reference' Text Hash)
+type HashableTermLink = Referent' (Reference' Text Hash) (Reference' Text Hash)
 type TypeLink = Reference
 
 -- | Base functor for terms in the Unison codebase
@@ -228,6 +236,11 @@ PConcat :: SeqOp
 extraMap :: forall text termRef typeRef termLink typeLink vt text' termRef' typeRef' termLink' typeLink' vt' v a. (Ord v, Ord vt') => (text -> text') -> (termRef -> termRef') -> (typeRef -> typeRef') -> (termLink -> termLink') -> (typeLink -> typeLink') -> (vt -> vt') -> Term (F' text termRef typeRef termLink typeLink vt) v a -> Term (F' text' termRef' typeRef' termLink' typeLink' vt') v a
 rmapPattern :: (t -> t') -> (r -> r') -> Pattern t r -> Pattern t' r'
 dependencies :: (Ord termRef, Ord typeRef, Ord termLink, Ord typeLink, Ord v) => Term (F' text termRef typeRef termLink typeLink vt) v a -> (Set termRef, Set typeRef, Set termLink, Set typeLink)
+
+-- | Given the pieces of a single term component, replaces all
+--   <a>Nothing</a> self-referential hashes with a variable reference to
+--   the relevant piece of the component in the component map.
+unhashComponent :: forall v extra. Var v => Hash -> (Id -> v) -> Map Id (Term v, extra) -> Map Id (v, HashableTerm v, extra)
 instance GHC.Show.Show U.Codebase.Term.SeqOp
 instance GHC.Classes.Eq U.Codebase.Term.SeqOp
 instance (GHC.Show.Show t, GHC.Show.Show r) => GHC.Show.Show (U.Codebase.Term.Pattern t r)

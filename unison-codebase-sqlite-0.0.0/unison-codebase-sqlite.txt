@@ -759,27 +759,6 @@ instance GHC.Classes.Ord U.Codebase.Sqlite.Symbol.Symbol
 instance GHC.Classes.Eq U.Codebase.Sqlite.Symbol.Symbol
 instance U.Core.ABT.Var.Var U.Codebase.Sqlite.Symbol.Symbol
 
-module U.Codebase.Sqlite.HashHandle
-data HashHandle
-HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (forall m. BranchV3 m -> BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> (HashBranchLocalIds -> LocalBranch -> BranchHash) -> HashHandle
-
--- | Hash type
-[$sel:toReference:HashHandle] :: HashHandle -> Type Symbol -> Reference
-
--- | Hash type's mentions
-[$sel:toReferenceMentions:HashHandle] :: HashHandle -> Type Symbol -> Set Reference
-
--- | Hash the type of a single constructor in a decl component. The
---   provided hash argument is the hash of the decl component.
-[$sel:toReferenceDecl:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Reference
-
--- | Hash decl's mentions
-[$sel:toReferenceDeclMentions:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Set Reference
-[$sel:hashBranch:HashHandle] :: HashHandle -> forall m. Monad m => Branch m -> m BranchHash
-[$sel:hashBranchV3:HashHandle] :: HashHandle -> forall m. BranchV3 m -> BranchHash
-[$sel:hashCausal:HashHandle] :: HashHandle -> BranchHash -> Set CausalHash -> CausalHash
-[$sel:hashBranchFormatFull:HashHandle] :: HashHandle -> HashBranchLocalIds -> LocalBranch -> BranchHash
-
 module U.Codebase.Sqlite.Decl.Format
 
 -- | Add new formats here
@@ -853,6 +832,10 @@ type TypeLink = TypeRef
 --   <li>The term's type, also with internal references to local id.</li>
 --   </ul>
 type LocallyIndexedComponent = LocallyIndexedComponent' TextId ObjectId
+
+-- | A locally indexed component which uses hash references instead of
+--   database ids.
+type HashLocallyIndexedComponent = LocallyIndexedComponent' Text Hash32
 newtype LocallyIndexedComponent' t d
 LocallyIndexedComponent :: Vector (LocalIds' t d, Term, Type) -> LocallyIndexedComponent' t d
 [$sel:unLocallyIndexedComponent:LocallyIndexedComponent] :: LocallyIndexedComponent' t d -> Vector (LocalIds' t d, Term, Type)
@@ -865,6 +848,9 @@ type Type = Term FT Symbol ()
 type FTT = F' Reference
 type TypeOfTerm = Term FTT Symbol ()
 type TermFormat = TermFormat' TextId ObjectId
+
+-- | A TermFormat which uses hash references instead of database ids.
+type HashTermFormat = TermFormat' Text Hash32
 data TermFormat' t d
 Term :: LocallyIndexedComponent' t d -> TermFormat' t d
 type SyncTermFormat = SyncTermFormat' TextId ObjectId
@@ -875,6 +861,32 @@ WatchResult :: WatchLocalIds -> Term -> WatchResultFormat
 data SyncWatchResultFormat
 SyncWatchResult :: WatchLocalIds -> ByteString -> SyncWatchResultFormat
 instance (GHC.Show.Show t, GHC.Show.Show d) => GHC.Show.Show (U.Codebase.Sqlite.Term.Format.LocallyIndexedComponent' t d)
+
+module U.Codebase.Sqlite.HashHandle
+data HashHandle
+HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (forall m. BranchV3 m -> BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> (HashBranchLocalIds -> LocalBranch -> BranchHash) -> (ComponentHash -> HashTermFormat -> Maybe HashMismatch) -> HashHandle
+
+-- | Hash type
+[$sel:toReference:HashHandle] :: HashHandle -> Type Symbol -> Reference
+
+-- | Hash type's mentions
+[$sel:toReferenceMentions:HashHandle] :: HashHandle -> Type Symbol -> Set Reference
+
+-- | Hash the type of a single constructor in a decl component. The
+--   provided hash argument is the hash of the decl component.
+[$sel:toReferenceDecl:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Reference
+
+-- | Hash decl's mentions
+[$sel:toReferenceDeclMentions:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Set Reference
+[$sel:hashBranch:HashHandle] :: HashHandle -> forall m. Monad m => Branch m -> m BranchHash
+[$sel:hashBranchV3:HashHandle] :: HashHandle -> forall m. BranchV3 m -> BranchHash
+[$sel:hashCausal:HashHandle] :: HashHandle -> BranchHash -> Set CausalHash -> CausalHash
+[$sel:hashBranchFormatFull:HashHandle] :: HashHandle -> HashBranchLocalIds -> LocalBranch -> BranchHash
+[$sel:verifyTermFormatHash:HashHandle] :: HashHandle -> ComponentHash -> HashTermFormat -> Maybe HashMismatch
+data HashMismatch
+HashMismatch :: Hash -> Hash -> HashMismatch
+[$sel:expectedHash:HashMismatch] :: HashMismatch -> Hash
+[$sel:actualHash:HashMismatch] :: HashMismatch -> Hash
 
 module U.Codebase.Sqlite.Entity
 
@@ -965,8 +977,8 @@ decodeTempNamespaceFormat :: ByteString -> Either DecodeError TempNamespaceForma
 decodeTempPatchFormat :: ByteString -> Either DecodeError TempPatchFormat
 decodeTempTermFormat :: ByteString -> Either DecodeError TempTermFormat
 decodeWatchResultFormat :: ByteString -> Either DecodeError WatchResultFormat
-unsyncTermComponent :: SyncLocallyIndexedComponent' t d -> IO (LocallyIndexedComponent' t d)
-unsyncDeclComponent :: SyncLocallyIndexedComponent' t d -> IO (LocallyIndexedComponent' t d)
+unsyncTermComponent :: HasCallStack => SyncLocallyIndexedComponent' t d -> Either DecodeError (LocallyIndexedComponent' t d)
+unsyncDeclComponent :: SyncLocallyIndexedComponent' t d -> Either DecodeError (LocallyIndexedComponent' t d)
 instance GHC.Exception.Type.Exception U.Codebase.Sqlite.Decode.DecodeError
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Decode.DecodeError
 instance GHC.Show.Show U.Codebase.Sqlite.Decode.DecodeError

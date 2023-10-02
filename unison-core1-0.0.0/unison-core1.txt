@@ -1237,7 +1237,7 @@ visit_ :: (Traversable f, Applicative g, Ord v) => (f (Term f v a) -> g ()) -> T
 -- | <a>visit</a> specialized to the <a>Identity</a> effect.
 visitPure :: forall (f :: Type -> Type) v a. (Traversable f, Ord v) => (Term f v a -> Maybe (Term f v a)) -> Term f v a -> Term f v a
 changeVars :: (Foldable f, Functor f, Var v) => Map v v -> Term f v a -> Term f v a
-allVars :: Foldable f => Term f v a -> [v]
+allVars :: forall (f :: TYPE LiftedRep -> Type) v a. Foldable f => Term f v a -> [v]
 numberedFreeVars :: (Ord v, Foldable f) => Term f v a -> Map v Int
 subterms :: forall v (f :: Type -> Type) a. (Ord v, Traversable f) => Term f v a -> [Term f v a]
 annotateBound :: (Ord v, Foldable f, Functor f) => Term f v a -> Term f v (a, Set v)

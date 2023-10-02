@@ -106,6 +106,15 @@ subst' :: (Foldable f, Functor f, Var v) => (a -> Term f v a) -> v -> Set v -> T
 -- | renames <tt>old</tt> to <tt>new</tt> in the given term, ignoring
 --   subtrees that bind <tt>old</tt>
 rename :: (Foldable f, Functor f, Var v) => v -> v -> Term f v a -> Term f v a
+allVars :: Foldable f => Term f v a -> [v]
+
+-- | Freshens the given variable wrt. the set of used variables tracked by
+--   state. Adds the result to the set of used variables.
+freshenS :: (Var v, MonadState (Set v) m) => v -> m v
+
+-- | A more general version of <a>freshenS</a> that uses a lens to focus on
+--   used variables inside state.
+freshenS' :: (Var v, MonadState s m) => Lens' s (Set v) -> v -> m v
 instance Data.Traversable.Traversable f => Data.Traversable.Traversable (U.Core.ABT.ABT f v)
 instance Data.Foldable.Foldable f => Data.Foldable.Foldable (U.Core.ABT.ABT f v)
 instance GHC.Base.Functor f => GHC.Base.Functor (U.Core.ABT.ABT f v)
@@ -241,6 +250,7 @@ isBuiltin :: Reference -> Bool
 toShortHash :: Reference -> ShortHash
 toId :: Reference -> Maybe Id
 unsafeId :: Reference -> Id
+component :: Hash -> [k] -> [(k, Id)]
 instance Data.Traversable.Traversable U.Codebase.Reference.Id'
 instance Data.Foldable.Foldable U.Codebase.Reference.Id'
 instance GHC.Base.Functor U.Codebase.Reference.Id'
