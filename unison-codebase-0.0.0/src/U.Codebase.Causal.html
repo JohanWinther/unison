@@ -1,91 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE PatternSynonyms #-}</span><span>
-</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE RankNTypes #-}</span><span>
-</span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE RecordWildCards #-}</span><span>
-</span><span id="line-4"></span><span>
-</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">U.Codebase.Causal</span><span>
-</span><span id="line-6"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier">Causal</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-7"></span><span>    </span><span class="annot"><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier">hoist</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-8"></span><span>  </span><span class="hs-special">)</span><span>
-</span><span id="line-9"></span><span class="hs-keyword">where</span><span>
-</span><span id="line-10"></span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE RecordWildCards #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">U.Codebase.Causal</span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier">Causal</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-5"></span><span>    </span><span class="annot"><a href="U.Codebase.Causal.html#emap"><span class="hs-identifier">emap</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-6"></span><span>    </span><span class="annot"><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier">hoist</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map.Strict</span></span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Map</span></span><span>
 </span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Unison.Prelude</span></span><span>
 </span><span id="line-12"></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">data</span><span> </span><span id="Causal"><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-var">Causal</span></a></span></span><span> </span><span id="local-6989586621679131269"><span class="annot"><a href="#local-6989586621679131269"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span id="local-6989586621679131268"><span class="annot"><a href="#local-6989586621679131268"><span class="hs-identifier hs-type">hc</span></a></span></span><span> </span><span id="local-6989586621679131267"><span class="annot"><a href="#local-6989586621679131267"><span class="hs-identifier hs-type">he</span></a></span></span><span> </span><span id="local-6989586621679131266"><span class="annot"><a href="#local-6989586621679131266"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Causal"><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-var">Causal</span></a></span></span><span>
-</span><span id="line-14"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="causalHash"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; hc
-</span><a href="U.Codebase.Causal.html#causalHash"><span class="hs-identifier hs-var hs-var">causalHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679131268"><span class="hs-identifier hs-type">hc</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-15"></span><span>    </span><span id="valueHash"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; he
-</span><a href="U.Codebase.Causal.html#valueHash"><span class="hs-identifier hs-var hs-var">valueHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679131267"><span class="hs-identifier hs-type">he</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-16"></span><span>    </span><span id="parents"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e.
-Causal m hc he e -&gt; Map hc (m (Causal m hc he e))
-</span><a href="U.Codebase.Causal.html#parents"><span class="hs-identifier hs-var hs-var">parents</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679131268"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679131269"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131269"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131268"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131267"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131266"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-17"></span><span>    </span><span id="value"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
-</span><a href="U.Codebase.Causal.html#value"><span class="hs-identifier hs-var hs-var">value</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679131269"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131266"><span class="hs-identifier hs-type">e</span></a></span><span>
+</span><span id="line-13"></span><span id="local-6989586621679132006"><span id="local-6989586621679132007"></span></span><span class="hs-keyword">data</span><span> </span><span id="Causal"><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-var">Causal</span></a></span></span><span> </span><span id="local-6989586621679132084"><span class="annot"><a href="#local-6989586621679132084"><span class="hs-identifier hs-type">m</span></a></span></span><span> </span><span id="local-6989586621679132083"><span class="annot"><a href="#local-6989586621679132083"><span class="hs-identifier hs-type">hc</span></a></span></span><span> </span><span id="local-6989586621679132082"><span class="annot"><a href="#local-6989586621679132082"><span class="hs-identifier hs-type">he</span></a></span></span><span> </span><span id="local-6989586621679132081"><span class="annot"><a href="#local-6989586621679132081"><span class="hs-identifier hs-type">pe</span></a></span></span><span> </span><span id="local-6989586621679132080"><span class="annot"><a href="#local-6989586621679132080"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Causal"><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-var">Causal</span></a></span></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="causalHash"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; hc
+</span><a href="U.Codebase.Causal.html#causalHash"><span class="hs-identifier hs-var hs-var">causalHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679132083"><span class="hs-identifier hs-type">hc</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-15"></span><span>    </span><span id="valueHash"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; he
+</span><a href="U.Codebase.Causal.html#valueHash"><span class="hs-identifier hs-var hs-var">valueHash</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679132082"><span class="hs-identifier hs-type">he</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-16"></span><span>    </span><span id="parents"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he pe e.
+Causal m hc he pe e -&gt; Map hc (m (Causal m hc he pe pe))
+</span><a href="U.Codebase.Causal.html#parents"><span class="hs-identifier hs-var hs-var">parents</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="#local-6989586621679132083"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679132084"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132084"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132083"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132082"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132081"><span class="hs-identifier hs-type">pe</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132081"><span class="hs-identifier hs-type">pe</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-17"></span><span>    </span><span id="value"><span class="annot"><span class="annottext">forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; m e
+</span><a href="U.Codebase.Causal.html#value"><span class="hs-identifier hs-var hs-var">value</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679132084"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132080"><span class="hs-identifier hs-type">e</span></a></span><span>
 </span><span id="line-18"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679131206"><span id="local-6989586621679131214"><span class="annot"><span class="annottext">forall a b. a -&gt; Causal m hc he b -&gt; Causal m hc he a
-forall a b. (a -&gt; b) -&gt; Causal m hc he a -&gt; Causal m hc he b
+</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">stock</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679131995"><span id="local-6989586621679131998"><span class="annot"><span class="annottext">forall a b. a -&gt; Causal m hc he pe b -&gt; Causal m hc he pe a
+forall a b. (a -&gt; b) -&gt; Causal m hc he pe a -&gt; Causal m hc he pe b
 forall (f :: * -&gt; *).
 (forall a b. (a -&gt; b) -&gt; f a -&gt; f b)
 -&gt; (forall a b. a -&gt; f b -&gt; f a) -&gt; Functor f
-forall (m :: * -&gt; *) hc he a b.
+forall (m :: * -&gt; *) hc he pe a b.
 Functor m =&gt;
-a -&gt; Causal m hc he b -&gt; Causal m hc he a
-forall (m :: * -&gt; *) hc he a b.
+a -&gt; Causal m hc he pe b -&gt; Causal m hc he pe a
+forall (m :: * -&gt; *) hc he pe a b.
 Functor m =&gt;
-(a -&gt; b) -&gt; Causal m hc he a -&gt; Causal m hc he b
-&lt;$ :: forall a b. a -&gt; Causal m hc he b -&gt; Causal m hc he a
-$c&lt;$ :: forall (m :: * -&gt; *) hc he a b.
+(a -&gt; b) -&gt; Causal m hc he pe a -&gt; Causal m hc he pe b
+&lt;$ :: forall a b. a -&gt; Causal m hc he pe b -&gt; Causal m hc he pe a
+$c&lt;$ :: forall (m :: * -&gt; *) hc he pe a b.
 Functor m =&gt;
-a -&gt; Causal m hc he b -&gt; Causal m hc he a
-fmap :: forall a b. (a -&gt; b) -&gt; Causal m hc he a -&gt; Causal m hc he b
-$cfmap :: forall (m :: * -&gt; *) hc he a b.
+a -&gt; Causal m hc he pe b -&gt; Causal m hc he pe a
+fmap :: forall a b. (a -&gt; b) -&gt; Causal m hc he pe a -&gt; Causal m hc he pe b
+$cfmap :: forall (m :: * -&gt; *) hc he pe a b.
 Functor m =&gt;
-(a -&gt; b) -&gt; Causal m hc he a -&gt; Causal m hc he b
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Functor</span></span></span></span><span class="hs-special">)</span><span>
+(a -&gt; b) -&gt; Causal m hc he pe a -&gt; Causal m hc he pe b
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Functor</span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+forall (m :: * -&gt; *) hc he pe e x.
+Rep (Causal m hc he pe e) x -&gt; Causal m hc he pe e
+forall (m :: * -&gt; *) hc he pe e x.
+Causal m hc he pe e -&gt; Rep (Causal m hc he pe e) x
+$cto :: forall (m :: * -&gt; *) hc he pe e x.
+Rep (Causal m hc he pe e) x -&gt; Causal m hc he pe e
+$cfrom :: forall (m :: * -&gt; *) hc he pe e x.
+Causal m hc he pe e -&gt; Rep (Causal m hc he pe e) x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
 </span><span id="line-20"></span><span>
-</span><span id="line-21"></span><span id="local-6989586621679131233"><span id="local-6989586621679131234"><span id="local-6989586621679131235"><span id="local-6989586621679131237"><span id="local-6989586621679131238"><span class="annot"><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier hs-type">hoist</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679131238"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679131236"><span class="annot"><a href="#local-6989586621679131236"><span class="hs-identifier hs-type">x</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="#local-6989586621679131237"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131236"><span class="hs-identifier hs-type">x</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679131238"><span class="hs-identifier hs-type">n</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131236"><span class="hs-identifier hs-type">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131237"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131235"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131234"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131233"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131238"><span class="hs-identifier hs-type">n</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131235"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131234"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679131233"><span class="hs-identifier hs-type">e</span></a></span></span></span></span></span></span><span>
-</span><span id="line-22"></span><span id="hoist"><span class="annot"><span class="annottext">hoist :: forall (n :: * -&gt; *) (m :: * -&gt; *) hc he e.
+</span><span id="line-21"></span><span class="hs-comment">-- | @emap f g@ maps over the values and parents' values with @f@ and @g@.</span><span>
+</span><span id="line-22"></span><span id="local-6989586621679132042"><span id="local-6989586621679132043"><span id="local-6989586621679132044"><span id="local-6989586621679132045"><span id="local-6989586621679132046"><span id="local-6989586621679132047"><span id="local-6989586621679132048"><span class="annot"><a href="U.Codebase.Causal.html#emap"><span class="hs-identifier hs-type">emap</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679132048"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679132047"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679132046"><span class="hs-identifier hs-type">e'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679132045"><span class="hs-identifier hs-type">pe</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679132044"><span class="hs-identifier hs-type">pe'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132048"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132043"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132042"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132045"><span class="hs-identifier hs-type">pe</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132047"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132048"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132043"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132042"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132044"><span class="hs-identifier hs-type">pe'</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132046"><span class="hs-identifier hs-type">e'</span></a></span></span></span></span></span></span></span></span><span>
+</span><span id="line-23"></span><span id="emap"><span class="annot"><span class="annottext">emap :: forall (m :: * -&gt; *) e e' pe pe' hc he.
+Functor m =&gt;
+(e -&gt; e')
+-&gt; (pe -&gt; pe') -&gt; Causal m hc he pe e -&gt; Causal m hc he pe' e'
+</span><a href="U.Codebase.Causal.html#emap"><span class="hs-identifier hs-var hs-var">emap</span></a></span></span><span> </span><span id="local-6989586621679131983"><span class="annot"><span class="annottext">e -&gt; e'
+</span><a href="#local-6989586621679131983"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679131982"><span class="annot"><span class="annottext">pe -&gt; pe'
+</span><a href="#local-6989586621679131982"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621679131981"><span class="annot"><span class="annottext">causal :: Causal m hc he pe e
+</span><a href="#local-6989586621679131981"><span class="hs-identifier hs-var">causal</span></a></span></span><span class="hs-glyph">@</span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679131980"><span class="annot"><span class="annottext">Map hc (m (Causal m hc he pe pe))
+parents :: Map hc (m (Causal m hc he pe pe))
+parents :: forall (m :: * -&gt; *) hc he pe e.
+Causal m hc he pe e -&gt; Map hc (m (Causal m hc he pe pe))
+</span><a href="#local-6989586621679131980"><span class="hs-identifier hs-var hs-var">parents</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679131979"><span class="annot"><span class="annottext">m e
+value :: m e
+value :: forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; m e
+</span><a href="#local-6989586621679131979"><span class="hs-identifier hs-var hs-var">value</span></a></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-24"></span><span>  </span><span class="annot"><span class="annottext">Causal m hc he pe e
+</span><a href="#local-6989586621679131981"><span class="hs-identifier hs-var">causal</span></a></span><span>
+</span><span id="line-25"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">parents :: Map hc (m (Causal m hc he pe' pe'))
+</span><a href="U.Codebase.Causal.html#parents"><span class="hs-identifier hs-var">parents</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b k. (a -&gt; b) -&gt; Map k a -&gt; Map k b
+</span><span class="hs-identifier hs-var">Map.map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) e e' pe pe' hc he.
+Functor m =&gt;
+(e -&gt; e')
+-&gt; (pe -&gt; pe') -&gt; Causal m hc he pe e -&gt; Causal m hc he pe' e'
+</span><a href="U.Codebase.Causal.html#emap"><span class="hs-identifier hs-var">emap</span></a></span><span> </span><span class="annot"><span class="annottext">pe -&gt; pe'
+</span><a href="#local-6989586621679131982"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">pe -&gt; pe'
+</span><a href="#local-6989586621679131982"><span class="hs-identifier hs-var">g</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Map hc (m (Causal m hc he pe pe))
+</span><a href="#local-6989586621679131980"><span class="hs-identifier hs-var">parents</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-26"></span><span>      </span><span class="annot"><span class="annottext">value :: m e'
+</span><a href="U.Codebase.Causal.html#value"><span class="hs-identifier hs-var">value</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">e -&gt; e'
+</span><a href="#local-6989586621679131983"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">m e
+</span><a href="#local-6989586621679131979"><span class="hs-identifier hs-var">value</span></a></span><span>
+</span><span id="line-27"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span id="local-6989586621679132022"><span id="local-6989586621679132023"><span id="local-6989586621679132024"><span id="local-6989586621679132025"><span id="local-6989586621679132027"><span id="local-6989586621679132028"><span class="annot"><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier hs-type">hoist</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Functor</span></span><span> </span><span class="annot"><a href="#local-6989586621679132028"><span class="hs-identifier hs-type">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679132026"><span class="annot"><a href="#local-6989586621679132026"><span class="hs-identifier hs-type">x</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><a href="#local-6989586621679132027"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132026"><span class="hs-identifier hs-type">x</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679132028"><span class="hs-identifier hs-type">n</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132026"><span class="hs-identifier hs-type">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132027"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132025"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132024"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132023"><span class="hs-identifier hs-type">pe</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132022"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132028"><span class="hs-identifier hs-type">n</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132025"><span class="hs-identifier hs-type">hc</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132024"><span class="hs-identifier hs-type">he</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132023"><span class="hs-identifier hs-type">pe</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679132022"><span class="hs-identifier hs-type">e</span></a></span></span></span></span></span></span></span><span>
+</span><span id="line-30"></span><span id="hoist"><span class="annot"><span class="annottext">hoist :: forall (n :: * -&gt; *) (m :: * -&gt; *) hc he pe e.
 Functor n =&gt;
-(forall x. m x -&gt; n x) -&gt; Causal m hc he e -&gt; Causal n hc he e
-</span><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier hs-var hs-var">hoist</span></a></span></span><span> </span><span id="local-6989586621679131195"><span class="annot"><span class="annottext">forall x. m x -&gt; n x
-</span><a href="#local-6989586621679131195"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679131191"><span id="local-6989586621679131192"><span id="local-6989586621679131193"><span id="local-6989586621679131194"><span class="annot"><span class="annottext">hc
+(forall x. m x -&gt; n x)
+-&gt; Causal m hc he pe e -&gt; Causal n hc he pe e
+</span><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier hs-var hs-var">hoist</span></a></span></span><span> </span><span id="local-6989586621679131970"><span class="annot"><span class="annottext">forall x. m x -&gt; n x
+</span><a href="#local-6989586621679131970"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span> </span><span class="hs-special">{</span><span id="local-6989586621679131966"><span id="local-6989586621679131967"><span id="local-6989586621679131968"><span id="local-6989586621679131969"><span class="annot"><span class="annottext">hc
 he
 m e
-Map hc (m (Causal m hc he e))
+Map hc (m (Causal m hc he pe pe))
 value :: m e
-parents :: Map hc (m (Causal m hc he e))
+parents :: Map hc (m (Causal m hc he pe pe))
 valueHash :: he
 causalHash :: hc
-value :: forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; m e
-parents :: forall (m :: * -&gt; *) hc he e.
-Causal m hc he e -&gt; Map hc (m (Causal m hc he e))
-valueHash :: forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; he
-causalHash :: forall (m :: * -&gt; *) hc he e. Causal m hc he e -&gt; hc
-</span><a href="#local-6989586621679131191"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-23"></span><span>  </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span>
-</span><span id="line-24"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">parents :: Map hc (n (Causal n hc he e))
-</span><a href="U.Codebase.Causal.html#parents"><span class="hs-identifier hs-var">parents</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map hc (m (Causal m hc he e))
-</span><a href="#local-6989586621679131192"><span class="hs-identifier hs-var">parents</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+value :: forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; m e
+parents :: forall (m :: * -&gt; *) hc he pe e.
+Causal m hc he pe e -&gt; Map hc (m (Causal m hc he pe pe))
+valueHash :: forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; he
+causalHash :: forall (m :: * -&gt; *) hc he pe e. Causal m hc he pe e -&gt; hc
+</span><a href="#local-6989586621679131966"><span class="hs-glyph hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">..</span></a></span></span></span></span></span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-31"></span><span>  </span><span class="annot"><a href="U.Codebase.Causal.html#Causal"><span class="hs-identifier hs-type">Causal</span></a></span><span>
+</span><span id="line-32"></span><span>    </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">parents :: Map hc (n (Causal n hc he pe pe))
+</span><a href="U.Codebase.Causal.html#parents"><span class="hs-identifier hs-var">parents</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map hc (m (Causal m hc he pe pe))
+</span><a href="#local-6989586621679131967"><span class="hs-identifier hs-var">parents</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">forall x. m x -&gt; n x
-</span><a href="#local-6989586621679131195"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
+</span><a href="#local-6989586621679131970"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; (a -&gt; b) -&gt; b
 </span><span class="hs-operator hs-var">&amp;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><span class="hs-identifier hs-var">fmap</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (n :: * -&gt; *) (m :: * -&gt; *) hc he e.
+</span><span class="hs-identifier hs-var">fmap</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall (n :: * -&gt; *) (m :: * -&gt; *) hc he pe e.
 Functor n =&gt;
-(forall x. m x -&gt; n x) -&gt; Causal m hc he e -&gt; Causal n hc he e
+(forall x. m x -&gt; n x)
+-&gt; Causal m hc he pe e -&gt; Causal n hc he pe e
 </span><a href="U.Codebase.Causal.html#hoist"><span class="hs-identifier hs-var">hoist</span></a></span><span> </span><span class="annot"><span class="annottext">forall x. m x -&gt; n x
-</span><a href="#local-6989586621679131195"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
-</span><span id="line-25"></span><span>      </span><span class="annot"><span class="annottext">value :: n e
+</span><a href="#local-6989586621679131970"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-33"></span><span>      </span><span class="annot"><span class="annottext">value :: n e
 </span><a href="U.Codebase.Causal.html#value"><span class="hs-identifier hs-var">value</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall x. m x -&gt; n x
-</span><a href="#local-6989586621679131195"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">m e
-</span><a href="#local-6989586621679131191"><span class="hs-identifier hs-var">value</span></a></span><span class="hs-special">,</span><span>
-</span><span id="line-26"></span><span>      </span><span class="annot"><span class="annottext">hc
+</span><a href="#local-6989586621679131970"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">m e
+</span><a href="#local-6989586621679131966"><span class="hs-identifier hs-var">value</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-34"></span><span>      </span><span class="annot"><span class="annottext">hc
 he
 valueHash :: he
 causalHash :: hc
 valueHash :: he
 causalHash :: hc
-</span><a href="#local-6989586621679131193"><span class="hs-glyph hs-var hs-var hs-var hs-var">..</span></a></span><span>
-</span><span id="line-27"></span><span>    </span><span class="hs-special">}</span><span>
-</span><span id="line-28"></span></pre></body></html>
+</span><a href="#local-6989586621679131968"><span class="hs-glyph hs-var hs-var hs-var hs-var">..</span></a></span><span>
+</span><span id="line-35"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-36"></span></pre></body></html>

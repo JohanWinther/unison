@@ -6,14 +6,19 @@
 @version 0.0.0
 
 module U.Codebase.Causal
-data Causal m hc he e
-Causal :: hc -> he -> Map hc (m (Causal m hc he e)) -> m e -> Causal m hc he e
-[causalHash] :: Causal m hc he e -> hc
-[valueHash] :: Causal m hc he e -> he
-[parents] :: Causal m hc he e -> Map hc (m (Causal m hc he e))
-[value] :: Causal m hc he e -> m e
-hoist :: Functor n => (forall x. m x -> n x) -> Causal m hc he e -> Causal n hc he e
-instance GHC.Base.Functor m => GHC.Base.Functor (U.Codebase.Causal.Causal m hc he)
+data Causal m hc he pe e
+Causal :: hc -> he -> Map hc (m (Causal m hc he pe pe)) -> m e -> Causal m hc he pe e
+[causalHash] :: Causal m hc he pe e -> hc
+[valueHash] :: Causal m hc he pe e -> he
+[parents] :: Causal m hc he pe e -> Map hc (m (Causal m hc he pe pe))
+[value] :: Causal m hc he pe e -> m e
+
+-- | <tt>emap f g</tt> maps over the values and parents' values with
+--   <tt>f</tt> and <tt>g</tt>.
+emap :: Functor m => (e -> e') -> (pe -> pe') -> Causal m hc he pe e -> Causal m hc he pe' e'
+hoist :: Functor n => (forall x. m x -> n x) -> Causal m hc he pe e -> Causal n hc he pe e
+instance GHC.Generics.Generic (U.Codebase.Causal.Causal m hc he pe e)
+instance GHC.Base.Functor m => GHC.Base.Functor (U.Codebase.Causal.Causal m hc he pe)
 
 module U.Codebase.Kind
 data Kind
@@ -255,16 +260,16 @@ module U.Codebase.Branch.Type
 --   it loads, which can often speed up load times and keep fewer things in
 --   memory.
 data Branch m
-Branch :: Map NameSegment (Map Referent (m MdValues)) -> Map NameSegment (Map Reference (m MdValues)) -> Map NameSegment (PatchHash, m Patch) -> Map NameSegment (CausalBranch m) -> Branch m
-[terms] :: Branch m -> Map NameSegment (Map Referent (m MdValues))
-[types] :: Branch m -> Map NameSegment (Map Reference (m MdValues))
-[patches] :: Branch m -> Map NameSegment (PatchHash, m Patch)
-[children] :: Branch m -> Map NameSegment (CausalBranch m)
-type CausalBranch m = Causal m CausalHash BranchHash (Branch m)
+Branch :: !Map NameSegment (Map Referent (m MdValues)) -> !Map NameSegment (Map Reference (m MdValues)) -> !Map NameSegment (PatchHash, m Patch) -> !Map NameSegment (CausalBranch m) -> Branch m
+[terms] :: Branch m -> !Map NameSegment (Map Referent (m MdValues))
+[types] :: Branch m -> !Map NameSegment (Map Reference (m MdValues))
+[patches] :: Branch m -> !Map NameSegment (PatchHash, m Patch)
+[children] :: Branch m -> !Map NameSegment (CausalBranch m)
+type CausalBranch m = Causal m CausalHash BranchHash (Branch m) (Branch m)
 data Patch
-Patch :: Map Referent (Set TermEdit) -> Map Reference (Set TypeEdit) -> Patch
-[termEdits] :: Patch -> Map Referent (Set TermEdit)
-[typeEdits] :: Patch -> Map Reference (Set TypeEdit)
+Patch :: !Map Referent (Set TermEdit) -> !Map Reference (Set TypeEdit) -> Patch
+[termEdits] :: Patch -> !Map Referent (Set TermEdit)
+[typeEdits] :: Patch -> !Map Reference (Set TypeEdit)
 type MetadataType = Reference
 type MetadataValue = Reference
 newtype MdValues
@@ -275,10 +280,10 @@ MdValues :: Map MetadataValue MetadataType -> MdValues
 --   be <tt>static</tt>, i.e. they can be computed when a branch is first
 --   saved, and won't change unless the branch hash also changes.
 data NamespaceStats
-NamespaceStats :: Int -> Int -> Int -> NamespaceStats
-[numContainedTerms] :: NamespaceStats -> Int
-[numContainedTypes] :: NamespaceStats -> Int
-[numContainedPatches] :: NamespaceStats -> Int
+NamespaceStats :: !Int -> !Int -> !Int -> NamespaceStats
+[numContainedTerms] :: NamespaceStats -> !Int
+[numContainedTypes] :: NamespaceStats -> !Int
+[numContainedPatches] :: NamespaceStats -> !Int
 
 -- | Whether the provided stats indicate the presence of any definitions in
 --   the namespace.
@@ -304,12 +309,37 @@ empty :: Branch m
 instance GHC.Show.Show U.Codebase.Branch.Type.MdValues
 instance GHC.Classes.Ord U.Codebase.Branch.Type.MdValues
 instance GHC.Classes.Eq U.Codebase.Branch.Type.MdValues
+instance GHC.Generics.Generic (U.Codebase.Branch.Type.Branch m)
 instance GHC.Classes.Ord U.Codebase.Branch.Type.NamespaceStats
 instance GHC.Classes.Eq U.Codebase.Branch.Type.NamespaceStats
 instance GHC.Show.Show U.Codebase.Branch.Type.NamespaceStats
 instance GHC.Base.Semigroup U.Codebase.Branch.Type.NamespaceStats
 instance GHC.Base.Monoid U.Codebase.Branch.Type.NamespaceStats
 instance GHC.Show.Show (U.Codebase.Branch.Type.Branch m)
+
+
+-- | V3 branches and causals.
+module U.Codebase.BranchV3
+
+-- | A V3 branch is a trimmed-down V2 branch:
+--   
+--   <ul>
+--   <li>Names can't be conflicted.</li>
+--   <li>Metadata doesn't exist.</li>
+--   <li>Patches don't exist.</li>
+--   </ul>
+data BranchV3 m
+BranchV3 :: !Map NameSegment (CausalBranchV3 m) -> !Map NameSegment Referent -> !Map NameSegment TypeReference -> BranchV3 m
+[children] :: BranchV3 m -> !Map NameSegment (CausalBranchV3 m)
+[terms] :: BranchV3 m -> !Map NameSegment Referent
+[types] :: BranchV3 m -> !Map NameSegment TypeReference
+
+-- | A V3 branch's history has V3 branches everywhere at the latest causal
+--   (so, no metadata, no patches, etc. in any children namespaces), but
+--   when we go back in history, we find V2 branches, because that's what
+--   we used to have ;)
+type CausalBranchV3 m = Causal m CausalHash BranchHash (Branch m) (BranchV3 m)
+instance GHC.Generics.Generic (U.Codebase.BranchV3.BranchV3 m)
 
 module U.Codebase.WatchKind
 data WatchKind

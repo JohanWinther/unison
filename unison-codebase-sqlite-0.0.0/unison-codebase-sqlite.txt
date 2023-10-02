@@ -274,14 +274,22 @@ type LocalBranch = Branch' LocalTextId LocalDefnId LocalPatchObjectId LocalBranc
 --     }
 --   </pre>
 type DbBranch = Branch' TextId ObjectId PatchObjectId (BranchObjectId, CausalHashId)
+type DbBranchV3 = GBranchV3 TextId ObjectId (BranchObjectId, CausalHashId)
 type HashBranch = Branch' Text ComponentHash PatchHash (BranchHash, CausalHash)
-type Referent'' t h = Referent' (Reference' t h) (Reference' t h)
+type Referent'' t h = Referent' (TermReference' t h) (TypeReference' t h)
 data Branch' t h p c
-Branch :: Map t (Map (Referent'' t h) (MetadataSetFormat' t h)) -> Map t (Map (Reference' t h) (MetadataSetFormat' t h)) -> Map t p -> Map t c -> Branch' t h p c
-[$sel:terms:Branch] :: Branch' t h p c -> Map t (Map (Referent'' t h) (MetadataSetFormat' t h))
-[$sel:types:Branch] :: Branch' t h p c -> Map t (Map (Reference' t h) (MetadataSetFormat' t h))
-[$sel:patches:Branch] :: Branch' t h p c -> Map t p
-[$sel:children:Branch] :: Branch' t h p c -> Map t c
+Branch :: !Map t (Map (Referent'' t h) (MetadataSetFormat' t h)) -> !Map t (Map (TypeReference' t h) (MetadataSetFormat' t h)) -> !Map t p -> !Map t c -> Branch' t h p c
+[$sel:terms:Branch] :: Branch' t h p c -> !Map t (Map (Referent'' t h) (MetadataSetFormat' t h))
+[$sel:types:Branch] :: Branch' t h p c -> !Map t (Map (TypeReference' t h) (MetadataSetFormat' t h))
+[$sel:patches:Branch] :: Branch' t h p c -> !Map t p
+[$sel:children:Branch] :: Branch' t h p c -> !Map t c
+
+-- | A V3 branch; see U.Codebase.BranchV3
+data GBranchV3 t h c
+BranchV3 :: !Map t c -> !Map t (Referent'' t h) -> !Map t (TypeReference' t h) -> GBranchV3 t h c
+[$sel:children:BranchV3] :: GBranchV3 t h c -> !Map t c
+[$sel:terms:BranchV3] :: GBranchV3 t h c -> !Map t (Referent'' t h)
+[$sel:types:BranchV3] :: GBranchV3 t h c -> !Map t (TypeReference' t h)
 emptyBranch :: Branch' t h p c
 branchHashes_ :: (Ord h', Ord t, Ord h) => Traversal (Branch' t h p c) (Branch' t h' p c) h h'
 patches_ :: Traversal (Branch' t h p c) (Branch' t h p' c) p p'
@@ -293,6 +301,8 @@ data MetadataSetFormat' t h
 Inline :: Set (Reference' t h) -> MetadataSetFormat' t h
 metadataSetFormatReferences_ :: (Ord t, Ord h, Ord h') => Traversal (MetadataSetFormat' t h) (MetadataSetFormat' t h') (Reference' t h) (Reference' t h')
 quadmap :: forall t h p c t' h' p' c'. (Ord t', Ord h') => (t -> t') -> (h -> h') -> (p -> p') -> (c -> c') -> Branch' t h p c -> Branch' t' h' p' c'
+instance (GHC.Show.Show t, GHC.Show.Show c, GHC.Show.Show h) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Full.GBranchV3 t h c)
+instance GHC.Generics.Generic (U.Codebase.Sqlite.Branch.Full.GBranchV3 t h c)
 instance (GHC.Show.Show t, GHC.Show.Show h) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Full.MetadataSetFormat' t h)
 instance GHC.Generics.Generic (U.Codebase.Sqlite.Branch.Full.Branch' t h p c)
 instance (GHC.Show.Show t, GHC.Show.Show h, GHC.Show.Show p, GHC.Show.Show c) => GHC.Show.Show (U.Codebase.Sqlite.Branch.Full.Branch' t h p c)
@@ -751,7 +761,7 @@ instance U.Core.ABT.Var.Var U.Codebase.Sqlite.Symbol.Symbol
 
 module U.Codebase.Sqlite.HashHandle
 data HashHandle
-HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> (HashBranchLocalIds -> LocalBranch -> BranchHash) -> HashHandle
+HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (Hash -> TypeD Symbol -> Reference) -> (Hash -> TypeD Symbol -> Set Reference) -> (forall m. Monad m => Branch m -> m BranchHash) -> (forall m. BranchV3 m -> BranchHash) -> (BranchHash -> Set CausalHash -> CausalHash) -> (HashBranchLocalIds -> LocalBranch -> BranchHash) -> HashHandle
 
 -- | Hash type
 [$sel:toReference:HashHandle] :: HashHandle -> Type Symbol -> Reference
@@ -766,6 +776,7 @@ HashHandle :: (Type Symbol -> Reference) -> (Type Symbol -> Set Reference) -> (H
 -- | Hash decl's mentions
 [$sel:toReferenceDeclMentions:HashHandle] :: HashHandle -> Hash -> TypeD Symbol -> Set Reference
 [$sel:hashBranch:HashHandle] :: HashHandle -> forall m. Monad m => Branch m -> m BranchHash
+[$sel:hashBranchV3:HashHandle] :: HashHandle -> forall m. BranchV3 m -> BranchHash
 [$sel:hashCausal:HashHandle] :: HashHandle -> BranchHash -> Set CausalHash -> CausalHash
 [$sel:hashBranchFormatFull:HashHandle] :: HashHandle -> HashBranchLocalIds -> LocalBranch -> BranchHash
 
@@ -1661,6 +1672,7 @@ expectCausalHashAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction Ca
 loadCausalBranchAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (Maybe (CausalBranch Transaction))
 loadBranchAtPath :: Maybe CausalHash -> TextPathSegments -> Transaction (Maybe (Branch Transaction))
 saveBranch :: HashHandle -> CausalBranch Transaction -> Transaction (BranchObjectId, CausalHashId)
+saveBranchV3 :: HashHandle -> CausalBranchV3 Transaction -> Transaction (BranchObjectId, CausalHashId)
 loadCausalBranchByCausalHash :: CausalHash -> Transaction (Maybe (CausalBranch Transaction))
 expectCausalBranchByCausalHash :: CausalHash -> Transaction (CausalBranch Transaction)
 expectBranchByBranchHash :: BranchHash -> Transaction (Branch Transaction)
@@ -1869,17 +1881,17 @@ expectDbBranch :: BranchObjectId -> Transaction DbBranch
 --   Note: long-standing question: should this package depend on the
 --   hashing package? (If so, we would only need to take the DbBranch, and
 --   hash internally).
-saveDbBranch :: HashHandle -> BranchHash -> NamespaceStats -> DbBranch -> Transaction BranchObjectId
+saveDbBranch :: HashHandle -> BranchHash -> NamespaceStats -> DbBranchV -> Transaction BranchObjectId
 
 -- | Variant of <a>saveDbBranch</a> that might be preferred by callers that
 --   already have a hash id, not a hash.
-saveDbBranchUnderHashId :: HashHandle -> BranchHashId -> NamespaceStats -> DbBranch -> Transaction BranchObjectId
+saveDbBranchUnderHashId :: HashHandle -> BranchHashId -> NamespaceStats -> DbBranchV -> Transaction BranchObjectId
 expectDbPatch :: PatchObjectId -> Transaction Patch
 saveDbPatch :: HashHandle -> PatchHash -> PatchFormat -> Transaction PatchObjectId
 
 -- | Expect a branch value given its causal hash id.
 expectDbBranchByCausalHashId :: CausalHashId -> Transaction DbBranch
-namespaceStatsForDbBranch :: DbBranch -> Transaction NamespaceStats
+namespaceStatsForDbBranch :: DbBranchV -> Transaction NamespaceStats
 c2sReferenceId :: Id -> Transaction Id
 c2sReferentId :: Id -> Transaction Id
 
@@ -1897,6 +1909,12 @@ namespaceHashesByPrefix :: ShortNamespaceHash -> Transaction (Set BranchHash)
 -- | returns empty set for unknown inputs; doesn't distinguish between term
 --   and decl
 derivedDependencies :: Id -> Transaction (Set Id)
+data BranchV m
+BranchV2 :: !Branch m -> BranchV m
+BranchV3 :: !BranchV3 m -> BranchV m
+data DbBranchV
+DbBranchV2 :: !DbBranch -> DbBranchV
+DbBranchV3 :: !DbBranchV3 -> DbBranchV
 instance Unison.Sqlite.Exception.SqliteExceptionReason U.Codebase.Sqlite.Operations.NeedTypeForBuiltinMetadata
 instance GHC.Show.Show U.Codebase.Sqlite.Operations.NeedTypeForBuiltinMetadata
 instance GHC.Show.Show U.Codebase.Sqlite.Operations.NamesPerspective
