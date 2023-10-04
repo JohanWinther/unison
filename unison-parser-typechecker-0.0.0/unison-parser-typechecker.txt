@@ -97,6 +97,7 @@ module Unison.Codebase.BuiltinAnnotation
 class BuiltinAnnotation a
 builtinAnnotation :: BuiltinAnnotation a => a
 instance Unison.Codebase.BuiltinAnnotation.BuiltinAnnotation Unison.Parser.Ann.Ann
+instance Unison.Codebase.BuiltinAnnotation.BuiltinAnnotation ()
 
 module Unison.Codebase.Causal.Type
 data Causal m e
@@ -651,6 +652,125 @@ module Unison.CodebasePath
 type CodebasePath = FilePath
 getCodebaseDir :: MonadIO m => Maybe CodebasePath -> m CodebasePath
 
+module Unison.KindInference.UVar
+data UVar v loc
+UVar :: Symbol -> Type v loc -> UVar v loc
+[$sel:_uvarSymbol:UVar] :: UVar v loc -> Symbol
+[$sel:uvarType:UVar] :: UVar v loc -> Type v loc
+instance GHC.Show.Show v => GHC.Show.Show (Unison.KindInference.UVar.UVar v loc)
+instance U.Core.ABT.Var.Var v => GHC.Classes.Ord (Unison.KindInference.UVar.UVar v loc)
+instance U.Core.ABT.Var.Var v => GHC.Classes.Eq (Unison.KindInference.UVar.UVar v loc)
+
+module Unison.KindInference.Constraint.Context
+
+-- | The context in which the constraint was generated. This is useful when
+--   generating user-facing error messages.
+data ConstraintContext v loc
+AppAbs :: !UVar v loc -> !UVar v loc -> ConstraintContext v loc
+AppArg :: !UVar v loc -> !UVar v loc -> !UVar v loc -> ConstraintContext v loc
+AppArrow :: loc -> !Type v loc -> !Type v loc -> ConstraintContext v loc
+Annotation :: ConstraintContext v loc
+EffectsList :: ConstraintContext v loc
+ScopeReference :: ConstraintContext v loc
+TypeAnnotation :: ConstraintContext v loc
+DeclDefinition :: ConstraintContext v loc
+Builtin :: ConstraintContext v loc
+ContextLookup :: ConstraintContext v loc
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Ord loc) => GHC.Classes.Ord (Unison.KindInference.Constraint.Context.ConstraintContext v loc)
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq loc) => GHC.Classes.Eq (Unison.KindInference.Constraint.Context.ConstraintContext v loc)
+instance (GHC.Show.Show v, GHC.Show.Show loc) => GHC.Show.Show (Unison.KindInference.Constraint.Context.ConstraintContext v loc)
+
+module Unison.KindInference.Constraint.Provenance
+
+-- | A tag for a source span and context indicating where the generated
+--   constraint came from. This is helpful to propagate the constraint
+--   context through the solver for user-facing error messages.
+data Provenance v loc
+Provenance :: !ConstraintContext v loc -> !loc -> Provenance v loc
+loc :: Lens' (Provenance v loc) loc
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Ord loc) => GHC.Classes.Ord (Unison.KindInference.Constraint.Provenance.Provenance v loc)
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq loc) => GHC.Classes.Eq (Unison.KindInference.Constraint.Provenance.Provenance v loc)
+instance (GHC.Show.Show v, GHC.Show.Show loc) => GHC.Show.Show (Unison.KindInference.Constraint.Provenance.Provenance v loc)
+
+module Unison.KindInference.Constraint.Unsolved
+
+-- | Unsolved constraints
+--   
+--   These are produced during constraint generation and given as input to
+--   the constraint solver.
+data Constraint uv v loc starProv
+
+-- | An IsType constraint may arise from generation or from the solver.
+--   During generation the provenance is always a real source code
+--   location, but the solver defaults unconstrained kind vars to Star.
+IsType :: uv -> starProv v loc -> Constraint uv v loc starProv
+IsArr :: uv -> Provenance v loc -> uv -> uv -> Constraint uv v loc starProv
+IsAbility :: uv -> Provenance v loc -> Constraint uv v loc starProv
+Unify :: Provenance v loc -> uv -> uv -> Constraint uv v loc starProv
+starProv :: Traversal (Constraint uv v loc prov) (Constraint uv v loc prov') (prov v loc) (prov' v loc)
+prov :: Lens (Constraint uv v loc Provenance) (Constraint uv v loc' Provenance) (Provenance v loc) (Provenance v loc')
+loc :: Lens' (Constraint uv v loc Provenance) loc
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Ord uv, GHC.Classes.Ord loc, GHC.Classes.Ord (starProv v loc)) => GHC.Classes.Ord (Unison.KindInference.Constraint.Unsolved.Constraint uv v loc starProv)
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq uv, GHC.Classes.Eq loc, GHC.Classes.Eq (starProv v loc)) => GHC.Classes.Eq (Unison.KindInference.Constraint.Unsolved.Constraint uv v loc starProv)
+instance (GHC.Show.Show uv, GHC.Show.Show v, GHC.Show.Show loc, GHC.Show.Show (starProv v loc)) => GHC.Show.Show (Unison.KindInference.Constraint.Unsolved.Constraint uv v loc starProv)
+
+module Unison.KindInference.Generate.Monad
+newtype Gen v loc a
+Gen :: (GenState v loc -> (a, GenState v loc)) -> Gen v loc a
+[$sel:unGen:Gen] :: Gen v loc a -> GenState v loc -> (a, GenState v loc)
+data GenState v loc
+GenState :: !Set Symbol -> !Map (Type v loc) (UVar v loc) -> [UVar v loc] -> GenState v loc
+[$sel:unifVars:GenState] :: GenState v loc -> !Set Symbol
+[$sel:typeMap:GenState] :: GenState v loc -> !Map (Type v loc) (UVar v loc)
+[$sel:newVars:GenState] :: GenState v loc -> [UVar v loc]
+type GeneratedConstraint v loc = Constraint (UVar v loc) v loc Provenance
+run :: Gen v loc a -> GenState v loc -> (a, GenState v loc)
+
+-- | Create a unique <tt>UVar</tt> associated with <tt>typ</tt>
+freshVar :: Var v => Type v loc -> Gen v loc (UVar v loc)
+
+-- | Lookup the <tt>UVar</tt> associated with <tt>t</tt>, or create one if
+--   it doesn't exist
+insertType :: Var v => Type v loc -> Gen v loc (UVar v loc)
+deleteType :: Var v => Type v loc -> Gen v loc ()
+scopedType :: Var v => Type v loc -> (UVar v loc -> Gen v loc r) -> Gen v loc r
+lookupType :: Var v => Type v loc -> Gen v loc (Maybe (UVar v loc))
+instance GHC.Generics.Generic (Unison.KindInference.Generate.Monad.GenState v loc)
+instance Control.Monad.State.Class.MonadState (Unison.KindInference.Generate.Monad.GenState v loc) (Unison.KindInference.Generate.Monad.Gen v loc)
+instance GHC.Base.Monad (Unison.KindInference.Generate.Monad.Gen v loc)
+instance GHC.Base.Applicative (Unison.KindInference.Generate.Monad.Gen v loc)
+instance GHC.Base.Functor (Unison.KindInference.Generate.Monad.Gen v loc)
+
+module Unison.KindInference.Constraint.StarProvenance
+
+-- | Provenance of an <tt>IsType</tt> constraint. <tt>IsType</tt>
+--   constraints arise in constraint generation (in which case it will have
+--   a <tt>Provenance</tt>) and also in the solver through kind-defaulting
+--   on unconstrained unification variables.
+data StarProvenance v loc
+NotDefault :: Provenance v loc -> StarProvenance v loc
+Default :: StarProvenance v loc
+prov :: Traversal (StarProvenance v loc) (StarProvenance v loc') (Provenance v loc) (Provenance v loc')
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Ord loc) => GHC.Classes.Ord (Unison.KindInference.Constraint.StarProvenance.StarProvenance v loc)
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq loc) => GHC.Classes.Eq (Unison.KindInference.Constraint.StarProvenance.StarProvenance v loc)
+instance (GHC.Show.Show v, GHC.Show.Show loc) => GHC.Show.Show (Unison.KindInference.Constraint.StarProvenance.StarProvenance v loc)
+
+module Unison.KindInference.Constraint.Solved
+
+-- | Solved constraints
+--   
+--   These constraints are associated with unification variables during
+--   kind inference.
+data Constraint uv v loc
+IsType :: StarProvenance v loc -> Constraint uv v loc
+IsAbility :: Provenance v loc -> Constraint uv v loc
+IsArr :: Provenance v loc -> uv -> uv -> Constraint uv v loc
+prov :: Traversal (Constraint uv v loc) (Constraint uv v loc') (Provenance v loc) (Provenance v loc')
+loc :: Traversal' (Constraint uv v loc) loc
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Ord loc, GHC.Classes.Ord uv) => GHC.Classes.Ord (Unison.KindInference.Constraint.Solved.Constraint uv v loc)
+instance (U.Core.ABT.Var.Var v, GHC.Classes.Eq loc, GHC.Classes.Eq uv) => GHC.Classes.Eq (Unison.KindInference.Constraint.Solved.Constraint uv v loc)
+instance (GHC.Show.Show v, GHC.Show.Show loc, GHC.Show.Show uv) => GHC.Show.Show (Unison.KindInference.Constraint.Solved.Constraint uv v loc)
+
 module Unison.PatternMatchCoverage.Fix
 newtype Fix f
 Fix :: f (Fix f) -> Fix f
@@ -776,7 +896,7 @@ empty :: UFMap k v
 -- | Lookup the canonical value
 lookupCanon :: Ord k => k -> UFMap k v -> Maybe (k, Int, v, UFMap k v)
 insert :: Ord k => k -> v -> UFMap k v -> UFMap k v
-union :: forall m k v r. (MonadFix m, Ord k) => k -> k -> UFMap k v -> (k -> v -> UFMap k v -> m (Maybe r)) -> m (Maybe r)
+union :: forall m k v r. (MonadFix m, Ord k) => k -> k -> UFMap k v -> (UFMap k v -> m r) -> (k -> v -> UFMap k v -> m (Maybe r)) -> m (Maybe r)
 alterF :: forall f k v. (Functor f, Ord k) => k -> f (Maybe v) -> (k -> Int -> v -> f (UFValue k v)) -> UFMap k v -> f (UFMap k v)
 alter :: forall k v. Ord k => k -> Maybe v -> (k -> Int -> v -> UFValue k v) -> UFMap k v -> UFMap k v
 keys :: UFMap k v -> [k]
@@ -861,6 +981,92 @@ BooleanType :: EnumeratedConstructors vt v loc
 OtherType :: EnumeratedConstructors vt v loc
 traverseConstructorTypes :: Applicative f => (v -> ConstructorReference -> Type vt loc -> f (Type vt loc)) -> EnumeratedConstructors vt v loc -> f (EnumeratedConstructors vt v loc)
 instance (GHC.Show.Show v, GHC.Show.Show vt) => GHC.Show.Show (Unison.PatternMatchCoverage.Class.EnumeratedConstructors vt v loc)
+
+module Unison.KindInference.Solve.Monad
+newtype Solve v loc a
+Solve :: (Env -> SolveState v loc -> (a, SolveState v loc)) -> Solve v loc a
+[$sel:unSolve:Solve] :: Solve v loc a -> Env -> SolveState v loc -> (a, SolveState v loc)
+data Env
+Env :: PrettyPrintEnv -> Env
+[$sel:prettyPrintEnv:Env] :: Env -> PrettyPrintEnv
+data SolveState v loc
+SolveState :: !Set Symbol -> [UVar v loc] -> !UFMap (UVar v loc) (Descriptor v loc) -> !Map (Type v loc) (UVar v loc) -> SolveState v loc
+[$sel:unifVars:SolveState] :: SolveState v loc -> !Set Symbol
+[$sel:newUnifVars:SolveState] :: SolveState v loc -> [UVar v loc]
+[$sel:constraints:SolveState] :: SolveState v loc -> !UFMap (UVar v loc) (Descriptor v loc)
+[$sel:typeMap:SolveState] :: SolveState v loc -> !Map (Type v loc) (UVar v loc)
+data Descriptor v loc
+Descriptor :: Maybe (Constraint (UVar v loc) v loc) -> Descriptor v loc
+[$sel:descriptorConstraint:Descriptor] :: Descriptor v loc -> Maybe (Constraint (UVar v loc) v loc)
+type ConstraintMap v loc = UFMap (UVar v loc) (Descriptor v loc)
+run :: Env -> SolveState v loc -> Solve v loc a -> (a, SolveState v loc)
+emptyState :: SolveState v loc
+find :: Var v => UVar v loc -> Solve v loc (Maybe (Constraint (UVar v loc) v loc))
+genStateL :: Lens' (SolveState v loc) (GenState v loc)
+runGen :: Var v => Gen v loc a -> Solve v loc a
+addUnconstrainedVar :: Var v => UVar v loc -> Solve v loc ()
+instance Control.Monad.State.Class.MonadState (Unison.KindInference.Solve.Monad.SolveState v loc) (Unison.KindInference.Solve.Monad.Solve v loc)
+instance Control.Monad.Reader.Class.MonadReader Unison.KindInference.Solve.Monad.Env (Unison.KindInference.Solve.Monad.Solve v loc)
+instance Control.Monad.Fix.MonadFix (Unison.KindInference.Solve.Monad.Solve v loc)
+instance GHC.Base.Monad (Unison.KindInference.Solve.Monad.Solve v loc)
+instance GHC.Base.Applicative (Unison.KindInference.Solve.Monad.Solve v loc)
+instance GHC.Base.Functor (Unison.KindInference.Solve.Monad.Solve v loc)
+
+module Unison.KindInference.Error
+
+-- | Errors that may arise during kind inference
+data KindError v loc
+
+-- | A variable is constrained to have an infinite kind
+CycleDetected :: loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Something of kind * or Effect is applied to an argument
+UnexpectedArgument :: loc -> UVar v loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+ArgumentMismatch :: UVar v loc -> UVar v loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+ArgumentMismatchArrow :: (loc, Type v loc, Type v loc) -> ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Something appeared in an effect list that isn't of kind Effect
+EffectListMismatch :: ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Generic constraint conflict
+ConstraintConflict :: GeneratedConstraint v loc -> ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+lspLoc :: Semigroup loc => KindError v loc -> loc
+
+-- | Two incompatible constraints on a <tt>UVar</tt>.
+data ConstraintConflict v loc
+ConstraintConflict' :: UVar v loc -> Constraint (UVar v loc) v loc -> Constraint (UVar v loc) v loc -> ConstraintConflict v loc
+[$sel:conflictedVar:ConstraintConflict'] :: ConstraintConflict v loc -> UVar v loc
+[$sel:impliedConstraint:ConstraintConflict'] :: ConstraintConflict v loc -> Constraint (UVar v loc) v loc
+[$sel:conflictedConstraint:ConstraintConflict'] :: ConstraintConflict v loc -> Constraint (UVar v loc) v loc
+
+-- | Transform generic constraint conflicts into more specific error by
+--   examining its <tt>ConstraintContext</tt>.
+improveError :: Var v => KindError v loc -> Solve v loc (KindError v loc)
+instance GHC.Show.Show (Unison.KindInference.Error.KindError v loc)
+
+
+module Unison.KindInference.Constraint.Pretty
+
+-- | Pretty print the kind constraint on the given <tt>UVar</tt>.
+--   
+--   <b>Precondition:</b> The <tt>ConstraintMap</tt> is acyclic.
+prettyUVarKind :: Var v => PrettyPrintEnv -> ConstraintMap v loc -> UVar v loc -> Pretty ColorText
+
+-- | Pretty print a <a>Constraint</a>
+--   
+--   <b>Precondition:</b> The <tt>ConstraintMap</tt> is acyclic.
+prettySolvedConstraint :: Var v => PrettyPrintEnv -> ConstraintMap v loc -> Constraint (UVar v loc) v loc -> Pretty ColorText
+
+-- | A pretty printer for cyclic kind constraints on a <tt>UVar</tt>.
+--   Expresses the infinite kind by a generating equation.
+--   
+--   <b>Precondition:</b> The <tt>UVar</tt> has a cyclic constraint.
+prettyCyclicUVarKind :: Var v => PrettyPrintEnv -> ConstraintMap v loc -> UVar v loc -> (Pretty ColorText -> Pretty ColorText) -> (Pretty ColorText, Pretty ColorText)
+
+module Unison.KindInference.Error.Pretty
+
+-- | Pretty print a user-facing <tt>KindError</tt>.
+prettyKindError :: Var v => (Type v loc -> Pretty ColorText) -> ([(loc, Color)] -> Pretty ColorText) -> Color -> Color -> PrettyPrintEnv -> KindError v loc -> Pretty ColorText
 
 module Unison.PrettyPrintEnv.FQN
 type Imports = Map Name Suffix
@@ -3245,10 +3451,84 @@ module Unison.PatternMatchCoverage
 -- | Perform pattern match coverage checking on a match expression
 checkMatch :: forall vt v loc m. Pmc vt v loc m => loc -> Type vt loc -> [MatchCase loc (Term' vt v loc)] -> m ([loc], [loc], [Pattern ()])
 
+module Unison.KindInference.Generate
+
+-- | Generate kind constraints arising from a given type. The given
+--   <tt>UVar</tt> is constrained to have the kind of the given type.
+typeConstraints :: (Var v, Ord loc) => UVar v loc -> Type v loc -> Gen v loc [GeneratedConstraint v loc]
+
+-- | Check that all annotations in a term are well-kinded
+termConstraints :: forall v loc. (Var v, Ord loc) => Term v loc -> Gen v loc [GeneratedConstraint v loc]
+
+-- | Generate kind constraints for a mutally recursive component of decls
+declComponentConstraints :: forall v loc. (Var v, Ord loc) => [(Reference, Decl v loc)] -> Gen v loc [GeneratedConstraint v loc]
+builtinConstraints :: forall v loc. (Ord loc, BuiltinAnnotation loc, Var v) => Gen v loc [GeneratedConstraint v loc]
+
+module Unison.KindInference.Solve
+
+-- | Apply some generated constraints to a solve state, returning a kind
+--   error if detected or a new solve state.
+step :: (Var v, Ord loc, Show loc) => Env -> SolveState v loc -> [GeneratedConstraint v loc] -> Either (NonEmpty (KindError v loc)) (SolveState v loc)
+
+-- | Do an occurence check and return an error or the resulting solve state
+verify :: Var v => SolveState v loc -> Either (NonEmpty (KindError v loc)) (SolveState v loc)
+initialState :: forall v loc. (BuiltinAnnotation loc, Show loc, Ord loc, Var v) => Env -> SolveState v loc
+
+-- | Errors that may arise during kind inference
+data KindError v loc
+
+-- | A variable is constrained to have an infinite kind
+CycleDetected :: loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Something of kind * or Effect is applied to an argument
+UnexpectedArgument :: loc -> UVar v loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+ArgumentMismatch :: UVar v loc -> UVar v loc -> UVar v loc -> ConstraintMap v loc -> KindError v loc
+ArgumentMismatchArrow :: (loc, Type v loc, Type v loc) -> ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Something appeared in an effect list that isn't of kind Effect
+EffectListMismatch :: ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Generic constraint conflict
+ConstraintConflict :: GeneratedConstraint v loc -> ConstraintConflict v loc -> ConstraintMap v loc -> KindError v loc
+
+-- | Two incompatible constraints on a <tt>UVar</tt>.
+data ConstraintConflict v loc
+ConstraintConflict' :: UVar v loc -> Constraint (UVar v loc) v loc -> Constraint (UVar v loc) v loc -> ConstraintConflict v loc
+[$sel:conflictedVar:ConstraintConflict'] :: ConstraintConflict v loc -> UVar v loc
+[$sel:impliedConstraint:ConstraintConflict'] :: ConstraintConflict v loc -> Constraint (UVar v loc) v loc
+[$sel:conflictedConstraint:ConstraintConflict'] :: ConstraintConflict v loc -> Constraint (UVar v loc) v loc
+
+
+-- | Kind inference for Unison
+--   
+--   Unison has Type, -&gt;, and Ability kinds
+--   
+--   An algorithm sketch: First break all decls into strongly connected
+--   components in reverse topological order. Then, for each component,
+--   generate kind constraints that arise from the constructors in the decl
+--   to discover constraints on the decl vars. These constraints are then
+--   given to a constraint solver that determines a unique kind for each
+--   type variable. Unconstrained variables are defaulted to kind * (just
+--   like Haskell 98). This is done by <a>inferDecls</a>.
+--   
+--   Afterwards, the <a>SolveState</a> holds the kinds of all decls and we
+--   can check that type annotations in terms that may mention the decls
+--   are well-kinded with <a>kindCheckAnnotations</a>.
+module Unison.KindInference
+
+-- | Infer the kinds of all decl vars
+inferDecls :: forall v loc. (Var v, BuiltinAnnotation loc, Ord loc, Show loc) => PrettyPrintEnv -> Map Reference (Decl v loc) -> Either (NonEmpty (KindError v loc)) (SolveState v loc)
+
+-- | Check that all annotations in a term are well-kinded
+kindCheckAnnotations :: forall v loc. (Var v, Ord loc, Show loc, BuiltinAnnotation loc) => PrettyPrintEnv -> SolveState v loc -> Term v loc -> Either (NonEmpty (KindError v loc)) ()
+
+-- | Errors that may arise during kind inference
+data KindError v loc
+
 module Unison.Typechecker.Context
 
 -- | public interface to the typechecker
-synthesizeClosed :: (Var v, Ord loc) => PrettyPrintEnv -> PatternMatchCoverageCheckSwitch -> [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
+synthesizeClosed :: (BuiltinAnnotation loc, Var v, Ord loc, Show loc) => PrettyPrintEnv -> PatternMatchCoverageCheckAndKindInferenceSwitch -> [Type v loc] -> TypeLookup v loc -> Term v loc -> Result v loc (Type v loc)
 data ErrorNote v loc
 ErrorNote :: Cause v loc -> Seq (PathElement v loc) -> ErrorNote v loc
 [$sel:cause:ErrorNote] :: ErrorNote v loc -> Cause v loc
@@ -3289,6 +3569,7 @@ HandlerOfUnexpectedType :: loc -> Type v loc -> Cause v loc
 DataEffectMismatch :: Unknown -> Reference -> DataDeclaration v loc -> Cause v loc
 UncoveredPatterns :: loc -> NonEmpty (Pattern ()) -> Cause v loc
 RedundantPattern :: loc -> Cause v loc
+KindInferenceFailure :: KindError v loc -> Cause v loc
 InaccessiblePattern :: loc -> Cause v loc
 newtype Context v loc
 Context :: [(Element v loc, Info v loc)] -> Context v loc
@@ -3334,9 +3615,9 @@ data Result v loc a
 Success :: !Seq (InfoNote v loc) -> !a -> Result v loc a
 TypeError :: !NESeq (ErrorNote v loc) -> !Seq (InfoNote v loc) -> Result v loc a
 CompilerBug :: !CompilerBug v loc -> !Seq (ErrorNote v loc) -> !Seq (InfoNote v loc) -> Result v loc a
-data PatternMatchCoverageCheckSwitch
-PatternMatchCoverageCheckSwitch'Enabled :: PatternMatchCoverageCheckSwitch
-PatternMatchCoverageCheckSwitch'Disabled :: PatternMatchCoverageCheckSwitch
+data PatternMatchCoverageCheckAndKindInferenceSwitch
+PatternMatchCoverageCheckAndKindInferenceSwitch'Enabled :: PatternMatchCoverageCheckAndKindInferenceSwitch
+PatternMatchCoverageCheckAndKindInferenceSwitch'Disabled :: PatternMatchCoverageCheckAndKindInferenceSwitch
 errorTerms :: ErrorNote v loc -> [Term v loc]
 innermostErrorTerm :: ErrorNote v loc -> Maybe (Term v loc)
 lookupAnn :: Ord v => Context v loc -> v -> Maybe (Type v loc)
@@ -3444,6 +3725,7 @@ cause :: ErrorExtractor v loc (Cause v loc)
 duplicateDefinitions :: ErrorExtractor v loc (NonEmpty (v, [loc]))
 uncoveredPatterns :: ErrorExtractor v loc (loc, NonEmpty (Pattern ()))
 redundantPattern :: ErrorExtractor v loc loc
+kindInferenceFailure :: ErrorExtractor v loc (KindError v loc)
 typeMismatch :: ErrorExtractor v loc (Context v loc)
 illFormedType :: ErrorExtractor v loc (Context v loc)
 unknownSymbol :: ErrorExtractor v loc (loc, v)
@@ -3554,6 +3836,7 @@ DuplicateDefinitions :: NonEmpty (v, [loc]) -> ErrorNote v loc -> TypeError v lo
 [$sel:note:Mismatch] :: TypeError v loc -> ErrorNote v loc
 UncoveredPatterns :: loc -> NonEmpty (Pattern ()) -> TypeError v loc
 RedundantPattern :: loc -> TypeError v loc
+KindInferenceFailure :: KindError v loc -> TypeError v loc
 Other :: ErrorNote v loc -> TypeError v loc
 type RedundantTypeAnnotation = Bool
 data TypeInfo v loc
@@ -3565,6 +3848,7 @@ typeInfoFromNote :: (Ord loc, Show loc, Var v) => InfoNote v loc -> Maybe (TypeI
 allErrors :: (Var v, Ord loc) => ErrorExtractor v loc (TypeError v loc)
 topLevelComponent :: InfoExtractor v a (TypeInfo v a)
 redundantPattern :: ErrorExtractor v a (TypeError v a)
+kindInferenceFailure :: ErrorExtractor v a (TypeError v a)
 uncoveredPatterns :: ErrorExtractor v a (TypeError v a)
 abilityCheckFailure :: ErrorExtractor v a (TypeError v a)
 abilityEqFailure :: ErrorExtractor v a (TypeError v a)
@@ -3642,17 +3926,17 @@ module Unison.Typechecker
 
 -- | Infer the type of a <a>Term</a>, using a function to resolve the type
 --   of <tt>Ref</tt> constructors contained in that term.
-synthesize :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> PatternMatchCoverageCheckSwitch -> Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
+synthesize :: (Monad f, Var v, BuiltinAnnotation loc, Ord loc, Show loc) => PrettyPrintEnv -> PatternMatchCoverageCheckAndKindInferenceSwitch -> Env v loc -> Term v loc -> ResultT (Notes v loc) f (Type v loc)
 
 -- | Infer the type of a <a>Term</a>, using type-directed name resolution
 --   to attempt to resolve unknown symbols.
-synthesizeAndResolve :: (Monad f, Var v, Monoid loc, Ord loc) => PrettyPrintEnv -> Env v loc -> TDNR f v loc (Type v loc)
+synthesizeAndResolve :: (Monad f, Var v, Monoid loc, BuiltinAnnotation loc, Ord loc, Show loc) => PrettyPrintEnv -> Env v loc -> TDNR f v loc (Type v loc)
 
 -- | Check whether a term matches a type, using a function to resolve the
 --   type of <tt>Ref</tt> constructors contained in the term. Returns
 --   <tt>typ</tt> if successful, and a note about typechecking failure
 --   otherwise.
-check :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> Type v loc -> ResultT (Notes v loc) f (Type v loc)
+check :: (Monad f, Var v, BuiltinAnnotation loc, Ord loc, Show loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> Type v loc -> ResultT (Notes v loc) f (Type v loc)
 
 -- | <tt>checkAdmissible</tt> e t` tests that `(f : t -&gt; r) e` is
 --   well-typed. If <tt>t</tt> has quantifiers, these are moved outside, so
@@ -3663,7 +3947,7 @@ check :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc 
 --   (Type.ForallNamed' v body) = Type.forall() v (tweak body) tweak t =
 --   Type.arrow() t t | Returns <a>True</a> if the expression is
 --   well-typed, <a>False</a> otherwise
-wellTyped :: (Monad f, Var v, Ord loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> f Bool
+wellTyped :: (Monad f, Var v, BuiltinAnnotation loc, Ord loc, Show loc) => PrettyPrintEnv -> Env v loc -> Term v loc -> f Bool
 isEqual :: Var v => Type v loc -> Type v loc -> Bool
 isSubtype :: Var v => Type v loc -> Type v loc -> Bool
 
@@ -3702,9 +3986,9 @@ NamedReference :: Name -> Type v loc -> Either v Referent -> NamedReference v lo
 [$sel:fqn:NamedReference] :: NamedReference v loc -> Name
 [$sel:fqnType:NamedReference] :: NamedReference v loc -> Type v loc
 [$sel:replacement:NamedReference] :: NamedReference v loc -> Either v Referent
-data PatternMatchCoverageCheckSwitch
-PatternMatchCoverageCheckSwitch'Enabled :: PatternMatchCoverageCheckSwitch
-PatternMatchCoverageCheckSwitch'Disabled :: PatternMatchCoverageCheckSwitch
+data PatternMatchCoverageCheckAndKindInferenceSwitch
+PatternMatchCoverageCheckAndKindInferenceSwitch'Enabled :: PatternMatchCoverageCheckAndKindInferenceSwitch
+PatternMatchCoverageCheckAndKindInferenceSwitch'Disabled :: PatternMatchCoverageCheckAndKindInferenceSwitch
 instance (Unison.Var.Var v, GHC.Show.Show loc, GHC.Classes.Ord loc) => GHC.Show.Show (Unison.Typechecker.Notes v loc)
 instance GHC.Show.Show v => GHC.Show.Show (Unison.Typechecker.NamedReference v loc)
 instance GHC.Base.Semigroup (Unison.Typechecker.Notes v loc)
