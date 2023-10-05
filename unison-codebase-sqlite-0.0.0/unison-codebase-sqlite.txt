@@ -924,6 +924,9 @@ decomposeWatchFormat :: MonadGet m => m SyncWatchResultFormat
 getBranchFormat :: MonadGet m => m BranchFormat
 getLocalBranch :: MonadGet m => m LocalBranch
 getDeclElement :: MonadGet m => m (Decl Symbol)
+
+-- | Get the number of constructors in a decl element.
+getDeclElementNumConstructors :: MonadGet m => m Int
 getDeclFormat :: MonadGet m => m DeclFormat
 getPatchFormat :: MonadGet m => m PatchFormat
 getTempCausalFormat :: MonadGet m => m TempCausalFormat
@@ -935,6 +938,7 @@ getTermAndType :: MonadGet m => m (Term, Type)
 getTermFormat :: MonadGet m => m TermFormat
 getWatchResultFormat :: MonadGet m => m WatchResultFormat
 lookupDeclElement :: MonadGet m => Pos -> m (LocalIds, Decl Symbol)
+lookupDeclElementNumConstructors :: MonadGet m => Pos -> m Int
 lookupTermElement :: MonadGet m => Pos -> m (LocalIds, Term, Type)
 lookupTermElementDiscardingTerm :: MonadGet m => Pos -> m (LocalIds, Type)
 lookupTermElementDiscardingType :: MonadGet m => Pos -> m (LocalIds, Term)
@@ -957,6 +961,7 @@ data DecodeError
 decodeBranchFormat :: ByteString -> Either DecodeError BranchFormat
 decodeComponentLengthOnly :: ByteString -> Either DecodeError Word64
 decodeDeclElement :: Word64 -> ByteString -> Either DecodeError (LocalIds, Decl Symbol)
+decodeDeclElementNumConstructors :: Word64 -> ByteString -> Either DecodeError Int
 decodeDeclFormat :: ByteString -> Either DecodeError DeclFormat
 decodePatchFormat :: ByteString -> Either DecodeError PatchFormat
 decodeSyncDeclFormat :: ByteString -> Either DecodeError SyncDeclFormat
@@ -1713,6 +1718,7 @@ saveDeclComponent :: HashHandle -> Maybe ByteString -> Hash -> [Decl Symbol] -> 
 loadDeclComponent :: Hash -> MaybeT Transaction [Decl Symbol]
 loadDeclByReference :: Id -> MaybeT Transaction (Decl Symbol)
 expectDeclByReference :: Id -> Transaction (Decl Symbol)
+expectDeclNumConstructors :: Id -> Transaction Int
 
 -- | Get the <a>DeclType</a> of a <a>Id'</a>.
 expectDeclTypeById :: Id -> Transaction DeclType
