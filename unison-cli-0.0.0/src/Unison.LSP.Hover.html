@@ -41,13 +41,13 @@
 -&gt; (Either ResponseError (MessageResult 'Method_TextDocumentHover)
     -&gt; Lsp ())
 -&gt; Lsp ()
-</span><a href="Unison.LSP.Hover.html#hoverHandler"><span class="hs-identifier hs-var hs-var">hoverHandler</span></a></span></span><span> </span><span id="local-6989586621679592392"><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentHover
-</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679592391"><span class="annot"><span class="annottext">Either ResponseError (MessageResult 'Method_TextDocumentHover)
+</span><a href="Unison.LSP.Hover.html#hoverHandler"><span class="hs-identifier hs-var hs-var">hoverHandler</span></a></span></span><span> </span><span id="local-6989586621679592429"><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentHover
+</span><a href="#local-6989586621679592429"><span class="hs-identifier hs-var">m</span></a></span></span><span> </span><span id="local-6989586621679592428"><span class="annot"><span class="annottext">Either ResponseError (MessageResult 'Method_TextDocumentHover)
 -&gt; Lsp ()
-</span><a href="#local-6989586621679592391"><span class="hs-identifier hs-var">respond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="#local-6989586621679592428"><span class="hs-identifier hs-var">respond</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-41"></span><span>  </span><span class="annot"><span class="annottext">Either ResponseError (MessageResult 'Method_TextDocumentHover)
 -&gt; Lsp ()
-</span><a href="#local-6989586621679592391"><span class="hs-identifier hs-var">respond</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679592428"><span class="hs-identifier hs-var">respond</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><span class="hs-identifier hs-var">Right</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
@@ -57,24 +57,24 @@
 </span><span class="hs-identifier hs-var">InL</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><span class="hs-operator hs-var">=&lt;&lt;</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MaybeT m a -&gt; m (Maybe a)
 </span><span class="hs-identifier hs-var">runMaybeT</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-42"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592383"><span class="annot"><span class="annottext">pos :: Position
-</span><a href="#local-6989586621679592383"><span class="hs-identifier hs-var hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentHover
-</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><span id="line-42"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592420"><span class="annot"><span class="annottext">pos :: Position
+</span><a href="#local-6989586621679592420"><span class="hs-identifier hs-var hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentHover
+</span><a href="#local-6989586621679592429"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasParams s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">params</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasPosition s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">position</span></span><span class="hs-special">)</span><span>
-</span><span id="line-43"></span><span>    </span><span id="local-6989586621679592379"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592379"><span class="hs-identifier hs-var">hoverTxt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp Text
+</span><span id="line-43"></span><span>    </span><span id="local-6989586621679592416"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592416"><span class="hs-identifier hs-var">hoverTxt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp Text
 </span><a href="Unison.LSP.Hover.html#hoverInfo"><span class="hs-identifier hs-var">hoverInfo</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">TRequestMessage 'Method_TextDocumentHover
-</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
+</span><a href="#local-6989586621679592429"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall s a. s -&gt; Getting a s a -&gt; a
 </span><span class="hs-operator hs-var">^.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasParams s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">params</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasTextDocument s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">textDocument</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall s a. HasUri s a =&gt; Lens' s a
 </span><span class="hs-identifier hs-var">uri</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Position
-</span><a href="#local-6989586621679592383"><span class="hs-identifier hs-var">pos</span></a></span><span>
+</span><a href="#local-6989586621679592420"><span class="hs-identifier hs-var">pos</span></a></span><span>
 </span><span id="line-44"></span><span>    </span><span class="hs-identifier">pure</span><span> </span><span class="hs-operator">$</span><span>
 </span><span id="line-45"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Hover</span></span><span>
 </span><span id="line-46"></span><span>        </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">$sel:_contents:Hover :: MarkupContent |? (MarkedString |? [MarkedString])
@@ -82,7 +82,7 @@
 </span><span class="hs-identifier hs-var">InL</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MarkupKind -&gt; Text -&gt; MarkupContent
 </span><span class="hs-identifier hs-var">MarkupContent</span></span><span> </span><span class="annot"><span class="annottext">MarkupKind
 </span><span class="hs-identifier hs-var">MarkupKind_Markdown</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592379"><span class="hs-identifier hs-var">hoverTxt</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a href="#local-6989586621679592416"><span class="hs-identifier hs-var">hoverTxt</span></a></span><span class="hs-special">)</span><span class="hs-special">,</span><span>
 </span><span id="line-47"></span><span>          </span><span class="annot"><span class="annottext">$sel:_range:Hover :: Maybe Range
 </span><span class="hs-identifier hs-var">_range</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-comment">-- TODO add range info</span><span>
@@ -90,75 +90,75 @@
 </span><span id="line-49"></span><span>
 </span><span id="line-50"></span><span class="annot"><a href="Unison.LSP.Hover.html#hoverInfo"><span class="hs-identifier hs-type">hoverInfo</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Uri</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Position</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-51"></span><span id="hoverInfo"><span class="annot"><span class="annottext">hoverInfo :: Uri -&gt; Position -&gt; MaybeT Lsp Text
-</span><a href="Unison.LSP.Hover.html#hoverInfo"><span class="hs-identifier hs-var hs-var">hoverInfo</span></a></span></span><span> </span><span id="local-6989586621679592370"><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span></span><span> </span><span id="local-6989586621679592369"><span class="annot"><span class="annottext">Position
-</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.LSP.Hover.html#hoverInfo"><span class="hs-identifier hs-var hs-var">hoverInfo</span></a></span></span><span> </span><span id="local-6989586621679592407"><span class="annot"><span class="annottext">Uri
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span></span><span> </span><span id="local-6989586621679592406"><span class="annot"><span class="annottext">Position
+</span><a href="#local-6989586621679592406"><span class="hs-identifier hs-var">pos</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-52"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MaybeT Lsp Text
-</span><a href="#local-6989586621679592368"><span class="hs-identifier hs-var">hoverInfoForRef</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><a href="#local-6989586621679592405"><span class="hs-identifier hs-var">hoverInfoForRef</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
 </span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">MaybeT Lsp Text
-</span><a href="#local-6989586621679592366"><span class="hs-identifier hs-var">hoverInfoForLiteral</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592403"><span class="hs-identifier hs-var">hoverInfoForLiteral</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-53"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-54"></span><span>    </span><span class="annot"><a href="#local-6989586621679592365"><span class="hs-identifier hs-type">markdownify</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-55"></span><span>    </span><span id="local-6989586621679592365"><span class="annot"><span class="annottext">markdownify :: Text -&gt; Text
-</span><a href="#local-6989586621679592365"><span class="hs-identifier hs-var hs-var">markdownify</span></a></span></span><span> </span><span id="local-6989586621679592364"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592364"><span class="hs-identifier hs-var">rendered</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Text] -&gt; Text
+</span><span id="line-54"></span><span>    </span><span class="annot"><a href="#local-6989586621679592402"><span class="hs-identifier hs-type">markdownify</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-55"></span><span>    </span><span id="local-6989586621679592402"><span class="annot"><span class="annottext">markdownify :: Text -&gt; Text
+</span><a href="#local-6989586621679592402"><span class="hs-identifier hs-var hs-var">markdownify</span></a></span></span><span> </span><span id="local-6989586621679592401"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592401"><span class="hs-identifier hs-var">rendered</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.unlines</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;```unison&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592364"><span class="hs-identifier hs-var">rendered</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592401"><span class="hs-identifier hs-var">rendered</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;```&quot;</span></span><span class="hs-special">]</span><span>
-</span><span id="line-56"></span><span>    </span><span class="annot"><a href="#local-6989586621679592362"><span class="hs-identifier hs-type">prettyWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Pretty.Width</span></span><span>
-</span><span id="line-57"></span><span>    </span><span id="local-6989586621679592362"><span class="annot"><span class="annottext">prettyWidth :: Width
-</span><a href="#local-6989586621679592362"><span class="hs-identifier hs-var hs-var">prettyWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Width
+</span><span id="line-56"></span><span>    </span><span class="annot"><a href="#local-6989586621679592399"><span class="hs-identifier hs-type">prettyWidth</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Pretty.Width</span></span><span>
+</span><span id="line-57"></span><span>    </span><span id="local-6989586621679592399"><span class="annot"><span class="annottext">prettyWidth :: Width
+</span><a href="#local-6989586621679592399"><span class="hs-identifier hs-var hs-var">prettyWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Width
 </span><span class="hs-number">40</span></span><span>
-</span><span id="line-58"></span><span>    </span><span class="annot"><a href="#local-6989586621679592368"><span class="hs-identifier hs-type">hoverInfoForRef</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-59"></span><span>    </span><span id="local-6989586621679592368"><span class="annot"><span class="annottext">hoverInfoForRef :: MaybeT Lsp Text
-</span><a href="#local-6989586621679592368"><span class="hs-identifier hs-var hs-var">hoverInfoForRef</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-60"></span><span>      </span><span id="local-6989586621679592361"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var">symAtCursor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp Text
+</span><span id="line-58"></span><span>    </span><span class="annot"><a href="#local-6989586621679592405"><span class="hs-identifier hs-type">hoverInfoForRef</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-59"></span><span>    </span><span id="local-6989586621679592405"><span class="annot"><span class="annottext">hoverInfoForRef :: MaybeT Lsp Text
+</span><a href="#local-6989586621679592405"><span class="hs-identifier hs-var hs-var">hoverInfoForRef</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-60"></span><span>      </span><span id="local-6989586621679592398"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592398"><span class="hs-identifier hs-var">symAtCursor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp Text
 </span><a href="Unison.LSP.VFS.html#identifierAtPosition"><span class="hs-identifier hs-var">VFS.identifierAtPosition</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
-</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">pos</span></a></span><span>
-</span><span id="line-61"></span><span>      </span><span id="local-6989586621679592359"><span class="annot"><span class="annottext">LabeledDependency
-</span><a href="#local-6989586621679592359"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp LabeledDependency
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
+</span><a href="#local-6989586621679592406"><span class="hs-identifier hs-var">pos</span></a></span><span>
+</span><span id="line-61"></span><span>      </span><span id="local-6989586621679592396"><span class="annot"><span class="annottext">LabeledDependency
+</span><a href="#local-6989586621679592396"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp LabeledDependency
 </span><a href="Unison.LSP.Queries.html#refAtPosition"><span class="hs-identifier hs-var">LSPQ.refAtPosition</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
-</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">pos</span></a></span><span>
-</span><span id="line-62"></span><span>      </span><span id="local-6989586621679592357"><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679592357"><span class="hs-identifier hs-var">pped</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
+</span><a href="#local-6989586621679592406"><span class="hs-identifier hs-var">pos</span></a></span><span>
+</span><span id="line-62"></span><span>      </span><span id="local-6989586621679592394"><span class="annot"><span class="annottext">PrettyPrintEnvDecl
+</span><a href="#local-6989586621679592394"><span class="hs-identifier hs-var">pped</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
 (MonadTrans t, Monad m) =&gt;
 m a -&gt; t m a
 </span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Lsp PrettyPrintEnvDecl
 </span><a href="Unison.LSP.FileAnalysis.html#ppedForFile"><span class="hs-identifier hs-var">ppedForFile</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span>
-</span><span id="line-63"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592355"><span class="annot"><span class="annottext">unsuffixifiedPPE :: PrettyPrintEnv
-</span><a href="#local-6989586621679592355"><span class="hs-identifier hs-var hs-var">unsuffixifiedPPE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl -&gt; PrettyPrintEnv
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span>
+</span><span id="line-63"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592392"><span class="annot"><span class="annottext">unsuffixifiedPPE :: PrettyPrintEnv
+</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var hs-var">unsuffixifiedPPE</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl -&gt; PrettyPrintEnv
 </span><span class="hs-identifier hs-var">PPED.unsuffixifiedPPE</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679592357"><span class="hs-identifier hs-var">pped</span></a></span><span>
-</span><span id="line-64"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592353"><span class="annot"><span class="annottext">fqn :: HashQualified Name
-</span><a href="#local-6989586621679592353"><span class="hs-identifier hs-var hs-var">fqn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">LabeledDependency
-</span><a href="#local-6989586621679592359"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-65"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">LD.TypeReference</span></span><span> </span><span id="local-6989586621679592351"><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621679592351"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; Reference -&gt; HashQualified Name
+</span><a href="#local-6989586621679592394"><span class="hs-identifier hs-var">pped</span></a></span><span>
+</span><span id="line-64"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592390"><span class="annot"><span class="annottext">fqn :: HashQualified Name
+</span><a href="#local-6989586621679592390"><span class="hs-identifier hs-var hs-var">fqn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">LabeledDependency
+</span><a href="#local-6989586621679592396"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-65"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">LD.TypeReference</span></span><span> </span><span id="local-6989586621679592388"><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621679592388"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; Reference -&gt; HashQualified Name
 </span><span class="hs-identifier hs-var">PPE.typeName</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679592355"><span class="hs-identifier hs-var">unsuffixifiedPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621679592351"><span class="hs-identifier hs-var">ref</span></a></span><span>
-</span><span id="line-66"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">LD.TermReferent</span></span><span> </span><span id="local-6989586621679592348"><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621679592348"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; Referent -&gt; HashQualified Name
+</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var">unsuffixifiedPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621679592388"><span class="hs-identifier hs-var">ref</span></a></span><span>
+</span><span id="line-66"></span><span>            </span><span class="annot"><span class="hs-identifier hs-type">LD.TermReferent</span></span><span> </span><span id="local-6989586621679592385"><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621679592385"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv -&gt; Referent -&gt; HashQualified Name
 </span><span class="hs-identifier hs-var">PPE.termName</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnv
-</span><a href="#local-6989586621679592355"><span class="hs-identifier hs-var">unsuffixifiedPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621679592348"><span class="hs-identifier hs-var">ref</span></a></span><span>
+</span><a href="#local-6989586621679592392"><span class="hs-identifier hs-var">unsuffixifiedPPE</span></a></span><span> </span><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621679592385"><span class="hs-identifier hs-var">ref</span></a></span><span>
 </span><span id="line-67"></span><span>
-</span><span id="line-68"></span><span>      </span><span id="local-6989586621679592346"><span class="annot"><span class="annottext">Async (TypecheckedUnisonFile Symbol Ann)
-</span><a href="#local-6989586621679592346"><span class="hs-identifier hs-var">builtinsAsync</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span id="line-68"></span><span>      </span><span id="local-6989586621679592383"><span class="annot"><span class="annottext">Async (TypecheckedUnisonFile Symbol Ann)
+</span><a href="#local-6989586621679592383"><span class="hs-identifier hs-var">builtinsAsync</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadUnliftIO m =&gt; m a -&gt; m (Async a)
 </span><span class="hs-identifier hs-var">UnliftIO.async</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">UnliftIO.evaluate</span></span><span> </span><span class="annot"><span class="annottext">TypecheckedUnisonFile Symbol Ann
 </span><span class="hs-identifier hs-var">IOSource.typecheckedFile</span></span><span>
-</span><span id="line-69"></span><span>      </span><span id="local-6989586621679592341"><span class="annot"><span class="annottext">MaybeT Lsp Bool
-</span><a href="#local-6989586621679592341"><span class="hs-identifier hs-var">checkBuiltinsReady</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span id="line-69"></span><span>      </span><span id="local-6989586621679592378"><span class="annot"><span class="annottext">MaybeT Lsp Bool
+</span><a href="#local-6989586621679592378"><span class="hs-identifier hs-var">checkBuiltinsReady</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-70"></span><span>        </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span>
@@ -166,7 +166,7 @@ m a -&gt; t m a
 MonadIO m =&gt;
 Async a -&gt; m (Maybe (Either SomeException a))
 </span><span class="hs-identifier hs-var">UnliftIO.poll</span></span><span> </span><span class="annot"><span class="annottext">Async (TypecheckedUnisonFile Symbol Ann)
-</span><a href="#local-6989586621679592346"><span class="hs-identifier hs-var">builtinsAsync</span></a></span><span>
+</span><a href="#local-6989586621679592383"><span class="hs-identifier hs-var">builtinsAsync</span></a></span><span>
 </span><span id="line-72"></span><span>              </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
 </span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="hs-special">(</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-73"></span><span>                      </span><span class="annot"><span class="annottext">Maybe (Either SomeException (TypecheckedUnisonFile Symbol Ann))
@@ -178,8 +178,8 @@ Async a -&gt; m (Maybe (Either SomeException a))
 </span><span class="hs-identifier hs-var">True</span></span><span>
 </span><span id="line-76"></span><span>                  </span><span class="hs-special">)</span><span>
 </span><span id="line-77"></span><span>          </span><span class="hs-special">)</span><span>
-</span><span id="line-78"></span><span>      </span><span id="local-6989586621679592338"><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679592338"><span class="hs-identifier hs-var">renderedDocs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-78"></span><span>      </span><span id="local-6989586621679592375"><span class="annot"><span class="annottext">[Text]
+</span><a href="#local-6989586621679592375"><span class="hs-identifier hs-var">renderedDocs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-79"></span><span>        </span><span class="hs-comment">-- We don't want to block the type signature hover info if the docs are taking a long time to render;</span><span>
 </span><span id="line-80"></span><span>        </span><span class="hs-comment">-- We know it's also possible to write docs that eval forever, so the timeout helps</span><span>
 </span><span id="line-81"></span><span>        </span><span class="hs-comment">-- protect against that.</span><span>
@@ -192,14 +192,14 @@ Int -&gt; m a -&gt; m (Maybe a)
 </span><span class="hs-identifier hs-var">UnliftIO.timeout</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2_000_000</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Uri -&gt; HashQualified Name -&gt; Lsp [Text]
 </span><a href="Unison.LSP.Queries.html#markdownDocsForFQN"><span class="hs-identifier hs-var">LSPQ.markdownDocsForFQN</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">HashQualified Name
-</span><a href="#local-6989586621679592353"><span class="hs-identifier hs-var">fqn</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">HashQualified Name
+</span><a href="#local-6989586621679592390"><span class="hs-identifier hs-var">fqn</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-83"></span><span>          </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-special">(</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-84"></span><span>                  </span><span class="annot"><span class="annottext">Maybe [Text]
 </span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-85"></span><span>                    </span><span class="annot"><span class="annottext">MaybeT Lsp Bool
-</span><a href="#local-6989586621679592341"><span class="hs-identifier hs-var">checkBuiltinsReady</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679592378"><span class="hs-identifier hs-var">checkBuiltinsReady</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
 </span><span id="line-86"></span><span>                      </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
@@ -212,47 +212,47 @@ Int -&gt; m a -&gt; m (Maybe a)
 </span><span id="line-88"></span><span>                  </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
 </span><span id="line-89"></span><span>                  </span><span class="hs-comment">-- Add some space from the type signature</span><span>
-</span><span id="line-90"></span><span>                  </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679592335"><span class="annot"><span class="annottext">xs :: [Text]
-</span><a href="#local-6989586621679592335"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
+</span><span id="line-90"></span><span>                  </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621679592372"><span class="annot"><span class="annottext">xs :: [Text]
+</span><a href="#local-6989586621679592372"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span> </span><span class="annot"><span class="annottext">[Text]
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;\n---\n&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><span class="hs-glyph hs-var">:</span></span><span> </span><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679592335"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592372"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-91"></span><span>              </span><span class="hs-special">)</span><span>
-</span><span id="line-92"></span><span>      </span><span id="local-6989586621679592334"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592334"><span class="hs-identifier hs-var">typeSig</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
+</span><span id="line-92"></span><span>      </span><span id="local-6989586621679592371"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592371"><span class="hs-identifier hs-var">typeSig</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span>
 </span><span id="line-93"></span><span>        </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">LabeledDependency
-</span><a href="#local-6989586621679592359"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679592396"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-94"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">LD.TypeReference</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.Builtin</span></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-95"></span><span>            </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679592398"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; : &lt;builtin&gt;&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-96"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">LD.TypeReference</span></span><span> </span><span id="local-6989586621679592332"><span class="annot"><span class="annottext">ref :: Reference
-</span><a href="#local-6989586621679592332"><span class="hs-identifier hs-var">ref</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.DerivedId</span></span><span> </span><span id="local-6989586621679592330"><span class="annot"><span class="annottext">Id' Hash
-</span><a href="#local-6989586621679592330"><span class="hs-identifier hs-var">refId</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-97"></span><span>            </span><span id="local-6989586621679592329"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679592329"><span class="hs-identifier hs-var">nameAtCursor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. m (Maybe a) -&gt; MaybeT m a
+</span><span id="line-96"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">LD.TypeReference</span></span><span> </span><span id="local-6989586621679592369"><span class="annot"><span class="annottext">ref :: Reference
+</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">ref</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Reference.DerivedId</span></span><span> </span><span id="local-6989586621679592367"><span class="annot"><span class="annottext">Id' Hash
+</span><a href="#local-6989586621679592367"><span class="hs-identifier hs-var">refId</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-97"></span><span>            </span><span id="local-6989586621679592366"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621679592366"><span class="hs-identifier hs-var">nameAtCursor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. m (Maybe a) -&gt; MaybeT m a
 </span><span class="hs-identifier hs-var">MaybeT</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe Name
 </span><span class="hs-identifier hs-var">Name.fromText</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span>
-</span><span id="line-98"></span><span>            </span><span id="local-6989586621679592326"><span class="annot"><span class="annottext">Decl Symbol Ann
-</span><a href="#local-6989586621679592326"><span class="hs-identifier hs-var">decl</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Id' Hash -&gt; MaybeT Lsp (Decl Symbol Ann)
+</span><a href="#local-6989586621679592398"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span>
+</span><span id="line-98"></span><span>            </span><span id="local-6989586621679592363"><span class="annot"><span class="annottext">Decl Symbol Ann
+</span><a href="#local-6989586621679592363"><span class="hs-identifier hs-var">decl</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Id' Hash -&gt; MaybeT Lsp (Decl Symbol Ann)
 </span><a href="Unison.LSP.Queries.html#getTypeDeclaration"><span class="hs-identifier hs-var">LSPQ.getTypeDeclaration</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Id' Hash
-</span><a href="#local-6989586621679592330"><span class="hs-identifier hs-var">refId</span></a></span><span>
-</span><span id="line-99"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592324"><span class="annot"><span class="annottext">typ :: Text
-</span><a href="#local-6989586621679592324"><span class="hs-identifier hs-var hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Id' Hash
+</span><a href="#local-6989586621679592367"><span class="hs-identifier hs-var">refId</span></a></span><span>
+</span><span id="line-99"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592361"><span class="annot"><span class="annottext">typ :: Text
+</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Width -&gt; Pretty ColorText -&gt; String
 </span><span class="hs-identifier hs-var">Pretty.toPlain</span></span><span> </span><span class="annot"><span class="annottext">Width
-</span><a href="#local-6989586621679592362"><span class="hs-identifier hs-var">prettyWidth</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679592399"><span class="hs-identifier hs-var">prettyWidth</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall r. Pretty (SyntaxText' r) -&gt; Pretty ColorText
 </span><span class="hs-identifier hs-var">Pretty.syntaxToColor</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v a.
@@ -260,90 +260,90 @@ Var v =&gt;
 PrettyPrintEnvDecl
 -&gt; Reference -&gt; HashQualified Name -&gt; Decl v a -&gt; Pretty SyntaxText
 </span><span class="hs-identifier hs-var">DeclPrinter.prettyDecl</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679592357"><span class="hs-identifier hs-var">pped</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
-</span><a href="#local-6989586621679592332"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall n. n -&gt; HashQualified n
+</span><a href="#local-6989586621679592394"><span class="hs-identifier hs-var">pped</span></a></span><span> </span><span class="annot"><span class="annottext">Reference
+</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">ref</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall n. n -&gt; HashQualified n
 </span><span class="hs-identifier hs-var">HQ.NameOnly</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621679592329"><span class="hs-identifier hs-var">nameAtCursor</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Decl Symbol Ann
-</span><a href="#local-6989586621679592326"><span class="hs-identifier hs-var">decl</span></a></span><span>
+</span><a href="#local-6989586621679592366"><span class="hs-identifier hs-var">nameAtCursor</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Decl Symbol Ann
+</span><a href="#local-6989586621679592363"><span class="hs-identifier hs-var">decl</span></a></span><span>
 </span><span id="line-100"></span><span>            </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592324"><span class="hs-identifier hs-var">typ</span></a></span><span>
-</span><span id="line-101"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">LD.TermReferent</span></span><span> </span><span id="local-6989586621679592318"><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621679592318"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-102"></span><span>            </span><span id="local-6989586621679592317"><span class="annot"><span class="annottext">Type Symbol Ann
-</span><a href="#local-6989586621679592317"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Referent -&gt; MaybeT Lsp (Type Symbol Ann)
+</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var">typ</span></a></span><span>
+</span><span id="line-101"></span><span>          </span><span class="annot"><span class="hs-identifier hs-type">LD.TermReferent</span></span><span> </span><span id="local-6989586621679592355"><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621679592355"><span class="hs-identifier hs-var">ref</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-102"></span><span>            </span><span id="local-6989586621679592354"><span class="annot"><span class="annottext">Type Symbol Ann
+</span><a href="#local-6989586621679592354"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Uri -&gt; Referent -&gt; MaybeT Lsp (Type Symbol Ann)
 </span><a href="Unison.LSP.Queries.html#getTypeOfReferent"><span class="hs-identifier hs-var">LSPQ.getTypeOfReferent</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Referent
-</span><a href="#local-6989586621679592318"><span class="hs-identifier hs-var">ref</span></a></span><span>
-</span><span id="line-103"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592315"><span class="annot"><span class="annottext">renderedType :: Text
-</span><a href="#local-6989586621679592315"><span class="hs-identifier hs-var hs-var">renderedType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Referent
+</span><a href="#local-6989586621679592355"><span class="hs-identifier hs-var">ref</span></a></span><span>
+</span><span id="line-103"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679592352"><span class="annot"><span class="annottext">renderedType :: Text
+</span><a href="#local-6989586621679592352"><span class="hs-identifier hs-var hs-var">renderedType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
 </span><span class="hs-identifier hs-var">Text.pack</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall v a.
 Var v =&gt;
 Maybe Width -&gt; PrettyPrintEnv -&gt; Type v a -&gt; String
 </span><span class="hs-identifier hs-var">TypePrinter.prettyStr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">Width
-</span><a href="#local-6989586621679592362"><span class="hs-identifier hs-var">prettyWidth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PrettyPrintEnvDecl -&gt; PrettyPrintEnv
+</span><a href="#local-6989586621679592399"><span class="hs-identifier hs-var">prettyWidth</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PrettyPrintEnvDecl -&gt; PrettyPrintEnv
 </span><span class="hs-identifier hs-var">PPED.suffixifiedPPE</span></span><span> </span><span class="annot"><span class="annottext">PrettyPrintEnvDecl
-</span><a href="#local-6989586621679592357"><span class="hs-identifier hs-var">pped</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
-</span><a href="#local-6989586621679592317"><span class="hs-identifier hs-var">typ</span></a></span><span>
+</span><a href="#local-6989586621679592394"><span class="hs-identifier hs-var">pped</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type Symbol Ann
+</span><a href="#local-6989586621679592354"><span class="hs-identifier hs-var">typ</span></a></span><span>
 </span><span id="line-104"></span><span>            </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592361"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679592398"><span class="hs-identifier hs-var">symAtCursor</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot; : &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592315"><span class="hs-identifier hs-var">renderedType</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592352"><span class="hs-identifier hs-var">renderedType</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-105"></span><span>      </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">[Text] -&gt; Text
 </span><span class="hs-identifier hs-var">Text.unlines</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Text -&gt; Text
-</span><a href="#local-6989586621679592365"><span class="hs-identifier hs-var">markdownify</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592334"><span class="hs-identifier hs-var">typeSig</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679592402"><span class="hs-identifier hs-var">markdownify</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592371"><span class="hs-identifier hs-var">typeSig</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[Text]
-</span><a href="#local-6989586621679592338"><span class="hs-identifier hs-var">renderedDocs</span></a></span><span>
-</span><span id="line-106"></span><span>    </span><span class="annot"><a href="#local-6989586621679592366"><span class="hs-identifier hs-type">hoverInfoForLiteral</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
-</span><span id="line-107"></span><span>    </span><span id="local-6989586621679592366"><span class="annot"><span class="annottext">hoverInfoForLiteral :: MaybeT Lsp Text
-</span><a href="#local-6989586621679592366"><span class="hs-identifier hs-var hs-var">hoverInfoForLiteral</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621679592375"><span class="hs-identifier hs-var">renderedDocs</span></a></span><span>
+</span><span id="line-106"></span><span>    </span><span class="annot"><a href="#local-6989586621679592403"><span class="hs-identifier hs-type">hoverInfoForLiteral</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
+</span><span id="line-107"></span><span>    </span><span id="local-6989586621679592403"><span class="annot"><span class="annottext">hoverInfoForLiteral :: MaybeT Lsp Text
+</span><a href="#local-6989586621679592403"><span class="hs-identifier hs-var hs-var">hoverInfoForLiteral</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-108"></span><span>      </span><span class="annot"><span class="annottext">Text -&gt; Text
-</span><a href="#local-6989586621679592365"><span class="hs-identifier hs-var">markdownify</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="#local-6989586621679592402"><span class="hs-identifier hs-var">markdownify</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-109"></span><span>        </span><span class="annot"><span class="annottext">Uri -&gt; Position -&gt; MaybeT Lsp (SourceNode Ann)
 </span><a href="Unison.LSP.Queries.html#nodeAtPosition"><span class="hs-identifier hs-var">LSPQ.nodeAtPosition</span></a></span><span> </span><span class="annot"><span class="annottext">Uri
-</span><a href="#local-6989586621679592370"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
-</span><a href="#local-6989586621679592369"><span class="hs-identifier hs-var">pos</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679592407"><span class="hs-identifier hs-var">uri</span></a></span><span> </span><span class="annot"><span class="annottext">Position
+</span><a href="#local-6989586621679592406"><span class="hs-identifier hs-var">pos</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-110"></span><span>          </span><span class="annot"><a href="Unison.LSP.Queries.html#TermNode"><span class="hs-identifier hs-type">LSPQ.TermNode</span></a></span><span> </span><span id="local-6989586621679592309"><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621679592309"><span class="hs-identifier hs-var">term</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-111"></span><span>            </span><span id="local-6989586621679592308"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592308"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a -&gt; MaybeT Lsp a
-</span><a href="#local-6989586621679592307"><span class="hs-identifier hs-var">hoistMaybe</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-110"></span><span>          </span><span class="annot"><a href="Unison.LSP.Queries.html#TermNode"><span class="hs-identifier hs-type">LSPQ.TermNode</span></a></span><span> </span><span id="local-6989586621679592346"><span class="annot"><span class="annottext">Term Symbol Ann
+</span><a href="#local-6989586621679592346"><span class="hs-identifier hs-var">term</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-111"></span><span>            </span><span id="local-6989586621679592345"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592345"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a -&gt; MaybeT Lsp a
+</span><a href="#local-6989586621679592344"><span class="hs-identifier hs-var">hoistMaybe</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Term Symbol Ann -&gt; Maybe Text
 </span><a href="Unison.LSP.Hover.html#builtinTypeForTermLiterals"><span class="hs-identifier hs-var">builtinTypeForTermLiterals</span></a></span><span> </span><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621679592309"><span class="hs-identifier hs-var">term</span></a></span><span>
+</span><a href="#local-6989586621679592346"><span class="hs-identifier hs-var">term</span></a></span><span>
 </span><span id="line-112"></span><span>            </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592308"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592345"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-113"></span><span>          </span><span class="annot"><a href="Unison.LSP.Queries.html#TypeNode"><span class="hs-identifier hs-type">LSPQ.TypeNode</span></a></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Alternative f =&gt; f a
 </span><span class="hs-identifier hs-var">empty</span></span><span>
-</span><span id="line-114"></span><span>          </span><span class="annot"><a href="Unison.LSP.Queries.html#PatternNode"><span class="hs-identifier hs-type">LSPQ.PatternNode</span></a></span><span> </span><span id="local-6989586621679592302"><span class="annot"><span class="annottext">Pattern Ann
-</span><a href="#local-6989586621679592302"><span class="hs-identifier hs-var">pat</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-115"></span><span>            </span><span id="local-6989586621679592301"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592301"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a -&gt; MaybeT Lsp a
-</span><a href="#local-6989586621679592307"><span class="hs-identifier hs-var">hoistMaybe</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-114"></span><span>          </span><span class="annot"><a href="Unison.LSP.Queries.html#PatternNode"><span class="hs-identifier hs-type">LSPQ.PatternNode</span></a></span><span> </span><span id="local-6989586621679592339"><span class="annot"><span class="annottext">Pattern Ann
+</span><a href="#local-6989586621679592339"><span class="hs-identifier hs-var">pat</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-115"></span><span>            </span><span id="local-6989586621679592338"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679592338"><span class="hs-identifier hs-var">typ</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a -&gt; MaybeT Lsp a
+</span><a href="#local-6989586621679592344"><span class="hs-identifier hs-var">hoistMaybe</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Pattern Ann -&gt; Maybe Text
 </span><a href="Unison.LSP.Hover.html#builtinTypeForPatternLiterals"><span class="hs-identifier hs-var">builtinTypeForPatternLiterals</span></a></span><span> </span><span class="annot"><span class="annottext">Pattern Ann
-</span><a href="#local-6989586621679592302"><span class="hs-identifier hs-var">pat</span></a></span><span>
+</span><a href="#local-6989586621679592339"><span class="hs-identifier hs-var">pat</span></a></span><span>
 </span><span id="line-116"></span><span>            </span><span class="hs-identifier">pure</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679592301"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679592338"><span class="hs-identifier hs-var">typ</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-117"></span><span>
-</span><span id="line-118"></span><span>    </span><span id="local-6989586621679592523"><span class="annot"><a href="#local-6989586621679592307"><span class="hs-identifier hs-type">hoistMaybe</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679592523"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679592523"><span class="hs-identifier hs-type">a</span></a></span></span><span>
-</span><span id="line-119"></span><span>    </span><span id="local-6989586621679592307"><span class="annot"><span class="annottext">hoistMaybe :: forall a. Maybe a -&gt; MaybeT Lsp a
-</span><a href="#local-6989586621679592307"><span class="hs-identifier hs-var hs-var">hoistMaybe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. m (Maybe a) -&gt; MaybeT m a
+</span><span id="line-118"></span><span>    </span><span id="local-6989586621679592560"><span class="annot"><a href="#local-6989586621679592344"><span class="hs-identifier hs-type">hoistMaybe</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621679592560"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MaybeT</span></span><span> </span><span class="annot"><a href="Unison.LSP.Types.html#Lsp"><span class="hs-identifier hs-type">Lsp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679592560"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-119"></span><span>    </span><span id="local-6989586621679592344"><span class="annot"><span class="annottext">hoistMaybe :: forall a. Maybe a -&gt; MaybeT Lsp a
+</span><a href="#local-6989586621679592344"><span class="hs-identifier hs-var hs-var">hoistMaybe</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. m (Maybe a) -&gt; MaybeT m a
 </span><span class="hs-identifier hs-var">MaybeT</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
 </span><span class="hs-identifier hs-var">pure</span></span><span>
@@ -351,14 +351,14 @@ Maybe Width -&gt; PrettyPrintEnv -&gt; Type v a -&gt; String
 </span><span id="line-121"></span><span class="hs-comment">-- | Get the type for term literals.</span><span>
 </span><span id="line-122"></span><span class="annot"><a href="Unison.LSP.Hover.html#builtinTypeForTermLiterals"><span class="hs-identifier hs-type">builtinTypeForTermLiterals</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Term.Term</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Symbol</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ann</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-123"></span><span id="builtinTypeForTermLiterals"><span class="annot"><span class="annottext">builtinTypeForTermLiterals :: Term Symbol Ann -&gt; Maybe Text
-</span><a href="Unison.LSP.Hover.html#builtinTypeForTermLiterals"><span class="hs-identifier hs-var hs-var">builtinTypeForTermLiterals</span></a></span></span><span> </span><span id="local-6989586621679592298"><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621679592298"><span class="hs-identifier hs-var">term</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Unison.LSP.Hover.html#builtinTypeForTermLiterals"><span class="hs-identifier hs-var hs-var">builtinTypeForTermLiterals</span></a></span></span><span> </span><span id="local-6989586621679592335"><span class="annot"><span class="annottext">Term Symbol Ann
+</span><a href="#local-6989586621679592335"><span class="hs-identifier hs-var">term</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-124"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) v a. Term f v a -&gt; ABT f v (Term f v a)
 </span><span class="hs-identifier hs-var">ABT.out</span></span><span> </span><span class="annot"><span class="annottext">Term Symbol Ann
-</span><a href="#local-6989586621679592298"><span class="hs-identifier hs-var">term</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-125"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ABT.Tm</span></span><span> </span><span id="local-6989586621679592295"><span class="annot"><span class="annottext">F Symbol Ann Ann (Term Symbol Ann)
-</span><a href="#local-6989586621679592295"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">F Symbol Ann Ann (Term Symbol Ann)
-</span><a href="#local-6989586621679592295"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679592335"><span class="hs-identifier hs-var">term</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-125"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">ABT.Tm</span></span><span> </span><span id="local-6989586621679592332"><span class="annot"><span class="annottext">F Symbol Ann Ann (Term Symbol Ann)
+</span><a href="#local-6989586621679592332"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">F Symbol Ann Ann (Term Symbol Ann)
+</span><a href="#local-6989586621679592332"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-126"></span><span>      </span><span class="annot"><span class="hs-identifier hs-type">Term.Int</span></span><span> </span><span class="hs-special">{</span><span class="hs-special">}</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;Int&quot;</span></span><span>
